@@ -1,6 +1,9 @@
 ### Releasing a new version
 
+- On `develop`: `git checkout -b release/v1.0.x`
+- Commit your changes on `release/v1.0.x` and submit a pull request to `master`
+- `git checkout master && git pull`
 - Run: `npm version <major|minor|patch>`
-- Generate change log: `npm run changelog`
-- Commit your changes on `feature/yourbranch` and submit a pull request to `develop`
-- After merged to `develop`, tag with semver: `git tag v1.0.x` and `git push --tags` 
+- `git checkout -b chore/changelog && npm run changelog`
+- Create a pull request to `master`
+- Merge `master` into `develop`
