@@ -1,4 +1,4 @@
-package net.lapidist.colony.game.resources;
+package net.lapidist.colony.resources;
 
 public class InfluenceResource<T extends IResource> extends IResource {
 

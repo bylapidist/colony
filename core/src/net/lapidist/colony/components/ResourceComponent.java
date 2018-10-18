@@ -1,7 +1,7 @@
-package net.lapidist.colony.component;
+package net.lapidist.colony.components;
 
 import com.badlogic.ashley.core.Component;
-import net.lapidist.colony.game.resources.IResource;
+import net.lapidist.colony.resources.IResource;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package net.lapidist.colony.module;
+package net.lapidist.colony.modules;
 
 import static net.lapidist.colony.core.Core.camera;
 

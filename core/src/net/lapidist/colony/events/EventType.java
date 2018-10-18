@@ -1,7 +1,6 @@
-package net.lapidist.colony.event;
+package net.lapidist.colony.events;
 
-import net.lapidist.colony.component.TileComponent;
-import net.lapidist.colony.core.Core;
+import net.lapidist.colony.components.TileComponent;
 
 public class EventType {
 

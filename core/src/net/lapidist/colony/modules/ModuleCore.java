@@ -1,4 +1,4 @@
-package net.lapidist.colony.module;
+package net.lapidist.colony.modules;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.utils.Array;
@@ -26,7 +26,7 @@ public abstract class ModuleCore extends ApplicationAdapter {
 //        Inputs.update();
     }
 
-    /** Adds a module to the list. */
+    /** Adds a modules to the list. */
     protected <N extends Module> void addModule(N module) {
         modules.put(module.getClass(), module);
         moduleArray.add(module);

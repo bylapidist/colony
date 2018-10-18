@@ -1,7 +1,7 @@
-package net.lapidist.colony.module;
+package net.lapidist.colony.modules;
 
 import net.lapidist.colony.core.Core;
-import net.lapidist.colony.scene.Scene;
+import net.lapidist.colony.scenes.Scene;
 
 public class SceneModule extends Module {
 

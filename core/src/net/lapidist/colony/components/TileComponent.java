@@ -1,4 +1,4 @@
-package net.lapidist.colony.component;
+package net.lapidist.colony.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Polygon;

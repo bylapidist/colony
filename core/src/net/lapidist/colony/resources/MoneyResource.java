@@ -1,4 +1,4 @@
-package net.lapidist.colony.game.resources;
+package net.lapidist.colony.resources;
 
 public class MoneyResource<T extends IResource> extends IResource {
 

@@ -1,4 +1,4 @@
-package net.lapidist.colony.system;
+package net.lapidist.colony.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;

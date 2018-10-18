@@ -22,11 +22,11 @@ public class Graphics {
     }
 
     public static void add(Decal decal) {
-        Core.batch.add(decal);
+        Core.decalBatch.add(decal);
     }
 
     public static void flush(){
-        Core.batch.flush();
+        Core.decalBatch.flush();
     }
 
     public static void resize() {

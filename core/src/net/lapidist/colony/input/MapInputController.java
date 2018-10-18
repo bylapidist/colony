@@ -7,13 +7,12 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.IntSet;
-import net.lapidist.colony.component.DecalComponent;
-import net.lapidist.colony.component.TileComponent;
+import net.lapidist.colony.components.TileComponent;
 import net.lapidist.colony.core.Camera;
 import net.lapidist.colony.core.Core;
-import net.lapidist.colony.event.EventType;
-import net.lapidist.colony.event.Events;
-import net.lapidist.colony.system.MapRenderingSystem;
+import net.lapidist.colony.events.EventType;
+import net.lapidist.colony.events.Events;
+import net.lapidist.colony.systems.MapRenderingSystem;
 
 import static net.lapidist.colony.ComponentMappers.*;
 import static net.lapidist.colony.Constants.PPM;

@@ -1,4 +1,4 @@
-package net.lapidist.colony.system;
+package net.lapidist.colony.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -8,13 +8,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import net.lapidist.colony.component.DecalComponent;
-import net.lapidist.colony.component.ResourceComponent;
-import net.lapidist.colony.component.TileComponent;
+import net.lapidist.colony.components.ResourceComponent;
+import net.lapidist.colony.components.TileComponent;
 import net.lapidist.colony.core.Camera;
 import net.lapidist.colony.core.Core;
 import net.lapidist.colony.core.Graphics;
-import net.lapidist.colony.game.resources.IResource;
+import net.lapidist.colony.resources.IResource;
 
 import static net.lapidist.colony.ComponentMappers.*;
 
@@ -61,12 +60,12 @@ public class DebugRenderingSystem extends IteratingSystem {
                     for (IResource resource : resourceC.getResources()) {
                         Vector2 screenCoords = Camera.screenCoords(tileC.bounds.getBoundingRectangle().x, tileC.bounds.getBoundingRectangle().y);
 
-                        font.draw(
-                            Core.spriteBatch,
-                            resource.getName() + ": " + resource.getComputedValue(),
-                            screenCoords.x,
-                            screenCoords.y - i
-                        );
+//                        font.draw(
+//                            Core.spriteBatch,
+//                            resource.getName() + ": " + resource.getComputedValue(),
+//                            screenCoords.x,
+//                            screenCoords.y - i
+//                        );
 
                         i += 16;
                     }

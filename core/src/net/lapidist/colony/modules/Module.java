@@ -1,4 +1,4 @@
-package net.lapidist.colony.module;
+package net.lapidist.colony.modules;
 
 import com.badlogic.gdx.InputAdapter;
 

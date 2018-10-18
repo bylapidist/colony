@@ -1,4 +1,4 @@
-package net.lapidist.colony.event;
+package net.lapidist.colony.events;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
