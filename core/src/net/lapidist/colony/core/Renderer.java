@@ -3,6 +3,7 @@ package net.lapidist.colony.core;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -22,6 +23,7 @@ public class Renderer extends RendererModule {
         Core.batch = new DecalBatch(new CameraGroupStrategy(Core.camera));
         Core.spriteBatch = new SpriteBatch();
         Core.shapeBatch = new ShapeRenderer();
+        Core.modelBatch = new ModelBatch();
         Core.postProcessor = new PostProcessor(false, false, true);
     }
 

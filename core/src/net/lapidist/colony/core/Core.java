@@ -1,6 +1,7 @@
 package net.lapidist.colony.core;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.bitfire.postprocessing.PostProcessor;
@@ -13,6 +14,7 @@ public class Core {
     public static DecalBatch batch;
     public static Batch spriteBatch;
     public static ShapeRenderer shapeBatch;
+    public static ModelBatch modelBatch;
     public static PostProcessor postProcessor;
 
     public static void dispose() {
