@@ -55,11 +55,11 @@ public class DebugRenderingSystem extends IteratingSystem {
                 ResourceComponent resourceC = resources.get(entity);
 
                 if (resourceC != null) {
-                    DecalComponent decalC = decal.get(entity);
+                    TileComponent tileC = tiles.get(entity);
 
                     int i = 0;
                     for (IResource resource : resourceC.getResources()) {
-                        Vector2 screenCoords = Camera.screenCoords(decalC.decal.getX(), decalC.decal.getY());
+                        Vector2 screenCoords = Camera.screenCoords(tileC.bounds.getBoundingRectangle().x, tileC.bounds.getBoundingRectangle().y);
 
                         font.draw(
                             Core.spriteBatch,
