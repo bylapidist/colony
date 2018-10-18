@@ -3,9 +3,16 @@ package net.lapidist.colony.core;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Vector3;
 import net.lapidist.colony.component.*;
 import net.lapidist.colony.event.EventType.WorldInitEvent;
 import net.lapidist.colony.event.Events;
@@ -119,24 +126,28 @@ public class World extends Module {
 
     private Entity createStar(IHexagon hex) {
         Entity entity = engine.createEntity();
-        TextureRegion texture = resourceLoader.getRegion("star");
 
-        DecalComponent decalC = engine.createComponent(DecalComponent.class);
+        ModelComponent modelC = engine.createComponent(ModelComponent.class);
         TileComponent tileC = engine.createComponent(TileComponent.class);
         ResourceComponent resourceC = engine.createComponent(ResourceComponent.class);
 
         tileC.hex = hex;
         tileC.bounds = new Polygon(hex.getVertices());
-        decalC.decal = Decal.newDecal(texture, true);
-        decalC.decal.setPosition(
+
+        Vector3 position = new Vector3(
             tileC.bounds.getBoundingRectangle().x,
             tileC.bounds.getBoundingRectangle().y,
-            0f
+            PPM
         );
-        decalC.decal.setDimensions(
-            tileC.bounds.getBoundingRectangle().getWidth(),
-            tileC.bounds.getBoundingRectangle().getHeight()
+
+        ModelBuilder modelBuilder = new ModelBuilder();
+        modelC.model = modelBuilder.createSphere(
+            PPM, PPM, PPM, 16, 16,
+            new Material(ColorAttribute.createDiffuse(Color.GOLD)),
+            VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal
         );
+        modelC.instance = new ModelInstance(modelC.model);
+        modelC.instance.transform.setTranslation(position);
 
         resourceC.addResource(new EnergyResource(5f));
         resourceC.addResource(new FoodResource(0f));
@@ -145,7 +156,7 @@ public class World extends Module {
         resourceC.addResource(new ProductionResource(0f));
         resourceC.addResource(new ScienceResource(0f));
 
-        entity.add(decalC);
+        entity.add(modelC);
         entity.add(tileC);
         entity.add(resourceC);
 
