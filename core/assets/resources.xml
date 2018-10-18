@@ -11,6 +11,7 @@
     </images>
 
     <shaders>
-        <shader name="bloomFragShader" file="shaders/bloom.frag" />
+        <shader name="sunVertexShader" file="shaders/sun.vert" />
+        <shader name="sunFragShader" file="shaders/sun.frag" />
     </shaders>
 </resources>
