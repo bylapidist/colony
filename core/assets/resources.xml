@@ -76,4 +76,8 @@
     <sounds>
         <sound name="splashGong" file="sound/splash_gong.mp3" />
     </sounds>
+
+    <shaders>
+        <shader name="bloomFragShader" file="shader/bloom.frag" />
+    </shaders>
 </resources>
