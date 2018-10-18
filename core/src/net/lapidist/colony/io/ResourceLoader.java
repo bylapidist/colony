@@ -12,6 +12,7 @@ import net.lapidist.colony.utils.SpriteAnimation;
 import net.lapidist.colony.utils.XmlUtils;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class ResourceLoader implements Disposable {
 
@@ -20,14 +21,16 @@ public class ResourceLoader implements Disposable {
     private final ObjectMap<String, TextureRegion> regions;
     private final ObjectMap<String, SpriteAnimation> animations;
     private final ObjectMap<String, Sound> sounds;
+    private final ObjectMap<String, String> shaders;
     private final FileLocation fileLocation;
 
     public ResourceLoader(FileLocation fileLocation, FileHandle resourceXml) throws IOException {
         this.fileLocation = fileLocation;
 
-        regions = new ObjectMap<String, TextureRegion>();
-        animations = new ObjectMap<String, SpriteAnimation>();
-        sounds = new ObjectMap<String, Sound>();
+        regions = new ObjectMap<>();
+        animations = new ObjectMap<>();
+        sounds = new ObjectMap<>();
+        shaders = new ObjectMap<>();
 
         XmlReader.Element resources = new XmlReader().parse(resourceXml);
         readResourcesTag(resources);
@@ -45,6 +48,10 @@ public class ResourceLoader implements Disposable {
         return sounds.get(name);
     }
 
+    public String getShader(String name) {
+        return shaders.get(name);
+    }
+
     public FileLocation getFileLocation() {
         return fileLocation;
     }
@@ -59,6 +66,9 @@ public class ResourceLoader implements Disposable {
                     break;
                 case "sounds":
                     readSoundsTag(child);
+                    break;
+                case "shaders":
+                    readShadersTag(child);
                     break;
                 default:
                     throw new RuntimeException("Expected <images> tag.");
@@ -101,6 +111,29 @@ public class ResourceLoader implements Disposable {
                     throw new RuntimeException("Expected <region> or <animation> tag.");
             }
         }
+    }
+
+    private void readShadersTag(XmlReader.Element shaders) throws RuntimeException {
+        for (int i = 0; i < shaders.getChildCount(); i++) {
+            XmlReader.Element child = shaders.getChild(i);
+
+            switch (child.getName()) {
+                case "shader":
+                    readShaderTag(child);
+                    break;
+                default:
+                    throw new RuntimeException("Expected <shader> tag.");
+            }
+        }
+    }
+
+    private void readShaderTag(XmlReader.Element shader) {
+        if (!shader.getAttributes().containsKey("file") || !shader.getAttributes().containsKey("name"))
+            throw new RuntimeException("need file=\"...\" and name=\"...\" properties");
+
+        String shaderString = Objects.requireNonNull(fileLocation.getFile(shader.get("file"))).readString();
+
+        shaders.put(shader.get("name"), shaderString);
     }
 
     private void readSoundsTag(XmlReader.Element sounds) throws RuntimeException {
@@ -152,6 +185,10 @@ public class ResourceLoader implements Disposable {
             }
 
             for (ObjectMap.Entry<String, SpriteAnimation> entry : animations.entries()) {
+                entry.value.dispose();
+            }
+
+            for (ObjectMap.Entry<String, Sound> entry : sounds.entries()) {
                 entry.value.dispose();
             }
         }
