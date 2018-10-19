@@ -1,83 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <images>
-        <image file="sprites/character.png">
-            <region name="standing-down" bounds="32 0 32 32" />
-            <region name="standing-left" bounds="32 32 32 32" />
-            <region name="standing-right" bounds="32 64 32 32" />
-            <region name="standing-up" bounds="32 96 32 32" />
-
-            <animation name="walking-down" delay="0.08">
-                <frame bounds="32 0 32 32" />
-                <frame bounds="64 0 32 32" />
-                <frame bounds="32 0 32 32" />
-                <frame bounds="0 0 32 32" />
-            </animation>
-
-            <animation name="walking-left" delay="0.08">
-                <frame bounds="32 32 32 32" />
-                <frame bounds="64 32 32 32" />
-                <frame bounds="0 32 32 32" />
-                <frame bounds="32 32 32 32" />
-            </animation>
-
-            <animation name="walking-right" delay="0.08">
-                <frame bounds="32 64 32 32" />
-                <frame bounds="64 64 32 32" />
-                <frame bounds="32 64 32 32" />
-                <frame bounds="0 64 32 32" />
-            </animation>
-
-            <animation name="walking-up" delay="0.08">
-                <frame bounds="32 96 32 32" />
-                <frame bounds="64 96 32 32" />
-                <frame bounds="32 96 32 32" />
-                <frame bounds="0 96 32 32" />
-            </animation>
-        </image>
-
-        <image file="sprites/ball.png">
-            <region name="ball" bounds="0 0 600 600" />
-        </image>
-
-        <image file="sprites/grass.png">
-            <region name="grass" bounds="0 0 64 64" />
-        </image>
-
         <image file="sprites/space.png">
             <region name="space" bounds="0 0 256 295" />
-        </image>
-
-        <image file="sprites/smallplanet.png">
-            <region name="smallplanet" bounds="0 0 256 295" />
-        </image>
-
-        <image file="sprites/star.png">
-            <region name="star" bounds="0 0 256 295" />
         </image>
 
         <image file="sprites/selected.png">
             <region name="selected" bounds="0 0 256 295" />
         </image>
 
-        <image file="sprites/background.png">
-            <region name="background" bounds="0 0 801 641" />
-        </image>
-
-        <image file="sprites/text.png">
-            <region name="RuinsOfRevenge" bounds="0 0 600 200" />
-        </image>
-
-        <image file="ui/splash.png">
-            <region name="splash" bounds="0 0 1280 720" />
+        <image file="sprites/noise.png">
+            <region name="noise" bounds="0 0 256 256" />
         </image>
     </images>
 
-    <sounds>
-        <sound name="splashGong" file="sound/splash_gong.mp3" />
-    </sounds>
-
     <shaders>
-        <shader name="bloomFragShader" file="shader/bloom.frag" />
+        <shader name="sunVertShader" file="shaders/sun.vert" />
+        <shader name="sunFragShader" file="shaders/sun.frag" />
     </shaders>
 </resources>

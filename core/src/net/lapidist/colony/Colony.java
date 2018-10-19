@@ -3,11 +3,11 @@ package net.lapidist.colony;
 import aurelienribon.tweenengine.TweenManager;
 import com.bitfire.utils.ShaderLoader;
 import net.lapidist.colony.core.*;
-import net.lapidist.colony.event.EventType.GameLoadEvent;
-import net.lapidist.colony.event.Events;
+import net.lapidist.colony.events.EventType.GameLoadEvent;
+import net.lapidist.colony.events.Events;
 import net.lapidist.colony.io.FileLocation;
 import net.lapidist.colony.io.ResourceLoader;
-import net.lapidist.colony.module.ModuleCore;
+import net.lapidist.colony.modules.ModuleCore;
 import net.lapidist.colony.tween.Accessors;
 
 import java.io.IOException;

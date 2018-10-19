@@ -1,9 +1,9 @@
 package net.lapidist.colony.core;
 
-import net.lapidist.colony.event.EventType.WorldInitEvent;
-import net.lapidist.colony.event.EventType.TickEvent;
-import net.lapidist.colony.event.Events;
-import net.lapidist.colony.module.Module;
+import net.lapidist.colony.events.EventType.WorldInitEvent;
+import net.lapidist.colony.events.EventType.TickEvent;
+import net.lapidist.colony.events.Events;
+import net.lapidist.colony.modules.Module;
 
 import static net.lapidist.colony.Constants.state;
 
