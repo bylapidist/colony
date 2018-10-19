@@ -4,8 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.IntSet;
@@ -105,14 +103,12 @@ public class MapInputController implements InputProcessor {
         if (button == Input.Buttons.LEFT) {
             for (Entity entity : renderingSystem.getRenderQueue()) {
                 TileComponent tileC = tiles.get(entity);
-                DecalComponent decalC = decal.get(entity);
-
                 Ray ray = Core.camera.getPickRay(screenX, screenY);
 
                 Vector3 center = new Vector3(
-                    decalC.decal.getPosition().x,
-                    decalC.decal.getPosition().y,
-                    decalC.decal.getPosition().z
+                    tileC.bounds.getBoundingRectangle().x,
+                    tileC.bounds.getBoundingRectangle().y,
+                    0
                 );
 
                 if (Intersector.intersectRaySphere(ray, center, PPM / 1.4f, null)) {
@@ -143,14 +139,12 @@ public class MapInputController implements InputProcessor {
     public boolean mouseMoved(int screenX, int screenY) {
         for (Entity entity : renderingSystem.getRenderQueue()) {
             TileComponent tileC = tiles.get(entity);
-            DecalComponent decalC = decal.get(entity);
-
             Ray ray = Core.camera.getPickRay(screenX, screenY);
 
             Vector3 center = new Vector3(
-                decalC.decal.getPosition().x,
-                decalC.decal.getPosition().y,
-                decalC.decal.getPosition().z
+                tileC.bounds.getBoundingRectangle().x,
+                tileC.bounds.getBoundingRectangle().y,
+                0
             );
 
             if (Intersector.intersectRaySphere(ray, center, PPM / 1.4f, null)) {
