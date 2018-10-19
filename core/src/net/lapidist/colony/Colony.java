@@ -17,6 +17,17 @@ import static net.lapidist.colony.Constants.*;
 public class Colony extends ModuleCore {
     @Override
     public void init() {
+        ShaderLoader.BasePath = "shaders/postprocessing/";
+
+        try {
+            resourceLoader = new ResourceLoader(
+                    FileLocation.INTERNAL,
+                    FileLocation.INTERNAL.getFile("resources.xml")
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         addModule(logic = new Logic());
         addModule(world = new World());
         addModule(control = new Control());
@@ -25,16 +36,6 @@ public class Colony extends ModuleCore {
 
         tweenManager = new TweenManager();
         Accessors.register();
-        ShaderLoader.BasePath = "shader/postprocessing/";
-
-        try {
-            resourceLoader = new ResourceLoader(
-                FileLocation.INTERNAL,
-                FileLocation.INTERNAL.getFile("resources.xml")
-            );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
