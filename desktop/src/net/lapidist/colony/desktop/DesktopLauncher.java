@@ -1,19 +1,17 @@
 package net.lapidist.colony.desktop;
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import net.lapidist.colony.Colony;
 import net.lapidist.colony.Constants;
 
 public class DesktopLauncher {
     public static void main(String[] arg) {
-        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 
-        config.title = Constants.NAME + " " + Constants.VERSION;
-        config.width = Constants.WIDTH;
-        config.height = Constants.HEIGHT;
-//        config.resizable = false;
+        config.setTitle(Constants.NAME + " " + Constants.VERSION);
+        config.setWindowedMode(Constants.WIDTH, Constants.HEIGHT);
 
-        new LwjglApplication(new Colony(), config);
+        new Lwjgl3Application(new Colony(), config);
     }
 }
