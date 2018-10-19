@@ -38,7 +38,6 @@ public class MapRenderingSystem extends IteratingSystem {
         environment = new Environment();
 
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, PPM, PPM, -PPM));
-        environment.add(new DirectionalLight().set(0.2f, 0.2f, 0.2f, -PPM * 4, -PPM, PPM));
 
         TextureRegion selectedTexture = resourceLoader.getRegion("selected");
         selectedDecal = Decal.newDecal(selectedTexture, true);

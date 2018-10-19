@@ -8,10 +8,14 @@
         <image file="sprites/selected.png">
             <region name="selected" bounds="0 0 256 295" />
         </image>
+
+        <image file="sprites/noise.png">
+            <region name="noise" bounds="0 0 256 256" />
+        </image>
     </images>
 
     <shaders>
-        <shader name="sunVertexShader" file="shaders/sun.vert" />
+        <shader name="sunVertShader" file="shaders/sun.vert" />
         <shader name="sunFragShader" file="shaders/sun.frag" />
     </shaders>
 </resources>
