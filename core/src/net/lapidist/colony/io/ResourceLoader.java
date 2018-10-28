@@ -12,7 +12,6 @@ import net.lapidist.colony.utils.SpriteAnimation;
 import net.lapidist.colony.utils.XmlUtils;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class ResourceLoader implements Disposable {
 
@@ -131,7 +130,7 @@ public class ResourceLoader implements Disposable {
         if (!shader.getAttributes().containsKey("file") || !shader.getAttributes().containsKey("name"))
             throw new RuntimeException("need file=\"...\" and name=\"...\" properties");
 
-        String shaderString = Objects.requireNonNull(fileLocation.getFile(shader.get("file"))).readString();
+        String shaderString = fileLocation.getFile(shader.get("file")).readString();
 
         shaders.put(shader.get("name"), shaderString);
     }

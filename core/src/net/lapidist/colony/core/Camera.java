@@ -4,7 +4,7 @@ import aurelienribon.tweenengine.Tween;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import net.lapidist.colony.component.TileComponent;
+import net.lapidist.colony.components.TileComponent;
 import net.lapidist.colony.tween.CameraAccessor;
 
 import static net.lapidist.colony.Constants.*;

@@ -11,7 +11,7 @@ import static net.lapidist.colony.Constants.*;
 public class Core {
 
     public static Camera camera;
-    public static DecalBatch batch;
+    public static DecalBatch decalBatch;
     public static Batch spriteBatch;
     public static ShapeRenderer shapeBatch;
     public static ModelBatch modelBatch;
@@ -20,9 +20,9 @@ public class Core {
     public static void dispose() {
         // Dispose of global static resources here
 
-        if (batch != null) {
-            batch.dispose();
-            batch = null;
+        if (decalBatch != null) {
+            decalBatch.dispose();
+            decalBatch = null;
         }
 
         if (spriteBatch != null) {

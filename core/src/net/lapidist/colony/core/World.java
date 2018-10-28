@@ -13,19 +13,20 @@ import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector3;
-import net.lapidist.colony.component.*;
-import net.lapidist.colony.event.EventType.WorldInitEvent;
-import net.lapidist.colony.event.Events;
-import net.lapidist.colony.game.resources.*;
+import net.lapidist.colony.components.*;
+import net.lapidist.colony.events.EventType.WorldInitEvent;
+import net.lapidist.colony.events.Events;
+import net.lapidist.colony.resources.*;
 import net.lapidist.colony.grid.*;
 import net.lapidist.colony.grid.hex.CubeCoordinate;
 import net.lapidist.colony.grid.hex.HexagonOrientation;
 import net.lapidist.colony.grid.hex.IHexagon;
 import net.lapidist.colony.grid.hex.IHexagonalGrid;
-import net.lapidist.colony.module.Module;
-import net.lapidist.colony.system.DebugRenderingSystem;
-import net.lapidist.colony.system.MapRenderingSystem;
-import net.lapidist.colony.system.RenderingSystem;
+import net.lapidist.colony.modules.Module;
+import net.lapidist.colony.systems.DebugRenderingSystem;
+import net.lapidist.colony.systems.MapRenderingSystem;
+import net.lapidist.colony.systems.PlayerSystem;
+import net.lapidist.colony.systems.RenderingSystem;
 import net.lapidist.colony.utils.Optional;
 
 import static net.lapidist.colony.Constants.*;
@@ -41,6 +42,7 @@ public class World extends Module {
         engine.addSystem(new RenderingSystem());
         engine.addSystem(new DebugRenderingSystem());
         engine.addSystem(new MapRenderingSystem());
+        engine.addSystem(new PlayerSystem());
 
         generateLevel();
 
@@ -85,28 +87,52 @@ public class World extends Module {
 
         Entity planet = createPlanet(hex2.get());
         engine.addEntity(planet);
+
+        Entity player = createPlayer();
+        engine.addEntity(player);
+    }
+
+    private Entity createPlayer() {
+        Entity entity = engine.createEntity();
+
+        ResourceComponent resourceC = engine.createComponent(ResourceComponent.class);
+
+        resourceC.addResource(new EnergyResource(0f));
+        resourceC.addResource(new FoodResource(0f));
+        resourceC.addResource(new InfluenceResource(0f));
+        resourceC.addResource(new MoneyResource(0f));
+        resourceC.addResource(new ProductionResource(0f));
+        resourceC.addResource(new ScienceResource(0f));
+
+        entity.add(resourceC);
+
+        return entity;
     }
 
     private Entity createPlanet(IHexagon hex) {
         Entity entity = engine.createEntity();
-        TextureRegion texture = resourceLoader.getRegion("smallplanet");
 
-        DecalComponent decalC = engine.createComponent(DecalComponent.class);
+        ModelComponent modelC = engine.createComponent(ModelComponent.class);
         TileComponent tileC = engine.createComponent(TileComponent.class);
         ResourceComponent resourceC = engine.createComponent(ResourceComponent.class);
 
         tileC.hex = hex;
         tileC.bounds = new Polygon(hex.getVertices());
-        decalC.decal = Decal.newDecal(texture, true);
-        decalC.decal.setPosition(
+
+        Vector3 position = new Vector3(
             tileC.bounds.getBoundingRectangle().x,
             tileC.bounds.getBoundingRectangle().y,
-            0f
+            PPM / 2
         );
-        decalC.decal.setDimensions(
-            tileC.bounds.getBoundingRectangle().getWidth(),
-            tileC.bounds.getBoundingRectangle().getHeight()
+
+        ModelBuilder modelBuilder = new ModelBuilder();
+        modelC.model = modelBuilder.createSphere(
+            PPM / 2, PPM / 2, PPM / 2, 16, 16,
+            new Material(ColorAttribute.createDiffuse(Color.BLUE)),
+            VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal
         );
+        modelC.instance = new ModelInstance(modelC.model);
+        modelC.instance.transform.setTranslation(position);
 
         resourceC.addResource(new EnergyResource(5f));
         resourceC.addResource(new FoodResource(0f));
@@ -115,11 +141,9 @@ public class World extends Module {
         resourceC.addResource(new ProductionResource(0f));
         resourceC.addResource(new ScienceResource(0f));
 
-        entity.add(decalC);
+        entity.add(modelC);
         entity.add(tileC);
         entity.add(resourceC);
-
-        Core.camera.tweenToTile(tileC);
 
         return entity;
     }
@@ -137,12 +161,12 @@ public class World extends Module {
         Vector3 position = new Vector3(
             tileC.bounds.getBoundingRectangle().x,
             tileC.bounds.getBoundingRectangle().y,
-            PPM
+            PPM / 2
         );
 
         ModelBuilder modelBuilder = new ModelBuilder();
         modelC.model = modelBuilder.createSphere(
-            PPM, PPM, PPM, 16, 16,
+            PPM * 4, PPM * 4, PPM * 4, 16, 16,
             new Material(ColorAttribute.createDiffuse(Color.GOLD)),
             VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal
         );
