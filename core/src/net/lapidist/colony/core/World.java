@@ -25,6 +25,7 @@ import net.lapidist.colony.grid.hex.IHexagonalGrid;
 import net.lapidist.colony.modules.Module;
 import net.lapidist.colony.systems.DebugRenderingSystem;
 import net.lapidist.colony.systems.MapRenderingSystem;
+import net.lapidist.colony.systems.PlayerSystem;
 import net.lapidist.colony.systems.RenderingSystem;
 import net.lapidist.colony.utils.Optional;
 
@@ -41,6 +42,7 @@ public class World extends Module {
         engine.addSystem(new RenderingSystem());
         engine.addSystem(new DebugRenderingSystem());
         engine.addSystem(new MapRenderingSystem());
+        engine.addSystem(new PlayerSystem());
 
         generateLevel();
 
@@ -85,6 +87,26 @@ public class World extends Module {
 
         Entity planet = createPlanet(hex2.get());
         engine.addEntity(planet);
+
+        Entity player = createPlayer();
+        engine.addEntity(player);
+    }
+
+    private Entity createPlayer() {
+        Entity entity = engine.createEntity();
+
+        ResourceComponent resourceC = engine.createComponent(ResourceComponent.class);
+
+        resourceC.addResource(new EnergyResource(0f));
+        resourceC.addResource(new FoodResource(0f));
+        resourceC.addResource(new InfluenceResource(0f));
+        resourceC.addResource(new MoneyResource(0f));
+        resourceC.addResource(new ProductionResource(0f));
+        resourceC.addResource(new ScienceResource(0f));
+
+        entity.add(resourceC);
+
+        return entity;
     }
 
     private Entity createPlanet(IHexagon hex) {
