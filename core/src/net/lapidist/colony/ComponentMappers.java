@@ -1,7 +1,7 @@
 package net.lapidist.colony;
 
 import com.badlogic.ashley.core.ComponentMapper;
-import net.lapidist.colony.component.*;
+import net.lapidist.colony.components.*;
 
 public class ComponentMappers {
 

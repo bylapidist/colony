@@ -3,11 +3,11 @@ package net.lapidist.colony;
 import aurelienribon.tweenengine.TweenManager;
 import com.bitfire.utils.ShaderLoader;
 import net.lapidist.colony.core.*;
-import net.lapidist.colony.event.EventType.GameLoadEvent;
-import net.lapidist.colony.event.Events;
+import net.lapidist.colony.events.EventType.GameLoadEvent;
+import net.lapidist.colony.events.Events;
 import net.lapidist.colony.io.FileLocation;
 import net.lapidist.colony.io.ResourceLoader;
-import net.lapidist.colony.module.ModuleCore;
+import net.lapidist.colony.modules.ModuleCore;
 import net.lapidist.colony.tween.Accessors;
 
 import java.io.IOException;
@@ -17,6 +17,17 @@ import static net.lapidist.colony.Constants.*;
 public class Colony extends ModuleCore {
     @Override
     public void init() {
+        ShaderLoader.BasePath = "shaders/postprocessing/";
+
+        try {
+            resourceLoader = new ResourceLoader(
+                    FileLocation.INTERNAL,
+                    FileLocation.INTERNAL.getFile("resources.xml")
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         addModule(logic = new Logic());
         addModule(world = new World());
         addModule(control = new Control());
@@ -25,16 +36,6 @@ public class Colony extends ModuleCore {
 
         tweenManager = new TweenManager();
         Accessors.register();
-        ShaderLoader.BasePath = "shader/postprocessing/";
-
-        try {
-            resourceLoader = new ResourceLoader(
-                FileLocation.INTERNAL,
-                FileLocation.INTERNAL.getFile("resources.xml")
-            );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

@@ -1,11 +1,10 @@
 package net.lapidist.colony.core;
 
-import net.lapidist.colony.event.EventType.WorldInitEvent;
-import net.lapidist.colony.event.EventType.TickEvent;
-import net.lapidist.colony.event.Events;
-import net.lapidist.colony.module.Module;
+import net.lapidist.colony.events.EventType.*;
+import net.lapidist.colony.events.Events;
+import net.lapidist.colony.modules.Module;
 
-import static net.lapidist.colony.Constants.state;
+import static net.lapidist.colony.Constants.*;
 
 public class Logic extends Module {
 
@@ -13,25 +12,25 @@ public class Logic extends Module {
 
     public Logic() {
         state = new GameState();
-
-        Events.on(WorldInitEvent.class, worldInitEvent -> {
-            System.out.println("World Initialized");
-        });
     }
 
     @Override
     public void init() {
+        Events.on(WorldInitEvent.class, worldInitEvent -> {
+            System.out.println("World Initialized");
+        });
+
+        play();
     }
 
     @Override
     public void update() {
-        Events.fire(new TickEvent());
+        if (doUpdate) {
+            Events.fire(new TickEvent());
+        }
     }
 
     public void play() {
         state.set(GameState.State.PLAYING);
-    }
-
-    public void reset() {
     }
 }
