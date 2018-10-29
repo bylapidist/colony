@@ -15,19 +15,20 @@ import net.lapidist.colony.core.Core;
 import net.lapidist.colony.core.Graphics;
 import net.lapidist.colony.resources.IResource;
 
+import static net.lapidist.colony.Constants.*;
 import static net.lapidist.colony.ComponentMappers.*;
 
 public class DebugRenderingSystem extends IteratingSystem {
 
     private Array<Entity> renderQueue;
-    private BitmapFont font;
     private OrthographicCamera camera;
+    private BitmapFont font;
 
     public DebugRenderingSystem() {
         super(Family.all(TileComponent.class).get());
 
         renderQueue = new Array<>();
-        font = new BitmapFont();
+        font = resourceLoader.getFont("default");
         camera = new OrthographicCamera(Graphics.width(), Graphics.height());
     }
 
