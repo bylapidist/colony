@@ -1,19 +1,21 @@
 package net.lapidist.colony.modules;
 
-import net.lapidist.colony.core.Core;
-import net.lapidist.colony.scenes.Scene;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class SceneModule extends Module {
 
-    public Scene scene;
+    protected Stage stage;
 
-    public SceneModule() {
-        scene = new Scene(Core.spriteBatch);
+    protected SceneModule() {
+        stage = new Stage(new ScreenViewport());
+        Gdx.input.setInputProcessor(stage);
     }
 
-    public void act() {
-        scene.act();
-        scene.draw();
+    private void act() {
+        stage.act();
+        stage.draw();
     }
 
     @Override
@@ -23,6 +25,6 @@ public class SceneModule extends Module {
 
     @Override
     public void resize(int width, int height) {
-        scene.resize(width, height);
+        stage.getViewport().update(width, height, true);
     }
 }

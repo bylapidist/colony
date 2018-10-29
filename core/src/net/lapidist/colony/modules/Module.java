@@ -2,7 +2,7 @@ package net.lapidist.colony.modules;
 
 import com.badlogic.gdx.InputAdapter;
 
-public class Module extends InputAdapter {
+public abstract class Module extends InputAdapter {
     public void update(){
     }
 

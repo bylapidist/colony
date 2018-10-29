@@ -20,7 +20,7 @@
     </shaders>
 
     <skins>
-        <skin name="default" file="ui/uiskin.json" />
+        <skin name="default" />
     </skins>
 
     <fonts>

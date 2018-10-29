@@ -189,10 +189,12 @@ public class ResourceLoader implements Disposable {
     }
 
     private void readSkinTag(XmlReader.Element skin) throws RuntimeException {
-        if (!skin.getAttributes().containsKey("file") || !skin.getAttributes().containsKey("name"))
-            throw new RuntimeException("need file=\"...\" and name=\"...\" properties");
+        if (!skin.getAttributes().containsKey("name"))
+            throw new RuntimeException("need name=\"...\" property");
 
-        skins.put(skin.get("name"), new Skin(fileLocation.getFile(skin.get("file"))));
+        Skin parsedSkin = new Skin(fileLocation.getFile("skin/" + skin.get("name") + ".json"));
+
+        skins.put(skin.get("name"), parsedSkin);
     }
 
     private void readSoundsTag(XmlReader.Element sounds) throws RuntimeException {
