@@ -4,10 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.XmlReader;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.*;
 import net.lapidist.colony.utils.SpriteAnimation;
 import net.lapidist.colony.utils.XmlUtils;
 
@@ -21,6 +21,8 @@ public class ResourceLoader implements Disposable {
     private final ObjectMap<String, SpriteAnimation> animations;
     private final ObjectMap<String, Sound> sounds;
     private final ObjectMap<String, String> shaders;
+    private final ObjectMap<String, BitmapFont> fonts;
+    private final ObjectMap<String, Skin> skins;
     private final FileLocation fileLocation;
 
     public ResourceLoader(FileLocation fileLocation, FileHandle resourceXml) throws IOException {
@@ -30,6 +32,8 @@ public class ResourceLoader implements Disposable {
         animations = new ObjectMap<>();
         sounds = new ObjectMap<>();
         shaders = new ObjectMap<>();
+        fonts = new ObjectMap<>();
+        skins = new ObjectMap<>();
 
         XmlReader.Element resources = new XmlReader().parse(resourceXml);
         readResourcesTag(resources);
@@ -51,6 +55,14 @@ public class ResourceLoader implements Disposable {
         return shaders.get(name);
     }
 
+    public BitmapFont getFont(String name) {
+        return fonts.get(name);
+    }
+
+    public Skin getSkin(String name) {
+        return skins.get(name);
+    }
+
     public FileLocation getFileLocation() {
         return fileLocation;
     }
@@ -69,8 +81,14 @@ public class ResourceLoader implements Disposable {
                 case "shaders":
                     readShadersTag(child);
                     break;
+                case "fonts":
+                    readFontsTag(child);
+                    break;
+                case "skins":
+                    readSkinsTag(child);
+                    break;
                 default:
-                    throw new RuntimeException("Expected <images> tag.");
+                    throw new RuntimeException("Missing resource tag.");
             }
         }
     }
@@ -131,8 +149,50 @@ public class ResourceLoader implements Disposable {
             throw new RuntimeException("need file=\"...\" and name=\"...\" properties");
 
         String shaderString = fileLocation.getFile(shader.get("file")).readString();
-
         shaders.put(shader.get("name"), shaderString);
+    }
+
+    private void readFontsTag(XmlReader.Element fonts) throws RuntimeException {
+        for (int i = 0; i < fonts.getChildCount(); i++) {
+            XmlReader.Element child = fonts.getChild(i);
+
+            switch (child.getName()) {
+                case "font":
+                    readFontTag(child);
+                    break;
+                default:
+                    throw new RuntimeException("Expected <font> tag.");
+            }
+        }
+    }
+
+    private void readFontTag(XmlReader.Element font) {
+        if (!font.getAttributes().containsKey("file") || !font.getAttributes().containsKey("name"))
+            throw new RuntimeException("need file=\"...\" and name=\"...\" properties");
+
+        BitmapFont bitmapFont = new BitmapFont(fileLocation.getFile(font.get("file")));
+        fonts.put(font.get("name"), bitmapFont);
+    }
+
+    private void readSkinsTag(XmlReader.Element skins) throws RuntimeException {
+        for (int i = 0; i < skins.getChildCount(); i++) {
+            XmlReader.Element child = skins.getChild(i);
+
+            switch (child.getName()) {
+                case "skin":
+                    readSkinTag(child);
+                    break;
+                default:
+                    throw new RuntimeException("Expected <skin> tag.");
+            }
+        }
+    }
+
+    private void readSkinTag(XmlReader.Element skin) throws RuntimeException {
+        if (!skin.getAttributes().containsKey("file") || !skin.getAttributes().containsKey("name"))
+            throw new RuntimeException("need file=\"...\" and name=\"...\" properties");
+
+        skins.put(skin.get("name"), new Skin(fileLocation.getFile(skin.get("file"))));
     }
 
     private void readSoundsTag(XmlReader.Element sounds) throws RuntimeException {
@@ -188,6 +248,14 @@ public class ResourceLoader implements Disposable {
             }
 
             for (ObjectMap.Entry<String, Sound> entry : sounds.entries()) {
+                entry.value.dispose();
+            }
+
+            for (ObjectMap.Entry<String, BitmapFont> entry : fonts.entries()) {
+                entry.value.dispose();
+            }
+
+            for (ObjectMap.Entry<String, Skin> entry : skins.entries()) {
                 entry.value.dispose();
             }
         }
