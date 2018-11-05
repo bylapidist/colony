@@ -18,8 +18,6 @@ public interface IHexagon<T extends ISatelliteData> {
 
     Rectangle getInternalBoundingBox();
 
-    Rectangle getCameraBoundingBox();
-
     CubeCoordinate getCubeCoordinate();
 
     int getGridX();
