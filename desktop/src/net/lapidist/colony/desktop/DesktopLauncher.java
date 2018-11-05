@@ -2,8 +2,8 @@ package net.lapidist.colony.desktop;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import net.lapidist.colony.Colony;
-import net.lapidist.colony.Constants;
+import net.lapidist.colony.core.Colony;
+import net.lapidist.colony.core.Constants;
 
 public class DesktopLauncher {
     public static void main(String[] arg) {
