@@ -1,5 +1,28 @@
+<a name="2.0.0"></a>
+# [2.0.0](https://bitbucket.org/lapidist/spacecolony/compare/v1.2.0...v2.0.0) (2018-11-05)
+
+
+### Features
+
+* **engine:** Implement BitmapFont and Skin loading ([d8f8419](https://bitbucket.org/lapidist/spacecolony/commits/d8f8419))
+
+
+
 <a name="1.2.0"></a>
 # [1.2.0](https://bitbucket.org/lapidist/spacecolony/compare/v1.1.0...v1.2.0) (2018-10-28)
+
+
+### Bug Fixes
+
+* **engine:** Race condition when loading resources before game engine elements ([dbf33d8](https://bitbucket.org/lapidist/spacecolony/commits/dbf33d8))
+* Merge conflict ([28121e2](https://bitbucket.org/lapidist/spacecolony/commits/28121e2))
+
+
+### Features
+
+* **engine:** Implement EventQueue ([5a26bc9](https://bitbucket.org/lapidist/spacecolony/commits/5a26bc9))
+* **engine:** Implement PlayerSystem ([d2fb128](https://bitbucket.org/lapidist/spacecolony/commits/d2fb128))
+* **engine:** WIP SunShader ([1484cef](https://bitbucket.org/lapidist/spacecolony/commits/1484cef))
 
 
 
