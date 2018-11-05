@@ -1,6 +1,5 @@
 package net.lapidist.colony.core.core;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import net.lapidist.colony.core.modules.SceneModule;
 
@@ -13,7 +12,6 @@ public class UI extends SceneModule {
 
     public UI() {
         skin = resourceLoader.getSkin("default");
-        Gdx.input.setInputProcessor(stage);
 
         Label label = new Label("Turn", skin);
         TextField textField = new TextField("", skin);

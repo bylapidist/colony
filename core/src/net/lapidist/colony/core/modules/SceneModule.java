@@ -1,9 +1,9 @@
 package net.lapidist.colony.core.modules;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import net.lapidist.colony.common.modules.Module;
+import net.lapidist.colony.core.input.InputManager;
 
 public class SceneModule extends Module {
 
@@ -11,7 +11,7 @@ public class SceneModule extends Module {
 
     protected SceneModule() {
         stage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(stage);
+        InputManager.add(stage);
     }
 
     private void act() {

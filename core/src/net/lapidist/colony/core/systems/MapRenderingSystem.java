@@ -20,6 +20,7 @@ import net.lapidist.colony.core.components.TileComponent;
 import net.lapidist.colony.core.core.Camera;
 import net.lapidist.colony.core.core.Core;
 import net.lapidist.colony.core.core.Graphics;
+import net.lapidist.colony.core.input.InputManager;
 import net.lapidist.colony.core.input.MapInputController;
 
 public class MapRenderingSystem extends IteratingSystem {
@@ -35,13 +36,12 @@ public class MapRenderingSystem extends IteratingSystem {
         renderQueue = new Array<>();
         inputController = new MapInputController(this);
         environment = new Environment();
+        InputManager.add(inputController);
 
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, Constants.PPM, Constants.PPM, -Constants.PPM));
 
         TextureRegion selectedTexture = Constants.resourceLoader.getRegion("selected");
         selectedDecal = Decal.newDecal(selectedTexture, true);
-
-        Gdx.input.setInputProcessor(inputController);
 
         MotionBlur motionBlur = new MotionBlur();
         Fxaa fxaa = new Fxaa(Graphics.width(), Graphics.height());
