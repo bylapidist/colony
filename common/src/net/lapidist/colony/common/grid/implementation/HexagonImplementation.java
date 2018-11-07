@@ -8,11 +8,11 @@ import net.lapidist.colony.common.grid.hex.HexagonOrientation;
 import net.lapidist.colony.common.grid.hex.IHexagon;
 import net.lapidist.colony.common.grid.hex.ISatelliteData;
 import net.lapidist.colony.common.grid.storage.IHexagonDataStorage;
-import net.lapidist.colony.common.utils.Optional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;

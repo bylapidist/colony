@@ -31,7 +31,8 @@ import net.lapidist.colony.core.systems.DebugRenderingSystem;
 import net.lapidist.colony.core.systems.MapRenderingSystem;
 import net.lapidist.colony.core.systems.PlayerSystem;
 import net.lapidist.colony.core.systems.RenderingSystem;
-import net.lapidist.colony.common.utils.Optional;
+
+import java.util.Optional;
 
 import static net.lapidist.colony.core.Constants.*;
 

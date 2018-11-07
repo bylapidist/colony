@@ -2,9 +2,9 @@ package net.lapidist.colony.common.grid.hex;
 
 import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.common.grid.GridData;
-import net.lapidist.colony.common.utils.Optional;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface IHexagonalGrid<T extends ISatelliteData> {
 
