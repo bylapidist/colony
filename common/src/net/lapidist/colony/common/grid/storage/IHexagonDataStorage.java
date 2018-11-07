@@ -2,7 +2,8 @@ package net.lapidist.colony.common.grid.storage;
 
 import net.lapidist.colony.common.grid.hex.CubeCoordinate;
 import net.lapidist.colony.common.grid.hex.ISatelliteData;
-import net.lapidist.colony.common.utils.Optional;
+
+import java.util.Optional;
 
 public interface IHexagonDataStorage<T extends ISatelliteData> {
 

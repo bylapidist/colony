@@ -1,10 +1,10 @@
 package net.lapidist.colony.common.grid.storage;
 
 import net.lapidist.colony.common.grid.hex.CubeCoordinate;
-import net.lapidist.colony.common.utils.Optional;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class HexagonDataStorage implements IHexagonDataStorage<SatelliteDataStorage> {
 
