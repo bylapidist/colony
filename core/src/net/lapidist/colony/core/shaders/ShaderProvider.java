@@ -8,8 +8,9 @@ public class ShaderProvider extends DefaultShaderProvider {
 
     @Override
     protected Shader createShader(Renderable renderable) {
-        return new SunShader(renderable);
+        if (renderable.userData == Attributes.SunAttribute.Alias)
+            return new SunShader();
 
-//        return super.createShader(renderable);
+        return super.createShader(renderable);
     }
 }

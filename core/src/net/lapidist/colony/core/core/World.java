@@ -31,6 +31,7 @@ import net.lapidist.colony.core.systems.DebugRenderingSystem;
 import net.lapidist.colony.core.systems.MapRenderingSystem;
 import net.lapidist.colony.core.systems.PlayerSystem;
 import net.lapidist.colony.core.systems.RenderingSystem;
+import net.lapidist.colony.shaders.Attributes;
 
 import java.util.Optional;
 
@@ -173,10 +174,11 @@ public class World extends Module {
         modelC.model = modelBuilder.createSphere(
             PPM * 4, PPM * 4, PPM * 4, 16, 16,
             new Material(ColorAttribute.createDiffuse(Color.GOLD)),
-            VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal
+            VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates
         );
         modelC.instance = new ModelInstance(modelC.model);
         modelC.instance.transform.setTranslation(position);
+        modelC.instance.userData = Attributes.SunAttribute.Alias;
 
         resourceC.addResource(new EnergyResource(5f));
         resourceC.addResource(new FoodResource(0f));
