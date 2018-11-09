@@ -24,18 +24,18 @@ public class Colony extends ModuleCore {
                     FileLocation.INTERNAL,
                     FileLocation.INTERNAL.getFile("resources.xml")
             );
+
+            addModule(logic = new Logic());
+            addModule(world = new World());
+            addModule(control = new Control());
+            addModule(renderer = new Renderer());
+            addModule(ui = new UI());
+
+            tweenManager = new TweenManager();
+            Accessors.register();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        addModule(logic = new Logic());
-        addModule(world = new World());
-        addModule(control = new Control());
-        addModule(renderer = new Renderer());
-        addModule(ui = new UI());
-
-        tweenManager = new TweenManager();
-        Accessors.register();
     }
 
     @Override
