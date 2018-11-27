@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
 import com.bitfire.postprocessing.effects.Fxaa;
 import com.bitfire.postprocessing.effects.MotionBlur;
 import net.lapidist.colony.core.ComponentMappers;
@@ -28,6 +29,7 @@ public class MapRenderingSystem extends IteratingSystem {
     private Array<Entity> renderQueue;
     private MapInputController inputController;
     private Decal selectedDecal;
+    private Decal spaceDecal;
     private Environment environment;
 
     public MapRenderingSystem() {
@@ -43,8 +45,13 @@ public class MapRenderingSystem extends IteratingSystem {
         TextureRegion selectedTexture = Constants.resourceLoader.getRegion("selected");
         selectedDecal = Decal.newDecal(selectedTexture, true);
 
+        TextureRegion spaceTexture = Constants.resourceLoader.getRegion("space");
+        spaceDecal = Decal.newDecal(spaceTexture, true);
+
         MotionBlur motionBlur = new MotionBlur();
         Fxaa fxaa = new Fxaa(Graphics.width(), Graphics.height());
+
+        motionBlur.setBlurOpacity(0.2f);
 
         Core.postProcessor.addEffect(motionBlur);
         Core.postProcessor.addEffect(fxaa);
@@ -88,11 +95,7 @@ public class MapRenderingSystem extends IteratingSystem {
                 || screenCoords.y > Graphics.height() + Constants.PPM
             ) continue;
 
-            if (decalC != null) {
-                Graphics.add(decalC.decal);
-            }
-
-            if (tileC.hovered || tileC.active) {
+            if (tileC.active) {
                 selectedDecal.setPosition(
                     tileC.bounds.getBoundingRectangle().x,
                     tileC.bounds.getBoundingRectangle().y,
@@ -103,6 +106,21 @@ public class MapRenderingSystem extends IteratingSystem {
                     tileC.bounds.getBoundingRectangle().getHeight()
                 );
                 Graphics.add(selectedDecal);
+            } else if (tileC.hovered) {
+                spaceDecal.setPosition(
+                        tileC.bounds.getBoundingRectangle().x,
+                        tileC.bounds.getBoundingRectangle().y,
+                        0f
+                );
+                spaceDecal.setDimensions(
+                        tileC.bounds.getBoundingRectangle().getWidth(),
+                        tileC.bounds.getBoundingRectangle().getHeight()
+                );
+                Graphics.add(spaceDecal);
+            }
+
+            if (decalC != null) {
+//                Graphics.add(decalC.decal);
             }
 
             Graphics.flush();
