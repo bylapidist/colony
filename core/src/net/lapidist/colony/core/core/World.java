@@ -27,11 +27,11 @@ import net.lapidist.colony.common.grid.hex.HexagonOrientation;
 import net.lapidist.colony.common.grid.hex.IHexagon;
 import net.lapidist.colony.common.grid.hex.IHexagonalGrid;
 import net.lapidist.colony.common.modules.Module;
+import net.lapidist.colony.core.shaders.Attributes;
 import net.lapidist.colony.core.systems.DebugRenderingSystem;
 import net.lapidist.colony.core.systems.MapRenderingSystem;
 import net.lapidist.colony.core.systems.PlayerSystem;
 import net.lapidist.colony.core.systems.RenderingSystem;
-import net.lapidist.colony.shaders.Attributes;
 
 import java.util.Optional;
 
