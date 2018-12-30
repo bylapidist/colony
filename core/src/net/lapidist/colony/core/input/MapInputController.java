@@ -104,8 +104,8 @@ public class MapInputController implements InputProcessor {
                 Ray ray = Core.camera.getPickRay(screenX, screenY);
 
                 Vector3 center = new Vector3(
-                    tileC.bounds.getBoundingRectangle().x,
-                    tileC.bounds.getBoundingRectangle().y,
+                    tileC.tile.getBoundingBox().x,
+                    tileC.tile.getBoundingBox().y,
                     0
                 );
 
@@ -140,8 +140,8 @@ public class MapInputController implements InputProcessor {
             Ray ray = Core.camera.getPickRay(screenX, screenY);
 
             Vector3 center = new Vector3(
-                tileC.bounds.getBoundingRectangle().x,
-                tileC.bounds.getBoundingRectangle().y,
+                tileC.tile.getBoundingBox().x,
+                tileC.tile.getBoundingBox().y,
                 0
             );
 

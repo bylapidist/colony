@@ -18,7 +18,7 @@ public class Control extends Module {
 
         Events.on(EventType.TileClickEvent.class, event -> {
             Core.camera.tweenToTile(event.tile);
-            System.out.println("Clicked " + event.tile.hex.getId());
+            System.out.println("Clicked " + event.tile.tile.getId());
         });
     }
 
