@@ -58,7 +58,7 @@ public class DebugRenderingSystem extends IteratingSystem {
 
                     int i = 0;
                     for (IResource resource : resourceC.getResources()) {
-                        Vector2 screenCoords = Camera.screenCoords(tileC.bounds.getBoundingRectangle().x, tileC.bounds.getBoundingRectangle().y);
+                        Vector2 screenCoords = Camera.screenCoords(tileC.tile.getBoundingBox().x, tileC.tile.getBoundingBox().y);
 
 //                        font.draw(
 //                            Core.spriteBatch,

@@ -3,7 +3,6 @@ package net.lapidist.colony.core.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
@@ -20,13 +19,13 @@ import net.lapidist.colony.core.components.TileComponent;
 import net.lapidist.colony.core.core.Camera;
 import net.lapidist.colony.core.core.Core;
 import net.lapidist.colony.core.core.Graphics;
+import net.lapidist.colony.core.input.InputManager;
 import net.lapidist.colony.core.input.MapInputController;
 
 public class MapRenderingSystem extends IteratingSystem {
 
     private Array<Entity> renderQueue;
     private MapInputController inputController;
-    private Decal selectedDecal;
     private Environment environment;
 
     public MapRenderingSystem() {
@@ -35,16 +34,14 @@ public class MapRenderingSystem extends IteratingSystem {
         renderQueue = new Array<>();
         inputController = new MapInputController(this);
         environment = new Environment();
+        InputManager.add(inputController);
 
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, Constants.PPM, Constants.PPM, -Constants.PPM));
 
-        TextureRegion selectedTexture = Constants.resourceLoader.getRegion("selected");
-        selectedDecal = Decal.newDecal(selectedTexture, true);
-
-        Gdx.input.setInputProcessor(inputController);
-
         MotionBlur motionBlur = new MotionBlur();
         Fxaa fxaa = new Fxaa(Graphics.width(), Graphics.height());
+
+        motionBlur.setBlurOpacity(0.2f);
 
         Core.postProcessor.addEffect(motionBlur);
         Core.postProcessor.addEffect(fxaa);
@@ -77,8 +74,8 @@ public class MapRenderingSystem extends IteratingSystem {
             if (tileC != inputController.getHoveredTile() && tileC.hovered) tileC.hovered = false;
 
             Vector2 screenCoords = Camera.screenCoords(
-                tileC.bounds.getBoundingRectangle().x,
-                tileC.bounds.getBoundingRectangle().y
+                tileC.tile.getBoundingBox().x,
+                tileC.tile.getBoundingBox().y
             );
 
             if (
@@ -90,19 +87,6 @@ public class MapRenderingSystem extends IteratingSystem {
 
             if (decalC != null) {
                 Graphics.add(decalC.decal);
-            }
-
-            if (tileC.hovered || tileC.active) {
-                selectedDecal.setPosition(
-                    tileC.bounds.getBoundingRectangle().x,
-                    tileC.bounds.getBoundingRectangle().y,
-                    0f
-                );
-                selectedDecal.setDimensions(
-                    tileC.bounds.getBoundingRectangle().getWidth(),
-                    tileC.bounds.getBoundingRectangle().getHeight()
-                );
-                Graphics.add(selectedDecal);
             }
 
             Graphics.flush();

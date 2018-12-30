@@ -1,13 +1,11 @@
 package net.lapidist.colony.core.components;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.gdx.math.Polygon;
-import net.lapidist.colony.common.grid.hex.IHexagon;
+import net.lapidist.colony.common.map.tile.ITile;
 
 public class TileComponent implements Component {
 
-    public IHexagon hex;
-    public Polygon bounds;
+    public ITile tile;
     public boolean active;
     public boolean hovered;
 }

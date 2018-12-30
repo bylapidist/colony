@@ -4,10 +4,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public final class XmlUtils {
-    public XmlUtils() {
-        new XmlUtils();
-    }
-
     public static TextureRegion getTexReg(Texture tex, String str) {
         try {
             String[] strs = str.split("\\s");

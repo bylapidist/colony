@@ -2,9 +2,9 @@ package net.lapidist.colony.common.grid.hex;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import net.lapidist.colony.common.utils.Optional;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IHexagon<T extends ISatelliteData> {
 
@@ -17,8 +17,6 @@ public interface IHexagon<T extends ISatelliteData> {
     Rectangle getExternalBoundingBox();
 
     Rectangle getInternalBoundingBox();
-
-    Rectangle getCameraBoundingBox();
 
     CubeCoordinate getCubeCoordinate();
 

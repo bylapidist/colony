@@ -9,7 +9,6 @@ import net.lapidist.colony.common.grid.hex.CubeCoordinate;
 import net.lapidist.colony.common.grid.hex.IHexagon;
 import net.lapidist.colony.common.grid.hex.IHexagonalGrid;
 import net.lapidist.colony.common.grid.hex.ISatelliteData;
-import net.lapidist.colony.common.utils.Optional;
 
 import java.util.*;
 
@@ -135,7 +134,7 @@ public final class GridImplementation<T extends ISatelliteData> implements IHexa
 
     @Override
     public boolean containsCubeCoordinate(CubeCoordinate coordinate) {
-        return this.hexagonDataStorage.containsCoordinate(coordinate);
+        return hexagonDataStorage.containsCoordinate(coordinate);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import net.lapidist.colony.core.events.EventType;
 import net.lapidist.colony.common.events.Events;
 import net.lapidist.colony.common.modules.Module;
+import net.lapidist.colony.core.input.InputManager;
 
 public class Control extends Module {
 
@@ -17,7 +18,7 @@ public class Control extends Module {
 
         Events.on(EventType.TileClickEvent.class, event -> {
             Core.camera.tweenToTile(event.tile);
-            System.out.println("Clicked " + event.tile.hex.getId());
+            System.out.println("Clicked " + event.tile.tile.getId());
         });
     }
 
@@ -39,5 +40,7 @@ public class Control extends Module {
     @Override
     public void update() {
         super.update();
+
+        Gdx.input.setInputProcessor(InputManager.getMultiplexer());
     }
 }

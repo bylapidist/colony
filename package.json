@@ -8,10 +8,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/lapidist/spacecolony.git"
+    "url": "git+ssh://git@gitlab.com/getbrett/colony.git"
   },
   "author": "Brett Dorrans",
-  "homepage": "https://bitbucket.org/lapidist/spacecolony#readme",
+  "homepage": "https://gitlab.com/getbrett/colony#readme",
   "devDependencies": {
     "conventional-changelog-cli": "^2.0.5"
   }

@@ -2,18 +2,17 @@ package net.lapidist.colony.common.grid.implementation;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import net.lapidist.colony.core.core.Camera;
 import net.lapidist.colony.common.grid.GridData;
 import net.lapidist.colony.common.grid.hex.CubeCoordinate;
 import net.lapidist.colony.common.grid.hex.HexagonOrientation;
 import net.lapidist.colony.common.grid.hex.IHexagon;
 import net.lapidist.colony.common.grid.hex.ISatelliteData;
 import net.lapidist.colony.common.grid.storage.IHexagonDataStorage;
-import net.lapidist.colony.common.utils.Optional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
@@ -25,7 +24,6 @@ public class HexagonImplementation<T extends ISatelliteData> implements IHexagon
     private final transient List<Vector2> points;
     private final transient Rectangle externalBoundingBox;
     private final transient Rectangle internalBoundingBox;
-    private final transient Rectangle cameraBoundingBox;
     private final transient GridData sharedData;
     private final transient IHexagonDataStorage<T> hexagonDataStorage;
 
@@ -44,8 +42,6 @@ public class HexagonImplementation<T extends ISatelliteData> implements IHexagon
         final float y1 = points.get(2).y;
         final float x2 = points.get(0).x;
         final float y2 = points.get(5).y;
-        final Vector2 camera1 = Camera.screenCoords(x1, y1);
-        final Vector2 camera2 = Camera.screenCoords(x2, y2);
 
         this.externalBoundingBox = new Rectangle(x1, y1, x2 - x1, y2 - y1);
         this.internalBoundingBox = new Rectangle(
@@ -54,7 +50,6 @@ public class HexagonImplementation<T extends ISatelliteData> implements IHexagon
             1.25f * sharedData.getRadius(),
             1.25f * sharedData.getRadius()
         );
-        this.cameraBoundingBox = new Rectangle(camera1.x, camera1.y, camera2.x - camera1.x, camera2.y - camera1.x);
 
         for (Vector2 point : points) {
             vertices.add(point.x);
@@ -106,11 +101,6 @@ public class HexagonImplementation<T extends ISatelliteData> implements IHexagon
     @Override
     public Rectangle getInternalBoundingBox() {
         return internalBoundingBox;
-    }
-
-    @Override
-    public Rectangle getCameraBoundingBox() {
-        return cameraBoundingBox;
     }
 
     @Override
