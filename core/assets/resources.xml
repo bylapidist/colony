@@ -2,7 +2,7 @@
 <resources>
     <images>
         <image file="sprites/space.png">
-            <region name="space" bounds="0 0 256 295" />
+            <region name="space" bounds="0 0 256 256" />
         </image>
 
         <image file="sprites/selected.png">

@@ -134,7 +134,7 @@ public final class GridImplementation<T extends ISatelliteData> implements IHexa
 
     @Override
     public boolean containsCubeCoordinate(CubeCoordinate coordinate) {
-        return this.hexagonDataStorage.containsCoordinate(coordinate);
+        return hexagonDataStorage.containsCoordinate(coordinate);
     }
 
     @Override

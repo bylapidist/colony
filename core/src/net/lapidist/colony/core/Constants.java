@@ -11,7 +11,7 @@ public class Constants {
     public static final boolean DEBUG = true;
     public static final int WIDTH = 1920;
     public static final int HEIGHT = 1280;
-    public static final float PPM = 147.5f; // Pixels per meter
+    public static final int PPM = 256; // Pixels per meter
 
     public static GameState state;
     public static ResourceLoader resourceLoader;

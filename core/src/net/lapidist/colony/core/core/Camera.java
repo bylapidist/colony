@@ -67,8 +67,8 @@ public class Camera extends PerspectiveCamera {
 
     public void tweenToTile(TileComponent tile, float duration) {
         Vector2 position = new Vector2(
-            tile.hex.getExternalBoundingBox().getX(),
-            tile.hex.getExternalBoundingBox().getY() - PPM * 3f
+            tile.tile.getBoundingBox().getX(),
+            tile.tile.getBoundingBox().getY() - PPM * 3f
         );
 
         Tween.to(this, CameraAccessor.POSITION_XY, duration)

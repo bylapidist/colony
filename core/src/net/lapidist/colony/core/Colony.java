@@ -21,8 +21,8 @@ public class Colony extends ModuleCore {
 
         try {
             resourceLoader = new ResourceLoader(
-                    FileLocation.INTERNAL,
-                    FileLocation.INTERNAL.getFile("resources.xml")
+                FileLocation.INTERNAL,
+                FileLocation.INTERNAL.getFile("resources.xml")
             );
 
             addModule(logic = new Logic());
