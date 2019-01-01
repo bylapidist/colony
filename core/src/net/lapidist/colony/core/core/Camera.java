@@ -46,7 +46,7 @@ public class Camera extends PerspectiveCamera {
         this.lookAt(0, 0, 0);
         this.state = state;
         this.near = 1f;
-        this.far = 8000f;
+        this.far = 2 * Graphics.width();
     }
 
     public void setState(CameraState state) {

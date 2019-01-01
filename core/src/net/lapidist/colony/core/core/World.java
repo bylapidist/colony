@@ -3,13 +3,22 @@ package net.lapidist.colony.core.core;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.DepthTestAttribute;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
+import com.badlogic.gdx.math.Vector3;
 import net.lapidist.colony.common.map.MapBuilder;
 import net.lapidist.colony.common.map.MapLayout;
 import net.lapidist.colony.common.map.tile.ITile;
 import net.lapidist.colony.common.map.tile.ITileGrid;
 import net.lapidist.colony.core.components.DecalComponent;
+import net.lapidist.colony.core.components.ModelComponent;
 import net.lapidist.colony.core.components.TileComponent;
 import net.lapidist.colony.core.events.EventType.WorldInitEvent;
 import net.lapidist.colony.common.events.Events;
@@ -64,8 +73,10 @@ public class World extends Module {
 
         tiles.forEach(tile -> {
             Entity tileEntity = createTile(tile);
+            Entity cubeEntity = createCube(tile);
 
             engine.addEntity(tileEntity);
+            engine.addEntity(cubeEntity);
         });
     }
 
@@ -81,7 +92,7 @@ public class World extends Module {
         decalC.decal.setPosition(
             tile.getBoundingBox().x,
             tile.getBoundingBox().y,
-            0f
+            -PPM / 2f
         );
         decalC.decal.setDimensions(
             tile.getBoundingBox().getWidth(),
@@ -90,6 +101,32 @@ public class World extends Module {
 
         entity.add(tileC);
         entity.add(decalC);
+
+        return entity;
+    }
+
+    private Entity createCube(ITile tile) {
+        Entity entity = engine.createEntity();
+        Model model = resourceLoader.getModel("cube");
+
+        ModelComponent modelC = engine.createComponent(ModelComponent.class);
+        TileComponent tileC = engine.createComponent(TileComponent.class);
+
+        Material material = new Material();
+        material.set(
+            new BlendingAttribute(true, 1.0f),
+            new ColorAttribute(ColorAttribute.Diffuse, 0, 1, 0, 1f),
+            new DepthTestAttribute(GL20.GL_LEQUAL, 1f, 8000f, true)
+        );
+
+        tileC.tile = tile;
+        modelC.instance = new ModelInstance(model, new Vector3(tile.getBoundingBox().x, tile.getBoundingBox().y, 0));
+
+        modelC.instance.materials.get(0).set(material);
+        modelC.instance.transform.scl(PPM / 2f);
+
+        entity.add(modelC);
+        entity.add(tileC);
 
         return entity;
     }

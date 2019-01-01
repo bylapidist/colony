@@ -24,7 +24,7 @@ public class Renderer extends RendererModule {
         Core.decalBatch = new DecalBatch(new CameraGroupStrategy(Core.camera));
         Core.spriteBatch = new SpriteBatch();
         Core.shapeBatch = new ShapeRenderer();
-        Core.modelBatch = new ModelBatch(new ShaderProvider());
+        Core.modelBatch = new ModelBatch(new ShaderProvider(), new RenderableSorter());
         Core.postProcessor = new PostProcessor(false, false, true);
     }
 

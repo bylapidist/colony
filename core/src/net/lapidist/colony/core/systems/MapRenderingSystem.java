@@ -3,9 +3,8 @@ package net.lapidist.colony.core.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.decals.Decal;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -36,6 +35,7 @@ public class MapRenderingSystem extends IteratingSystem {
         environment = new Environment();
         InputManager.add(inputController);
 
+        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 0.5f));
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, Constants.PPM, Constants.PPM, -Constants.PPM));
 
         MotionBlur motionBlur = new MotionBlur();
@@ -86,7 +86,7 @@ public class MapRenderingSystem extends IteratingSystem {
             ) continue;
 
             if (decalC != null) {
-                Graphics.add(decalC.decal);
+//                Graphics.add(decalC.decal);
             }
 
             Graphics.flush();

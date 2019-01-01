@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.*;
@@ -27,7 +26,7 @@ public class ResourceLoader implements Disposable {
     private final ObjectMap<String, String> shaders;
     private final ObjectMap<String, BitmapFont> fonts;
     private final ObjectMap<String, Skin> skins;
-    private final ObjectMap<String, ModelInstance> models;
+    private final ObjectMap<String, Model> models;
     private final FileLocation fileLocation;
 
     public ResourceLoader(FileLocation fileLocation, FileHandle resourceXml) throws IOException {
@@ -69,7 +68,7 @@ public class ResourceLoader implements Disposable {
         return skins.get(name);
     }
 
-    public ModelInstance getModel(String name) {
+    public Model getModel(String name) {
         return models.get(name);
     }
 
@@ -269,9 +268,8 @@ public class ResourceLoader implements Disposable {
 
         ModelLoader loader = new G3dModelLoader(new UBJsonReader());
         Model modelObj = loader.loadModel(fileLocation.getFile(model.get("file")));
-        ModelInstance modelInstance = new ModelInstance(modelObj);
 
-        models.put(model.get("name"), modelInstance);
+        models.put(model.get("name"), modelObj);
     }
 
     @Override
@@ -299,8 +297,8 @@ public class ResourceLoader implements Disposable {
                 entry.value.dispose();
             }
 
-            for (ObjectMap.Entry<String, ModelInstance> entry : models.entries()) {
-                entry.value = null;
+            for (ObjectMap.Entry<String, Model> entry : models.entries()) {
+                entry.value.dispose();
             }
         }
     }
