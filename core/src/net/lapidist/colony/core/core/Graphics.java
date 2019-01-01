@@ -16,9 +16,11 @@ public class Graphics {
     }
 
     public static void clear(Color color){
+        Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+        Gdx.gl.glDepthFunc(GL20.GL_LESS);
+        Gdx.gl.glDepthMask(true);
         Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-        Gdx.gl.glClear(GL20.GL_ALPHA_BITS);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_ALPHA_BITS);
     }
 
     public static void add(Decal decal) {

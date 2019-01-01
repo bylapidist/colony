@@ -34,7 +34,9 @@ public class Camera extends PerspectiveCamera {
         PANNING_S,
         PANNING_SW,
         PANNING_W,
-        PANNING_NW
+        PANNING_NW,
+        ROTATING_CLOCKWISE,
+        ROTATING_ANTICLOCKWISE
     }
 
     private CameraState state;
@@ -42,11 +44,11 @@ public class Camera extends PerspectiveCamera {
     public Camera(CameraState state) {
         super(67, Graphics.width(), Graphics.height());
 
-        this.position.set(0f, -400f, MIN_ZOOM * 2);
+        this.position.set(0, -400f, MIN_ZOOM * 2);
         this.lookAt(0, 0, 0);
         this.state = state;
         this.near = 1f;
-        this.far = 8000f;
+        this.far = 2 * Graphics.width();
     }
 
     public void setState(CameraState state) {
@@ -188,6 +190,18 @@ public class Camera extends PerspectiveCamera {
                             .target(this.position.z + ZOOM_SPEED)
                             .start(tweenManager);
                 }
+
+                setState(CameraState.STATIC);
+                break;
+            }
+
+            case ROTATING_CLOCKWISE: {
+
+                setState(CameraState.STATIC);
+                break;
+            }
+
+            case ROTATING_ANTICLOCKWISE: {
 
                 setState(CameraState.STATIC);
                 break;

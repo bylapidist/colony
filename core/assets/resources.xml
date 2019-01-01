@@ -26,4 +26,9 @@
     <fonts>
         <font name="default" file="fonts/default.fnt" />
     </fonts>
+
+    <models>
+        <model name="cube" file="models/cube.g3db" />
+        <model name="doublecube" file="models/doublecube.g3db" />
+    </models>
 </resources>
