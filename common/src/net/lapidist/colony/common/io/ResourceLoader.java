@@ -1,11 +1,15 @@
 package net.lapidist.colony.common.io;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.loaders.ModelLoader;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.*;
 import net.lapidist.colony.common.utils.XmlUtils;
@@ -23,6 +27,7 @@ public class ResourceLoader implements Disposable {
     private final ObjectMap<String, String> shaders;
     private final ObjectMap<String, BitmapFont> fonts;
     private final ObjectMap<String, Skin> skins;
+    private final ObjectMap<String, ModelInstance> models;
     private final FileLocation fileLocation;
 
     public ResourceLoader(FileLocation fileLocation, FileHandle resourceXml) throws IOException {
@@ -34,6 +39,7 @@ public class ResourceLoader implements Disposable {
         shaders = new ObjectMap<>();
         fonts = new ObjectMap<>();
         skins = new ObjectMap<>();
+        models = new ObjectMap<>();
 
         XmlReader.Element resources = new XmlReader().parse(resourceXml);
         readResourcesTag(resources);
@@ -63,6 +69,10 @@ public class ResourceLoader implements Disposable {
         return skins.get(name);
     }
 
+    public ModelInstance getModel(String name) {
+        return models.get(name);
+    }
+
     public FileLocation getFileLocation() {
         return fileLocation;
     }
@@ -86,6 +96,9 @@ public class ResourceLoader implements Disposable {
                     break;
                 case "skins":
                     readSkinsTag(child);
+                    break;
+                case "models":
+                    readModelsTag(child);
                     break;
                 default:
                     throw new RuntimeException("Missing resource tag.");
@@ -236,6 +249,31 @@ public class ResourceLoader implements Disposable {
         animations.put(animation.get("name"), new SpriteAnimation(texture, animation));
     }
 
+    private void readModelsTag(XmlReader.Element models) {
+        for (int i = 0; i < models.getChildCount(); i++) {
+            XmlReader.Element child = models.getChild(i);
+
+            switch (child.getName()) {
+                case "model":
+                    readModelTag(child);
+                    break;
+                default:
+                    throw new RuntimeException("Expected <model> tag.");
+            }
+        }
+    }
+
+    private void readModelTag(XmlReader.Element model) {
+        if (!model.getAttributes().containsKey("file") || !model.getAttributes().containsKey("name"))
+            throw new RuntimeException("need file=\"...\" and name=\"...\" properties");
+
+        ModelLoader loader = new G3dModelLoader(new UBJsonReader());
+        Model modelObj = loader.loadModel(fileLocation.getFile(model.get("file")));
+        ModelInstance modelInstance = new ModelInstance(modelObj);
+
+        models.put(model.get("name"), modelInstance);
+    }
+
     @Override
     public void dispose() {
         if (!disposed) {
@@ -259,6 +297,10 @@ public class ResourceLoader implements Disposable {
 
             for (ObjectMap.Entry<String, Skin> entry : skins.entries()) {
                 entry.value.dispose();
+            }
+
+            for (ObjectMap.Entry<String, ModelInstance> entry : models.entries()) {
+                entry.value = null;
             }
         }
     }
