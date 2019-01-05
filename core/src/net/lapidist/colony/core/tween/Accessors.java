@@ -1,7 +1,7 @@
 package net.lapidist.colony.core.tween;
 
 import aurelienribon.tweenengine.Tween;
-import com.bitfire.postprocessing.effects.Bloom;
+import net.lapidist.colony.common.postprocessing.effects.Bloom;
 import net.lapidist.colony.core.core.Camera;
 
 public class Accessors {

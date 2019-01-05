@@ -4,16 +4,18 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.IntSet;
+import net.lapidist.colony.common.events.Events;
 import net.lapidist.colony.core.ComponentMappers;
 import net.lapidist.colony.core.Constants;
+import net.lapidist.colony.core.components.SpriteComponent;
+import net.lapidist.colony.core.components.TileComponent;
 import net.lapidist.colony.core.core.Camera;
 import net.lapidist.colony.core.core.Core;
-import net.lapidist.colony.core.components.TileComponent;
 import net.lapidist.colony.core.events.EventType;
-import net.lapidist.colony.common.events.Events;
 import net.lapidist.colony.core.systems.MapRenderingSystem;
 
 public class MapInputController implements InputProcessor {
@@ -99,17 +101,13 @@ public class MapInputController implements InputProcessor {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (button == Input.Buttons.LEFT) {
+            downKeys.add(Input.Buttons.LEFT);
+
             for (Entity entity : renderingSystem.getRenderQueue()) {
                 TileComponent tileC = ComponentMappers.tiles.get(entity);
-                Ray ray = Core.camera.getPickRay(screenX, screenY);
+                SpriteComponent spriteC = ComponentMappers.sprites.get(entity);
 
-                Vector3 center = new Vector3(
-                    tileC.tile.getBoundingBox().x,
-                    tileC.tile.getBoundingBox().y,
-                    0
-                );
-
-                if (Intersector.intersectRaySphere(ray, center, Constants.PPM / 1.4f, null)) {
+                if (spriteC.sprite.getBoundingRectangle().contains(Camera.worldCoords(screenX, screenY))) {
                     Events.fire(new EventType.TileClickEvent(tileC));
 
                     if (!tileC.active) {
@@ -125,6 +123,10 @@ public class MapInputController implements InputProcessor {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if (downKeys.contains(Input.Buttons.LEFT)) {
+            downKeys.remove(Input.Buttons.LEFT);
+        }
+
         return false;
     }
 
@@ -140,9 +142,9 @@ public class MapInputController implements InputProcessor {
             Ray ray = Core.camera.getPickRay(screenX, screenY);
 
             Vector3 center = new Vector3(
-                tileC.tile.getBoundingBox().x,
-                tileC.tile.getBoundingBox().y,
-                0
+                    tileC.tile.getBoundingBox().x,
+                    tileC.tile.getBoundingBox().y,
+                    0
             );
 
             if (Intersector.intersectRaySphere(ray, center, Constants.PPM / 1.4f, null)) {

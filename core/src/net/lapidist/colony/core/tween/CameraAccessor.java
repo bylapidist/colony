@@ -6,7 +6,6 @@ import net.lapidist.colony.core.core.Camera;
 public class CameraAccessor implements TweenAccessor<Camera> {
 
     public static final int POSITION_XY = 0;
-    public static final int ZOOM = 1;
 
     @Override
     public int getValues(Camera target, int tweenType, float[] returnValues) {
@@ -15,11 +14,6 @@ public class CameraAccessor implements TweenAccessor<Camera> {
                 returnValues[0] = target.position.x;
                 returnValues[1] = target.position.y;
                 return 2;
-            }
-
-            case ZOOM: {
-                returnValues[0] = target.position.z;
-                return 1;
             }
         }
 
@@ -32,11 +26,6 @@ public class CameraAccessor implements TweenAccessor<Camera> {
             case POSITION_XY: {
                 target.position.x = newValues[0];
                 target.position.y = newValues[1];
-                break;
-            }
-
-            case ZOOM: {
-                target.position.z = newValues[0];
                 break;
             }
         }

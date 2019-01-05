@@ -1,30 +1,20 @@
 package net.lapidist.colony.core.core;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.bitfire.postprocessing.PostProcessor;
+import net.lapidist.colony.common.postprocessing.PostProcessor;
 
 import static net.lapidist.colony.core.Constants.*;
 
 public class Core {
 
     public static Camera camera;
-    public static DecalBatch decalBatch;
     public static Batch spriteBatch;
     public static ShapeRenderer shapeBatch;
-    public static ModelBatch modelBatch;
     public static PostProcessor postProcessor;
 
     public static void dispose() {
         // Dispose of global static resources here
-
-        if (decalBatch != null) {
-            decalBatch.dispose();
-            decalBatch = null;
-        }
-
         if (spriteBatch != null) {
             spriteBatch.dispose();
             spriteBatch = null;

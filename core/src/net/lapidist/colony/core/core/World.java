@@ -3,17 +3,17 @@ package net.lapidist.colony.core.core;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.decals.Decal;
+import net.lapidist.colony.common.events.Events;
 import net.lapidist.colony.common.map.MapBuilder;
 import net.lapidist.colony.common.map.MapLayout;
 import net.lapidist.colony.common.map.tile.ITile;
 import net.lapidist.colony.common.map.tile.ITileGrid;
-import net.lapidist.colony.core.components.DecalComponent;
+import net.lapidist.colony.common.modules.Module;
+import net.lapidist.colony.core.components.SpriteComponent;
 import net.lapidist.colony.core.components.TileComponent;
 import net.lapidist.colony.core.events.EventType.WorldInitEvent;
-import net.lapidist.colony.common.events.Events;
-import net.lapidist.colony.common.modules.Module;
 import net.lapidist.colony.core.systems.DebugRenderingSystem;
 import net.lapidist.colony.core.systems.MapRenderingSystem;
 import net.lapidist.colony.core.systems.PlayerSystem;
@@ -64,7 +64,6 @@ public class World extends Module {
 
         tiles.forEach(tile -> {
             Entity tileEntity = createTile(tile);
-
             engine.addEntity(tileEntity);
         });
     }
@@ -73,23 +72,20 @@ public class World extends Module {
         Entity entity = engine.createEntity();
         TextureRegion texture = resourceLoader.getRegion("space");
 
-        DecalComponent decalC = engine.createComponent(DecalComponent.class);
         TileComponent tileC = engine.createComponent(TileComponent.class);
+        SpriteComponent spriteC = engine.createComponent(SpriteComponent.class);
 
         tileC.tile = tile;
-        decalC.decal = Decal.newDecal(texture, true);
-        decalC.decal.setPosition(
-            tile.getBoundingBox().x,
-            tile.getBoundingBox().y,
-            0f
-        );
-        decalC.decal.setDimensions(
-            tile.getBoundingBox().getWidth(),
-            tile.getBoundingBox().getHeight()
+        spriteC.sprite = new Sprite(texture);
+        spriteC.sprite.setBounds(
+                tile.getBoundingBox().x,
+                tile.getBoundingBox().y,
+                tile.getBoundingBox().getWidth(),
+                tile.getBoundingBox().getHeight()
         );
 
         entity.add(tileC);
-        entity.add(decalC);
+        entity.add(spriteC);
 
         return entity;
     }

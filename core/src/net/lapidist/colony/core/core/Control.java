@@ -1,9 +1,9 @@
 package net.lapidist.colony.core.core;
 
 import com.badlogic.gdx.Gdx;
-import net.lapidist.colony.core.events.EventType;
 import net.lapidist.colony.common.events.Events;
 import net.lapidist.colony.common.modules.Module;
+import net.lapidist.colony.core.events.EventType;
 import net.lapidist.colony.core.input.InputManager;
 
 public class Control extends Module {
