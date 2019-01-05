@@ -13,12 +13,18 @@ public enum FileLocation {
 
     public FileHandle getFile(String path) {
         switch (this) {
-            case CLASSPATH: return Gdx.files.classpath(path);
-            case INTERNAL: return Gdx.files.internal(path);
-            case LOCAL: return Gdx.files.local(path);
-            case EXTERNAL: return Gdx.files.external(path);
-            case ABSOLUTE: return Gdx.files.absolute(path);
-            default: return null;
+            case CLASSPATH:
+                return Gdx.files.classpath(path);
+            case INTERNAL:
+                return Gdx.files.internal(path);
+            case LOCAL:
+                return Gdx.files.local(path);
+            case EXTERNAL:
+                return Gdx.files.external(path);
+            case ABSOLUTE:
+                return Gdx.files.absolute(path);
+            default:
+                return null;
         }
     }
 

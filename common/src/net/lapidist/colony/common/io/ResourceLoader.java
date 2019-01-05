@@ -10,15 +10,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.*;
-import net.lapidist.colony.common.utils.XmlUtils;
+import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.UBJsonReader;
+import com.badlogic.gdx.utils.XmlReader;
 import net.lapidist.colony.common.utils.SpriteAnimation;
+import net.lapidist.colony.common.utils.XmlUtils;
 
 import java.io.IOException;
 
 public class ResourceLoader implements Disposable {
-
-    private boolean disposed;
 
     private final ObjectMap<String, TextureRegion> regions;
     private final ObjectMap<String, SpriteAnimation> animations;
@@ -28,6 +29,7 @@ public class ResourceLoader implements Disposable {
     private final ObjectMap<String, Skin> skins;
     private final ObjectMap<String, Model> models;
     private final FileLocation fileLocation;
+    private boolean disposed;
 
     public ResourceLoader(FileLocation fileLocation, FileHandle resourceXml) throws IOException {
         this.fileLocation = fileLocation;
@@ -236,8 +238,8 @@ public class ResourceLoader implements Disposable {
             throw new RuntimeException("need name=\"...\" and bounds=\"...\" properties");
 
         regions.put(
-            region.get("name"),
-            XmlUtils.getTexReg(texture, region.get("bounds"))
+                region.get("name"),
+                XmlUtils.getTexReg(texture, region.get("bounds"))
         );
     }
 

@@ -14,11 +14,6 @@
         </image>
     </images>
 
-    <shaders>
-        <shader name="sunVertShader" file="shaders/sun.vert" />
-        <shader name="sunFragShader" file="shaders/sun.frag" />
-    </shaders>
-
     <skins>
         <skin name="default" />
     </skins>
@@ -26,9 +21,4 @@
     <fonts>
         <font name="default" file="fonts/default.fnt" />
     </fonts>
-
-    <models>
-        <model name="cube" file="models/cube.g3db" />
-        <model name="doublecube" file="models/doublecube.g3db" />
-    </models>
 </resources>
