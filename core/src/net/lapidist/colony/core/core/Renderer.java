@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.bitfire.postprocessing.PostProcessor;
+import net.lapidist.colony.common.utils.ModelSorter;
 import net.lapidist.colony.core.shaders.ShaderProvider;
 import net.lapidist.colony.core.modules.RendererModule;
 import net.lapidist.colony.core.systems.DebugRenderingSystem;
@@ -24,7 +25,7 @@ public class Renderer extends RendererModule {
         Core.decalBatch = new DecalBatch(new CameraGroupStrategy(Core.camera));
         Core.spriteBatch = new SpriteBatch();
         Core.shapeBatch = new ShapeRenderer();
-        Core.modelBatch = new ModelBatch(new ShaderProvider(), new RenderableSorter());
+        Core.modelBatch = new ModelBatch(new ShaderProvider(), new ModelSorter());
         Core.postProcessor = new PostProcessor(false, false, true);
     }
 

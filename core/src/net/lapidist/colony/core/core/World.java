@@ -17,6 +17,7 @@ import net.lapidist.colony.common.map.MapBuilder;
 import net.lapidist.colony.common.map.MapLayout;
 import net.lapidist.colony.common.map.tile.ITile;
 import net.lapidist.colony.common.map.tile.ITileGrid;
+import net.lapidist.colony.common.map.tile.TileCoordinate;
 import net.lapidist.colony.core.components.DecalComponent;
 import net.lapidist.colony.core.components.ModelComponent;
 import net.lapidist.colony.core.components.TileComponent;
@@ -27,6 +28,8 @@ import net.lapidist.colony.core.systems.DebugRenderingSystem;
 import net.lapidist.colony.core.systems.MapRenderingSystem;
 import net.lapidist.colony.core.systems.PlayerSystem;
 import net.lapidist.colony.core.systems.RenderingSystem;
+
+import java.util.Optional;
 
 import static net.lapidist.colony.core.Constants.*;
 
@@ -71,12 +74,20 @@ public class World extends Module {
         ITileGrid grid = builder.build();
         Iterable<ITile> tiles = grid.getTiles();
 
-        tiles.forEach(tile -> {
-            Entity tileEntity = createTile(tile);
-            Entity cubeEntity = createCube(tile);
+        Optional<ITile> doubleCubeTile = grid.getByTileCoordinate(new TileCoordinate(0, 0,0));
 
-            engine.addEntity(tileEntity);
-            engine.addEntity(cubeEntity);
+        tiles.forEach(tile -> {
+            if (doubleCubeTile.isPresent() && !tile.equals(doubleCubeTile.get())) {
+                Entity tileEntity = createTile(tile);
+                Entity cubeEntity = createCube(tile);
+
+                engine.addEntity(tileEntity);
+                engine.addEntity(cubeEntity);
+            } else {
+                Entity doubleCubeEntity = createDoubleCube(tile);
+
+                engine.addEntity(doubleCubeEntity);
+            }
         });
     }
 
@@ -115,8 +126,32 @@ public class World extends Module {
         Material material = new Material();
         material.set(
             new BlendingAttribute(true, 1.0f),
-            new ColorAttribute(ColorAttribute.Diffuse, 0, 1, 0, 1f),
-            new DepthTestAttribute(GL20.GL_LEQUAL, 1f, 8000f, true)
+            new ColorAttribute(ColorAttribute.Diffuse, 0, 1, 0, 1f)
+        );
+
+        tileC.tile = tile;
+        modelC.instance = new ModelInstance(model, new Vector3(tile.getBoundingBox().x, tile.getBoundingBox().y, 0));
+
+        modelC.instance.materials.get(0).set(material);
+        modelC.instance.transform.scl(PPM / 2f);
+
+        entity.add(modelC);
+        entity.add(tileC);
+
+        return entity;
+    }
+
+    private Entity createDoubleCube(ITile tile) {
+        Entity entity = engine.createEntity();
+        Model model = resourceLoader.getModel("doublecube");
+
+        ModelComponent modelC = engine.createComponent(ModelComponent.class);
+        TileComponent tileC = engine.createComponent(TileComponent.class);
+
+        Material material = new Material();
+        material.set(
+            new BlendingAttribute(true, 1.0f),
+            new ColorAttribute(ColorAttribute.Diffuse, 1, 0, 1, 1f)
         );
 
         tileC.tile = tile;

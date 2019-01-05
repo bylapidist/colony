@@ -35,8 +35,8 @@ public class MapRenderingSystem extends IteratingSystem {
         environment = new Environment();
         InputManager.add(inputController);
 
-        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 0.5f));
-        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, Constants.PPM, Constants.PPM, -Constants.PPM));
+//        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 0.5f));
+        environment.add(new DirectionalLight().set(0.4f, 0.4f, 0.4f, Constants.PPM, Constants.PPM, -Constants.PPM));
 
         MotionBlur motionBlur = new MotionBlur();
         Fxaa fxaa = new Fxaa(Graphics.width(), Graphics.height());
@@ -62,11 +62,13 @@ public class MapRenderingSystem extends IteratingSystem {
         }
     }
 
-    public void draw() {
+    void draw() {
         Core.postProcessor.capture();
 
         for (Entity entity : renderQueue) {
             DecalComponent decalC = ComponentMappers.decals.get(entity);
+            if (decalC != null) { continue; }
+
             ModelComponent modelC = ComponentMappers.models.get(entity);
             TileComponent tileC = ComponentMappers.tiles.get(entity);
 
@@ -85,16 +87,20 @@ public class MapRenderingSystem extends IteratingSystem {
                 || screenCoords.y > Graphics.height() + Constants.PPM
             ) continue;
 
-            if (decalC != null) {
-//                Graphics.add(decalC.decal);
-            }
-
-            Graphics.flush();
-
             if (modelC != null) {
                 Core.modelBatch.begin(Core.camera);
                     Core.modelBatch.render(modelC.instance, environment);
                 Core.modelBatch.end();
+            }
+        }
+
+        // Decals always go on top of models, so we need a second loop
+        for (Entity entity : renderQueue) {
+            DecalComponent decalC = ComponentMappers.decals.get(entity);
+
+            if (decalC != null) {
+//                Graphics.add(decalC.decal);
+                Graphics.flush();
             }
         }
 
