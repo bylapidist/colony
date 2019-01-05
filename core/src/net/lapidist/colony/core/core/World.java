@@ -77,14 +77,12 @@ public class World extends Module {
 
         tileC.tile = tile;
         spriteC.sprite = new Sprite(texture);
-        spriteC.sprite.setPosition(tile.getBoundingBox().x, tile.getBoundingBox().y);
         spriteC.sprite.setBounds(
                 tile.getBoundingBox().x,
                 tile.getBoundingBox().y,
                 tile.getBoundingBox().getWidth(),
                 tile.getBoundingBox().getHeight()
         );
-        spriteC.sprite.setSize(PPM, PPM);
 
         entity.add(tileC);
         entity.add(spriteC);

@@ -2,6 +2,7 @@ package net.lapidist.colony.core.core;
 
 import aurelienribon.tweenengine.Tween;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import net.lapidist.colony.core.components.TileComponent;
@@ -12,17 +13,16 @@ import static net.lapidist.colony.core.Constants.tweenManager;
 
 public class Camera extends OrthographicCamera {
 
-    private final static float MIN_ZOOM = 0.05f;
-    private final static float MAX_ZOOM = 1f;
-    private final static float INITIAL_ZOOM = MAX_ZOOM;
-    private final static float ZOOM_SPEED = 0.02f;
+    private final static float MIN_ZOOM = 1f;
+    private final static float MAX_ZOOM = 3f;
+    private final static float INITIAL_ZOOM = 2f;
+    private final static float ZOOM_SPEED = 0.06f;
     private final static float PAN_SPEED = PPM * 2f;
     private static Vector3 tmpVec3 = new Vector3();
     private static Vector2 mouse = new Vector2();
     private CameraState state;
 
     Camera(CameraState state) {
-//        super(Graphics.width(), Graphics.height());
         super(PPM / 3f, (PPM / 3f) * (Graphics.width() / Graphics.height()));
 
         this.state = state;
@@ -32,6 +32,11 @@ public class Camera extends OrthographicCamera {
 
     public static Vector2 screenCoords(float worldX, float worldY) {
         Core.camera.project(tmpVec3.set(worldX, worldY, 0));
+        return mouse.set(tmpVec3.x, tmpVec3.y);
+    }
+
+    public static Vector2 worldCoords(float screenX, float screenY) {
+        Core.camera.unproject(tmpVec3.set(screenX, screenY, 0));
         return mouse.set(tmpVec3.x, tmpVec3.y);
     }
 
@@ -54,7 +59,7 @@ public class Camera extends OrthographicCamera {
     public void tweenToTile(TileComponent tile, float duration) {
         Vector2 position = new Vector2(
                 tile.tile.getBoundingBox().getX(),
-                tile.tile.getBoundingBox().getY() - PPM * 3f
+                tile.tile.getBoundingBox().getY()
         );
 
         Tween.to(this, CameraAccessor.POSITION_XY, duration)
@@ -73,7 +78,7 @@ public class Camera extends OrthographicCamera {
                 Vector3 position = this.position.cpy();
 
                 Tween.to(this, CameraAccessor.POSITION_XY, 0.1f)
-                        .target(position.x, position.y - PAN_SPEED)
+                        .target(position.x, position.y + PAN_SPEED)
                         .start(tweenManager);
 
                 break;
@@ -83,7 +88,7 @@ public class Camera extends OrthographicCamera {
                 Vector3 position = this.position.cpy();
 
                 Tween.to(this, CameraAccessor.POSITION_XY, 0.1f)
-                        .target(position.x - PAN_SPEED, position.y - PAN_SPEED)
+                        .target(position.x + PAN_SPEED, position.y + PAN_SPEED)
                         .start(tweenManager);
 
                 break;
@@ -93,7 +98,7 @@ public class Camera extends OrthographicCamera {
                 Vector3 position = this.position.cpy();
 
                 Tween.to(this, CameraAccessor.POSITION_XY, 0.1f)
-                        .target(position.x - PAN_SPEED, position.y)
+                        .target(position.x + PAN_SPEED, position.y)
                         .start(tweenManager);
 
                 break;
@@ -103,7 +108,7 @@ public class Camera extends OrthographicCamera {
                 Vector3 position = this.position.cpy();
 
                 Tween.to(this, CameraAccessor.POSITION_XY, 0.1f)
-                        .target(position.x - PAN_SPEED, position.y + PAN_SPEED)
+                        .target(position.x + PAN_SPEED, position.y - PAN_SPEED)
                         .start(tweenManager);
 
                 break;
@@ -113,7 +118,7 @@ public class Camera extends OrthographicCamera {
                 Vector3 position = this.position.cpy();
 
                 Tween.to(this, CameraAccessor.POSITION_XY, 0.1f)
-                        .target(position.x, position.y + PAN_SPEED)
+                        .target(position.x, position.y - PAN_SPEED)
                         .start(tweenManager);
 
                 break;
@@ -123,7 +128,7 @@ public class Camera extends OrthographicCamera {
                 Vector3 position = this.position.cpy();
 
                 Tween.to(this, CameraAccessor.POSITION_XY, 0.1f)
-                        .target(position.x + PAN_SPEED, position.y + PAN_SPEED)
+                        .target(position.x - PAN_SPEED, position.y - PAN_SPEED)
                         .start(tweenManager);
 
                 break;
@@ -133,7 +138,7 @@ public class Camera extends OrthographicCamera {
                 Vector3 position = this.position.cpy();
 
                 Tween.to(this, CameraAccessor.POSITION_XY, 0.1f)
-                        .target(position.x + PAN_SPEED, position.y)
+                        .target(position.x - PAN_SPEED, position.y)
                         .start(tweenManager);
 
                 break;
@@ -143,37 +148,23 @@ public class Camera extends OrthographicCamera {
                 Vector3 position = this.position.cpy();
 
                 Tween.to(this, CameraAccessor.POSITION_XY, 0.1f)
-                        .target(position.x + PAN_SPEED, position.y - PAN_SPEED)
+                        .target(position.x - PAN_SPEED, position.y + PAN_SPEED)
                         .start(tweenManager);
 
                 break;
             }
 
             case ZOOMING_IN: {
-                float targetZoom = this.zoom - ZOOM_SPEED;
-
-                if (targetZoom <= MIN_ZOOM) {
-                    this.zoom = MIN_ZOOM;
-                } else {
-                    Tween.to(this, CameraAccessor.ZOOM, 0.1f)
-                            .target(this.zoom - ZOOM_SPEED)
-                            .start(tweenManager);
-                }
+                this.zoom -= ZOOM_SPEED;
+                this.zoom = MathUtils.clamp(this.zoom, MIN_ZOOM, MAX_ZOOM);
 
                 setState(CameraState.STATIC);
                 break;
             }
 
             case ZOOMING_OUT: {
-                float targetZoom = this.zoom + ZOOM_SPEED;
-
-                if (targetZoom >= MAX_ZOOM) {
-                    this.zoom = MAX_ZOOM;
-                } else {
-                    Tween.to(this, CameraAccessor.ZOOM, 0.1f)
-                            .target(this.zoom + ZOOM_SPEED)
-                            .start(tweenManager);
-                }
+                this.zoom += ZOOM_SPEED;
+                this.zoom = MathUtils.clamp(this.zoom, MIN_ZOOM, MAX_ZOOM);
 
                 setState(CameraState.STATIC);
                 break;

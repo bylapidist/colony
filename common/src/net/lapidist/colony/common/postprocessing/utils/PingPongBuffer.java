@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
  * <p>
  * Subsequent {@link #capture()} calls will initiate writing to the next available buffer, returning the previously used one,
  * effectively ping-ponging between the two. Until {@link #end()} is called, chained rendering will be possible by retrieving the
- * necessary buffers via {@link #getSourceTexture()}, {@link #getSourceBuffer()}, {@link #getResultTexture()} or
+ * necessary buffers via {@link #getSourceBuffer()}, {@link #getResultTexture()} or
  * {@link #getResultBuffer}.
  * <p>
  * When finished, {@link #end()} should be called to stop capturing. When the OpenGL context is lost, {@link #rebind()} should be

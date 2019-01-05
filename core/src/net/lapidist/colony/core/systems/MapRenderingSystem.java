@@ -74,9 +74,9 @@ public class MapRenderingSystem extends IteratingSystem {
             ) continue;
 
             if (spriteC != null) {
-                Core.spriteBatch.begin();
-                spriteC.sprite.draw(Core.spriteBatch);
-                Core.spriteBatch.end();
+                Graphics.begin();
+                Graphics.draw(spriteC.sprite);
+                Graphics.end();
             }
         }
 
