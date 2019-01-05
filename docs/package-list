@@ -1,7 +1,7 @@
-com.bitfire.postprocessing
-com.bitfire.postprocessing.effects
-com.bitfire.postprocessing.filters
-com.bitfire.postprocessing.utils
+net.lapidist.colony.common.postprocessing
+net.lapidist.colony.common.postprocessing.effects
+net.lapidist.colony.common.postprocessing.filters
+net.lapidist.colony.common.postprocessing.utils
 com.bitfire.utils
 net.lapidist.colony.common.events
 net.lapidist.colony.common.grid

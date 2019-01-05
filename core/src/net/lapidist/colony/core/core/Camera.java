@@ -1,62 +1,46 @@
 package net.lapidist.colony.core.core;
 
 import aurelienribon.tweenengine.Tween;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import net.lapidist.colony.core.tween.CameraAccessor;
 import net.lapidist.colony.core.components.TileComponent;
+import net.lapidist.colony.core.tween.CameraAccessor;
 
-import static net.lapidist.colony.core.Constants.*;
+import static net.lapidist.colony.core.Constants.PPM;
+import static net.lapidist.colony.core.Constants.tweenManager;
 
-public class Camera extends PerspectiveCamera {
+public class Camera extends OrthographicCamera {
 
-    private final static float MIN_ZOOM = 800f;
-    private final static float MAX_ZOOM = MIN_ZOOM * 4;
-    private final static float ZOOM_SPEED = 300f;
-    private final static float PAN_SPEED = PPM * 2;
+    private final static float MIN_ZOOM = 0.05f;
+    private final static float MAX_ZOOM = 1f;
+    private final static float INITIAL_ZOOM = MAX_ZOOM;
+    private final static float ZOOM_SPEED = 0.02f;
+    private final static float PAN_SPEED = PPM * 2f;
     private static Vector3 tmpVec3 = new Vector3();
     private static Vector2 mouse = new Vector2();
+    private CameraState state;
+
+    Camera(CameraState state) {
+//        super(Graphics.width(), Graphics.height());
+        super(PPM / 3f, (PPM / 3f) * (Graphics.width() / Graphics.height()));
+
+        this.state = state;
+        this.zoom = INITIAL_ZOOM;
+        this.position.set(this.viewportWidth / 2f, this.viewportHeight / 2f, 0);
+    }
 
     public static Vector2 screenCoords(float worldX, float worldY) {
         Core.camera.project(tmpVec3.set(worldX, worldY, 0));
         return mouse.set(tmpVec3.x, tmpVec3.y);
     }
 
-    public enum CameraState {
-        STATIC,
-        ZOOMING_IN,
-        ZOOMING_OUT,
-        PANNING_N,
-        PANNING_NE,
-        PANNING_E,
-        PANNING_SE,
-        PANNING_S,
-        PANNING_SW,
-        PANNING_W,
-        PANNING_NW,
-        ROTATING_CLOCKWISE,
-        ROTATING_ANTICLOCKWISE
-    }
-
-    private CameraState state;
-
-    public Camera(CameraState state) {
-        super(67, Graphics.width(), Graphics.height());
-
-        this.position.set(0, -400f, MIN_ZOOM * 2);
-        this.lookAt(0, 0, 0);
-        this.state = state;
-        this.near = 1f;
-        this.far = 2 * Graphics.width();
+    public CameraState getState() {
+        return state;
     }
 
     public void setState(CameraState state) {
         this.state = state;
-    }
-
-    public CameraState getState() {
-        return state;
     }
 
     public void goToTile(TileComponent tile) {
@@ -69,13 +53,13 @@ public class Camera extends PerspectiveCamera {
 
     public void tweenToTile(TileComponent tile, float duration) {
         Vector2 position = new Vector2(
-            tile.tile.getBoundingBox().getX(),
-            tile.tile.getBoundingBox().getY() - PPM * 3f
+                tile.tile.getBoundingBox().getX(),
+                tile.tile.getBoundingBox().getY() - PPM * 3f
         );
 
         Tween.to(this, CameraAccessor.POSITION_XY, duration)
-            .target(position.x, position.y)
-            .start(tweenManager);
+                .target(position.x, position.y)
+                .start(tweenManager);
     }
 
     @Override
@@ -89,53 +73,13 @@ public class Camera extends PerspectiveCamera {
                 Vector3 position = this.position.cpy();
 
                 Tween.to(this, CameraAccessor.POSITION_XY, 0.1f)
-                    .target(position.x, position.y + PAN_SPEED)
-                    .start(tweenManager);
+                        .target(position.x, position.y - PAN_SPEED)
+                        .start(tweenManager);
 
                 break;
             }
 
             case PANNING_NE: {
-                Vector3 position = this.position.cpy();
-
-                Tween.to(this, CameraAccessor.POSITION_XY, 0.1f)
-                        .target(position.x + PAN_SPEED, position.y + PAN_SPEED)
-                        .start(tweenManager);
-
-                break;
-            }
-
-            case PANNING_E: {
-                Vector3 position = this.position.cpy();
-
-                Tween.to(this, CameraAccessor.POSITION_XY, 0.1f)
-                    .target(position.x + PAN_SPEED, position.y)
-                    .start(tweenManager);
-
-                break;
-            }
-
-            case PANNING_SE: {
-                Vector3 position = this.position.cpy();
-
-                Tween.to(this, CameraAccessor.POSITION_XY, 0.1f)
-                        .target(position.x + PAN_SPEED, position.y - PAN_SPEED)
-                        .start(tweenManager);
-
-                break;
-            }
-
-            case PANNING_S: {
-                Vector3 position = this.position.cpy();
-
-                Tween.to(this, CameraAccessor.POSITION_XY, 0.1f)
-                    .target(position.x, position.y - PAN_SPEED)
-                    .start(tweenManager);
-
-                break;
-            }
-
-            case PANNING_SW: {
                 Vector3 position = this.position.cpy();
 
                 Tween.to(this, CameraAccessor.POSITION_XY, 0.1f)
@@ -145,17 +89,17 @@ public class Camera extends PerspectiveCamera {
                 break;
             }
 
-            case PANNING_W: {
+            case PANNING_E: {
                 Vector3 position = this.position.cpy();
 
                 Tween.to(this, CameraAccessor.POSITION_XY, 0.1f)
-                    .target(position.x - PAN_SPEED, position.y)
-                    .start(tweenManager);
+                        .target(position.x - PAN_SPEED, position.y)
+                        .start(tweenManager);
 
                 break;
             }
 
-            case PANNING_NW: {
+            case PANNING_SE: {
                 Vector3 position = this.position.cpy();
 
                 Tween.to(this, CameraAccessor.POSITION_XY, 0.1f)
@@ -165,14 +109,54 @@ public class Camera extends PerspectiveCamera {
                 break;
             }
 
+            case PANNING_S: {
+                Vector3 position = this.position.cpy();
+
+                Tween.to(this, CameraAccessor.POSITION_XY, 0.1f)
+                        .target(position.x, position.y + PAN_SPEED)
+                        .start(tweenManager);
+
+                break;
+            }
+
+            case PANNING_SW: {
+                Vector3 position = this.position.cpy();
+
+                Tween.to(this, CameraAccessor.POSITION_XY, 0.1f)
+                        .target(position.x + PAN_SPEED, position.y + PAN_SPEED)
+                        .start(tweenManager);
+
+                break;
+            }
+
+            case PANNING_W: {
+                Vector3 position = this.position.cpy();
+
+                Tween.to(this, CameraAccessor.POSITION_XY, 0.1f)
+                        .target(position.x + PAN_SPEED, position.y)
+                        .start(tweenManager);
+
+                break;
+            }
+
+            case PANNING_NW: {
+                Vector3 position = this.position.cpy();
+
+                Tween.to(this, CameraAccessor.POSITION_XY, 0.1f)
+                        .target(position.x + PAN_SPEED, position.y - PAN_SPEED)
+                        .start(tweenManager);
+
+                break;
+            }
+
             case ZOOMING_IN: {
-                float targetZoom = this.position.z - ZOOM_SPEED;
+                float targetZoom = this.zoom - ZOOM_SPEED;
 
                 if (targetZoom <= MIN_ZOOM) {
-                    this.position.z = MIN_ZOOM;
+                    this.zoom = MIN_ZOOM;
                 } else {
                     Tween.to(this, CameraAccessor.ZOOM, 0.1f)
-                            .target(this.position.z - ZOOM_SPEED)
+                            .target(this.zoom - ZOOM_SPEED)
                             .start(tweenManager);
                 }
 
@@ -181,27 +165,15 @@ public class Camera extends PerspectiveCamera {
             }
 
             case ZOOMING_OUT: {
-                float targetZoom = this.position.z + ZOOM_SPEED;
+                float targetZoom = this.zoom + ZOOM_SPEED;
 
                 if (targetZoom >= MAX_ZOOM) {
-                    this.position.z = MAX_ZOOM;
+                    this.zoom = MAX_ZOOM;
                 } else {
                     Tween.to(this, CameraAccessor.ZOOM, 0.1f)
-                            .target(this.position.z + ZOOM_SPEED)
+                            .target(this.zoom + ZOOM_SPEED)
                             .start(tweenManager);
                 }
-
-                setState(CameraState.STATIC);
-                break;
-            }
-
-            case ROTATING_CLOCKWISE: {
-
-                setState(CameraState.STATIC);
-                break;
-            }
-
-            case ROTATING_ANTICLOCKWISE: {
 
                 setState(CameraState.STATIC);
                 break;
@@ -214,5 +186,19 @@ public class Camera extends PerspectiveCamera {
             default:
                 // Do nothing
         }
+    }
+
+    public enum CameraState {
+        STATIC,
+        ZOOMING_IN,
+        ZOOMING_OUT,
+        PANNING_N,
+        PANNING_NE,
+        PANNING_E,
+        PANNING_SE,
+        PANNING_S,
+        PANNING_SW,
+        PANNING_W,
+        PANNING_NW
     }
 }

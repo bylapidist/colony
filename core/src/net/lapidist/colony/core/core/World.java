@@ -3,33 +3,21 @@ package net.lapidist.colony.core.core;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.Material;
-import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.attributes.DepthTestAttribute;
-import com.badlogic.gdx.graphics.g3d.decals.Decal;
-import com.badlogic.gdx.math.Vector3;
+import net.lapidist.colony.common.events.Events;
 import net.lapidist.colony.common.map.MapBuilder;
 import net.lapidist.colony.common.map.MapLayout;
 import net.lapidist.colony.common.map.tile.ITile;
 import net.lapidist.colony.common.map.tile.ITileGrid;
-import net.lapidist.colony.common.map.tile.TileCoordinate;
-import net.lapidist.colony.core.components.DecalComponent;
-import net.lapidist.colony.core.components.ModelComponent;
+import net.lapidist.colony.common.modules.Module;
+import net.lapidist.colony.core.components.SpriteComponent;
 import net.lapidist.colony.core.components.TileComponent;
 import net.lapidist.colony.core.events.EventType.WorldInitEvent;
-import net.lapidist.colony.common.events.Events;
-import net.lapidist.colony.common.modules.Module;
 import net.lapidist.colony.core.systems.DebugRenderingSystem;
 import net.lapidist.colony.core.systems.MapRenderingSystem;
 import net.lapidist.colony.core.systems.PlayerSystem;
 import net.lapidist.colony.core.systems.RenderingSystem;
-
-import java.util.Optional;
 
 import static net.lapidist.colony.core.Constants.*;
 
@@ -74,20 +62,9 @@ public class World extends Module {
         ITileGrid grid = builder.build();
         Iterable<ITile> tiles = grid.getTiles();
 
-        Optional<ITile> doubleCubeTile = grid.getByTileCoordinate(new TileCoordinate(0, 0,0));
-
         tiles.forEach(tile -> {
-            if (doubleCubeTile.isPresent() && !tile.equals(doubleCubeTile.get())) {
-                Entity tileEntity = createTile(tile);
-                Entity cubeEntity = createCube(tile);
-
-                engine.addEntity(tileEntity);
-                engine.addEntity(cubeEntity);
-            } else {
-                Entity doubleCubeEntity = createDoubleCube(tile);
-
-                engine.addEntity(doubleCubeEntity);
-            }
+            Entity tileEntity = createTile(tile);
+            engine.addEntity(tileEntity);
         });
     }
 
@@ -95,73 +72,22 @@ public class World extends Module {
         Entity entity = engine.createEntity();
         TextureRegion texture = resourceLoader.getRegion("space");
 
-        DecalComponent decalC = engine.createComponent(DecalComponent.class);
         TileComponent tileC = engine.createComponent(TileComponent.class);
+        SpriteComponent spriteC = engine.createComponent(SpriteComponent.class);
 
         tileC.tile = tile;
-        decalC.decal = Decal.newDecal(texture, true);
-        decalC.decal.setPosition(
-            tile.getBoundingBox().x,
-            tile.getBoundingBox().y,
-            -PPM / 2f
+        spriteC.sprite = new Sprite(texture);
+        spriteC.sprite.setPosition(tile.getBoundingBox().x, tile.getBoundingBox().y);
+        spriteC.sprite.setBounds(
+                tile.getBoundingBox().x,
+                tile.getBoundingBox().y,
+                tile.getBoundingBox().getWidth(),
+                tile.getBoundingBox().getHeight()
         );
-        decalC.decal.setDimensions(
-            tile.getBoundingBox().getWidth(),
-            tile.getBoundingBox().getHeight()
-        );
+        spriteC.sprite.setSize(PPM, PPM);
 
         entity.add(tileC);
-        entity.add(decalC);
-
-        return entity;
-    }
-
-    private Entity createCube(ITile tile) {
-        Entity entity = engine.createEntity();
-        Model model = resourceLoader.getModel("cube");
-
-        ModelComponent modelC = engine.createComponent(ModelComponent.class);
-        TileComponent tileC = engine.createComponent(TileComponent.class);
-
-        Material material = new Material();
-        material.set(
-            new BlendingAttribute(true, 1.0f),
-            new ColorAttribute(ColorAttribute.Diffuse, 0, 1, 0, 1f)
-        );
-
-        tileC.tile = tile;
-        modelC.instance = new ModelInstance(model, new Vector3(tile.getBoundingBox().x, tile.getBoundingBox().y, 0));
-
-        modelC.instance.materials.get(0).set(material);
-        modelC.instance.transform.scl(PPM / 2f);
-
-        entity.add(modelC);
-        entity.add(tileC);
-
-        return entity;
-    }
-
-    private Entity createDoubleCube(ITile tile) {
-        Entity entity = engine.createEntity();
-        Model model = resourceLoader.getModel("doublecube");
-
-        ModelComponent modelC = engine.createComponent(ModelComponent.class);
-        TileComponent tileC = engine.createComponent(TileComponent.class);
-
-        Material material = new Material();
-        material.set(
-            new BlendingAttribute(true, 1.0f),
-            new ColorAttribute(ColorAttribute.Diffuse, 1, 0, 1, 1f)
-        );
-
-        tileC.tile = tile;
-        modelC.instance = new ModelInstance(model, new Vector3(tile.getBoundingBox().x, tile.getBoundingBox().y, 0));
-
-        modelC.instance.materials.get(0).set(material);
-        modelC.instance.transform.scl(PPM / 2f);
-
-        entity.add(modelC);
-        entity.add(tileC);
+        entity.add(spriteC);
 
         return entity;
     }

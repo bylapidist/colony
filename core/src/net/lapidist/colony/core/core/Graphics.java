@@ -15,7 +15,7 @@ public class Graphics {
         return Gdx.graphics.getHeight();
     }
 
-    public static void clear(Color color){
+    public static void clear(Color color) {
         Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
         Gdx.gl.glDepthFunc(GL20.GL_LESS);
         Gdx.gl.glDepthMask(true);
@@ -27,7 +27,7 @@ public class Graphics {
         Core.decalBatch.add(decal);
     }
 
-    public static void flush(){
+    public static void flush() {
         Core.decalBatch.flush();
     }
 

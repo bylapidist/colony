@@ -121,9 +121,9 @@ public class MapImplementation<T extends ITileMetaData> implements ITileGrid<T> 
         final int neighbourGridZ = tile.getGridZ() + NEIGHBOURS[index][NEIGHBOUR_Z_INDEX];
 
         final TileCoordinate neighbourCoordinate = TileCoordinate.fromCoordinates(
-            neighbourGridX,
-            neighbourGridY,
-            neighbourGridZ
+                neighbourGridX,
+                neighbourGridY,
+                neighbourGridZ
         );
 
         return getByTileCoordinate(neighbourCoordinate);

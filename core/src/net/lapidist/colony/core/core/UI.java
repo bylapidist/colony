@@ -1,9 +1,12 @@
 package net.lapidist.colony.core.core;
 
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import net.lapidist.colony.core.modules.SceneModule;
 
-import static net.lapidist.colony.core.Constants.*;
+import static net.lapidist.colony.core.Constants.resourceLoader;
 
 public class UI extends SceneModule {
 

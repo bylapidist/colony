@@ -24,7 +24,9 @@ public abstract class ModuleCore extends ApplicationAdapter {
 //        Inputs.update();
     }
 
-    /** Adds a modules to the list. */
+    /**
+     * Adds a modules to the list.
+     */
     protected <N extends Module> void addModule(N module) {
         modules.put(module.getClass(), module);
         moduleArray.add(module);

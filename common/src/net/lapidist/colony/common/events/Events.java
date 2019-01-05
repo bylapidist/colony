@@ -21,7 +21,7 @@ public class Events {
         }
 
         for (IConsumer<? extends IEvent> event : events.get(type.getClass())) {
-            ((IConsumer<T>)event).accept(type);
+            ((IConsumer<T>) event).accept(type);
         }
     }
 }

@@ -1,14 +1,14 @@
 package net.lapidist.colony.core;
 
 import aurelienribon.tweenengine.TweenManager;
-import com.bitfire.utils.ShaderLoader;
+import net.lapidist.colony.common.events.Events;
 import net.lapidist.colony.common.io.FileLocation;
 import net.lapidist.colony.common.io.ResourceLoader;
-import net.lapidist.colony.core.core.*;
-import net.lapidist.colony.core.tween.Accessors;
-import net.lapidist.colony.core.events.EventType.GameLoadEvent;
-import net.lapidist.colony.common.events.Events;
 import net.lapidist.colony.common.modules.ModuleCore;
+import net.lapidist.colony.common.utils.ShaderLoader;
+import net.lapidist.colony.core.core.*;
+import net.lapidist.colony.core.events.EventType.GameLoadEvent;
+import net.lapidist.colony.core.tween.Accessors;
 
 import java.io.IOException;
 
@@ -21,8 +21,8 @@ public class Colony extends ModuleCore {
 
         try {
             resourceLoader = new ResourceLoader(
-                FileLocation.INTERNAL,
-                FileLocation.INTERNAL.getFile("resources.xml")
+                    FileLocation.INTERNAL,
+                    FileLocation.INTERNAL.getFile("resources.xml")
             );
 
             addModule(logic = new Logic());

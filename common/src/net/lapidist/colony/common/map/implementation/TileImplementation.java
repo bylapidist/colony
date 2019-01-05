@@ -18,18 +18,18 @@ public class TileImplementation<T extends ITileMetaData> implements ITile<T> {
     private final transient ITileDataStorage<T> tileDataStorage;
 
     TileImplementation(
-        final MapData mapData,
-        final TileCoordinate coordinate,
-        final ITileDataStorage<T> tileDataStorage
+            final MapData mapData,
+            final TileCoordinate coordinate,
+            final ITileDataStorage<T> tileDataStorage
     ) {
         this.sharedData = mapData;
         this.coordinate = coordinate;
         this.tileDataStorage = tileDataStorage;
         this.boundingBox = new Rectangle(
-            coordinate.getGridX() * sharedData.getTileWidth(),
-            coordinate.getGridY() * sharedData.getTileHeight(),
-            sharedData.getTileWidth(),
-            sharedData.getTileHeight()
+                coordinate.getGridX() * sharedData.getTileWidth(),
+                coordinate.getGridY() * sharedData.getTileHeight(),
+                sharedData.getTileWidth(),
+                sharedData.getTileHeight()
         );
     }
 

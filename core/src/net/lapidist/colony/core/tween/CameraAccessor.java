@@ -18,7 +18,7 @@ public class CameraAccessor implements TweenAccessor<Camera> {
             }
 
             case ZOOM: {
-                returnValues[0] = target.position.z;
+                returnValues[0] = target.zoom;
                 return 1;
             }
         }
@@ -36,7 +36,7 @@ public class CameraAccessor implements TweenAccessor<Camera> {
             }
 
             case ZOOM: {
-                target.position.z = newValues[0];
+                target.zoom = newValues[0];
                 break;
             }
         }
