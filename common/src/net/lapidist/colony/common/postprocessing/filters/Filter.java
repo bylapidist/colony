@@ -125,7 +125,7 @@ public abstract class Filter<T> {
     }
 
     /**
-     * Sets the parameter to the specified value for this filter. When you are finished building the batch you shall signal it by
+     * Sets the parameter to the specified value for this filter. When you are finished buildings the batch you shall signal it by
      * invoking endParams().
      */
 
