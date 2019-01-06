@@ -14,11 +14,6 @@
         </image>
     </images>
 
-    <shaders>
-        <shader name="sunVertShader" file="shaders/sun.vert" />
-        <shader name="sunFragShader" file="shaders/sun.frag" />
-    </shaders>
-
     <skins>
         <skin name="default" />
     </skins>

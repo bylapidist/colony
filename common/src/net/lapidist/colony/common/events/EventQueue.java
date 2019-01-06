@@ -5,6 +5,7 @@ import java.util.List;
 
 /**
  * The EventQueue is a List of events, which are then run() sequentially.
+ *
  * @param <T>
  */
 public class EventQueue<T extends IEvent> {
@@ -17,6 +18,7 @@ public class EventQueue<T extends IEvent> {
 
     /**
      * Add a new Event to the queue.
+     *
      * @param event
      */
     public void add(IEvent event) {

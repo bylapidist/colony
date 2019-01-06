@@ -1,10 +1,11 @@
 package net.lapidist.colony.core.core;
 
-import net.lapidist.colony.core.events.EventType.*;
 import net.lapidist.colony.common.events.Events;
 import net.lapidist.colony.common.modules.Module;
+import net.lapidist.colony.core.events.EventType.TickEvent;
+import net.lapidist.colony.core.events.EventType.WorldInitEvent;
 
-import static net.lapidist.colony.core.Constants.*;
+import static net.lapidist.colony.core.Constants.state;
 
 public class Logic extends Module {
 

@@ -6,14 +6,12 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.XmlReader;
 
 public class SpriteAnimation implements Disposable {
-    private boolean disposed;
-
     private final Texture texture;
     private final float[] delays;
     private final float totalDelays;
     private final TextureRegion[] keyframes;
     private final String name;
-
+    private boolean disposed;
     private float time;
     private int frame;
 
@@ -70,7 +68,7 @@ public class SpriteAnimation implements Disposable {
         float lookupTime = time % totalDelays;
         float visitedTime = 0;
 
-        for (int i = 0; i < delays.length-1; i++) {
+        for (int i = 0; i < delays.length - 1; i++) {
             visitedTime += delays[i];
             if (lookupTime < visitedTime) {
                 return i;

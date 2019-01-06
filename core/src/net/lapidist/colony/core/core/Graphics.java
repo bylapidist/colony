@@ -3,7 +3,7 @@ package net.lapidist.colony.core.core;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g3d.decals.Decal;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Graphics {
 
@@ -15,18 +15,25 @@ public class Graphics {
         return Gdx.graphics.getHeight();
     }
 
-    public static void clear(Color color){
+    public static void clear(Color color) {
+        Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+        Gdx.gl.glDepthFunc(GL20.GL_LESS);
+        Gdx.gl.glDepthMask(true);
         Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-        Gdx.gl.glClear(GL20.GL_ALPHA_BITS);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_ALPHA_BITS);
     }
 
-    public static void add(Decal decal) {
-        Core.decalBatch.add(decal);
+    public static void draw(Sprite sprite) {
+        sprite.draw(Core.spriteBatch);
     }
 
-    public static void flush(){
-        Core.decalBatch.flush();
+    public static void begin() {
+        Core.spriteBatch.setProjectionMatrix(Core.camera.combined);
+        Core.spriteBatch.begin();
+    }
+
+    public static void end() {
+        Core.spriteBatch.end();
     }
 
     public static void resize() {

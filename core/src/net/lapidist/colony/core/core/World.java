@@ -1,23 +1,25 @@
 package net.lapidist.colony.core.core;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.decals.Decal;
+import net.lapidist.colony.common.events.Events;
 import net.lapidist.colony.common.map.MapBuilder;
 import net.lapidist.colony.common.map.MapLayout;
 import net.lapidist.colony.common.map.tile.ITile;
 import net.lapidist.colony.common.map.tile.ITileGrid;
-import net.lapidist.colony.core.components.DecalComponent;
-import net.lapidist.colony.core.components.TileComponent;
-import net.lapidist.colony.core.events.EventType.WorldInitEvent;
-import net.lapidist.colony.common.events.Events;
+import net.lapidist.colony.common.map.tile.TileCoordinate;
 import net.lapidist.colony.common.modules.Module;
+import net.lapidist.colony.core.entities.EntityBuilder;
+import net.lapidist.colony.core.entities.EntityType;
+import net.lapidist.colony.core.entities.TerrainType;
+import net.lapidist.colony.core.entities.UnitType;
+import net.lapidist.colony.core.events.EventType.WorldInitEvent;
 import net.lapidist.colony.core.systems.DebugRenderingSystem;
 import net.lapidist.colony.core.systems.MapRenderingSystem;
 import net.lapidist.colony.core.systems.PlayerSystem;
 import net.lapidist.colony.core.systems.RenderingSystem;
+
+import java.util.Optional;
 
 import static net.lapidist.colony.core.Constants.*;
 
@@ -34,7 +36,11 @@ public class World extends Module {
         engine.addSystem(new MapRenderingSystem());
         engine.addSystem(new PlayerSystem());
 
-        generateLevel();
+        try {
+            generateLevel();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         Events.fire(new WorldInitEvent());
     }
@@ -51,7 +57,7 @@ public class World extends Module {
         super.dispose();
     }
 
-    private void generateLevel() {
+    private void generateLevel() throws Exception {
         MapBuilder builder = new MapBuilder()
                 .setGridHeight(12)
                 .setGridWidth(12)
@@ -63,34 +69,27 @@ public class World extends Module {
         Iterable<ITile> tiles = grid.getTiles();
 
         tiles.forEach(tile -> {
-            Entity tileEntity = createTile(tile);
+            EntityBuilder entityBuilder = new EntityBuilder()
+                    .setEngine(engine)
+                    .setEntityType(EntityType.TERRAIN)
+                    .setTerrainType(TerrainType.GRASS)
+                    .setTile(tile);
 
-            engine.addEntity(tileEntity);
+            try {
+                engine.addEntity(entityBuilder.build());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
-    }
 
-    private Entity createTile(ITile tile) {
-        Entity entity = engine.createEntity();
-        TextureRegion texture = resourceLoader.getRegion("space");
+        Optional<ITile> playerTile = grid.getByTileCoordinate(new TileCoordinate(0, 0, 0));
 
-        DecalComponent decalC = engine.createComponent(DecalComponent.class);
-        TileComponent tileC = engine.createComponent(TileComponent.class);
+        EntityBuilder playerEntityBuilder = new EntityBuilder()
+                .setEngine(engine)
+                .setEntityType(EntityType.UNIT)
+                .setUnitType(UnitType.PLAYER)
+                .setTile(playerTile.get());
 
-        tileC.tile = tile;
-        decalC.decal = Decal.newDecal(texture, true);
-        decalC.decal.setPosition(
-            tile.getBoundingBox().x,
-            tile.getBoundingBox().y,
-            0f
-        );
-        decalC.decal.setDimensions(
-            tile.getBoundingBox().getWidth(),
-            tile.getBoundingBox().getHeight()
-        );
-
-        entity.add(tileC);
-        entity.add(decalC);
-
-        return entity;
+        engine.addEntity(playerEntityBuilder.build());
     }
 }
