@@ -4,14 +4,13 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.IntSet;
 import net.lapidist.colony.common.events.Events;
 import net.lapidist.colony.core.ComponentMappers;
 import net.lapidist.colony.core.Constants;
-import net.lapidist.colony.core.components.SpriteComponent;
+import net.lapidist.colony.core.components.traits.SpriteTrait;
 import net.lapidist.colony.core.components.TileComponent;
 import net.lapidist.colony.core.core.Camera;
 import net.lapidist.colony.core.core.Core;
@@ -105,7 +104,7 @@ public class MapInputController implements InputProcessor {
 
             for (Entity entity : renderingSystem.getRenderQueue()) {
                 TileComponent tileC = ComponentMappers.tiles.get(entity);
-                SpriteComponent spriteC = ComponentMappers.sprites.get(entity);
+                SpriteTrait spriteC = ComponentMappers.sprites.get(entity);
 
                 if (spriteC.sprite.getBoundingRectangle().contains(Camera.worldCoords(screenX, screenY))) {
                     Events.fire(new EventType.TileClickEvent(tileC));

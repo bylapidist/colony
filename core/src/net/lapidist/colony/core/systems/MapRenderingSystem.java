@@ -9,7 +9,7 @@ import net.lapidist.colony.common.postprocessing.effects.Fxaa;
 import net.lapidist.colony.common.postprocessing.effects.MotionBlur;
 import net.lapidist.colony.core.ComponentMappers;
 import net.lapidist.colony.core.Constants;
-import net.lapidist.colony.core.components.SpriteComponent;
+import net.lapidist.colony.core.components.traits.SpriteTrait;
 import net.lapidist.colony.core.components.TileComponent;
 import net.lapidist.colony.core.core.Camera;
 import net.lapidist.colony.core.core.Core;
@@ -20,13 +20,12 @@ import net.lapidist.colony.core.input.MapInputController;
 public class MapRenderingSystem extends IteratingSystem {
 
     private Array<Entity> renderQueue;
-    private MapInputController inputController;
 
     public MapRenderingSystem() {
         super(Family.all(TileComponent.class).get());
 
         renderQueue = new Array<>();
-        inputController = new MapInputController(this);
+        MapInputController inputController = new MapInputController(this);
         InputManager.add(inputController);
 
         MotionBlur motionBlur = new MotionBlur();
@@ -46,7 +45,7 @@ public class MapRenderingSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         if (!renderQueue.contains(entity, true)) {
-            SpriteComponent spriteC = ComponentMappers.sprites.get(entity);
+            SpriteTrait spriteC = ComponentMappers.sprites.get(entity);
 
             if (spriteC != null) renderQueue.add(entity);
         }
@@ -55,32 +54,55 @@ public class MapRenderingSystem extends IteratingSystem {
     void draw() {
         Core.postProcessor.capture();
 
-        for (Entity entity : renderQueue) {
-            SpriteComponent spriteC = ComponentMappers.sprites.get(entity);
-            TileComponent tileC = ComponentMappers.tiles.get(entity);
-
-            if (tileC != inputController.getSelectedTile() && tileC.active) tileC.active = false;
-            if (tileC != inputController.getHoveredTile() && tileC.hovered) tileC.hovered = false;
-
-            Vector2 screenCoords = Camera.screenCoords(
-                    tileC.tile.getBoundingBox().x,
-                    tileC.tile.getBoundingBox().y
-            );
-
-            if (screenCoords.x < -Constants.PPM * 2
-                    || screenCoords.x > Graphics.width() + Constants.PPM
-                    || screenCoords.y < -Constants.PPM * 2
-                    || screenCoords.y > Graphics.height() + Constants.PPM
-            ) continue;
-
-            if (spriteC != null) {
-                Graphics.begin();
-                Graphics.draw(spriteC.sprite);
-                Graphics.end();
-            }
-        }
+        Graphics.begin();
+        drawTerrain();
+        drawUnits();
+        Graphics.end();
 
         Core.postProcessor.render();
+    }
+
+    private void drawTerrain() {
+        for (Entity entity : renderQueue) {
+            TileComponent tileC = ComponentMappers.tiles.get(entity);
+
+            if (tileC.terrainType != null) {
+                SpriteTrait spriteC = ComponentMappers.sprites.get(entity);
+
+                if (outOfBounds(
+                        tileC.tile.getBoundingBox().x,
+                        tileC.tile.getBoundingBox().y
+                )) continue;
+
+                Graphics.draw(spriteC.sprite);
+            }
+        }
+    }
+
+    private void drawUnits() {
+        for (Entity entity : renderQueue) {
+            TileComponent tileC = ComponentMappers.tiles.get(entity);
+
+            if (tileC.unitType != null) {
+                SpriteTrait spriteC = ComponentMappers.sprites.get(entity);
+
+                if (outOfBounds(
+                        tileC.tile.getBoundingBox().x,
+                        tileC.tile.getBoundingBox().y
+                )) continue;
+
+                Graphics.draw(spriteC.sprite);
+            }
+        }
+    }
+
+    private boolean outOfBounds(float x, float y) {
+        Vector2 screenCoords = Camera.screenCoords(x, y);
+
+        return screenCoords.x < -Constants.PPM * 2
+                || screenCoords.x > Graphics.width() + Constants.PPM
+                || screenCoords.y < -Constants.PPM * 2
+                || screenCoords.y > Graphics.height() + Constants.PPM;
     }
 
     public Array<Entity> getRenderQueue() {
