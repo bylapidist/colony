@@ -1,3 +1,16 @@
+<a name="3.0.0"></a>
+# [3.0.0](https://gitlab.com/getbrett/colony/compare/v2.1.0...v3.0.0) (2019-01-06)
+
+
+### Features
+
+* **engine:** Add fbx-conv script ([83cee47](https://gitlab.com/getbrett/colony/commit/83cee47))
+* **engine:** Implement loading g3db model files ([78ea40a](https://gitlab.com/getbrett/colony/commit/78ea40a))
+* **engine:** Pull postprocessing into core namespace ([7b8adb8](https://gitlab.com/getbrett/colony/commit/7b8adb8))
+* **engine:** Split rendering of terrain and units ([6403bd6](https://gitlab.com/getbrett/colony/commit/6403bd6))
+
+
+
 <a name="2.1.0"></a>
 # [2.1.0](https://gitlab.com/getbrett/colony/compare/v2.0.0...v2.1.0) (2018-12-30)
 
