@@ -1,64 +1,98 @@
 package net.lapidist.colony.core;
 
 import aurelienribon.tweenengine.TweenManager;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import net.lapidist.colony.common.events.Events;
 import net.lapidist.colony.common.io.FileLocation;
 import net.lapidist.colony.common.io.ResourceLoader;
-import net.lapidist.colony.common.modules.ModuleCore;
+import net.lapidist.colony.common.postprocessing.PostProcessor;
 import net.lapidist.colony.common.utils.ShaderLoader;
-import net.lapidist.colony.core.core.*;
-import net.lapidist.colony.core.events.EventType.GameLoadEvent;
+import net.lapidist.colony.core.events.GameLoadEvent;
 import net.lapidist.colony.core.tween.Accessors;
 
 import java.io.IOException;
 
-import static net.lapidist.colony.core.Constants.*;
+public class Colony extends Game {
 
-public class Colony extends ModuleCore {
+    private static Colony instance;
+    private static Batch spriteBatch;
+    private static ShapeRenderer shapeBatch;
+    private static PostProcessor postProcessor;
+    private static TweenManager tweenManager;
+    private static ResourceLoader resourceLoader;
+    private static InputMultiplexer inputMultiplexer;
+
     @Override
-    public void init() {
+    public void create() {
         ShaderLoader.BasePath = "shaders/postprocessing/";
+        Accessors.register();
+
+        instance = this;
+        spriteBatch = new SpriteBatch();
+        shapeBatch = new ShapeRenderer();
+        postProcessor = new PostProcessor(false, false, true);
+        tweenManager = new TweenManager();
+        inputMultiplexer = new InputMultiplexer();
+        Gdx.input.setInputProcessor(inputMultiplexer);
 
         try {
             resourceLoader = new ResourceLoader(
                     FileLocation.INTERNAL,
                     FileLocation.INTERNAL.getFile("resources.xml")
             );
-
-            addModule(logic = new Logic());
-            addModule(world = new World());
-            addModule(control = new Control());
-            addModule(renderer = new Renderer());
-            addModule(ui = new UI());
-
-            tweenManager = new TweenManager();
-            Accessors.register();
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
 
-    @Override
-    public void postInit() {
         Events.fire(new GameLoadEvent());
     }
 
     @Override
     public void render() {
         super.render();
+
+        tweenManager.update(Gdx.graphics.getDeltaTime());
     }
 
     @Override
     public void dispose() {
         super.dispose();
 
-        Core.dispose();
+        spriteBatch.dispose();
+        shapeBatch.dispose();
+        postProcessor.dispose();
     }
 
-    @Override
-    public void resize(int width, int height) {
-        super.resize(width, height);
+    public static Batch getSpriteBatch() {
+        return spriteBatch;
+    }
 
-        Graphics.resize();
+    public static ShapeRenderer getShapeBatch() {
+        return shapeBatch;
+    }
+
+    public static PostProcessor getPostProcessor() {
+        return postProcessor;
+    }
+
+    public static TweenManager getTweenManager() {
+        return tweenManager;
+    }
+
+    public static ResourceLoader getResourceLoader() {
+        return resourceLoader;
+    }
+
+    public static InputMultiplexer getInputMultiplexer() {
+        return inputMultiplexer;
+    }
+
+    public static Colony getInstance() {
+        return instance;
     }
 }

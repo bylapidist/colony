@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <images>
-        <image file="sprites/space.png">
-            <region name="space" bounds="0 0 256 256" />
+        <image file="sprites/grass.png">
+            <region name="grass" bounds="0 0 64 64" />
         </image>
 
-        <image file="sprites/selected.png">
-            <region name="selected" bounds="0 0 256 295" />
-        </image>
-
-        <image file="sprites/noise.png">
-            <region name="noise" bounds="0 0 256 256" />
+        <image file="sprites/empty.png">
+            <region name="empty" bounds="0 0 64 64" />
         </image>
     </images>
 
