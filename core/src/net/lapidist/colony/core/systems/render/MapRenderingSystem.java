@@ -17,11 +17,11 @@ import net.lapidist.colony.common.map.tile.ITileGrid;
 import net.lapidist.colony.common.map.tile.TileCoordinate;
 import net.lapidist.colony.common.postprocessing.effects.Fxaa;
 import net.lapidist.colony.common.postprocessing.effects.MotionBlur;
-import net.lapidist.colony.components.*;
 import net.lapidist.colony.components.archetypes.UnitType;
+import net.lapidist.colony.components.render.RenderableComponent;
 import net.lapidist.colony.core.Colony;
 import net.lapidist.colony.core.Constants;
-import net.lapidist.colony.components.archetypes.EntityFactory;
+import net.lapidist.colony.core.EntityFactory;
 import net.lapidist.colony.components.archetypes.TerrainType;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
 

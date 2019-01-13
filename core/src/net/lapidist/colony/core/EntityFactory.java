@@ -1,9 +1,11 @@
-package net.lapidist.colony.components.archetypes;
+package net.lapidist.colony.core;
 
 import com.artemis.ArchetypeBuilder;
 import com.artemis.Entity;
 import com.artemis.World;
 import net.lapidist.colony.components.*;
+import net.lapidist.colony.components.render.RenderableComponent;
+import net.lapidist.colony.components.render.SpriteComponent;
 
 public class EntityFactory {
 

@@ -6,19 +6,26 @@ import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.IntSet;
 import net.lapidist.colony.components.PlayerComponent;
 import net.lapidist.colony.core.Colony;
+import net.lapidist.colony.core.systems.camera.CameraSystem;
 
 import static com.artemis.E.E;
 
 @Wire
 public class PlayerControlSystem extends EntityProcessingSystem implements InputProcessor {
 
+    private final static float MOVEMENT_SPEED = 10f;
+    private final static float MIN_ZOOM = 1f;
+    private final static float MAX_ZOOM = 2f;
+    private final static float ZOOM_SPEED = 0.06f;
+
     private IntSet downKeys = new IntSet(20);
     private Entity entity;
-    private float movementSpeed = 10f;
+    private CameraSystem cameraSystem;
 
     public PlayerControlSystem() {
         super(Aspect.all(PlayerComponent.class));
@@ -35,49 +42,49 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
         if (singleKeyDown(Input.Keys.W)) {
             E(entity)
                     .getSpriteComponent().getSprite()
-                    .setPosition(oldPosition.x, oldPosition.y - movementSpeed);
+                    .setPosition(oldPosition.x, oldPosition.y - MOVEMENT_SPEED);
         }
 
         if (singleKeyDown(Input.Keys.A)) {
             E(entity)
                     .getSpriteComponent().getSprite()
-                    .setPosition(oldPosition.x - movementSpeed, oldPosition.y);
+                    .setPosition(oldPosition.x - MOVEMENT_SPEED, oldPosition.y);
         }
 
         if (singleKeyDown(Input.Keys.S)) {
             E(entity)
                     .getSpriteComponent().getSprite()
-                    .setPosition(oldPosition.x, oldPosition.y + movementSpeed);
+                    .setPosition(oldPosition.x, oldPosition.y + MOVEMENT_SPEED);
         }
 
         if (singleKeyDown(Input.Keys.D)) {
             E(entity)
                     .getSpriteComponent().getSprite()
-                    .setPosition(oldPosition.x + movementSpeed, oldPosition.y);
+                    .setPosition(oldPosition.x + MOVEMENT_SPEED, oldPosition.y);
         }
 
         if (twoKeysDown(Input.Keys.W, Input.Keys.D)) {
             E(entity)
                     .getSpriteComponent().getSprite()
-                    .setPosition(oldPosition.x + movementSpeed, oldPosition.y - movementSpeed);
+                    .setPosition(oldPosition.x + MOVEMENT_SPEED, oldPosition.y - MOVEMENT_SPEED);
         }
 
         if (twoKeysDown(Input.Keys.A, Input.Keys.W)) {
             E(entity)
                     .getSpriteComponent().getSprite()
-                    .setPosition(oldPosition.x - movementSpeed, oldPosition.y - movementSpeed);
+                    .setPosition(oldPosition.x - MOVEMENT_SPEED, oldPosition.y - MOVEMENT_SPEED);
         }
 
         if (twoKeysDown(Input.Keys.S, Input.Keys.D)) {
             E(entity)
                     .getSpriteComponent().getSprite()
-                    .setPosition(oldPosition.x + movementSpeed, oldPosition.y + movementSpeed);
+                    .setPosition(oldPosition.x + MOVEMENT_SPEED, oldPosition.y + MOVEMENT_SPEED);
         }
 
         if (twoKeysDown(Input.Keys.A, Input.Keys.S)) {
             E(entity)
                     .getSpriteComponent().getSprite()
-                    .setPosition(oldPosition.x - movementSpeed, oldPosition.y + movementSpeed);
+                    .setPosition(oldPosition.x - MOVEMENT_SPEED, oldPosition.y + MOVEMENT_SPEED);
         }
     }
 
@@ -146,6 +153,18 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
 
     @Override
     public boolean scrolled(int amount) {
-        return false;
+        // Zoom out
+        if (amount == 1) {
+            cameraSystem.camera.zoom += ZOOM_SPEED;
+            cameraSystem.camera.zoom = MathUtils.clamp(cameraSystem.camera.zoom, MIN_ZOOM, MAX_ZOOM);
+        }
+
+        // Zoom in
+        if (amount == -1) {
+            cameraSystem.camera.zoom -= ZOOM_SPEED;
+            cameraSystem.camera.zoom = MathUtils.clamp(cameraSystem.camera.zoom, MIN_ZOOM, MAX_ZOOM);
+        }
+
+        return true;
     }
 }
