@@ -1,11 +1,9 @@
-package net.lapidist.colony.desktop;
+package net.lapidist.colony.core;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import net.lapidist.colony.core.Colony;
-import net.lapidist.colony.core.Constants;
 
-public class DesktopLauncher {
+public class Launcher {
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 

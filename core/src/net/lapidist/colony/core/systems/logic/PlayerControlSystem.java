@@ -17,18 +17,8 @@ import static com.artemis.E.E;
 public class PlayerControlSystem extends EntityProcessingSystem implements InputProcessor {
 
     private IntSet downKeys = new IntSet(20);
-    private enum Direction {
-        NORTH,
-        NORTHEAST,
-        EAST,
-        SOUTHEAST,
-        SOUTH,
-        SOUTHWEST,
-        WEST
-    }
     private Entity entity;
     private float movementSpeed = 10f;
-    private Direction currentDirection;
 
     public PlayerControlSystem() {
         super(Aspect.all(PlayerComponent.class));
