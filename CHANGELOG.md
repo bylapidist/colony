@@ -1,3 +1,13 @@
+<a name="4.0.0"></a>
+# [4.0.0](https://gitlab.com/getbrett/colony/compare/v3.0.0...v4.0.0) (2019-01-13)
+
+
+### Features
+
+* **engine:** Move to artemis-odb ([893f4aa](https://gitlab.com/getbrett/colony/commit/893f4aa))
+
+
+
 <a name="3.0.0"></a>
 # [3.0.0](https://gitlab.com/getbrett/colony/compare/v2.1.0...v3.0.0) (2019-01-06)
 
@@ -6,6 +16,7 @@
 
 * **engine:** Add fbx-conv script ([83cee47](https://gitlab.com/getbrett/colony/commit/83cee47))
 * **engine:** Implement loading g3db model files ([78ea40a](https://gitlab.com/getbrett/colony/commit/78ea40a))
+* **engine:** Implement loading g3db model files ([45fd2bc](https://gitlab.com/getbrett/colony/commit/45fd2bc))
 * **engine:** Pull postprocessing into core namespace ([7b8adb8](https://gitlab.com/getbrett/colony/commit/7b8adb8))
 * **engine:** Split rendering of terrain and units ([6403bd6](https://gitlab.com/getbrett/colony/commit/6403bd6))
 
