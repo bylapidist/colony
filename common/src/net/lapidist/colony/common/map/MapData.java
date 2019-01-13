@@ -1,11 +1,14 @@
 package net.lapidist.colony.common.map;
 
+import com.badlogic.gdx.math.Rectangle;
+
 public class MapData {
 
     private final int gridWidth;
     private final int gridHeight;
     private final int tileWidth;
     private final int tileHeight;
+    private final Rectangle bounds;
 
     public MapData(
             final int gridWidth,
@@ -17,6 +20,12 @@ public class MapData {
         this.gridHeight = gridHeight;
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
+        this.bounds = new Rectangle(
+                0,
+                0,
+                getGridWidth() * getTileWidth(),
+                getGridHeight() * getTileHeight()
+        );
     }
 
     public int getGridWidth() {
@@ -33,5 +42,9 @@ public class MapData {
 
     public int getTileHeight() {
         return tileHeight;
+    }
+
+    public Rectangle getBounds() {
+        return bounds;
     }
 }

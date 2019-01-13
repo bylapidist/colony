@@ -13,7 +13,7 @@ import java.util.*;
 
 public class MapImplementation<T extends ITileMetaData> implements ITileGrid<T> {
 
-    private static final int[][] NEIGHBOURS = {{-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}};
+    private static final int[][] NEIGHBOURS = {{-1, -1, 0}, {0, -1, 0}, {1, -1, 0}, {1, 0, 0}, {1, 1, 0}, {0, 1, 0}, {-1, 1, 0}, {-1, 0, 0}};
     private static final int NEIGHBOUR_X_INDEX = 0;
     private static final int NEIGHBOUR_Y_INDEX = 1;
     private static final int NEIGHBOUR_Z_INDEX = 2;
@@ -111,7 +111,42 @@ public class MapImplementation<T extends ITileMetaData> implements ITileGrid<T> 
 
     @Override
     public Optional<ITile<T>> getByPixelCoordinate(Vector2 coordinate) {
-        return Optional.empty();
+        int estimatedGridX = (int) (coordinate.x / mapData.getTileWidth());
+        int estimatedGridY = (int) (coordinate.y / mapData.getTileHeight());
+
+        // It's possible the estimated coordinates are off the grid
+        // so we create a virtual tile
+        final TileCoordinate estimatedCoordinate = TileCoordinate.fromCoordinates(estimatedGridX, estimatedGridY, 0);
+        final ITile tempTile = new TileImplementation(mapData, estimatedCoordinate, tileDataStorage);
+        final ITile trueTile = refineTileByPixel(tempTile, new Vector2(coordinate.x, coordinate.y));
+
+        if (tilesAreAtTheSamePosition(tempTile, trueTile)) {
+            return getByTileCoordinate(estimatedCoordinate);
+        }
+
+        return containsTileCoordinate(trueTile.getTileCoordinate()) ? Optional.of(trueTile) : Optional.empty();
+    }
+
+    private boolean tilesAreAtTheSamePosition(final ITile<T> tile0, final ITile<T> tile1) {
+        return tile0.getGridX() == tile1.getGridX()
+                && tile0.getGridY() == tile1.getGridY()
+                && tile0.getGridZ() == tile1.getGridZ();
+    }
+
+    private ITile<T> refineTileByPixel(final ITile<T> tile, final Vector2 clickedPoint) {
+        ITile refined = tile;
+        double smallestDistance = Math.sqrt(Math.pow((refined.getCenterX() - clickedPoint.x), 2) + Math.pow((refined.getCenterY() - clickedPoint.y), 2));
+
+        for (final ITile<T> neighbour : getNeighboursOf(tile)) {
+            final double currentDistance = Math.sqrt(Math.pow((neighbour.getCenterX() - clickedPoint.x), 2) + Math.pow((neighbour.getCenterY() - clickedPoint.y), 2));
+
+            if (currentDistance < smallestDistance) {
+                refined = neighbour;
+                smallestDistance = currentDistance;
+            }
+        }
+
+        return refined;
     }
 
     @Override

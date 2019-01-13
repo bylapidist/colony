@@ -29,7 +29,7 @@ public class MapScreen implements Screen {
                         new CameraSystem(1f),
                         new PlayerCameraSystem(),
                         new PlayerControlSystem(),
-                        new MapGenerationSystem(128, 128, Constants.PPM),
+                        new MapGenerationSystem(12, 12, Constants.PPM),
                         new MapRenderingSystem()
                 )
                 .build();
