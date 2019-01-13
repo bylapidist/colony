@@ -1,2 +1,2 @@
-include 'desktop', 'core', 'common'
+include 'desktop', 'core', 'common', 'components'
 
