@@ -9,9 +9,12 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.IntSet;
+import net.lapidist.colony.common.map.tile.ITile;
 import net.lapidist.colony.components.PlayerComponent;
 import net.lapidist.colony.core.Colony;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
+
+import java.util.Optional;
 
 import static com.artemis.E.E;
 
@@ -96,11 +99,21 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
         return downKeys.contains(keycode1) && downKeys.contains(keycode2) && downKeys.size == 2;
     }
 
+    private void updatePlayerTile() {
+        Vector2 position = new Vector2(
+                E(entity).getSpriteComponent().getSprite().getX(),
+                E(entity).getSpriteComponent().getSprite().getY()
+        );
+
+//        Optional<ITile> playerTile = E().grid
+    }
+
     @Override
     protected void process(Entity e) {
         this.entity = e;
 
         processInput();
+        updatePlayerTile();
     }
 
     @Override

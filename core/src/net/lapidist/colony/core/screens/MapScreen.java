@@ -4,9 +4,11 @@ import com.artemis.*;
 import com.artemis.managers.TagManager;
 import com.badlogic.gdx.Screen;
 import net.lapidist.colony.common.events.Events;
+import net.lapidist.colony.core.Constants;
 import net.lapidist.colony.core.events.WorldInitEvent;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
 import net.lapidist.colony.core.systems.camera.PlayerCameraSystem;
+import net.lapidist.colony.core.systems.logic.MapGenerationSystem;
 import net.lapidist.colony.core.systems.logic.PlayerControlSystem;
 import net.lapidist.colony.core.systems.render.ClearScreenSystem;
 import net.lapidist.colony.core.systems.render.MapRenderingSystem;
@@ -27,6 +29,7 @@ public class MapScreen implements Screen {
                         new CameraSystem(1f),
                         new PlayerCameraSystem(),
                         new PlayerControlSystem(),
+                        new MapGenerationSystem(128, 128, Constants.PPM),
                         new MapRenderingSystem()
                 )
                 .build();

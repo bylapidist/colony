@@ -10,20 +10,18 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import net.lapidist.colony.common.map.MapBuilder;
-import net.lapidist.colony.common.map.MapLayout;
 import net.lapidist.colony.common.map.tile.ITile;
-import net.lapidist.colony.common.map.tile.ITileGrid;
 import net.lapidist.colony.common.map.tile.TileCoordinate;
 import net.lapidist.colony.common.postprocessing.effects.Fxaa;
 import net.lapidist.colony.common.postprocessing.effects.MotionBlur;
+import net.lapidist.colony.components.archetypes.TerrainType;
 import net.lapidist.colony.components.archetypes.UnitType;
 import net.lapidist.colony.components.render.RenderableComponent;
 import net.lapidist.colony.core.Colony;
 import net.lapidist.colony.core.Constants;
 import net.lapidist.colony.core.EntityFactory;
-import net.lapidist.colony.components.archetypes.TerrainType;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
+import net.lapidist.colony.core.systems.logic.MapGenerationSystem;
 
 import java.util.Optional;
 
@@ -36,6 +34,7 @@ public class MapRenderingSystem extends EntityProcessingSystem implements Screen
     private static Vector3 tmpVec3 = new Vector3();
     private static Vector2 mouse = new Vector2();
     private CameraSystem cameraSystem;
+    private MapGenerationSystem mapGenerationSystem;
 
     public MapRenderingSystem() {
         super(Aspect.all(RenderableComponent.class));
@@ -66,7 +65,40 @@ public class MapRenderingSystem extends EntityProcessingSystem implements Screen
 
     @Override
     public void show() {
-        generateLevel();
+        Iterable<ITile> tiles = mapGenerationSystem.getGrid().getTiles();
+
+        tiles.forEach(tile -> {
+            Entity entity = new EntityFactory().createTerrain(world);
+
+            Sprite sprite = new Sprite(Colony.getResourceLoader().getRegion("empty"));
+            sprite.setBounds(
+                    tile.getBoundingBox().getX(),
+                    tile.getBoundingBox().getY(),
+                    tile.getBoundingBox().getWidth(),
+                    tile.getBoundingBox().getHeight()
+            );
+
+            E(entity).nameComponentName(tile.getId())
+                    .tileComponentTile(tile)
+                    .terrainComponentTerrainType(TerrainType.EMPTY)
+                    .spriteComponentSprite(sprite);
+        });
+
+        Optional<ITile> playerTile = mapGenerationSystem.getGrid()
+                .getByTileCoordinate(new TileCoordinate(0, 0 , 0));
+        Entity playerEntity = new EntityFactory().createPlayer(world);
+        Sprite playerSprite = new Sprite(Colony.getResourceLoader().getRegion("grass"));
+        playerSprite.setBounds(
+                playerTile.get().getBoundingBox().getX(),
+                playerTile.get().getBoundingBox().getY(),
+                playerTile.get().getBoundingBox().getWidth(),
+                playerTile.get().getBoundingBox().getHeight()
+        );
+
+        E(playerEntity).nameComponentName("Player")
+                .unitComponentUnitType(UnitType.PLAYER)
+                .tileComponentTile(playerTile.get())
+                .spriteComponentSprite(playerSprite);
     }
 
     @Override
@@ -143,50 +175,6 @@ public class MapRenderingSystem extends EntityProcessingSystem implements Screen
                         .draw(Colony.getSpriteBatch());
             }
         }
-    }
-
-    private void generateLevel() {
-        MapBuilder builder = new MapBuilder()
-                .setGridHeight(120)
-                .setGridWidth(120)
-                .setTileWidth(Constants.PPM)
-                .setTileHeight(Constants.PPM)
-                .setMapLayout(MapLayout.RECTANGULAR);
-
-        ITileGrid grid = builder.build();
-        Iterable<ITile> tiles = grid.getTiles();
-
-        tiles.forEach(tile -> {
-            Entity entity = new EntityFactory().createTerrain(world);
-
-            Sprite sprite = new Sprite(Colony.getResourceLoader().getRegion("empty"));
-            sprite.setBounds(
-                    tile.getBoundingBox().getX(),
-                    tile.getBoundingBox().getY(),
-                    tile.getBoundingBox().getWidth(),
-                    tile.getBoundingBox().getHeight()
-            );
-
-            E(entity).nameComponentName(tile.getId())
-                    .tileComponentTile(tile)
-                    .terrainComponentTerrainType(TerrainType.EMPTY)
-                    .spriteComponentSprite(sprite);
-        });
-
-        Optional<ITile> playerTile = grid.getByTileCoordinate(new TileCoordinate(0, 0 , 0));
-        Entity playerEntity = new EntityFactory().createPlayer(world);
-        Sprite playerSprite = new Sprite(Colony.getResourceLoader().getRegion("grass"));
-        playerSprite.setBounds(
-                playerTile.get().getBoundingBox().getX(),
-                playerTile.get().getBoundingBox().getY(),
-                playerTile.get().getBoundingBox().getWidth(),
-                playerTile.get().getBoundingBox().getHeight()
-        );
-
-        E(playerEntity).nameComponentName("Player")
-                .unitComponentUnitType(UnitType.PLAYER)
-                .tileComponentTile(playerTile.get())
-                .spriteComponentSprite(playerSprite);
     }
 
     private boolean outOfBounds(float x, float y) {
