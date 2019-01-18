@@ -1,41 +1,40 @@
 package net.lapidist.colony.core.systems.render;
 
-import com.artemis.BaseSystem;
+import com.artemis.Aspect;
 import com.artemis.Entity;
+import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.common.events.Events;
+import net.lapidist.colony.components.render.GuiComponent;
 import net.lapidist.colony.core.Colony;
 import net.lapidist.colony.core.events.ScreenResizeEvent;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
 
-public class GuiRenderSystem extends BaseSystem {
+import static com.artemis.E.*;
 
-    private Array<Entity> renderQueue;
+public class GuiRenderingSystem extends EntityProcessingSystem {
+
     private BitmapFont font;
     private CameraSystem cameraSystem;
 
-    public GuiRenderSystem() {
-        this.renderQueue = new Array<>();
-        font = Colony.getResourceLoader().getFont("default");
-    }
-
-    @Override
-    protected void processSystem() {
-
+    public GuiRenderingSystem() {
+        super(Aspect.all(
+                GuiComponent.class
+        ));
     }
 
     @Override
     protected void initialize() {
-        Events.on(ScreenResizeEvent.class, event -> {
-            resize(event.width, event.height);
-        });
+        Events.on(ScreenResizeEvent.class, event -> resize(event.width, event.height));
+        font = Colony.getResourceLoader().getFont("default");
     }
 
-    private void resize(int width, int height) {
-        cameraSystem.guiCamera.setToOrtho(false, width, height);
-        cameraSystem.guiCamera.update();
+    @Override
+    protected void process(Entity e) {
+        if (E(e).hasSpriteComponent()) {
+            E(e).spriteComponentSprite().draw(Colony.getSpriteBatch());
+        }
     }
 
     @Override
@@ -49,13 +48,15 @@ public class GuiRenderSystem extends BaseSystem {
                 32,
                 Gdx.graphics.getHeight() - 32
         );
-
-        Colony.getSpriteBatch().end();
     }
 
     @Override
-    protected void dispose() {
-        renderQueue.forEach(Entity::deleteFromWorld);
-        renderQueue.clear();
+    protected void end() {
+        Colony.getSpriteBatch().end();
+    }
+
+    private void resize(int width, int height) {
+        cameraSystem.guiCamera.setToOrtho(false, width, height);
+        cameraSystem.guiCamera.update();
     }
 }

@@ -17,14 +17,14 @@ import static com.artemis.E.E;
 
 public class EntityFactorySystem extends BaseSystem {
 
-    public Entity createEntity(String entity, float cx, float cy, MapProperties properties, TiledMapTileLayer.Cell cell) {
+    Entity createEntity(String entity, float cx, float cy, MapProperties properties, TiledMapTileLayer.Cell cell) {
         switch (entity) {
             case "building":
-                return createBuilding(cx, cy, properties);
+                return createBuilding(cx, cy, properties, cell);
             case "terrain":
                 return createTerrain(cx, cy, properties, cell);
             case "unit":
-                return createUnit(cx, cy, properties);
+                return createUnit(cx, cy, properties, cell);
             case "player":
                 return createPlayer(cx, cy, properties, cell);
             default:
@@ -32,37 +32,29 @@ public class EntityFactorySystem extends BaseSystem {
         }
     }
 
-    private ArchetypeBuilder createBuildingArchetype() {
+    private ArchetypeBuilder createCellArchetype() {
         return new ArchetypeBuilder()
-                .add(BuildingComponent.class)
                 .add(DimensionsComponent.class)
                 .add(NameComponent.class)
                 .add(RenderableComponent.class)
                 .add(SpriteComponent.class)
                 .add(CellComponent.class)
                 .add(UpdatableComponent.class);
+    }
+
+    private ArchetypeBuilder createBuildingArchetype() {
+        return createCellArchetype()
+                .add(BuildingComponent.class);
     }
 
     private ArchetypeBuilder createTerrainArchetype() {
-        return new ArchetypeBuilder()
-                .add(TerrainComponent.class)
-                .add(DimensionsComponent.class)
-                .add(NameComponent.class)
-                .add(RenderableComponent.class)
-                .add(SpriteComponent.class)
-                .add(CellComponent.class)
-                .add(UpdatableComponent.class);
+        return createCellArchetype()
+                .add(TerrainComponent.class);
     }
 
     private ArchetypeBuilder createUnitArchetype() {
-        return new ArchetypeBuilder()
-                .add(UnitComponent.class)
-                .add(DimensionsComponent.class)
-                .add(NameComponent.class)
-                .add(RenderableComponent.class)
-                .add(SpriteComponent.class)
-                .add(CellComponent.class)
-                .add(UpdatableComponent.class);
+        return createCellArchetype()
+                .add(UnitComponent.class);
     }
 
     private ArchetypeBuilder createPlayerArchetype() {
@@ -70,7 +62,7 @@ public class EntityFactorySystem extends BaseSystem {
                 .add(PlayerComponent.class);
     }
 
-    private Entity createBuilding(float cx, float cy, MapProperties properties) {
+    private Entity createBuilding(float cx, float cy, MapProperties properties, TiledMapTileLayer.Cell cell) {
         Entity entity = world.createEntity(createBuildingArchetype().build(world));
 
         return entity;
@@ -94,7 +86,7 @@ public class EntityFactorySystem extends BaseSystem {
         return entity;
     }
 
-    private Entity createUnit(float cx, float cy, MapProperties properties) {
+    private Entity createUnit(float cx, float cy, MapProperties properties, TiledMapTileLayer.Cell cell) {
         Entity entity = world.createEntity(createUnitArchetype().build(world));
 
         return entity;

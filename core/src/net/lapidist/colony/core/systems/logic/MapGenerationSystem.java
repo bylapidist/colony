@@ -8,7 +8,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.utils.ObjectMap;
 import net.lapidist.colony.core.Colony;
-import net.lapidist.colony.core.systems.logic.EntityFactorySystem;
 
 @Wire
 public class MapGenerationSystem extends BaseSystem {

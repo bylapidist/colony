@@ -8,13 +8,17 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.IntSet;
+import net.lapidist.colony.common.events.Events;
 import net.lapidist.colony.components.PlayerComponent;
 import net.lapidist.colony.core.Colony;
 import net.lapidist.colony.core.Constants;
+import net.lapidist.colony.core.events.HoverTileOutsideReachEvent;
+import net.lapidist.colony.core.events.HoverTileWithinReachEvent;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
 
 import static com.artemis.E.E;
@@ -26,6 +30,7 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
     private final static float MIN_ZOOM = 1f;
     private final static float MAX_ZOOM = 2f;
     private final static float ZOOM_SPEED = 0.06f;
+    private final static float REACH = (5f * Constants.PPM) / 2f;
 
     private IntSet downKeys = new IntSet(20);
     private Entity entity;
@@ -33,6 +38,7 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
     private Vector2 origin;
     private Vector2 tmpVec2;
     private Rectangle mapBounds;
+    private Circle reachBounds;
     private CameraSystem cameraSystem;
     private MapGenerationSystem mapGenerationSystem;
 
@@ -41,6 +47,7 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
 
         tmpVec2 = new Vector2();
         mapBounds = new Rectangle();
+        reachBounds = new Circle();
 
         Colony.getInputMultiplexer().addProcessor(this);
     }
@@ -127,6 +134,10 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
         return mapBounds.contains(position);
     }
 
+    private boolean isWithinReach(Vector2 position) {
+        return reachBounds.contains(position);
+    }
+
     @Override
     protected void initialize() {
         mapBounds.set(
@@ -142,6 +153,7 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
         entity = e;
         position = getPlayerPosition();
         origin = getPlayerOrigin();
+        reachBounds.set(origin, REACH);
 
         processInput();
         updatePlayerCell();
@@ -158,7 +170,7 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
         return false;
     }
 
-    public boolean multipleKeysDown(int keycode) {
+    public boolean multipleKeysDown(int lastKeycode) {
         return false;
     }
 
@@ -192,7 +204,18 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        return false;
+        tmpVec2.set(cameraSystem.worldCoords(screenX, screenY));
+
+        int estimatedGridX = (int) tmpVec2.x / mapGenerationSystem.getTileWidth();
+        int estimatedGridY = (int) tmpVec2.y / mapGenerationSystem.getTileHeight();
+
+        if (isWithinReach(tmpVec2.set(tmpVec2.x, tmpVec2.y))) {
+            Events.fire(new HoverTileWithinReachEvent(estimatedGridX, estimatedGridY));
+            return true;
+        }
+
+        Events.fire(new HoverTileOutsideReachEvent(estimatedGridX, estimatedGridY));
+        return true;
     }
 
     @Override
