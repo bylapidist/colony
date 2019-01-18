@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.IntSet;
-import net.lapidist.colony.common.map.tile.ITile;
+//import net.lapidist.colony.common.map.tile.ITile;
 import net.lapidist.colony.components.PlayerComponent;
 import net.lapidist.colony.core.Colony;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
@@ -33,7 +33,7 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
     private Vector2 origin;
     private Vector2 tmpVec2;
     private CameraSystem cameraSystem;
-    private MapGenerationSystem mapGenerationSystem;
+//    private MapGenerationSystem mapGenerationSystem;
 
     public PlayerControlSystem() {
         super(Aspect.all(PlayerComponent.class));
@@ -112,15 +112,16 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
     }
 
     private void updatePlayerTile() {
-        Optional<ITile> playerTile = mapGenerationSystem.getGrid().getByPixelCoordinate(origin);
-
-        if (playerTile.isPresent()) {
-            E(entity).tileComponentTile(playerTile.get());
-        }
+//        Optional<ITile> playerTile = mapGenerationSystem.getGrid().getByPixelCoordinate(origin);
+//
+//        if (playerTile.isPresent()) {
+//            E(entity).tileComponentTile(playerTile.get());
+//        }
     }
 
     private boolean isWithinGrid(Vector2 position) {
-        return mapGenerationSystem.getGrid().getMapData().getBounds().contains(position);
+//        return mapGenerationSystem.getGrid().getMapData().getBounds().contains(position);
+        return false;
     }
 
     @Override

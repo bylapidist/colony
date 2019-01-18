@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <images>
-        <image file="sprites/grass.png">
-            <region name="grass" bounds="0 0 64 64" />
+        <image file="sprites/player.png">
+            <region name="player" bounds="0 0 64 64" />
+        </image>
+
+        <image file="sprites/dirt.png">
+            <region name="dirt" bounds="0 0 64 64" />
         </image>
 
         <image file="sprites/empty.png">

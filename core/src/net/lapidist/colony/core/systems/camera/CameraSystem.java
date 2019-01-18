@@ -53,12 +53,14 @@ public class CameraSystem extends BaseSystem {
     }
 
     public Vector2 screenCoords(float worldX, float worldY) {
+        camera.update();
         camera.project(tmpVec3.set(worldX, worldY, 0));
 
         return mouse.set(tmpVec3.x, tmpVec3.y);
     }
 
     public Vector2 worldCoords(float screenX, float screenY) {
+        camera.update();
         camera.unproject(tmpVec3.set(screenX, screenY, 0));
 
         return mouse.set(tmpVec3.x, tmpVec3.y);
