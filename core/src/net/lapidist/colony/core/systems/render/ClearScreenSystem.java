@@ -19,8 +19,7 @@ public class ClearScreenSystem extends BaseSystem {
 
     @Override
     protected void processSystem() {
-        Gdx.gl20.glDepthMask(true);
         Gdx.gl20.glClearColor(color.r, color.g, color.b, color.a);
-        Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_ALPHA_BITS);
+        Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_ALPHA_BITS);
     }
 }

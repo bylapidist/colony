@@ -1,35 +1,29 @@
 package net.lapidist.colony.core.systems.render;
 
-import com.artemis.Aspect;
+import com.artemis.BaseSystem;
 import com.artemis.Entity;
-import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.common.events.Events;
-import net.lapidist.colony.components.render.RenderableComponent;
 import net.lapidist.colony.core.Colony;
 import net.lapidist.colony.core.events.ScreenResizeEvent;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
 
-public class GuiRenderSystem extends EntityProcessingSystem {
+public class GuiRenderSystem extends BaseSystem {
 
     private Array<Entity> renderQueue;
     private BitmapFont font;
     private CameraSystem cameraSystem;
 
     public GuiRenderSystem() {
-        super(Aspect.all(RenderableComponent.class));
-
         this.renderQueue = new Array<>();
         font = Colony.getResourceLoader().getFont("default");
     }
 
     @Override
-    protected void process(Entity entity) {
-        if (!renderQueue.contains(entity, true)) {
-            renderQueue.add(entity);
-        }
+    protected void processSystem() {
+
     }
 
     @Override

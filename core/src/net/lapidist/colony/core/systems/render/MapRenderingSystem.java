@@ -6,8 +6,6 @@ import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.common.events.Events;
 import net.lapidist.colony.common.map.tile.ITile;
@@ -17,9 +15,9 @@ import net.lapidist.colony.common.postprocessing.effects.MotionBlur;
 import net.lapidist.colony.components.archetypes.TerrainType;
 import net.lapidist.colony.components.archetypes.UnitType;
 import net.lapidist.colony.components.render.RenderableComponent;
+import net.lapidist.colony.components.render.UpdatableComponent;
 import net.lapidist.colony.core.Colony;
-import net.lapidist.colony.core.Constants;
-import net.lapidist.colony.core.EntityFactory;
+import net.lapidist.colony.core.systems.EntityFactory;
 import net.lapidist.colony.core.events.ScreenResizeEvent;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
 import net.lapidist.colony.core.systems.logic.MapGenerationSystem;
@@ -32,13 +30,11 @@ import static com.artemis.E.*;
 public class MapRenderingSystem extends EntityProcessingSystem {
 
     private Array<Entity> renderQueue;
-    private static Vector3 tmpVec3 = new Vector3();
-    private static Vector2 mouse = new Vector2();
     private CameraSystem cameraSystem;
     private MapGenerationSystem mapGenerationSystem;
 
     public MapRenderingSystem() {
-        super(Aspect.all(RenderableComponent.class));
+        super(Aspect.all(RenderableComponent.class, UpdatableComponent.class));
 
         this.renderQueue = new Array<>();
 
@@ -62,7 +58,7 @@ public class MapRenderingSystem extends EntityProcessingSystem {
         tiles.forEach(tile -> {
             Entity entity = new EntityFactory().createTerrain(world);
 
-            Sprite sprite = new Sprite(Colony.getResourceLoader().getRegion("empty"));
+            Sprite sprite = new Sprite(Colony.getResourceLoader().getTexture("empty"));
             sprite.setBounds(
                     tile.getBoundingBox().getX(),
                     tile.getBoundingBox().getY(),
@@ -79,7 +75,7 @@ public class MapRenderingSystem extends EntityProcessingSystem {
         Optional<ITile> playerTile = mapGenerationSystem.getGrid()
                 .getByTileCoordinate(new TileCoordinate(0, 0 , 0));
         Entity playerEntity = new EntityFactory().createPlayer(world);
-        Sprite playerSprite = new Sprite(Colony.getResourceLoader().getRegion("grass"));
+        Sprite playerSprite = new Sprite(Colony.getResourceLoader().getTexture("grass"));
         playerSprite.setBounds(
                 playerTile.get().getBoundingBox().getX(),
                 playerTile.get().getBoundingBox().getY(),
@@ -96,6 +92,11 @@ public class MapRenderingSystem extends EntityProcessingSystem {
     @Override
     protected void process(Entity entity) {
         if (!renderQueue.contains(entity, true)) {
+            if (cameraSystem.outOfBounds(
+                    E(entity).getSpriteComponent().getSprite().getX(),
+                    E(entity).getSpriteComponent().getSprite().getY()
+            )) return;
+
             renderQueue.add(entity);
         }
     }
@@ -134,11 +135,6 @@ public class MapRenderingSystem extends EntityProcessingSystem {
     private void drawTerrain() {
         for (Entity entity : renderQueue) {
             if (E(entity).hasTerrainComponent()) {
-                if (outOfBounds(
-                        E(entity).getSpriteComponent().getSprite().getX(),
-                        E(entity).getSpriteComponent().getSprite().getY()
-                )) continue;
-
                 E(entity).getSpriteComponent().getSprite()
                         .draw(Colony.getSpriteBatch());
             }
@@ -148,11 +144,6 @@ public class MapRenderingSystem extends EntityProcessingSystem {
     private void drawBuildings() {
         for (Entity entity : renderQueue) {
             if (E(entity).hasBuildingComponent()) {
-                if (outOfBounds(
-                        E(entity).getSpriteComponent().getSprite().getX(),
-                        E(entity).getSpriteComponent().getSprite().getY()
-                )) continue;
-
                 E(entity).getSpriteComponent().getSprite()
                         .draw(Colony.getSpriteBatch());
             }
@@ -162,29 +153,9 @@ public class MapRenderingSystem extends EntityProcessingSystem {
     private void drawUnits() {
         for (Entity entity : renderQueue) {
             if (E(entity).hasUnitComponent()) {
-                if (outOfBounds(
-                        E(entity).getSpriteComponent().getSprite().getX(),
-                        E(entity).getSpriteComponent().getSprite().getY()
-                )) continue;
-
                 E(entity).getSpriteComponent().getSprite()
                         .draw(Colony.getSpriteBatch());
             }
         }
-    }
-
-    private boolean outOfBounds(float x, float y) {
-        Vector2 screenCoords = screenCoords(x, y);
-
-        return screenCoords.x < -Constants.PPM * 2
-                || screenCoords.x > Gdx.graphics.getWidth() + Constants.PPM
-                || screenCoords.y < -Constants.PPM * 2
-                || screenCoords.y > Gdx.graphics.getHeight() + Constants.PPM;
-    }
-
-    private Vector2 screenCoords(float worldX, float worldY) {
-        cameraSystem.camera.project(tmpVec3.set(worldX, worldY, 0));
-
-        return mouse.set(tmpVec3.x, tmpVec3.y);
     }
 }
