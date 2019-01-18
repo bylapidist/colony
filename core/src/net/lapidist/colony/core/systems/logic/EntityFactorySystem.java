@@ -39,6 +39,7 @@ public class EntityFactorySystem extends BaseSystem {
                 .add(NameComponent.class)
                 .add(RenderableComponent.class)
                 .add(SpriteComponent.class)
+                .add(CellComponent.class)
                 .add(UpdatableComponent.class);
     }
 
@@ -49,6 +50,7 @@ public class EntityFactorySystem extends BaseSystem {
                 .add(NameComponent.class)
                 .add(RenderableComponent.class)
                 .add(SpriteComponent.class)
+                .add(CellComponent.class)
                 .add(UpdatableComponent.class);
     }
 
@@ -59,6 +61,7 @@ public class EntityFactorySystem extends BaseSystem {
                 .add(NameComponent.class)
                 .add(RenderableComponent.class)
                 .add(SpriteComponent.class)
+                .add(CellComponent.class)
                 .add(UpdatableComponent.class);
     }
 
@@ -85,6 +88,7 @@ public class EntityFactorySystem extends BaseSystem {
 
         E(entity).nameComponentName((String) properties.get("entity"))
                 .spriteComponentSprite(sprite)
+                .cellComponentCell(cell)
                 .terrainComponentTerrainType(TerrainType.EMPTY);
 
         return entity;
@@ -108,6 +112,7 @@ public class EntityFactorySystem extends BaseSystem {
 
         E(entity).nameComponentName((String) properties.get("entity"))
                 .spriteComponentSprite(sprite)
+                .cellComponentCell(cell)
                 .unitComponentUnitType(UnitType.PLAYER);
 
         return entity;

@@ -7,15 +7,14 @@ import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.IntSet;
-//import net.lapidist.colony.common.map.tile.ITile;
 import net.lapidist.colony.components.PlayerComponent;
 import net.lapidist.colony.core.Colony;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
-
-import java.util.Optional;
+import net.lapidist.colony.core.systems.render.MapGenerationSystem;
 
 import static com.artemis.E.E;
 
@@ -33,7 +32,7 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
     private Vector2 origin;
     private Vector2 tmpVec2;
     private CameraSystem cameraSystem;
-//    private MapGenerationSystem mapGenerationSystem;
+    private MapGenerationSystem mapGenerationSystem;
 
     public PlayerControlSystem() {
         super(Aspect.all(PlayerComponent.class));
@@ -112,11 +111,15 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
     }
 
     private void updatePlayerTile() {
-//        Optional<ITile> playerTile = mapGenerationSystem.getGrid().getByPixelCoordinate(origin);
-//
-//        if (playerTile.isPresent()) {
-//            E(entity).tileComponentTile(playerTile.get());
-//        }
+        TiledMapTileLayer layer = mapGenerationSystem.layers.get("unitsLayer");
+        Vector2 worldCoords = cameraSystem.worldCoords(E(entity).spriteComponentSprite().getX(), E(entity).spriteComponentSprite().getY());
+
+        TiledMapTileLayer.Cell cell = layer.getCell(
+            (int) worldCoords.x,
+            (int) worldCoords.y
+        );
+
+        E(entity).cellComponentCell(cell);
     }
 
     private boolean isWithinGrid(Vector2 position) {
