@@ -4,74 +4,70 @@ import com.artemis.*;
 import com.artemis.managers.TagManager;
 import com.badlogic.gdx.Screen;
 import net.lapidist.colony.common.events.Events;
+import net.lapidist.colony.core.Constants;
+import net.lapidist.colony.core.events.ScreenResizeEvent;
 import net.lapidist.colony.core.events.WorldInitEvent;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
 import net.lapidist.colony.core.systems.camera.PlayerCameraSystem;
+import net.lapidist.colony.core.systems.logic.MapGenerationSystem;
 import net.lapidist.colony.core.systems.logic.PlayerControlSystem;
-import net.lapidist.colony.core.systems.render.ClearScreenSystem;
+import net.lapidist.colony.core.systems.render.GuiRenderSystem;
 import net.lapidist.colony.core.systems.render.MapRenderingSystem;
 
 public class MapScreen implements Screen {
 
     private World world;
-    private MapRenderingSystem renderingSystem;
 
     public MapScreen() {
         WorldConfiguration config = new WorldConfigurationBuilder()
-                .with(
+                .with(WorldConfigurationBuilder.Priority.HIGHEST,
                         new SuperMapper(),
                         new TagManager()
                 )
-                .with(
-                        new ClearScreenSystem(),
+                .with(WorldConfigurationBuilder.Priority.NORMAL,
                         new CameraSystem(1f),
                         new PlayerCameraSystem(),
                         new PlayerControlSystem(),
-                        new MapRenderingSystem()
+                        new MapGenerationSystem(120, 120, Constants.PPM),
+                        new MapRenderingSystem(),
+                        new GuiRenderSystem()
                 )
                 .build();
 
         world = new World(config);
-        renderingSystem = world.getSystem(MapRenderingSystem.class);
 
         Events.fire(new WorldInitEvent());
     }
 
     @Override
     public void show() {
-        renderingSystem.show();
     }
 
     @Override
     public void render(float delta) {
         world.setDelta(delta);
         world.process();
-        renderingSystem.render(delta);
     }
 
     @Override
     public void resize(int width, int height) {
-        renderingSystem.resize(width, height);
+        Events.fire(new ScreenResizeEvent(width, height));
     }
 
     @Override
     public void pause() {
-        renderingSystem.pause();
     }
 
     @Override
     public void resume() {
-        renderingSystem.resume();
     }
 
     @Override
     public void hide() {
-        renderingSystem.hide();
     }
 
     @Override
     public void dispose() {
-        renderingSystem.dispose();
         world.dispose();
     }
 }
