@@ -59,7 +59,8 @@ public class EntityFactorySystem extends BaseSystem {
 
     private ArchetypeBuilder createPlayerArchetype() {
         return createUnitArchetype()
-                .add(PlayerComponent.class);
+                .add(PlayerComponent.class)
+                .add(VelocityComponent.class);
     }
 
     private Entity createBuilding(float cx, float cy, MapProperties properties, TiledMapTileLayer.Cell cell) {

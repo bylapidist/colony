@@ -30,7 +30,7 @@ public class MapScreen implements Screen {
                         new PlayerCameraSystem(),
                         new PlayerControlSystem(),
                         new EntityFactorySystem(),
-                        new MapGenerationSystem(32, 32, Constants.PPM, Constants.PPM),
+                        new MapGenerationSystem(12, 12, Constants.PPM, Constants.PPM),
                         new MapRenderingSystem(),
                         new GuiRenderingSystem()
                 )
