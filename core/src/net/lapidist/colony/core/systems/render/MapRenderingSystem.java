@@ -5,11 +5,11 @@ import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import net.lapidist.colony.common.events.Events;
 import net.lapidist.colony.common.map.tile.ITile;
 import net.lapidist.colony.common.map.tile.TileCoordinate;
 import net.lapidist.colony.common.postprocessing.effects.Fxaa;
@@ -20,6 +20,7 @@ import net.lapidist.colony.components.render.RenderableComponent;
 import net.lapidist.colony.core.Colony;
 import net.lapidist.colony.core.Constants;
 import net.lapidist.colony.core.EntityFactory;
+import net.lapidist.colony.core.events.ScreenResizeEvent;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
 import net.lapidist.colony.core.systems.logic.MapGenerationSystem;
 
@@ -28,7 +29,7 @@ import java.util.Optional;
 import static com.artemis.E.*;
 
 @Wire
-public class MapRenderingSystem extends EntityProcessingSystem implements Screen {
+public class MapRenderingSystem extends EntityProcessingSystem {
 
     private Array<Entity> renderQueue;
     private static Vector3 tmpVec3 = new Vector3();
@@ -51,20 +52,11 @@ public class MapRenderingSystem extends EntityProcessingSystem implements Screen
     }
 
     @Override
-    protected void process(Entity entity) {
-        if (!renderQueue.contains(entity, true)) {
-            renderQueue.add(entity);
-        }
-    }
+    protected void initialize() {
+        Events.on(ScreenResizeEvent.class, event -> {
+            resize(event.width, event.height);
+        });
 
-    @Override
-    public void dispose() {
-        renderQueue.forEach(Entity::deleteFromWorld);
-        renderQueue.clear();
-    }
-
-    @Override
-    public void show() {
         Iterable<ITile> tiles = mapGenerationSystem.getGrid().getTiles();
 
         tiles.forEach(tile -> {
@@ -102,11 +94,24 @@ public class MapRenderingSystem extends EntityProcessingSystem implements Screen
     }
 
     @Override
-    public void hide() {
+    protected void process(Entity entity) {
+        if (!renderQueue.contains(entity, true)) {
+            renderQueue.add(entity);
+        }
     }
 
     @Override
-    public void render(float delta) {
+    protected void begin() {
+        render(world.getDelta());
+    }
+
+    @Override
+    public void dispose() {
+        renderQueue.forEach(Entity::deleteFromWorld);
+        renderQueue.clear();
+    }
+
+    private void render(float delta) {
         cameraSystem.camera.update();
 
         Colony.getPostProcessor().capture();
@@ -121,18 +126,9 @@ public class MapRenderingSystem extends EntityProcessingSystem implements Screen
         Colony.getPostProcessor().render();
     }
 
-    @Override
-    public void resize(int width, int height) {
+    private void resize(int width, int height) {
         cameraSystem.camera.setToOrtho(true, width, height);
         cameraSystem.camera.update();
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
     }
 
     private void drawTerrain() {

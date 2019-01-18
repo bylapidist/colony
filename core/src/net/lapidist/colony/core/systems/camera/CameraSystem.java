@@ -10,6 +10,10 @@ public class CameraSystem extends BaseSystem {
     public OrthographicCamera guiCamera;
     public final float zoom;
 
+    public CameraSystem() {
+        this(1);
+    }
+
     public CameraSystem(float width, float height) {
         this.zoom = 1;
         setupViewport(width, height);
