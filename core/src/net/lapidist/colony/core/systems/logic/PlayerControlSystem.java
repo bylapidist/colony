@@ -9,12 +9,13 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.IntSet;
 import net.lapidist.colony.components.PlayerComponent;
 import net.lapidist.colony.core.Colony;
+import net.lapidist.colony.core.Constants;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
-import net.lapidist.colony.core.systems.render.MapGenerationSystem;
 
 import static com.artemis.E.E;
 
@@ -31,6 +32,7 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
     private Vector2 position;
     private Vector2 origin;
     private Vector2 tmpVec2;
+    private Rectangle mapBounds;
     private CameraSystem cameraSystem;
     private MapGenerationSystem mapGenerationSystem;
 
@@ -38,6 +40,7 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
         super(Aspect.all(PlayerComponent.class));
 
         tmpVec2 = new Vector2();
+        mapBounds = new Rectangle();
 
         Colony.getInputMultiplexer().addProcessor(this);
     }
@@ -110,21 +113,28 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
         );
     }
 
-    private void updatePlayerTile() {
+    private void updatePlayerCell() {
         TiledMapTileLayer layer = mapGenerationSystem.layers.get("unitsLayer");
-        Vector2 worldCoords = cameraSystem.worldCoords(E(entity).spriteComponentSprite().getX(), E(entity).spriteComponentSprite().getY());
+        int estimatedGridX = (int) (origin.x / mapGenerationSystem.getTileWidth());
+        int estimatedGridY = (int) (origin.y / mapGenerationSystem.getTileHeight());
 
-        TiledMapTileLayer.Cell cell = layer.getCell(
-            (int) worldCoords.x,
-            (int) worldCoords.y
-        );
+        TiledMapTileLayer.Cell cell = layer.getCell(estimatedGridX, estimatedGridY);
 
         E(entity).cellComponentCell(cell);
     }
 
     private boolean isWithinGrid(Vector2 position) {
-//        return mapGenerationSystem.getGrid().getMapData().getBounds().contains(position);
-        return false;
+        return mapBounds.contains(position);
+    }
+
+    @Override
+    protected void initialize() {
+        mapBounds.set(
+                0,
+                0,
+                (mapGenerationSystem.getWidth() * mapGenerationSystem.getTileWidth()) - Constants.PPM,
+                (mapGenerationSystem.getHeight() * mapGenerationSystem.getTileHeight()) - Constants.PPM
+        );
     }
 
     @Override
@@ -134,7 +144,7 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
         origin = getPlayerOrigin();
 
         processInput();
-        updatePlayerTile();
+        updatePlayerCell();
     }
 
     @Override

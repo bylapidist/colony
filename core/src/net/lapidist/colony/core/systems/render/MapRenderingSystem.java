@@ -14,6 +14,7 @@ import net.lapidist.colony.components.render.UpdatableComponent;
 import net.lapidist.colony.core.Colony;
 import net.lapidist.colony.core.events.ScreenResizeEvent;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
+import net.lapidist.colony.core.systems.logic.MapGenerationSystem;
 
 import static com.artemis.E.*;
 
@@ -45,7 +46,7 @@ public class MapRenderingSystem extends EntityProcessingSystem {
     }
 
     @Override
-    protected void process(final Entity e) {
+    protected void process(Entity e) {
         E(e).spriteComponentSprite().draw(Colony.getSpriteBatch());
     }
 

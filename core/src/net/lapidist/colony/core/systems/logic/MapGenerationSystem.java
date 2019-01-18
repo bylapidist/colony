@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.systems.render;
+package net.lapidist.colony.core.systems.logic;
 
 import com.artemis.BaseSystem;
 import com.artemis.annotations.Wire;
@@ -120,5 +120,21 @@ public class MapGenerationSystem extends BaseSystem {
                 }
             }
         }
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getTileWidth() {
+        return tileWidth;
+    }
+
+    public int getTileHeight() {
+        return tileHeight;
     }
 }

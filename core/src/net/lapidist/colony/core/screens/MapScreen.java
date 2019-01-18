@@ -11,7 +11,7 @@ import net.lapidist.colony.core.systems.camera.CameraSystem;
 import net.lapidist.colony.core.systems.camera.PlayerCameraSystem;
 import net.lapidist.colony.core.systems.logic.EntityFactorySystem;
 import net.lapidist.colony.core.systems.logic.PlayerControlSystem;
-import net.lapidist.colony.core.systems.render.MapGenerationSystem;
+import net.lapidist.colony.core.systems.logic.MapGenerationSystem;
 import net.lapidist.colony.core.systems.render.GuiRenderSystem;
 import net.lapidist.colony.core.systems.render.MapRenderingSystem;
 
