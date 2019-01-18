@@ -1,3 +1,21 @@
+<a name="4.1.0"></a>
+# [4.1.0](https://gitlab.com/getbrett/colony/compare/v4.0.0...v4.1.0) (2019-01-18)
+
+
+### Features
+
+* **engine:** Give map bounds ([37d06ec](https://gitlab.com/getbrett/colony/commit/37d06ec))
+* **engine:** Remove docs and desktop project ([2011863](https://gitlab.com/getbrett/colony/commit/2011863))
+* **engine:** Split MapRenderingSystem and GuiRenderingSystem ([aac4c12](https://gitlab.com/getbrett/colony/commit/aac4c12))
+* **engine:** Split out MapGenerationSystem ([565abc9](https://gitlab.com/getbrett/colony/commit/565abc9))
+
+
+### Performance Improvements
+
+* **engine:** Optimise for large map sizes ([ad6ee96](https://gitlab.com/getbrett/colony/commit/ad6ee96))
+
+
+
 <a name="4.0.0"></a>
 # [4.0.0](https://gitlab.com/getbrett/colony/compare/v3.0.0...v4.0.0) (2019-01-13)
 
