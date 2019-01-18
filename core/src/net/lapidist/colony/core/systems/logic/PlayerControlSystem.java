@@ -6,89 +6,83 @@ import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.IntSet;
+import net.lapidist.colony.common.map.tile.ITile;
 import net.lapidist.colony.components.PlayerComponent;
 import net.lapidist.colony.core.Colony;
+import net.lapidist.colony.core.systems.camera.CameraSystem;
+
+import java.util.Optional;
 
 import static com.artemis.E.E;
 
 @Wire
 public class PlayerControlSystem extends EntityProcessingSystem implements InputProcessor {
 
+    private final static float MOVEMENT_SPEED = 10f;
+    private final static float MIN_ZOOM = 1f;
+    private final static float MAX_ZOOM = 2f;
+    private final static float ZOOM_SPEED = 0.06f;
+
     private IntSet downKeys = new IntSet(20);
-    private enum Direction {
-        NORTH,
-        NORTHEAST,
-        EAST,
-        SOUTHEAST,
-        SOUTH,
-        SOUTHWEST,
-        WEST
-    }
     private Entity entity;
-    private float movementSpeed = 10f;
-    private Direction currentDirection;
+    private Vector2 position;
+    private Vector2 origin;
+    private Vector2 tmpVec2;
+    private CameraSystem cameraSystem;
+    private MapGenerationSystem mapGenerationSystem;
 
     public PlayerControlSystem() {
         super(Aspect.all(PlayerComponent.class));
+
+        tmpVec2 = new Vector2();
 
         Colony.getInputMultiplexer().addProcessor(this);
     }
 
     private void processInput() {
-        Vector2 oldPosition = new Vector2(
-                E(entity).getSpriteComponent().getSprite().getX(),
-                E(entity).getSpriteComponent().getSprite().getY()
-        );
+        tmpVec2 = tmpVec2.set(position.x, position.y);
 
         if (singleKeyDown(Input.Keys.W)) {
-            E(entity)
-                    .getSpriteComponent().getSprite()
-                    .setPosition(oldPosition.x, oldPosition.y - movementSpeed);
+            tmpVec2 = tmpVec2.set(tmpVec2.x, tmpVec2.y - MOVEMENT_SPEED);
         }
 
         if (singleKeyDown(Input.Keys.A)) {
-            E(entity)
-                    .getSpriteComponent().getSprite()
-                    .setPosition(oldPosition.x - movementSpeed, oldPosition.y);
+            tmpVec2 = tmpVec2.set(tmpVec2.x - MOVEMENT_SPEED, tmpVec2.y);
         }
 
         if (singleKeyDown(Input.Keys.S)) {
-            E(entity)
-                    .getSpriteComponent().getSprite()
-                    .setPosition(oldPosition.x, oldPosition.y + movementSpeed);
+            tmpVec2 = tmpVec2.set(tmpVec2.x, tmpVec2.y + MOVEMENT_SPEED);
         }
 
         if (singleKeyDown(Input.Keys.D)) {
-            E(entity)
-                    .getSpriteComponent().getSprite()
-                    .setPosition(oldPosition.x + movementSpeed, oldPosition.y);
+            tmpVec2 = tmpVec2.set(tmpVec2.x + MOVEMENT_SPEED, tmpVec2.y);
         }
 
         if (twoKeysDown(Input.Keys.W, Input.Keys.D)) {
-            E(entity)
-                    .getSpriteComponent().getSprite()
-                    .setPosition(oldPosition.x + movementSpeed, oldPosition.y - movementSpeed);
+            tmpVec2 = tmpVec2.set(tmpVec2.x + MOVEMENT_SPEED, tmpVec2.y - MOVEMENT_SPEED);
         }
 
         if (twoKeysDown(Input.Keys.A, Input.Keys.W)) {
-            E(entity)
-                    .getSpriteComponent().getSprite()
-                    .setPosition(oldPosition.x - movementSpeed, oldPosition.y - movementSpeed);
+            tmpVec2 = tmpVec2.set(tmpVec2.x - MOVEMENT_SPEED, tmpVec2.y - MOVEMENT_SPEED);
         }
 
         if (twoKeysDown(Input.Keys.S, Input.Keys.D)) {
-            E(entity)
-                    .getSpriteComponent().getSprite()
-                    .setPosition(oldPosition.x + movementSpeed, oldPosition.y + movementSpeed);
+            tmpVec2 = tmpVec2.set(tmpVec2.x + MOVEMENT_SPEED, tmpVec2.y + MOVEMENT_SPEED);
         }
 
         if (twoKeysDown(Input.Keys.A, Input.Keys.S)) {
-            E(entity)
-                    .getSpriteComponent().getSprite()
-                    .setPosition(oldPosition.x - movementSpeed, oldPosition.y + movementSpeed);
+            tmpVec2 = tmpVec2.set(tmpVec2.x - MOVEMENT_SPEED, tmpVec2.y + MOVEMENT_SPEED);
         }
+
+        if (!isWithinGrid(tmpVec2)) return;
+
+        E(entity)
+                .getSpriteComponent().getSprite()
+                .setPosition(tmpVec2.x, tmpVec2.y);
     }
 
     private boolean singleKeyDown(int keycode) {
@@ -99,11 +93,44 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
         return downKeys.contains(keycode1) && downKeys.contains(keycode2) && downKeys.size == 2;
     }
 
+    private Vector2 getPlayerPosition() {
+        Sprite sprite = E(entity).getSpriteComponent().getSprite();
+
+        return new Vector2(
+                sprite.getX(),
+                sprite.getY()
+        );
+    }
+
+    private Vector2 getPlayerOrigin() {
+        Sprite sprite = E(entity).getSpriteComponent().getSprite();
+
+        return new Vector2(
+                sprite.getX() + (sprite.getWidth() / 2),
+                sprite.getY() + (sprite.getHeight() / 2)
+        );
+    }
+
+    private void updatePlayerTile() {
+        Optional<ITile> playerTile = mapGenerationSystem.getGrid().getByPixelCoordinate(origin);
+
+        if (playerTile.isPresent()) {
+            E(entity).tileComponentTile(playerTile.get());
+        }
+    }
+
+    private boolean isWithinGrid(Vector2 position) {
+        return mapGenerationSystem.getGrid().getMapData().getBounds().contains(position);
+    }
+
     @Override
     protected void process(Entity e) {
-        this.entity = e;
+        entity = e;
+        position = getPlayerPosition();
+        origin = getPlayerOrigin();
 
         processInput();
+        updatePlayerTile();
     }
 
     @Override
@@ -156,6 +183,18 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
 
     @Override
     public boolean scrolled(int amount) {
-        return false;
+        // Zoom out
+        if (amount == 1) {
+            cameraSystem.camera.zoom += ZOOM_SPEED;
+            cameraSystem.camera.zoom = MathUtils.clamp(cameraSystem.camera.zoom, MIN_ZOOM, MAX_ZOOM);
+        }
+
+        // Zoom in
+        if (amount == -1) {
+            cameraSystem.camera.zoom -= ZOOM_SPEED;
+            cameraSystem.camera.zoom = MathUtils.clamp(cameraSystem.camera.zoom, MIN_ZOOM, MAX_ZOOM);
+        }
+
+        return true;
     }
 }

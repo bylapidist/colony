@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
@@ -21,7 +22,8 @@ import java.io.IOException;
 
 public class ResourceLoader implements Disposable {
 
-    private final ObjectMap<String, TextureRegion> regions;
+    private final ObjectMap<String, TextureRegion> textures;
+    private final ObjectMap<String, Sprite> sprites;
     private final ObjectMap<String, SpriteAnimation> animations;
     private final ObjectMap<String, Sound> sounds;
     private final ObjectMap<String, String> shaders;
@@ -34,7 +36,8 @@ public class ResourceLoader implements Disposable {
     public ResourceLoader(FileLocation fileLocation, FileHandle resourceXml) throws IOException {
         this.fileLocation = fileLocation;
 
-        regions = new ObjectMap<>();
+        textures = new ObjectMap<>();
+        sprites = new ObjectMap<>();
         animations = new ObjectMap<>();
         sounds = new ObjectMap<>();
         shaders = new ObjectMap<>();
@@ -46,8 +49,12 @@ public class ResourceLoader implements Disposable {
         readResourcesTag(resources);
     }
 
-    public TextureRegion getRegion(String name) {
-        return regions.get(name);
+    public TextureRegion getTexture(String name) {
+        return textures.get(name);
+    }
+
+    public Sprite getSprite(String name) {
+        return sprites.get(name);
     }
 
     public SpriteAnimation getAnimation(String name) {
@@ -237,9 +244,14 @@ public class ResourceLoader implements Disposable {
         if (!region.getAttributes().containsKey("name") || !region.getAttributes().containsKey("bounds"))
             throw new RuntimeException("need name=\"...\" and bounds=\"...\" properties");
 
-        regions.put(
+        textures.put(
                 region.get("name"),
                 XmlUtils.getTexReg(texture, region.get("bounds"))
+        );
+
+        sprites.put(
+                region.get("name"),
+                new Sprite(texture)
         );
     }
 
@@ -279,7 +291,7 @@ public class ResourceLoader implements Disposable {
         if (!disposed) {
             disposed = true;
 
-            for (ObjectMap.Entry<String, TextureRegion> entry : regions.entries()) {
+            for (ObjectMap.Entry<String, TextureRegion> entry : textures.entries()) {
                 entry.value.getTexture().dispose();
             }
 
