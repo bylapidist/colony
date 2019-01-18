@@ -17,7 +17,7 @@ import static com.artemis.E.E;
 
 public class EntityFactorySystem extends BaseSystem {
 
-    Entity createEntity(String entity, float cx, float cy, MapProperties properties, TiledMapTileLayer.Cell cell) {
+    public Entity createEntity(String entity, float cx, float cy, MapProperties properties, TiledMapTileLayer.Cell cell) {
         switch (entity) {
             case "building":
                 return createBuilding(cx, cy, properties, cell);
@@ -101,6 +101,10 @@ public class EntityFactorySystem extends BaseSystem {
                 cy,
                 properties.get("tileWidth", Integer.class),
                 properties.get("tileHeight", Integer.class)
+        );
+        sprite.setOrigin(
+                cx + (properties.get("tileWidth", Integer.class) / 2f),
+                cy + (properties.get("tileHeight", Integer.class) / 2f)
         );
 
         E(entity).nameComponentName((String) properties.get("entity"))

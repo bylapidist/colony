@@ -35,7 +35,7 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
     private final static float MIN_ZOOM = 1f;
     private final static float MAX_ZOOM = 2f;
     private final static float ZOOM_SPEED = 0.06f;
-    private final static float REACH = (5f * Constants.PPM) / 2f;
+    private final static float REACH = (6.5f * Constants.PPM) / 2f;
 
     private IntSet downKeys = new IntSet(20);
     private Entity e;
@@ -43,6 +43,7 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
     private Vector2 origin;
     private Vector2 tmpPosition;
     private Vector2 tmpVelocity;
+    private Vector2 tmpOrigin;
     private Rectangle mapBounds;
     private Circle reachBounds;
     private CameraSystem cameraSystem;
@@ -50,17 +51,11 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
 
     public PlayerControlSystem() {
         super(Aspect.all(PlayerComponent.class, VelocityComponent.class));
-
-        tmpPosition = new Vector2();
-        tmpVelocity = new Vector2();
-        mapBounds = new Rectangle();
-        reachBounds = new Circle();
-
-        Colony.getInputMultiplexer().addProcessor(this);
     }
 
     private void processInput() {
         tmpPosition = tmpPosition.set(position.x, position.y);
+        tmpOrigin = tmpOrigin.set(origin.x, origin.y);
         tmpVelocity = E(e).getVelocityComponent().getVelocity();
 
         if (singleKeyDown(Input.Keys.W)) {
@@ -155,15 +150,20 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
             tmpVelocity.y = 0;
         }
 
-        if (!isWithinGrid(tmpPosition)) {
+
+        tmpOrigin.set(
+                tmpPosition.x + (mapGenerationSystem.getTileWidth() / 2f),
+                tmpPosition.y + (mapGenerationSystem.getTileHeight() / 2f)
+        );
+
+        if (!isWithinGrid(tmpOrigin)) {
             E(e).getVelocityComponent().setVelocity(tmpVelocity.set(0, 0));
             return;
         }
 
-        System.out.println(tmpVelocity);
-
         E(e).getVelocityComponent().setVelocity(tmpVelocity);
         E(e).spriteComponentSprite().setPosition(tmpPosition.x, tmpPosition.y);
+        E(e).spriteComponentSprite().setOrigin(tmpOrigin.x, tmpOrigin.y);
     }
 
     private boolean singleKeyDown(int keycode) {
@@ -187,8 +187,8 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
         Sprite sprite = E(e).getSpriteComponent().getSprite();
 
         return new Vector2(
-                sprite.getX() + (sprite.getWidth() / 2),
-                sprite.getY() + (sprite.getHeight() / 2)
+                sprite.getOriginX(),
+                sprite.getOriginY()
         );
     }
 
@@ -212,11 +212,19 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
 
     @Override
     protected void initialize() {
+        tmpPosition = new Vector2();
+        tmpVelocity = new Vector2();
+        tmpOrigin = new Vector2();
+        mapBounds = new Rectangle();
+        reachBounds = new Circle();
+
+        Colony.getInputMultiplexer().addProcessor(this);
+
         mapBounds.set(
                 0,
                 0,
-                (mapGenerationSystem.getWidth() * mapGenerationSystem.getTileWidth()) - Constants.PPM,
-                (mapGenerationSystem.getHeight() * mapGenerationSystem.getTileHeight()) - Constants.PPM
+                (mapGenerationSystem.getWidth() * mapGenerationSystem.getTileWidth()),
+                (mapGenerationSystem.getHeight() * mapGenerationSystem.getTileHeight())
         );
     }
 
@@ -281,13 +289,13 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
         int estimatedGridX = (int) tmpPosition.x / mapGenerationSystem.getTileWidth();
         int estimatedGridY = (int) tmpPosition.y / mapGenerationSystem.getTileHeight();
 
-        if (isWithinReach(tmpPosition.set(tmpPosition.x, tmpPosition.y))) {
-            Events.fire(new HoverTileWithinReachEvent(estimatedGridX, estimatedGridY));
-            return true;
+        if (isWithinReach(tmpPosition) && isWithinGrid(tmpPosition)) {
+            Events.fire(new HoverTileWithinReachEvent(estimatedGridX, estimatedGridY, tmpPosition.x, tmpPosition.y));
+            return false;
         }
 
         Events.fire(new HoverTileOutsideReachEvent(estimatedGridX, estimatedGridY));
-        return true;
+        return false;
     }
 
     @Override
