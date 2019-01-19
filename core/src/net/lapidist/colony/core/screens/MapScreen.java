@@ -11,7 +11,7 @@ import net.lapidist.colony.core.systems.camera.CameraSystem;
 import net.lapidist.colony.core.systems.camera.PlayerCameraSystem;
 import net.lapidist.colony.core.systems.logic.*;
 import net.lapidist.colony.core.systems.render.GuiRenderingSystem;
-import net.lapidist.colony.core.systems.render.LightRenderingSystem;
+import net.lapidist.colony.core.systems.render.PhysicsSystem;
 import net.lapidist.colony.core.systems.render.MapRenderingSystem;
 
 public class MapScreen implements Screen {
@@ -32,7 +32,7 @@ public class MapScreen implements Screen {
                         new MapGenerationSystem(32, 32, Constants.PPM, Constants.PPM),
                         new MapRenderingSystem(),
                         new LightFactorySystem(),
-                        new LightRenderingSystem(),
+                        new PhysicsSystem(),
                         new GuiEntityFactorySystem(),
                         new GuiRenderingSystem()
                 )

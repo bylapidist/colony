@@ -16,6 +16,8 @@ import net.lapidist.colony.components.PlayerComponent;
 import net.lapidist.colony.components.VelocityComponent;
 import net.lapidist.colony.core.Colony;
 import net.lapidist.colony.core.Constants;
+import net.lapidist.colony.core.events.ClickTileOutsideReachEvent;
+import net.lapidist.colony.core.events.ClickTileWithinReachEvent;
 import net.lapidist.colony.core.events.HoverTileOutsideReachEvent;
 import net.lapidist.colony.core.events.HoverTileWithinReachEvent;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
@@ -269,6 +271,19 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         downKeys.add(button);
+
+        tmpPosition.set(cameraSystem.worldCoords(screenX, screenY));
+
+        int estimatedGridX = (int) tmpPosition.x / mapGenerationSystem.getTileWidth();
+        int estimatedGridY = (int) tmpPosition.y / mapGenerationSystem.getTileHeight();
+
+        if (isWithinReach(tmpPosition) && isWithinGrid(tmpPosition)) {
+            Events.fire(new ClickTileWithinReachEvent(estimatedGridX, estimatedGridY, tmpPosition.x, tmpPosition.y));
+            return false;
+        }
+
+        Events.fire(new ClickTileOutsideReachEvent(estimatedGridX, estimatedGridY));
+
         return false;
     }
 
