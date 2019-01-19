@@ -30,7 +30,7 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
 
     private final static float BASE_ACCELERATION = 350f;
     private final static float BASE_MAX_VELOCITY = 100f;
-    private final static float BASE_FRICTION = 150f;
+    private final static float BASE_FRICTION = 180f;
     private final static float MIN_VELOCITY = 0.5f;
     private final static float MIN_ZOOM = 1f;
     private final static float MAX_ZOOM = 2f;
