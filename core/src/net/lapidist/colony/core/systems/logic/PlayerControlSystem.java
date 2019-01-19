@@ -4,85 +4,166 @@ import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.IntSet;
-import net.lapidist.colony.common.map.tile.ITile;
+import net.lapidist.colony.common.events.Events;
 import net.lapidist.colony.components.PlayerComponent;
+import net.lapidist.colony.components.VelocityComponent;
 import net.lapidist.colony.core.Colony;
+import net.lapidist.colony.core.Constants;
+import net.lapidist.colony.core.events.HoverTileOutsideReachEvent;
+import net.lapidist.colony.core.events.HoverTileWithinReachEvent;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
-
-import java.util.Optional;
 
 import static com.artemis.E.E;
 
 @Wire
 public class PlayerControlSystem extends EntityProcessingSystem implements InputProcessor {
 
-    private final static float MOVEMENT_SPEED = 10f;
+    private final static float BASE_ACCELERATION = 350f;
+    private final static float BASE_MAX_VELOCITY = 100f;
+    private final static float BASE_FRICTION = 180f;
+    private final static float MIN_VELOCITY = 0.5f;
     private final static float MIN_ZOOM = 1f;
     private final static float MAX_ZOOM = 2f;
     private final static float ZOOM_SPEED = 0.06f;
+    private final static float REACH = (6.5f * Constants.PPM) / 2f;
 
     private IntSet downKeys = new IntSet(20);
-    private Entity entity;
+    private Entity e;
     private Vector2 position;
     private Vector2 origin;
-    private Vector2 tmpVec2;
+    private Vector2 tmpPosition;
+    private Vector2 tmpVelocity;
+    private Vector2 tmpOrigin;
+    private Rectangle mapBounds;
+    private Circle reachBounds;
     private CameraSystem cameraSystem;
     private MapGenerationSystem mapGenerationSystem;
 
     public PlayerControlSystem() {
-        super(Aspect.all(PlayerComponent.class));
-
-        tmpVec2 = new Vector2();
-
-        Colony.getInputMultiplexer().addProcessor(this);
+        super(Aspect.all(PlayerComponent.class, VelocityComponent.class));
     }
 
     private void processInput() {
-        tmpVec2 = tmpVec2.set(position.x, position.y);
+        tmpPosition = tmpPosition.set(position.x, position.y);
+        tmpOrigin = tmpOrigin.set(origin.x, origin.y);
+        tmpVelocity = E(e).getVelocityComponent().getVelocity();
 
         if (singleKeyDown(Input.Keys.W)) {
-            tmpVec2 = tmpVec2.set(tmpVec2.x, tmpVec2.y - MOVEMENT_SPEED);
+            tmpVelocity.y += BASE_ACCELERATION * Gdx.graphics.getDeltaTime();
+            tmpPosition.y -= tmpVelocity.y * Gdx.graphics.getDeltaTime();
         }
 
         if (singleKeyDown(Input.Keys.A)) {
-            tmpVec2 = tmpVec2.set(tmpVec2.x - MOVEMENT_SPEED, tmpVec2.y);
+            tmpVelocity.x += BASE_ACCELERATION * Gdx.graphics.getDeltaTime();
+            tmpPosition.x -= tmpVelocity.x * Gdx.graphics.getDeltaTime();
         }
 
         if (singleKeyDown(Input.Keys.S)) {
-            tmpVec2 = tmpVec2.set(tmpVec2.x, tmpVec2.y + MOVEMENT_SPEED);
+            tmpVelocity.y += -BASE_ACCELERATION * Gdx.graphics.getDeltaTime();
+            tmpPosition.y -= tmpVelocity.y * Gdx.graphics.getDeltaTime();
         }
 
         if (singleKeyDown(Input.Keys.D)) {
-            tmpVec2 = tmpVec2.set(tmpVec2.x + MOVEMENT_SPEED, tmpVec2.y);
+            tmpVelocity.x += -BASE_ACCELERATION * Gdx.graphics.getDeltaTime();
+            tmpPosition.x -= tmpVelocity.x * Gdx.graphics.getDeltaTime();
         }
 
         if (twoKeysDown(Input.Keys.W, Input.Keys.D)) {
-            tmpVec2 = tmpVec2.set(tmpVec2.x + MOVEMENT_SPEED, tmpVec2.y - MOVEMENT_SPEED);
+            tmpVelocity.y += BASE_ACCELERATION * Gdx.graphics.getDeltaTime();
+            tmpPosition.y -= tmpVelocity.y * Gdx.graphics.getDeltaTime();
+            tmpVelocity.x += -BASE_ACCELERATION * Gdx.graphics.getDeltaTime();
+            tmpPosition.x -= tmpVelocity.x * Gdx.graphics.getDeltaTime();
         }
 
         if (twoKeysDown(Input.Keys.A, Input.Keys.W)) {
-            tmpVec2 = tmpVec2.set(tmpVec2.x - MOVEMENT_SPEED, tmpVec2.y - MOVEMENT_SPEED);
+            tmpVelocity.x += BASE_ACCELERATION * Gdx.graphics.getDeltaTime();
+            tmpPosition.x -= tmpVelocity.x * Gdx.graphics.getDeltaTime();
+            tmpVelocity.y += BASE_ACCELERATION * Gdx.graphics.getDeltaTime();
+            tmpPosition.y -= tmpVelocity.y * Gdx.graphics.getDeltaTime();
         }
 
         if (twoKeysDown(Input.Keys.S, Input.Keys.D)) {
-            tmpVec2 = tmpVec2.set(tmpVec2.x + MOVEMENT_SPEED, tmpVec2.y + MOVEMENT_SPEED);
+            tmpVelocity.y += -BASE_ACCELERATION * Gdx.graphics.getDeltaTime();
+            tmpPosition.y -= tmpVelocity.y * Gdx.graphics.getDeltaTime();
+            tmpVelocity.x += -BASE_ACCELERATION * Gdx.graphics.getDeltaTime();
+            tmpPosition.x -= tmpVelocity.x * Gdx.graphics.getDeltaTime();
         }
 
         if (twoKeysDown(Input.Keys.A, Input.Keys.S)) {
-            tmpVec2 = tmpVec2.set(tmpVec2.x - MOVEMENT_SPEED, tmpVec2.y + MOVEMENT_SPEED);
+            tmpVelocity.x += BASE_ACCELERATION * Gdx.graphics.getDeltaTime();
+            tmpPosition.x -= tmpVelocity.x * Gdx.graphics.getDeltaTime();
+            tmpVelocity.y += -BASE_ACCELERATION * Gdx.graphics.getDeltaTime();
+            tmpPosition.y -= tmpVelocity.y * Gdx.graphics.getDeltaTime();
         }
 
-        if (!isWithinGrid(tmpVec2)) return;
+        if (tmpVelocity.x > 0) {
+            tmpVelocity.x -= BASE_FRICTION * Gdx.graphics.getDeltaTime();
+            tmpPosition.x -= tmpVelocity.x * Gdx.graphics.getDeltaTime();
+        }
 
-        E(entity)
-                .getSpriteComponent().getSprite()
-                .setPosition(tmpVec2.x, tmpVec2.y);
+        if (tmpVelocity.x < 0) {
+            tmpVelocity.x -= -BASE_FRICTION * Gdx.graphics.getDeltaTime();
+            tmpPosition.x -= tmpVelocity.x * Gdx.graphics.getDeltaTime();
+        }
+
+        if (tmpVelocity.y > 0) {
+            tmpVelocity.y -= BASE_FRICTION * Gdx.graphics.getDeltaTime();
+            tmpPosition.y -= tmpVelocity.y * Gdx.graphics.getDeltaTime();
+        }
+
+        if (tmpVelocity.y < 0) {
+            tmpVelocity.y -= -BASE_FRICTION * Gdx.graphics.getDeltaTime();
+            tmpPosition.y -= tmpVelocity.y * Gdx.graphics.getDeltaTime();
+        }
+
+        if (tmpVelocity.x < -BASE_MAX_VELOCITY) {
+            tmpVelocity.x = -BASE_MAX_VELOCITY;
+        }
+
+        if (tmpVelocity.y < -BASE_MAX_VELOCITY) {
+            tmpVelocity.y = -BASE_MAX_VELOCITY;
+        }
+
+        if (tmpVelocity.x > BASE_MAX_VELOCITY) {
+            tmpVelocity.x = BASE_MAX_VELOCITY;
+        }
+
+        if (tmpVelocity.y > BASE_MAX_VELOCITY) {
+            tmpVelocity.y = BASE_MAX_VELOCITY;
+        }
+
+        if (tmpVelocity.x < MIN_VELOCITY && tmpVelocity.x > -MIN_VELOCITY) {
+            tmpVelocity.x = 0;
+        }
+
+        if (tmpVelocity.y < MIN_VELOCITY && tmpVelocity.y > -MIN_VELOCITY) {
+            tmpVelocity.y = 0;
+        }
+
+
+        tmpOrigin.set(
+                tmpPosition.x + (mapGenerationSystem.getTileWidth() / 2f),
+                tmpPosition.y + (mapGenerationSystem.getTileHeight() / 2f)
+        );
+
+        if (!isWithinGrid(tmpOrigin)) {
+            E(e).getVelocityComponent().setVelocity(tmpVelocity.set(0, 0));
+            return;
+        }
+
+        E(e).getVelocityComponent().setVelocity(tmpVelocity);
+        E(e).spriteComponentSprite().setPosition(tmpPosition.x, tmpPosition.y);
+        E(e).spriteComponentSprite().setOrigin(tmpOrigin.x, tmpOrigin.y);
     }
 
     private boolean singleKeyDown(int keycode) {
@@ -94,7 +175,7 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
     }
 
     private Vector2 getPlayerPosition() {
-        Sprite sprite = E(entity).getSpriteComponent().getSprite();
+        Sprite sprite = E(e).getSpriteComponent().getSprite();
 
         return new Vector2(
                 sprite.getX(),
@@ -103,34 +184,59 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
     }
 
     private Vector2 getPlayerOrigin() {
-        Sprite sprite = E(entity).getSpriteComponent().getSprite();
+        Sprite sprite = E(e).getSpriteComponent().getSprite();
 
         return new Vector2(
-                sprite.getX() + (sprite.getWidth() / 2),
-                sprite.getY() + (sprite.getHeight() / 2)
+                sprite.getOriginX(),
+                sprite.getOriginY()
         );
     }
 
-    private void updatePlayerTile() {
-        Optional<ITile> playerTile = mapGenerationSystem.getGrid().getByPixelCoordinate(origin);
+    private void updatePlayerCell() {
+        TiledMapTileLayer layer = mapGenerationSystem.layers.get("unitsLayer");
+        int estimatedGridX = (int) (origin.x / mapGenerationSystem.getTileWidth());
+        int estimatedGridY = (int) (origin.y / mapGenerationSystem.getTileHeight());
 
-        if (playerTile.isPresent()) {
-            E(entity).tileComponentTile(playerTile.get());
-        }
+        TiledMapTileLayer.Cell cell = layer.getCell(estimatedGridX, estimatedGridY);
+
+        E(e).cellComponentCell(cell);
     }
 
     private boolean isWithinGrid(Vector2 position) {
-        return mapGenerationSystem.getGrid().getMapData().getBounds().contains(position);
+        return mapBounds.contains(position);
+    }
+
+    private boolean isWithinReach(Vector2 position) {
+        return reachBounds.contains(position);
+    }
+
+    @Override
+    protected void initialize() {
+        tmpPosition = new Vector2();
+        tmpVelocity = new Vector2();
+        tmpOrigin = new Vector2();
+        mapBounds = new Rectangle();
+        reachBounds = new Circle();
+
+        Colony.getInputMultiplexer().addProcessor(this);
+
+        mapBounds.set(
+                0,
+                0,
+                (mapGenerationSystem.getWidth() * mapGenerationSystem.getTileWidth()),
+                (mapGenerationSystem.getHeight() * mapGenerationSystem.getTileHeight())
+        );
     }
 
     @Override
     protected void process(Entity e) {
-        entity = e;
+        this.e = e;
         position = getPlayerPosition();
         origin = getPlayerOrigin();
+        reachBounds.set(origin, REACH);
 
         processInput();
-        updatePlayerTile();
+        updatePlayerCell();
     }
 
     @Override
@@ -144,7 +250,7 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
         return false;
     }
 
-    public boolean multipleKeysDown(int keycode) {
+    public boolean multipleKeysDown(int lastKeycode) {
         return false;
     }
 
@@ -178,6 +284,17 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
+        tmpPosition.set(cameraSystem.worldCoords(screenX, screenY));
+
+        int estimatedGridX = (int) tmpPosition.x / mapGenerationSystem.getTileWidth();
+        int estimatedGridY = (int) tmpPosition.y / mapGenerationSystem.getTileHeight();
+
+        if (isWithinReach(tmpPosition) && isWithinGrid(tmpPosition)) {
+            Events.fire(new HoverTileWithinReachEvent(estimatedGridX, estimatedGridY, tmpPosition.x, tmpPosition.y));
+            return false;
+        }
+
+        Events.fire(new HoverTileOutsideReachEvent(estimatedGridX, estimatedGridY));
         return false;
     }
 
