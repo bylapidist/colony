@@ -41,6 +41,7 @@ public class GuiEntityFactorySystem extends BaseSystem {
                 properties.get("tileWidth", Integer.class),
                 properties.get("tileHeight", Integer.class)
         );
+        sprite.setColor(1, 1, 1, 0.5f);
         sprite.setOrigin(
                 cx + (properties.get("tileWidth", Integer.class) / 2f),
                 cy + (properties.get("tileHeight", Integer.class) / 2f)

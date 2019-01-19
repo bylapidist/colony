@@ -89,7 +89,7 @@ public class MapGenerationSystem extends BaseSystem {
         cell.getTile().getProperties().put("tileWidth", tileWidth);
         cell.getTile().getProperties().put("tileHeight", tileHeight);
 
-        layers.get("unitsLayer").setCell(width / 2, height / 2, cell);
+        layers.get("unitsLayer").setCell(2, 2, cell);
     }
 
     private void setup() {

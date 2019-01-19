@@ -7,7 +7,7 @@ public class RenderableComponent extends Component {
     private boolean renderable;
 
     public RenderableComponent() {
-        renderable = true;
+        renderable = false;
     }
 
     public RenderableComponent(boolean renderable) {
