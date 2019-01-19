@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import net.lapidist.colony.components.*;
@@ -106,6 +107,7 @@ public class EntityFactorySystem extends BaseSystem {
             0
         );
         E(entity).dynamicBodyComponentFixtureDef().shape = shape;
+        E(entity).dynamicBodyComponentBodyDef().type = BodyDef.BodyType.StaticBody;
         E(entity).dynamicBodyComponentBodyDef().position.set(sprite.getOriginX(), sprite.getOriginY());
         E(entity).dynamicBodyComponentBody(physicsSystem.getPhysicsWorld().createBody(
                 E(entity).dynamicBodyComponentBodyDef()
