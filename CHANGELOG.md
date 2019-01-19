@@ -1,3 +1,24 @@
+<a name="4.2.0"></a>
+# [4.2.0](https://gitlab.com/getbrett/colony/compare/v4.1.0...v4.2.0) (2019-01-19)
+
+
+### Bug Fixes
+
+* **engine:** cell rendering ([2a06ae2](https://gitlab.com/getbrett/colony/commit/2a06ae2))
+* **engine:** Dependency ordering ([3bca179](https://gitlab.com/getbrett/colony/commit/3bca179))
+
+
+### Features
+
+* **engine:** convert GuiRenderingSystem to EntityProcessingSystem ([3752c57](https://gitlab.com/getbrett/colony/commit/3752c57))
+* **engine:** Give player VelocityComponent ([f823bf2](https://gitlab.com/getbrett/colony/commit/f823bf2))
+* **engine:** Implement player reach ([bb8b093](https://gitlab.com/getbrett/colony/commit/bb8b093))
+* **engine:** Reimplement controls ([241fa01](https://gitlab.com/getbrett/colony/commit/241fa01))
+* **engine:** Switch to TiledMapRenderer ([1a0e047](https://gitlab.com/getbrett/colony/commit/1a0e047))
+* **gameplay:** Increase player friction ([0b1eb6e](https://gitlab.com/getbrett/colony/commit/0b1eb6e))
+
+
+
 <a name="4.1.0"></a>
 # [4.1.0](https://gitlab.com/getbrett/colony/compare/v4.0.0...v4.1.0) (2019-01-18)
 
