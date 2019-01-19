@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import net.lapidist.colony.components.*;
 import net.lapidist.colony.components.archetypes.TerrainType;
 import net.lapidist.colony.components.archetypes.UnitType;
@@ -17,7 +16,6 @@ import net.lapidist.colony.components.render.RenderableComponent;
 import net.lapidist.colony.components.render.SpriteComponent;
 import net.lapidist.colony.components.render.UpdatableComponent;
 import net.lapidist.colony.core.systems.render.LightRenderingSystem;
-import net.lapidist.colony.core.systems.render.MapRenderingSystem;
 
 import static com.artemis.E.E;
 
@@ -126,7 +124,7 @@ public class EntityFactorySystem extends BaseSystem {
                 .unitComponentUnitType(UnitType.PLAYER);
 
         E(entity).dynamicBodyComponentBodyDef().position.set(sprite.getOriginX(), sprite.getOriginY());
-        E(entity).dynamicBodyComponentBody(lightRenderingSystem.getBox3dWorld().createBody(
+        E(entity).dynamicBodyComponentBody(lightRenderingSystem.getPhysicsWorld().createBody(
                 E(entity).dynamicBodyComponentBodyDef()
         ));
 

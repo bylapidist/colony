@@ -22,7 +22,7 @@ public class LightRenderingSystem extends EntityProcessingSystem {
 
     private CameraSystem cameraSystem;
     private MapGenerationSystem mapGenerationSystem;
-    private World box3dWorld;
+    private World physicsWorld;
     private RayHandler rayHandler;
     private Vector2 tmpVec2;
 
@@ -37,8 +37,8 @@ public class LightRenderingSystem extends EntityProcessingSystem {
     @Override
     protected void initialize() {
         tmpVec2 = new Vector2();
-        box3dWorld = new World(new Vector2(0, 0), true);
-        rayHandler = new RayHandler(box3dWorld);
+        physicsWorld = new World(new Vector2(0, 0), true);
+        rayHandler = new RayHandler(physicsWorld);
         rayHandler.setAmbientLight(0.1f, 0.1f, 0.1f, 0.01f);
         rayHandler.setBlurNum(3);
         rayHandler.setShadows(true);
@@ -46,7 +46,7 @@ public class LightRenderingSystem extends EntityProcessingSystem {
 
     @Override
     protected void process(Entity e) {
-        box3dWorld.step(Gdx.graphics.getDeltaTime(), 6, 2);
+        physicsWorld.step(Gdx.graphics.getDeltaTime(), 6, 2);
 
         E(e).dynamicBodyComponentBody().setTransform(
                 tmpVec2.set(
@@ -55,8 +55,6 @@ public class LightRenderingSystem extends EntityProcessingSystem {
                 ),
                 0
         );
-
-        System.out.println(E(e).dynamicBodyComponentBody().getPosition());
     }
 
     @Override
@@ -79,11 +77,11 @@ public class LightRenderingSystem extends EntityProcessingSystem {
     @Override
     protected void dispose() {
         rayHandler.dispose();
-        box3dWorld.dispose();
+        physicsWorld.dispose();
     }
 
-    public World getBox3dWorld() {
-        return box3dWorld;
+    public World getPhysicsWorld() {
+        return physicsWorld;
     }
 
     public RayHandler getRayHandler() {

@@ -5,6 +5,9 @@ import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import net.lapidist.colony.common.events.Events;
 import net.lapidist.colony.common.postprocessing.effects.Fxaa;
 import net.lapidist.colony.common.postprocessing.effects.MotionBlur;
@@ -23,6 +26,7 @@ public class MapRenderingSystem extends EntityProcessingSystem {
 
     private CameraSystem cameraSystem;
     private MapGenerationSystem mapGenerationSystem;
+    private MapRenderingSystem mapRenderingSystem;
 
     public MapRenderingSystem() {
         super(Aspect.all(
@@ -41,13 +45,24 @@ public class MapRenderingSystem extends EntityProcessingSystem {
 
         motionBlur.setBlurOpacity(0.2f);
 
-        Colony.getPostProcessor().addEffect(motionBlur);
+//        Colony.getPostProcessor().addEffect(motionBlur);
         Colony.getPostProcessor().addEffect(fxaa);
     }
 
     @Override
     protected void process(Entity e) {
-        E(e).spriteComponentSprite().draw(Colony.getSpriteBatch());
+        if (cameraSystem.outOfBounds(
+                E(e).spriteComponentSprite().getX(),
+                E(e).spriteComponentSprite().getY()
+        )) {
+            E(e).renderableComponentRenderable(false);
+        } else {
+            E(e).renderableComponentRenderable(true);
+        }
+
+        if (E(e).renderableComponentIsRenderable()) {
+            E(e).spriteComponentSprite().draw(Colony.getSpriteBatch());
+        }
     }
 
     @Override
