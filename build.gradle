@@ -2,6 +2,7 @@ buildscript {
     ext {
         appName = "colony"
         gdxVersion = '1.9.9'
+        box2dLightsVersion = '1.4'
         tweenEngineVersion = '6.3.3'
         noise4jVersion = '0.1.0'
         roboVMVersion = '2.3.3'
@@ -44,13 +45,13 @@ project(":core") {
     dependencies {
         compile project(":common")
         compile project(":components")
-//        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
 //        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         compile "org.mini2Dx:universal-tween-engine:$tweenEngineVersion"
+        compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
     }
 }
 
@@ -60,6 +61,8 @@ project(":common") {
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
+        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        compile "com.badlogicgames.box2dlights:box2dlights:$box2dLightsVersion"
 //        compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
 //        compile "org.mini2Dx:universal-tween-engine:$tweenEngineVersion"
 //        compile "com.github.czyzby:noise4j:$noise4jVersion"

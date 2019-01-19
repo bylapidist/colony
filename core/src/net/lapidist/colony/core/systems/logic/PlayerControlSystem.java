@@ -157,8 +157,6 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
             return;
         }
 
-        System.out.println(tmpVelocity);
-
         E(e).getVelocityComponent().setVelocity(tmpVelocity);
         E(e).spriteComponentSprite().setPosition(tmpPosition.x, tmpPosition.y);
         E(e).spriteComponentSprite().setOrigin(tmpOrigin.x, tmpOrigin.y);
