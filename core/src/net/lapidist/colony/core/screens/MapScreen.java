@@ -9,11 +9,9 @@ import net.lapidist.colony.core.events.ScreenResizeEvent;
 import net.lapidist.colony.core.events.WorldInitEvent;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
 import net.lapidist.colony.core.systems.camera.PlayerCameraSystem;
-import net.lapidist.colony.core.systems.logic.EntityFactorySystem;
-import net.lapidist.colony.core.systems.logic.GuiEntityFactorySystem;
-import net.lapidist.colony.core.systems.logic.PlayerControlSystem;
-import net.lapidist.colony.core.systems.logic.MapGenerationSystem;
+import net.lapidist.colony.core.systems.logic.*;
 import net.lapidist.colony.core.systems.render.GuiRenderingSystem;
+import net.lapidist.colony.core.systems.render.PhysicsSystem;
 import net.lapidist.colony.core.systems.render.MapRenderingSystem;
 
 public class MapScreen implements Screen {
@@ -33,6 +31,8 @@ public class MapScreen implements Screen {
                         new EntityFactorySystem(),
                         new MapGenerationSystem(32, 32, Constants.PPM, Constants.PPM),
                         new MapRenderingSystem(),
+                        new LightFactorySystem(),
+                        new PhysicsSystem(),
                         new GuiEntityFactorySystem(),
                         new GuiRenderingSystem()
                 )

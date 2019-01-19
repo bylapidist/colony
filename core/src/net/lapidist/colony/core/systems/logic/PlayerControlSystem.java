@@ -9,16 +9,15 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.IntSet;
 import net.lapidist.colony.common.events.Events;
 import net.lapidist.colony.components.PlayerComponent;
 import net.lapidist.colony.components.VelocityComponent;
 import net.lapidist.colony.core.Colony;
 import net.lapidist.colony.core.Constants;
+import net.lapidist.colony.core.events.ClickTileOutsideReachEvent;
+import net.lapidist.colony.core.events.ClickTileWithinReachEvent;
 import net.lapidist.colony.core.events.HoverTileOutsideReachEvent;
 import net.lapidist.colony.core.events.HoverTileWithinReachEvent;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
@@ -31,7 +30,7 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
     private final static float BASE_ACCELERATION = 350f;
     private final static float BASE_MAX_VELOCITY = 100f;
     private final static float BASE_FRICTION = 180f;
-    private final static float MIN_VELOCITY = 0.5f;
+    private final static float MIN_VELOCITY = 3f;
     private final static float MIN_ZOOM = 1f;
     private final static float MAX_ZOOM = 2f;
     private final static float ZOOM_SPEED = 0.06f;
@@ -150,7 +149,6 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
             tmpVelocity.y = 0;
         }
 
-
         tmpOrigin.set(
                 tmpPosition.x + (mapGenerationSystem.getTileWidth() / 2f),
                 tmpPosition.y + (mapGenerationSystem.getTileHeight() / 2f)
@@ -235,6 +233,11 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
         origin = getPlayerOrigin();
         reachBounds.set(origin, REACH);
 
+        tileHovered(
+                Gdx.input.getX(),
+                Gdx.input.getY()
+        );
+
         processInput();
         updatePlayerCell();
     }
@@ -268,6 +271,19 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         downKeys.add(button);
+
+        tmpPosition.set(cameraSystem.worldCoords(screenX, screenY));
+
+        int estimatedGridX = (int) tmpPosition.x / mapGenerationSystem.getTileWidth();
+        int estimatedGridY = (int) tmpPosition.y / mapGenerationSystem.getTileHeight();
+
+        if (isWithinReach(tmpPosition) && isWithinGrid(tmpPosition)) {
+            Events.fire(new ClickTileWithinReachEvent(estimatedGridX, estimatedGridY, tmpPosition.x, tmpPosition.y));
+            return false;
+        }
+
+        Events.fire(new ClickTileOutsideReachEvent(estimatedGridX, estimatedGridY));
+
         return false;
     }
 
@@ -284,6 +300,10 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    public void tileHovered(int screenX, int screenY) {
         tmpPosition.set(cameraSystem.worldCoords(screenX, screenY));
 
         int estimatedGridX = (int) tmpPosition.x / mapGenerationSystem.getTileWidth();
@@ -291,11 +311,10 @@ public class PlayerControlSystem extends EntityProcessingSystem implements Input
 
         if (isWithinReach(tmpPosition) && isWithinGrid(tmpPosition)) {
             Events.fire(new HoverTileWithinReachEvent(estimatedGridX, estimatedGridY, tmpPosition.x, tmpPosition.y));
-            return false;
+            return;
         }
 
         Events.fire(new HoverTileOutsideReachEvent(estimatedGridX, estimatedGridY));
-        return false;
     }
 
     @Override
