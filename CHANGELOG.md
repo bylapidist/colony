@@ -1,3 +1,20 @@
+<a name="4.3.0"></a>
+# [4.3.0](https://gitlab.com/getbrett/colony/compare/v4.2.0...v4.3.0) (2019-01-19)
+
+
+### Bug Fixes
+
+* **engine:** make buildings static ([5211cfe](https://gitlab.com/getbrett/colony/commit/5211cfe))
+* **engine:** redraw tile selection when player is moving ([af6f7ff](https://gitlab.com/getbrett/colony/commit/af6f7ff))
+
+
+### Features
+
+* **engine:** implement box2dlights ([2013d7c](https://gitlab.com/getbrett/colony/commit/2013d7c))
+* **engine:** Implement lighting system ([aad3f49](https://gitlab.com/getbrett/colony/commit/aad3f49))
+
+
+
 <a name="4.2.0"></a>
 # [4.2.0](https://gitlab.com/getbrett/colony/compare/v4.1.0...v4.2.0) (2019-01-19)
 
