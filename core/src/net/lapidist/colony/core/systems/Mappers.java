@@ -1,6 +1,7 @@
 package net.lapidist.colony.core.systems;
 
 import com.artemis.BaseSystem;
+import net.lapidist.colony.components.assets.FontComponent;
 import net.lapidist.colony.components.assets.TextureComponent;
 import net.mostlyoriginal.api.component.basic.Angle;
 import net.mostlyoriginal.api.component.basic.Origin;
@@ -14,6 +15,7 @@ public final class Mappers extends BaseSystem {
 
     public M<Pos> mPos;
     public M<TextureComponent> mTexture;
+    public M<FontComponent> mFont;
     public M<Tint> mTint;
     public M<Angle> mAngle;
     public M<Scale> mScale;
@@ -24,6 +26,7 @@ public final class Mappers extends BaseSystem {
     protected void initialize() {
         mPos = new M<>(Pos.class, world);
         mTexture = new M<>(TextureComponent.class, world);
+        mFont = new M<>(FontComponent.class, world);
         mTint = new M<>(Tint.class, world);
         mAngle = new M<>(Angle.class, world);
         mScale = new M<>(Scale.class, world);

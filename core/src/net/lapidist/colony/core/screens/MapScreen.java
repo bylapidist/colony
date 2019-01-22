@@ -34,11 +34,11 @@ public class MapScreen implements Screen {
                 .with(WorldConfigurationBuilder.Priority.NORMAL,
                         new ClearScreenSystem(Color.GOLD),
                         new CameraSystem(1),
-                        new GuiAssetSystem(FileLocation.INTERNAL),
                         new MapAssetSystem(FileLocation.INTERNAL),
+                        new GuiAssetSystem(FileLocation.INTERNAL),
                         renderBatchingSystem = new RenderBatchingSystem(),
-                        new GuiRenderSystem(renderBatchingSystem),
-                        new MapRenderSystem(renderBatchingSystem)
+                        new MapRenderSystem(renderBatchingSystem),
+                        new GuiRenderSystem(renderBatchingSystem)
                 )
                 .build();
 

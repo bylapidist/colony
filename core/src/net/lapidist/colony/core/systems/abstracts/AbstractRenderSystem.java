@@ -3,6 +3,7 @@ package net.lapidist.colony.core.systems.abstracts;
 import com.artemis.Aspect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import net.lapidist.colony.components.assets.FontComponent;
 import net.lapidist.colony.components.assets.TextureComponent;
 import net.mostlyoriginal.api.component.basic.Angle;
 import net.mostlyoriginal.api.component.basic.Origin;
@@ -52,8 +53,13 @@ public abstract class AbstractRenderSystem extends DeferredEntityProcessingSyste
         }
     }
 
-    protected void drawLabel(Label labelC, Angle angleC, Origin originC, Pos posC, float scale, float zoom) {
-
+    protected void drawLabel(Label labelC, FontComponent fontC, Pos posC) {
+        fontC.getFont().draw(
+                batch,
+                labelC.text,
+                posC.xy.x,
+                posC.xy.y
+        );
     }
 
     private float roundToPixels(final float val, final float zoom) {
