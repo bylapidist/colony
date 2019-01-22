@@ -3,28 +3,44 @@ package net.lapidist.colony.core.screens;
 import com.artemis.*;
 import com.artemis.managers.TagManager;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import net.lapidist.colony.core.events.Events;
+import net.lapidist.colony.core.events.logic.GamePauseEvent;
+import net.lapidist.colony.core.events.logic.GameResumeEvent;
 import net.lapidist.colony.core.events.render.ScreenResizeEvent;
-import net.lapidist.colony.core.events.logic.WorldInitEvent;
+import net.lapidist.colony.core.io.FileLocation;
+import net.lapidist.colony.core.systems.abstracts.AbstractAssetSystem;
+import net.lapidist.colony.core.systems.Mappers;
+import net.lapidist.colony.core.systems.map.MapAssetSystem;
+import net.lapidist.colony.core.systems.render.MapRenderSystem;
+import net.mostlyoriginal.api.system.camera.CameraSystem;
+import net.mostlyoriginal.api.system.graphics.RenderBatchingSystem;
+import net.mostlyoriginal.api.system.render.ClearScreenSystem;
 
 public class MapScreen implements Screen {
 
     private World world;
+    private final AbstractAssetSystem assetSystem;
 
     public MapScreen() {
+        final RenderBatchingSystem renderBatchingSystem;
+
         WorldConfiguration config = new WorldConfigurationBuilder()
                 .with(WorldConfigurationBuilder.Priority.HIGHEST,
                         new SuperMapper(),
+                        new Mappers(),
                         new TagManager()
                 )
-//                .with(WorldConfigurationBuilder.Priority.NORMAL,
-
-//                )
+                .with(WorldConfigurationBuilder.Priority.NORMAL,
+                        new ClearScreenSystem(Color.GOLD),
+                        new CameraSystem(1),
+                        assetSystem = new MapAssetSystem(FileLocation.INTERNAL),
+                        renderBatchingSystem = new RenderBatchingSystem(),
+                        new MapRenderSystem(renderBatchingSystem)
+                )
                 .build();
 
         world = new World(config);
-
-        Events.fire(new WorldInitEvent());
     }
 
     @Override
@@ -44,10 +60,12 @@ public class MapScreen implements Screen {
 
     @Override
     public void pause() {
+        Events.fire(new GamePauseEvent());
     }
 
     @Override
     public void resume() {
+        Events.fire(new GameResumeEvent());
     }
 
     @Override
@@ -56,6 +74,7 @@ public class MapScreen implements Screen {
 
     @Override
     public void dispose() {
+        assetSystem.dispose();
         world.dispose();
     }
 }

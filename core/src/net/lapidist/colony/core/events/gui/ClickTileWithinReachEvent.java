@@ -39,14 +39,4 @@ public class ClickTileWithinReachEvent implements IEvent {
     public void setScreenY(float screenY) {
         this.screenY = screenY;
     }
-
-    @Override
-    public String toString() {
-        return "ClickTileWithinReachEvent{" +
-                "gridX=" + gridX +
-                ", gridY=" + gridY +
-                ", screenX=" + screenX +
-                ", screenY=" + screenY +
-                '}';
-    }
 }

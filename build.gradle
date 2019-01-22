@@ -44,12 +44,11 @@ project(":core") {
 
     dependencies {
         compile project(":components")
-//        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-//        compile "org.mini2Dx:universal-tween-engine:$tweenEngineVersion"
         compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
@@ -60,16 +59,11 @@ project(":core") {
         compile "net.mostlyoriginal.artemis-odb:contrib-eventbus:$artemisContribVersion"
         compile "net.mostlyoriginal.artemis-odb:contrib-plugin-operations:$artemisContribVersion"
         compile "net.mostlyoriginal.artemis-odb:contrib-plugin-profiler:$artemisContribVersion"
+        compile "net.onedaybeard.artemis:artemis-odb-serializer:$artemisVersion:sources"
+        compile "net.onedaybeard.artemis:artemis-odb-serializer-json-libgdx:$artemisVersion:sources"
 //        compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
 //        compile "org.mini2Dx:universal-tween-engine:$tweenEngineVersion"
 //        compile "com.github.czyzby:noise4j:$noise4jVersion"
-//        compile "net.onedaybeard.artemis:artemis-odb-serializer:$artemisVersion:sources"
-//        compile "net.onedaybeard.artemis:artemis-odb-serializer-json-libgdx:$artemisVersion:sources"
-//        compile "net.mostlyoriginal.artemis-odb:contrib-core:$artemisContribVersion:sources"
-//        compile "net.mostlyoriginal.artemis-odb:contrib-jam:$artemisContribVersion:sources"
-//        compile "net.mostlyoriginal.artemis-odb:contrib-eventbus:$artemisContribVersion:sources"
-//        compile "net.mostlyoriginal.artemis-odb:contrib-plugin-operations:$artemisContribVersion:sources"
-//        compile "net.mostlyoriginal.artemis-odb:contrib-plugin-profiler:$artemisContribVersion:sources"
     }
 }
 
@@ -77,10 +71,11 @@ project(":components") {
     apply plugin: "java"
 
     dependencies {
-//        compile "net.mostlyoriginal.artemis-odb:contrib-core:$artemisContribVersion"
-//        compile "net.mostlyoriginal.artemis-odb:contrib-jam:$artemisContribVersion"
-//        compile "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
-//        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile "net.mostlyoriginal.artemis-odb:contrib-core:$artemisContribVersion"
+        compile "net.mostlyoriginal.artemis-odb:contrib-jam:$artemisContribVersion"
+        compile "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
     }
 }
 

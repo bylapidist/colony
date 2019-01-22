@@ -5,9 +5,12 @@ import net.lapidist.colony.core.Constants;
 
 public abstract class AbstractEvent implements IEvent {
 
-    protected AbstractEvent() {
+    protected AbstractEvent(String payload) {
         if (Constants.DEBUG) {
-            Gdx.app.log("Event", this.toString());
+            Gdx.app.log(
+                    "Event",
+                    this.getClass().getSimpleName() + " {" + payload + "}"
+            );
         }
     }
 }

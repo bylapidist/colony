@@ -19,12 +19,4 @@ public class ClickTileOutsideReachEvent implements IEvent {
     public int getGridY() {
         return gridY;
     }
-
-    @Override
-    public String toString() {
-        return "ClickTileOutsideReachEvent{" +
-                "gridX=" + gridX +
-                ", gridY=" + gridY +
-                '}';
-    }
 }

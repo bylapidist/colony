@@ -19,12 +19,4 @@ public class HoverTileOutsideReachEvent implements IEvent {
     public int getGridY() {
         return gridY;
     }
-
-    @Override
-    public String toString() {
-        return "HoverTileOutsideReachEvent{" +
-                "gridX=" + gridX +
-                ", gridY=" + gridY +
-                '}';
-    }
 }

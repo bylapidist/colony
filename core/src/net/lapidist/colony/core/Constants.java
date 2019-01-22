@@ -1,6 +1,6 @@
 package net.lapidist.colony.core;
 
-public class Constants {
+public final class Constants {
     public static final String NAME = "Colony";
     public static final String VERSION = "1.0.0";
     public static final boolean DEBUG = true;

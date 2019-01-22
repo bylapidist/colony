@@ -39,14 +39,4 @@ public class HoverTileWithinReachEvent implements IEvent {
     public void setScreenY(float screenY) {
         this.screenY = screenY;
     }
-
-    @Override
-    public String toString() {
-        return "HoverTileWithinReachEvent{" +
-                "gridX=" + gridX +
-                ", gridY=" + gridY +
-                ", screenX=" + screenX +
-                ", screenY=" + screenY +
-                '}';
-    }
 }

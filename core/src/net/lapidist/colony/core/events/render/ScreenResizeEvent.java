@@ -8,6 +8,11 @@ public class ScreenResizeEvent extends AbstractEvent {
     private int height;
 
     public ScreenResizeEvent(int width, int height) {
+        super(
+                "width=" + width +
+                ", height=" + height
+        );
+
         this.width = width;
         this.height = height;
     }
@@ -20,11 +25,11 @@ public class ScreenResizeEvent extends AbstractEvent {
         this.width = width;
     }
 
-    @Override
-    public String toString() {
-        return "ScreenResizeEvent{" +
-                "width=" + width +
-                ", height=" + height +
-                '}';
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 }
