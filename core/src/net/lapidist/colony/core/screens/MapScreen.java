@@ -13,6 +13,7 @@ import net.lapidist.colony.core.systems.logic.*;
 import net.lapidist.colony.core.systems.render.GuiRenderingSystem;
 import net.lapidist.colony.core.systems.render.PhysicsSystem;
 import net.lapidist.colony.core.systems.render.MapRenderingSystem;
+import net.lapidist.colony.core.systems.render.RenderableSystem;
 
 public class MapScreen implements Screen {
 
@@ -29,7 +30,8 @@ public class MapScreen implements Screen {
                         new PlayerCameraSystem(),
                         new PlayerControlSystem(),
                         new EntityFactorySystem(),
-                        new MapGenerationSystem(32, 32, Constants.PPM, Constants.PPM),
+                        new RenderableSystem(),
+                        new MapGenerationSystem(1024, 1024, Constants.PPM, Constants.PPM),
                         new MapRenderingSystem(),
                         new LightFactorySystem(),
                         new PhysicsSystem(),
@@ -48,13 +50,13 @@ public class MapScreen implements Screen {
     }
 
     @Override
-    public void render(float delta) {
+    public void render(final float delta) {
         world.setDelta(delta);
         world.process();
     }
 
     @Override
-    public void resize(int width, int height) {
+    public void resize(final int width, final int height) {
         Events.fire(new ScreenResizeEvent(width, height));
     }
 

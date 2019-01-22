@@ -12,6 +12,7 @@ public class CameraSystem extends BaseSystem {
     public OrthographicCamera camera;
     public OrthographicCamera guiCamera;
 
+    private static Vector2 tmpVec2 = new Vector2();
     private static Vector3 tmpVec3 = new Vector3();
     private static Vector2 mouse = new Vector2();
     final float zoom;
@@ -20,19 +21,19 @@ public class CameraSystem extends BaseSystem {
         this(1);
     }
 
-    public CameraSystem(float width, float height) {
+    public CameraSystem(final float width, final float height) {
         this.zoom = 1;
         setupViewport(width, height);
     }
 
-    public CameraSystem(float zoom) {
+    public CameraSystem(final float zoom) {
         this.zoom = zoom;
         float zoomFactorInverter = 1f / zoom;
 
         setupViewport(Gdx.graphics.getWidth() * zoomFactorInverter, Gdx.graphics.getHeight() * zoomFactorInverter);
     }
 
-    protected void setupViewport(float width, float height) {
+    protected void setupViewport(final float width, final float height) {
         camera = new OrthographicCamera(width, height);
         camera.setToOrtho(false, width, height);
         camera.zoom = zoom;
@@ -43,23 +44,21 @@ public class CameraSystem extends BaseSystem {
         guiCamera.update();
     }
 
-    public boolean outOfBounds(float worldX, float worldY) {
-        Vector2 screenCoords = screenCoords(worldX, worldY);
-
-        return screenCoords.x < -Constants.PPM * 2
-                || screenCoords.x > Gdx.graphics.getWidth() + Constants.PPM
-                || screenCoords.y < -Constants.PPM * 2
-                || screenCoords.y > Gdx.graphics.getHeight() + Constants.PPM;
+    public boolean outOfBounds(final float screenX, final float screenY) {
+        return screenX < -Constants.PPM * 2
+                || screenX > Gdx.graphics.getWidth() + Constants.PPM
+                || screenY < -Constants.PPM * 2
+                || screenY > Gdx.graphics.getHeight() + Constants.PPM;
     }
 
-    public Vector2 screenCoords(float worldX, float worldY) {
+    public Vector2 screenCoords(final float worldX, final float worldY) {
         camera.update();
         camera.project(tmpVec3.set(worldX, worldY, 0));
 
         return mouse.set(tmpVec3.x, tmpVec3.y);
     }
 
-    public Vector2 worldCoords(float screenX, float screenY) {
+    public Vector2 worldCoords(final float screenX, final float screenY) {
         camera.update();
         camera.unproject(tmpVec3.set(screenX, screenY, 0));
 

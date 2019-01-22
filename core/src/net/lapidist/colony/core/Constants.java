@@ -6,5 +6,5 @@ public class Constants {
     public static final boolean DEBUG = true;
     public static final int WIDTH = 1080;
     public static final int HEIGHT = 720;
-    public static final int PPM = 64; // Pixels per meter
+    public static final int PPM = 32; // Pixels per meter
 }

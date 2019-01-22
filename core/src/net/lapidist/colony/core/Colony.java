@@ -38,7 +38,6 @@ public class Colony extends Game {
         postProcessor = new PostProcessor(false, false, true);
         tweenManager = new TweenManager();
         inputMultiplexer = new InputMultiplexer();
-        Gdx.input.setInputProcessor(inputMultiplexer);
 
         try {
             resourceLoader = new ResourceLoader(
@@ -49,6 +48,7 @@ public class Colony extends Game {
             e.printStackTrace();
         }
 
+        Gdx.input.setInputProcessor(inputMultiplexer);
         Events.fire(new GameLoadEvent());
     }
 
@@ -56,6 +56,7 @@ public class Colony extends Game {
     public void render() {
         super.render();
 
+        // @TODO: move to TweenSystem
         tweenManager.update(Gdx.graphics.getDeltaTime());
     }
 
