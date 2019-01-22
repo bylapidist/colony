@@ -3,17 +3,9 @@ package net.lapidist.colony.core.screens;
 import com.artemis.*;
 import com.artemis.managers.TagManager;
 import com.badlogic.gdx.Screen;
-import net.lapidist.colony.common.events.Events;
-import net.lapidist.colony.core.Constants;
-import net.lapidist.colony.core.events.ScreenResizeEvent;
-import net.lapidist.colony.core.events.WorldInitEvent;
-import net.lapidist.colony.core.systems.camera.CameraSystem;
-import net.lapidist.colony.core.systems.camera.PlayerCameraSystem;
-import net.lapidist.colony.core.systems.logic.*;
-import net.lapidist.colony.core.systems.render.GuiRenderingSystem;
-import net.lapidist.colony.core.systems.render.PhysicsSystem;
-import net.lapidist.colony.core.systems.render.MapRenderingSystem;
-import net.lapidist.colony.core.systems.render.RenderableSystem;
+import net.lapidist.colony.core.events.Events;
+import net.lapidist.colony.core.events.render.ScreenResizeEvent;
+import net.lapidist.colony.core.events.logic.WorldInitEvent;
 
 public class MapScreen implements Screen {
 
@@ -25,19 +17,9 @@ public class MapScreen implements Screen {
                         new SuperMapper(),
                         new TagManager()
                 )
-                .with(WorldConfigurationBuilder.Priority.NORMAL,
-                        new CameraSystem(1f),
-                        new PlayerCameraSystem(),
-                        new PlayerControlSystem(),
-                        new EntityFactorySystem(),
-                        new RenderableSystem(),
-                        new MapGenerationSystem(1024, 1024, Constants.PPM, Constants.PPM),
-                        new MapRenderingSystem(),
-                        new LightFactorySystem(),
-                        new PhysicsSystem(),
-                        new GuiEntityFactorySystem(),
-                        new GuiRenderingSystem()
-                )
+//                .with(WorldConfigurationBuilder.Priority.NORMAL,
+
+//                )
                 .build();
 
         world = new World(config);

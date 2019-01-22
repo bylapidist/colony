@@ -9,6 +9,8 @@ public class Launcher {
 
         config.setTitle(Constants.NAME + " " + Constants.VERSION);
         config.setWindowedMode(Constants.WIDTH, Constants.HEIGHT);
+        config.setIdleFPS(60);
+        config.setHdpiMode(Lwjgl3ApplicationConfiguration.HdpiMode.Logical);
 
         new Lwjgl3Application(new Colony(), config);
     }
