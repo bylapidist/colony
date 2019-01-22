@@ -1,0 +1,41 @@
+package net.lapidist.colony.core.systems.gui;
+
+import com.artemis.ArchetypeBuilder;
+import com.artemis.Entity;
+import net.lapidist.colony.components.assets.AssetComponent;
+import net.lapidist.colony.components.assets.FontComponent;
+import net.lapidist.colony.core.events.Events;
+import net.lapidist.colony.core.events.gui.GuiInitEvent;
+import net.lapidist.colony.core.io.FileLocation;
+import net.lapidist.colony.core.systems.abstracts.AbstractAssetSystem;
+
+public class GuiAssetSystem extends AbstractAssetSystem {
+
+    private boolean initialised;
+
+    public GuiAssetSystem(FileLocation fileLocation) {
+        super(fileLocation);
+    }
+
+    @Override
+    protected void initialize() {
+        super.initialize();
+
+        Entity e = world.createEntity(new ArchetypeBuilder()
+                .add(AssetComponent.class)
+                .add(FontComponent.class)
+                .build(world));
+
+        register("default", e);
+    }
+
+    @Override
+    protected void process(int entityId) {
+        super.process(entityId);
+
+        if (loaded && !initialised) {
+            initialised = true;
+            Events.fire(new GuiInitEvent());
+        }
+    }
+}

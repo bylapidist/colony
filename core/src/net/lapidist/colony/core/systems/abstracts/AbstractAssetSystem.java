@@ -8,6 +8,7 @@ import com.artemis.utils.BitVector;
 import com.artemis.utils.IntBag;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Disposable;
 import net.lapidist.colony.components.assets.AssetComponent;
 import net.lapidist.colony.core.io.FileLocation;
@@ -90,6 +91,12 @@ public abstract class AbstractAssetSystem extends IteratingSystem implements Dis
 
             assetManager.load(path, Texture.class);
         }
+
+        if (E(e).hasFontComponent()) {
+            String path = fileLocation.getFile("fonts/" + name + ".fnt").path();
+
+            assetManager.load(path, BitmapFont.class);
+        }
     }
 
     protected void register(String name, int entityId) {
@@ -136,7 +143,20 @@ public abstract class AbstractAssetSystem extends IteratingSystem implements Dis
             }
         }
 
-        throw new RuntimeException("Texture is not registered");
+        return null;
+    }
+
+    public BitmapFont getFont(String name) {
+        if (isRegistered(name)) {
+            Entity e = getEntity(name);
+
+            if (E(e).hasFontComponent()) {
+                String path = fileLocation.getFile("fonts/" + name + ".fnt").path();
+                return assetManager.get(path, BitmapFont.class);
+            }
+        }
+
+        return null;
     }
 
     protected Collection<String> getRegisteredAssets() {
@@ -161,6 +181,12 @@ public abstract class AbstractAssetSystem extends IteratingSystem implements Dis
         if (E(entityId).hasTextureComponent()) {
             if (E(entityId).getTextureComponent().getTexture() == null) {
                 E(entityId).getTextureComponent().setTexture(getTexture(getName(entityId)));
+            }
+        }
+
+        if (E(entityId).hasFontComponent()) {
+            if (E(entityId).getFontComponent().getFont() == null) {
+                E(entityId).getFontComponent().setFont(getFont(getName(entityId)));
             }
         }
     }

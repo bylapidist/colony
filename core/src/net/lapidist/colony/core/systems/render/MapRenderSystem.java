@@ -13,6 +13,7 @@ import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.logic.MapInitEvent;
 import net.lapidist.colony.core.events.render.ScreenResizeEvent;
 import net.lapidist.colony.core.systems.Mappers;
+import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
 import net.lapidist.colony.core.systems.map.MapAssetSystem;
 import net.mostlyoriginal.api.component.basic.Angle;
 import net.mostlyoriginal.api.component.basic.Origin;
@@ -22,22 +23,17 @@ import net.mostlyoriginal.api.component.graphics.Invisible;
 import net.mostlyoriginal.api.component.graphics.Render;
 import net.mostlyoriginal.api.component.graphics.Tint;
 import net.mostlyoriginal.api.system.camera.CameraSystem;
-import net.mostlyoriginal.api.system.delegate.DeferredEntityProcessingSystem;
 import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
 
 @Wire
-public class MapRenderSystem extends DeferredEntityProcessingSystem {
-
-    private TextureRegion tmpTextureRegion;
-    private SpriteBatch batch;
-    private final Origin defaultOrigin = new Origin(0.5f, 0.5f);
+public class MapRenderSystem extends AbstractRenderSystem {
 
     private CameraSystem cameraSystem;
     private MapAssetSystem assetSystem;
     private Mappers mappers;
 
     public MapRenderSystem(EntityProcessPrincipal principal) {
-        super(Aspect.all(Pos.class, TextureComponent.class, Render.class).exclude(Invisible.class), principal);
+        super(Aspect.all(Render.class).exclude(Invisible.class), principal);
     }
 
     @Override
@@ -47,35 +43,8 @@ public class MapRenderSystem extends DeferredEntityProcessingSystem {
         tmpTextureRegion = new TextureRegion();
         batch = new SpriteBatch(2000);
 
-        Events.on(MapInitEvent.class, mapInitEvent -> {
-            Entity e = world.createEntity(new ArchetypeBuilder()
-                    .add(Pos.class)
-                    .add(TextureComponent.class)
-                    .add(Render.class)
-                    .build(world));
-
-            mappers.mPos.create(e);
-            mappers.mTexture.create(e);
-
-            mappers.mPos.get(e).set(new Vector3(0, 0, 1));
-            mappers.mTexture.get(e).setTexture(assetSystem.getTexture("player"));
-
-            Entity e2 = world.createEntity(new ArchetypeBuilder()
-                    .add(Pos.class)
-                    .add(TextureComponent.class)
-                    .add(Render.class)
-                    .build(world));
-
-            mappers.mPos.create(e2);
-            mappers.mTexture.create(e2);
-            mappers.mPos.get(e2).set(new Vector3(0, 0, 0));
-            mappers.mTexture.get(e2).setTexture(assetSystem.getTexture("dirt"));
-
-            Events.on(ScreenResizeEvent.class, event -> {
-                cameraSystem.camera.setToOrtho(true, event.getWidth(), event.getHeight());
-                cameraSystem.camera.update();
-            });
-        });
+        Events.on(MapInitEvent.class, mapInitEvent -> onInit());
+        Events.on(ScreenResizeEvent.class, event -> onResize(event.getWidth(), event.getHeight()));
     }
 
     @Override
@@ -101,7 +70,7 @@ public class MapRenderSystem extends DeferredEntityProcessingSystem {
 
         batch.setColor(mappers.mTint.getSafe(e, Tint.WHITE).color);
 
-        if (textureC != null && posC != null) drawTexture(textureC, angleC, originC, posC, scale);
+        if (textureC != null && posC != null) drawTexture(textureC, angleC, originC, posC, scale, cameraSystem.zoom);
     }
 
     @Override
@@ -109,30 +78,22 @@ public class MapRenderSystem extends DeferredEntityProcessingSystem {
         batch.dispose();
     }
 
-    private float roundToPixels(final float val) {
-        return ((int)(val * cameraSystem.zoom)) / cameraSystem.zoom;
+    protected void onResize(int width, int height) {
+        cameraSystem.camera.setToOrtho(false, width, height);
+        cameraSystem.camera.update();
     }
 
-    private void drawTexture(TextureComponent textureC, Angle angleC, Origin originC, Pos posC, float scale) {
-        float ox = textureC.getTexture().getWidth() * scale * originC.xy.x;
-        float oy = textureC.getTexture().getHeight() * scale * originC.xy.y;
-        tmpTextureRegion.setTexture(textureC.getTexture());
+    protected void onInit() {
+        Entity e = world.createEntity(new ArchetypeBuilder()
+                .add(Pos.class)
+                .add(TextureComponent.class)
+                .add(Render.class)
+                .build(world));
 
-        if (angleC.rotation != 0) {
-            batch.draw(tmpTextureRegion,
-                    roundToPixels(posC.xy.x),
-                    roundToPixels(posC.xy.y),
-                    ox,
-                    oy,
-                    textureC.getTexture().getWidth() * scale,
-                    textureC.getTexture().getHeight() * scale, 1, 1,
-                    angleC.rotation);
-        } else {
-            batch.draw(tmpTextureRegion,
-                    roundToPixels(posC.xy.x),
-                    roundToPixels(posC.xy.y),
-                    textureC.getTexture().getWidth() * scale,
-                    textureC.getTexture().getHeight() * scale);
-        }
+        mappers.mPos.create(e);
+        mappers.mTexture.create(e);
+
+        mappers.mPos.get(e).set(new Vector3(0, 0, 1));
+        mappers.mTexture.get(e).setTexture(assetSystem.getTexture("dirt"));
     }
 }

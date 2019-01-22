@@ -9,9 +9,10 @@ import net.lapidist.colony.core.events.logic.GamePauseEvent;
 import net.lapidist.colony.core.events.logic.GameResumeEvent;
 import net.lapidist.colony.core.events.render.ScreenResizeEvent;
 import net.lapidist.colony.core.io.FileLocation;
-import net.lapidist.colony.core.systems.abstracts.AbstractAssetSystem;
 import net.lapidist.colony.core.systems.Mappers;
+import net.lapidist.colony.core.systems.gui.GuiAssetSystem;
 import net.lapidist.colony.core.systems.map.MapAssetSystem;
+import net.lapidist.colony.core.systems.render.GuiRenderSystem;
 import net.lapidist.colony.core.systems.render.MapRenderSystem;
 import net.mostlyoriginal.api.system.camera.CameraSystem;
 import net.mostlyoriginal.api.system.graphics.RenderBatchingSystem;
@@ -20,7 +21,6 @@ import net.mostlyoriginal.api.system.render.ClearScreenSystem;
 public class MapScreen implements Screen {
 
     private World world;
-    private final AbstractAssetSystem assetSystem;
 
     public MapScreen() {
         final RenderBatchingSystem renderBatchingSystem;
@@ -34,8 +34,10 @@ public class MapScreen implements Screen {
                 .with(WorldConfigurationBuilder.Priority.NORMAL,
                         new ClearScreenSystem(Color.GOLD),
                         new CameraSystem(1),
-                        assetSystem = new MapAssetSystem(FileLocation.INTERNAL),
+                        new GuiAssetSystem(FileLocation.INTERNAL),
+                        new MapAssetSystem(FileLocation.INTERNAL),
                         renderBatchingSystem = new RenderBatchingSystem(),
+                        new GuiRenderSystem(renderBatchingSystem),
                         new MapRenderSystem(renderBatchingSystem)
                 )
                 .build();
@@ -74,7 +76,6 @@ public class MapScreen implements Screen {
 
     @Override
     public void dispose() {
-        assetSystem.dispose();
         world.dispose();
     }
 }
