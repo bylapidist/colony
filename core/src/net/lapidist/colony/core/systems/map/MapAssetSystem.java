@@ -6,7 +6,6 @@ import net.lapidist.colony.components.assets.AssetComponent;
 import net.lapidist.colony.components.assets.TextureComponent;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.logic.MapInitEvent;
-import net.lapidist.colony.core.events.render.TextureRegisterEvent;
 import net.lapidist.colony.core.io.FileLocation;
 import net.lapidist.colony.core.systems.abstracts.AbstractAssetSystem;
 
@@ -35,7 +34,6 @@ public class MapAssetSystem extends AbstractAssetSystem {
             .build(world));
 
             register(texture, e);
-            Events.fire(new TextureRegisterEvent(texture));
         }
     }
 

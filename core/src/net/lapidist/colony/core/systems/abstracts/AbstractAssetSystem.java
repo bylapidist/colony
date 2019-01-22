@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Disposable;
 import net.lapidist.colony.components.assets.AssetComponent;
+import net.lapidist.colony.core.events.Events;
+import net.lapidist.colony.core.events.render.AssetRegisterEvent;
 import net.lapidist.colony.core.io.FileLocation;
 
 import java.util.Collection;
@@ -88,12 +90,14 @@ public abstract class AbstractAssetSystem extends IteratingSystem implements Dis
 
         if (E(e).hasTextureComponent()) {
             String path = fileLocation.getFile("textures/" + name + ".png").path();
+            Events.fire(new AssetRegisterEvent(path, Texture.class));
 
             assetManager.load(path, Texture.class);
         }
 
         if (E(e).hasFontComponent()) {
             String path = fileLocation.getFile("fonts/" + name + ".fnt").path();
+            Events.fire(new AssetRegisterEvent(path, BitmapFont.class));
 
             assetManager.load(path, BitmapFont.class);
         }
