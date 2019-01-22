@@ -13,13 +13,16 @@ import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
 
 public abstract class AbstractRenderSystem extends DeferredEntityProcessingSystem {
 
-    protected TextureRegion tmpTextureRegion;
-    protected SpriteBatch batch;
-
     protected final Origin defaultOrigin = new Origin(0.5f, 0.5f);
+
+    protected SpriteBatch batch;
+    private TextureRegion tmpTextureRegion;
 
     public AbstractRenderSystem(Aspect.Builder aspect, EntityProcessPrincipal principal) {
         super(aspect, principal);
+
+        tmpTextureRegion = new TextureRegion();
+        batch = new SpriteBatch(2000);
     }
 
     protected abstract void onResize(int width, int height);
@@ -49,7 +52,7 @@ public abstract class AbstractRenderSystem extends DeferredEntityProcessingSyste
         }
     }
 
-    protected void drawLabel(Label labelC, Angle angleC, Origin originC, Pos posC, float scale) {
+    protected void drawLabel(Label labelC, Angle angleC, Origin originC, Pos posC, float scale, float zoom) {
 
     }
 
@@ -59,22 +62,21 @@ public abstract class AbstractRenderSystem extends DeferredEntityProcessingSyste
 
     @Override
     protected void initialize() {
-
     }
 
     @Override
     protected void begin() {
-
+        batch.begin();
     }
 
     @Override
     protected void end() {
-
+        batch.end();
     }
 
     @Override
     protected void dispose() {
-
+        batch.dispose();
     }
 
     @Override

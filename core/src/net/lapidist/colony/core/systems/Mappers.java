@@ -7,6 +7,7 @@ import net.mostlyoriginal.api.component.basic.Origin;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.basic.Scale;
 import net.mostlyoriginal.api.component.graphics.Tint;
+import net.mostlyoriginal.api.component.ui.Label;
 import net.mostlyoriginal.api.plugin.extendedcomponentmapper.M;
 
 public final class Mappers extends BaseSystem {
@@ -17,6 +18,7 @@ public final class Mappers extends BaseSystem {
     public M<Angle> mAngle;
     public M<Scale> mScale;
     public M<Origin> mOrigin;
+    public M<Label> mLabel;
 
     @Override
     protected void initialize() {
@@ -26,6 +28,7 @@ public final class Mappers extends BaseSystem {
         mAngle = new M<>(Angle.class, world);
         mScale = new M<>(Scale.class, world);
         mOrigin = new M<>(Origin.class, world);
+        mLabel = new M<>(Label.class, world);
     }
 
     @Override

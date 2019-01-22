@@ -40,24 +40,19 @@ public class MapRenderSystem extends AbstractRenderSystem {
     protected void initialize() {
         super.initialize();
 
-        tmpTextureRegion = new TextureRegion();
-        batch = new SpriteBatch(2000);
-
         Events.on(MapInitEvent.class, mapInitEvent -> onInit());
         Events.on(ScreenResizeEvent.class, event -> onResize(event.getWidth(), event.getHeight()));
     }
 
     @Override
     protected void begin() {
-        cameraSystem.camera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        cameraSystem.camera.update();
+        super.begin();
         batch.setProjectionMatrix(cameraSystem.camera.combined);
-        batch.begin();
     }
 
     @Override
     protected void end() {
-        batch.end();
+        super.end();
     }
 
     @Override
@@ -75,11 +70,11 @@ public class MapRenderSystem extends AbstractRenderSystem {
 
     @Override
     protected void dispose() {
-        batch.dispose();
+        super.dispose();
     }
 
     protected void onResize(int width, int height) {
-        cameraSystem.camera.setToOrtho(false, width, height);
+        cameraSystem.camera.setToOrtho(true, width, height);
         cameraSystem.camera.update();
     }
 
