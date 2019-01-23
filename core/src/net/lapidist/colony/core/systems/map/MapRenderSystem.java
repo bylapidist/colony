@@ -1,6 +1,7 @@
 package net.lapidist.colony.core.systems.map;
 
 import com.artemis.Aspect;
+import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import net.lapidist.colony.components.assets.TextureComponent;
 import net.lapidist.colony.components.base.OriginComponent;
@@ -15,7 +16,6 @@ import net.lapidist.colony.core.events.render.ScreenResizeEvent;
 import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
-import net.lapidist.colony.core.systems.delegate.EntityProcessPrincipal;
 
 import static com.artemis.E.E;
 
@@ -25,9 +25,10 @@ public class MapRenderSystem extends AbstractRenderSystem {
     private CameraSystem cameraSystem;
     private EntityFactorySystem entityFactorySystem;
     private MapGenerationSystem mapGenerationSystem;
+    private MapPhysicsSystem mapPhysicsSystem;
 
-    public MapRenderSystem(EntityProcessPrincipal principal) {
-        super(Aspect.all(SortableComponent.class).exclude(InvisibleComponent.class), principal);
+    public MapRenderSystem() {
+        super(Aspect.all(SortableComponent.class).exclude(InvisibleComponent.class));
     }
 
     @Override
@@ -40,17 +41,17 @@ public class MapRenderSystem extends AbstractRenderSystem {
 
     @Override
     protected void begin() {
-        super.begin();
+        batch.begin();
         batch.setProjectionMatrix(cameraSystem.camera.combined);
     }
 
     @Override
     protected void end() {
-        super.end();
+        batch.end();
     }
 
     @Override
-    protected void process(final int e) {
+    protected void process(Entity e) {
         if (
                 E(e).hasTextureComponent() &&
                 E(e).hasRotationComponent() &&

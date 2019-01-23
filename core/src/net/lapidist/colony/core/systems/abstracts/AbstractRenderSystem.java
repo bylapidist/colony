@@ -1,6 +1,8 @@
 package net.lapidist.colony.core.systems.abstracts;
 
 import com.artemis.Aspect;
+import com.artemis.Entity;
+import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import net.lapidist.colony.components.assets.FontComponent;
@@ -10,16 +12,14 @@ import net.lapidist.colony.components.base.OriginComponent;
 import net.lapidist.colony.components.base.PositionComponent;
 import net.lapidist.colony.components.base.ScaleComponent;
 import net.lapidist.colony.components.gui.LabelComponent;
-import net.lapidist.colony.core.systems.delegate.DeferredEntityProcessingSystem;
-import net.lapidist.colony.core.systems.delegate.EntityProcessPrincipal;
 
-public abstract class AbstractRenderSystem extends DeferredEntityProcessingSystem {
+public abstract class AbstractRenderSystem extends EntityProcessingSystem {
 
     protected SpriteBatch batch;
     private TextureRegion tmpTextureRegion;
 
-    public AbstractRenderSystem(Aspect.Builder aspect, EntityProcessPrincipal principal) {
-        super(aspect, principal);
+    public AbstractRenderSystem(Aspect.Builder aspect) {
+        super(aspect);
 
         tmpTextureRegion = new TextureRegion();
         batch = new SpriteBatch(2000);
@@ -82,12 +82,10 @@ public abstract class AbstractRenderSystem extends DeferredEntityProcessingSyste
 
     @Override
     protected void begin() {
-        batch.begin();
     }
 
     @Override
     protected void end() {
-        batch.end();
     }
 
     @Override
@@ -96,7 +94,7 @@ public abstract class AbstractRenderSystem extends DeferredEntityProcessingSyste
     }
 
     @Override
-    protected void process(int e) {
+    protected void process(Entity e) {
 
     }
 }

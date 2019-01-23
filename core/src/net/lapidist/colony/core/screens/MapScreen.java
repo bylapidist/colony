@@ -19,15 +19,12 @@ import net.lapidist.colony.core.systems.map.MapPhysicsSystem;
 import net.lapidist.colony.core.systems.render.ClearScreenSystem;
 import net.lapidist.colony.core.systems.gui.GuiRenderSystem;
 import net.lapidist.colony.core.systems.map.MapRenderSystem;
-import net.lapidist.colony.core.systems.render.RenderBatchingSystem;
 
 public class MapScreen implements Screen {
 
     private World world;
 
     public MapScreen() {
-        final RenderBatchingSystem renderBatchingSystem;
-
         WorldConfiguration config = new WorldConfigurationBuilder()
                 .with(WorldConfigurationBuilder.Priority.HIGHEST,
                         new SuperMapper(),
@@ -40,10 +37,9 @@ public class MapScreen implements Screen {
                         new MapAssetSystem(FileLocation.INTERNAL),
                         new GuiAssetSystem(FileLocation.INTERNAL),
                         new MapGenerationSystem(256, 256, Constants.PPM, Constants.PPM),
-                        renderBatchingSystem = new RenderBatchingSystem(),
-                        new MapRenderSystem(renderBatchingSystem),
-                        new MapPhysicsSystem(renderBatchingSystem),
-                        new GuiRenderSystem(renderBatchingSystem)
+                        new MapRenderSystem(),
+                        new MapPhysicsSystem(),
+                        new GuiRenderSystem()
                 )
                 .build();
 
