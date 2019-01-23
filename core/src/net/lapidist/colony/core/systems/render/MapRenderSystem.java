@@ -1,8 +1,6 @@
 package net.lapidist.colony.core.systems.render;
 
-import com.artemis.ArchetypeBuilder;
 import com.artemis.Aspect;
-import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -17,6 +15,7 @@ import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.logic.MapInitEvent;
 import net.lapidist.colony.core.events.render.ScreenResizeEvent;
 import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
+import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
 import net.lapidist.colony.core.systems.delegate.EntityProcessPrincipal;
 import net.lapidist.colony.core.systems.map.MapAssetSystem;
@@ -28,6 +27,7 @@ public class MapRenderSystem extends AbstractRenderSystem {
 
     private CameraSystem cameraSystem;
     private MapAssetSystem assetSystem;
+    private EntityFactorySystem entityFactorySystem;
 
     public MapRenderSystem(EntityProcessPrincipal principal) {
         super(Aspect.all(RenderableComponent.class).exclude(InvisibleComponent.class), principal);
@@ -82,14 +82,7 @@ public class MapRenderSystem extends AbstractRenderSystem {
     }
 
     protected void onInit() {
-        Entity e = world.createEntity(new ArchetypeBuilder()
-                .add(TextureComponent.class)
-                .add(RotationComponent.class)
-                .add(OriginComponent.class)
-                .add(PositionComponent.class)
-                .add(ScaleComponent.class)
-                .add(RenderableComponent.class)
-                .build(world));
+        int e = entityFactorySystem.create(entityFactorySystem.getArchetype("terrain"));
 
         E(e).getTextureComponent().setTexture(assetSystem.getTexture("dirt"));
         E(e).getRotationComponent().setRotation(0);

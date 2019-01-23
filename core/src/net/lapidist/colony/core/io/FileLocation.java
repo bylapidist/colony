@@ -29,12 +29,7 @@ public enum FileLocation {
     }
 
     public FileHandleResolver getResolver() {
-        return new FileHandleResolver() {
-            @Override
-            public FileHandle resolve(String fileName) {
-                return getFile(fileName);
-            }
-        };
+        return this::getFile;
     }
 }
 
