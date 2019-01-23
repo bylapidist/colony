@@ -7,26 +7,25 @@ import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import net.lapidist.colony.components.assets.FontComponent;
+import net.lapidist.colony.components.base.PositionComponent;
 import net.lapidist.colony.components.gui.GuiComponent;
+import net.lapidist.colony.components.gui.LabelComponent;
+import net.lapidist.colony.components.render.RenderableComponent;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.gui.GuiInitEvent;
 import net.lapidist.colony.core.events.render.ScreenResizeEvent;
-import net.lapidist.colony.core.systems.Mappers;
 import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
 import net.lapidist.colony.core.systems.gui.GuiAssetSystem;
-import net.mostlyoriginal.api.component.basic.Pos;
-import net.mostlyoriginal.api.component.graphics.Render;
-import net.mostlyoriginal.api.component.graphics.Tint;
-import net.mostlyoriginal.api.component.ui.Label;
 import net.mostlyoriginal.api.system.camera.CameraSystem;
 import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
+
+import static com.artemis.E.E;
 
 @Wire
 public class GuiRenderSystem extends AbstractRenderSystem {
 
     private CameraSystem cameraSystem;
     private GuiAssetSystem assetSystem;
-    private Mappers mappers;
 
     public GuiRenderSystem(EntityProcessPrincipal principal) {
         super(Aspect.all(GuiComponent.class), principal);
@@ -51,12 +50,11 @@ public class GuiRenderSystem extends AbstractRenderSystem {
 
     @Override
     protected void process(int e) {
-        final Pos posC = mappers.mPos.get(e);
-        final Label labelC = mappers.mLabel.get(e);
-        final FontComponent fontC = mappers.mFont.get(e);
-
-        batch.setColor(mappers.mTint.getSafe(e, Tint.WHITE).color);
-        mappers.mLabel.get(e).text = Gdx.graphics.getFramesPerSecond() + " FPS";
+        final PositionComponent posC = E(e).getPositionComponent();
+        final LabelComponent labelC = E(e).getLabelComponent();
+        final FontComponent fontC = E(e).getFontComponent();
+        
+        labelC.setText(Gdx.graphics.getFramesPerSecond() + " FPS");
 
         if (fontC != null && posC != null) drawLabel(labelC, fontC, posC);
     }
@@ -73,19 +71,15 @@ public class GuiRenderSystem extends AbstractRenderSystem {
 
     protected void onInit() {
         Entity e = world.createEntity(new ArchetypeBuilder()
-                .add(Pos.class)
+                .add(PositionComponent.class)
                 .add(FontComponent.class)
-                .add(Label.class)
+                .add(LabelComponent.class)
                 .add(GuiComponent.class)
-                .add(Render.class)
+                .add(RenderableComponent.class)
                 .build(world));
 
-        mappers.mPos.create(e);
-        mappers.mFont.create(e);
-        mappers.mLabel.create(e);
-
-        mappers.mPos.get(e).set(new Vector3(16, 32, 0));
-        mappers.mFont.get(e).setFont(assetSystem.getFont("default"));
-        mappers.mLabel.get(e).set(new Label(Gdx.graphics.getFramesPerSecond() + " FPS"));
+        E(e).getPositionComponent().setPosition(new Vector3(16, 32, 0));
+        E(e).getFontComponent().setFont(assetSystem.getFont("default"));
+        E(e).getLabelComponent().setText(Gdx.graphics.getFramesPerSecond() + " FPS");
     }
 }

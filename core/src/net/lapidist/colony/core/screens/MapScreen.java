@@ -9,7 +9,6 @@ import net.lapidist.colony.core.events.logic.GamePauseEvent;
 import net.lapidist.colony.core.events.logic.GameResumeEvent;
 import net.lapidist.colony.core.events.render.ScreenResizeEvent;
 import net.lapidist.colony.core.io.FileLocation;
-import net.lapidist.colony.core.systems.Mappers;
 import net.lapidist.colony.core.systems.gui.GuiAssetSystem;
 import net.lapidist.colony.core.systems.map.MapAssetSystem;
 import net.lapidist.colony.core.systems.render.GuiRenderSystem;
@@ -28,7 +27,6 @@ public class MapScreen implements Screen {
         WorldConfiguration config = new WorldConfigurationBuilder()
                 .with(WorldConfigurationBuilder.Priority.HIGHEST,
                         new SuperMapper(),
-                        new Mappers(),
                         new TagManager()
                 )
                 .with(WorldConfigurationBuilder.Priority.NORMAL,
