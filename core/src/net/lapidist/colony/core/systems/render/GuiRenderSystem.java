@@ -15,9 +15,9 @@ import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.gui.GuiInitEvent;
 import net.lapidist.colony.core.events.render.ScreenResizeEvent;
 import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
+import net.lapidist.colony.core.systems.camera.CameraSystem;
+import net.lapidist.colony.core.systems.delegate.EntityProcessPrincipal;
 import net.lapidist.colony.core.systems.gui.GuiAssetSystem;
-import net.mostlyoriginal.api.system.camera.CameraSystem;
-import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
 
 import static com.artemis.E.E;
 
@@ -53,10 +53,10 @@ public class GuiRenderSystem extends AbstractRenderSystem {
         final PositionComponent posC = E(e).getPositionComponent();
         final LabelComponent labelC = E(e).getLabelComponent();
         final FontComponent fontC = E(e).getFontComponent();
-        
+
         labelC.setText(Gdx.graphics.getFramesPerSecond() + " FPS");
 
-        if (fontC != null && posC != null) drawLabel(labelC, fontC, posC);
+        if (fontC != null) drawLabel(labelC, fontC, posC);
     }
 
     @Override

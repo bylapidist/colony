@@ -11,8 +11,8 @@ import net.lapidist.colony.components.base.OriginComponent;
 import net.lapidist.colony.components.base.PositionComponent;
 import net.lapidist.colony.components.base.ScaleComponent;
 import net.lapidist.colony.components.gui.LabelComponent;
-import net.mostlyoriginal.api.system.delegate.DeferredEntityProcessingSystem;
-import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
+import net.lapidist.colony.core.systems.delegate.DeferredEntityProcessingSystem;
+import net.lapidist.colony.core.systems.delegate.EntityProcessPrincipal;
 
 public abstract class AbstractRenderSystem extends DeferredEntityProcessingSystem {
 

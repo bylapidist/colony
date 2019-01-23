@@ -4,6 +4,7 @@ import com.artemis.ArchetypeBuilder;
 import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import net.lapidist.colony.components.assets.TextureComponent;
 import net.lapidist.colony.components.base.OriginComponent;
@@ -16,9 +17,9 @@ import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.logic.MapInitEvent;
 import net.lapidist.colony.core.events.render.ScreenResizeEvent;
 import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
+import net.lapidist.colony.core.systems.camera.CameraSystem;
+import net.lapidist.colony.core.systems.delegate.EntityProcessPrincipal;
 import net.lapidist.colony.core.systems.map.MapAssetSystem;
-import net.mostlyoriginal.api.system.camera.CameraSystem;
-import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
 
 import static com.artemis.E.E;
 
@@ -53,13 +54,21 @@ public class MapRenderSystem extends AbstractRenderSystem {
 
     @Override
     protected void process(final int e) {
-        final PositionComponent posC = E(e).getPositionComponent();
-        final TextureComponent textureC = E(e).getTextureComponent();
-        final RotationComponent rotationC = E(e).getRotationComponent();
-        final ScaleComponent scaleC = E(e).getScaleComponent();
-        final OriginComponent originC = E(e).getOriginComponent();
+        if (
+                E(e).hasTextureComponent() &&
+                E(e).hasRotationComponent() &&
+                E(e).hasOriginComponent() &&
+                E(e).hasPositionComponent() &&
+                E(e).hasScaleComponent()
+        ) {
+            final PositionComponent posC = E(e).getPositionComponent();
+            final TextureComponent textureC = E(e).getTextureComponent();
+            final RotationComponent rotationC = E(e).getRotationComponent();
+            final ScaleComponent scaleC = E(e).getScaleComponent();
+            final OriginComponent originC = E(e).getOriginComponent();
 
-        if (textureC != null && posC != null) drawTexture(textureC, rotationC, originC, posC, scaleC, cameraSystem.zoom);
+            drawTexture(textureC, rotationC, originC, posC, scaleC, cameraSystem.zoom);
+        }
     }
 
     @Override
@@ -74,12 +83,19 @@ public class MapRenderSystem extends AbstractRenderSystem {
 
     protected void onInit() {
         Entity e = world.createEntity(new ArchetypeBuilder()
-                .add(PositionComponent.class)
                 .add(TextureComponent.class)
+                .add(RotationComponent.class)
+                .add(OriginComponent.class)
+                .add(PositionComponent.class)
+                .add(ScaleComponent.class)
                 .add(RenderableComponent.class)
                 .build(world));
 
-        E(e).getPositionComponent().setPosition(new Vector3(0, 0, 1));
         E(e).getTextureComponent().setTexture(assetSystem.getTexture("dirt"));
+        E(e).getRotationComponent().setRotation(0);
+        E(e).getOriginComponent().setOrigin(new Vector2(0.5f, 0.5f));
+        E(e).getPositionComponent().setPosition(new Vector3(0, 0, 0));
+        E(e).getScaleComponent().setScale(1);
+        E(e).getRenderableComponent().setLayer(0);
     }
 }
