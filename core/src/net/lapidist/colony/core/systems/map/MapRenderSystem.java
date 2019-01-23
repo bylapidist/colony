@@ -1,16 +1,14 @@
-package net.lapidist.colony.core.systems.render;
+package net.lapidist.colony.core.systems.map;
 
 import com.artemis.Aspect;
 import com.artemis.annotations.Wire;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import net.lapidist.colony.components.assets.TextureComponent;
 import net.lapidist.colony.components.base.OriginComponent;
 import net.lapidist.colony.components.base.PositionComponent;
 import net.lapidist.colony.components.base.RotationComponent;
 import net.lapidist.colony.components.base.ScaleComponent;
 import net.lapidist.colony.components.render.InvisibleComponent;
-import net.lapidist.colony.components.render.RenderableComponent;
+import net.lapidist.colony.components.base.SortableComponent;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.logic.MapInitEvent;
 import net.lapidist.colony.core.events.render.ScreenResizeEvent;
@@ -18,7 +16,6 @@ import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
 import net.lapidist.colony.core.systems.delegate.EntityProcessPrincipal;
-import net.lapidist.colony.core.systems.map.MapAssetSystem;
 
 import static com.artemis.E.E;
 
@@ -26,11 +23,11 @@ import static com.artemis.E.E;
 public class MapRenderSystem extends AbstractRenderSystem {
 
     private CameraSystem cameraSystem;
-    private MapAssetSystem assetSystem;
     private EntityFactorySystem entityFactorySystem;
+    private MapGenerationSystem mapGenerationSystem;
 
     public MapRenderSystem(EntityProcessPrincipal principal) {
-        super(Aspect.all(RenderableComponent.class).exclude(InvisibleComponent.class), principal);
+        super(Aspect.all(SortableComponent.class).exclude(InvisibleComponent.class), principal);
     }
 
     @Override
@@ -82,13 +79,6 @@ public class MapRenderSystem extends AbstractRenderSystem {
     }
 
     protected void onInit() {
-        int e = entityFactorySystem.create(entityFactorySystem.getArchetype("terrain"));
-
-        E(e).textureComponentTexture(assetSystem.getTexture("dirt"));
-        E(e).rotationComponentRotation(0);
-        E(e).originComponentOrigin(new Vector2(0.5f, 0.5f));
-        E(e).positionComponentPosition(new Vector3(0, 0, 0));
-        E(e).scaleComponentScale(1);
-        E(e).renderableComponentLayer(0);
+        mapGenerationSystem.generate();
     }
 }

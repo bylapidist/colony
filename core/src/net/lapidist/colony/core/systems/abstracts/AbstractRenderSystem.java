@@ -3,7 +3,6 @@ package net.lapidist.colony.core.systems.abstracts;
 import com.artemis.Aspect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.components.assets.FontComponent;
 import net.lapidist.colony.components.assets.TextureComponent;
 import net.lapidist.colony.components.base.RotationComponent;
@@ -15,8 +14,6 @@ import net.lapidist.colony.core.systems.delegate.DeferredEntityProcessingSystem;
 import net.lapidist.colony.core.systems.delegate.EntityProcessPrincipal;
 
 public abstract class AbstractRenderSystem extends DeferredEntityProcessingSystem {
-
-    protected final Vector2 defaultOrigin = new Vector2(0.5f, 0.5f);
 
     protected SpriteBatch batch;
     private TextureRegion tmpTextureRegion;

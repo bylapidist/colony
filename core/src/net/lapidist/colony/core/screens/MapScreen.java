@@ -4,6 +4,7 @@ import com.artemis.*;
 import com.artemis.managers.TagManager;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import net.lapidist.colony.core.Constants;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.logic.GamePauseEvent;
 import net.lapidist.colony.core.events.logic.GameResumeEvent;
@@ -13,9 +14,11 @@ import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
 import net.lapidist.colony.core.systems.gui.GuiAssetSystem;
 import net.lapidist.colony.core.systems.map.MapAssetSystem;
+import net.lapidist.colony.core.systems.map.MapGenerationSystem;
+import net.lapidist.colony.core.systems.map.MapPhysicsSystem;
 import net.lapidist.colony.core.systems.render.ClearScreenSystem;
-import net.lapidist.colony.core.systems.render.GuiRenderSystem;
-import net.lapidist.colony.core.systems.render.MapRenderSystem;
+import net.lapidist.colony.core.systems.gui.GuiRenderSystem;
+import net.lapidist.colony.core.systems.map.MapRenderSystem;
 import net.lapidist.colony.core.systems.render.RenderBatchingSystem;
 
 public class MapScreen implements Screen {
@@ -36,8 +39,10 @@ public class MapScreen implements Screen {
                         new EntityFactorySystem(),
                         new MapAssetSystem(FileLocation.INTERNAL),
                         new GuiAssetSystem(FileLocation.INTERNAL),
+                        new MapGenerationSystem(256, 256, Constants.PPM, Constants.PPM),
                         renderBatchingSystem = new RenderBatchingSystem(),
                         new MapRenderSystem(renderBatchingSystem),
+                        new MapPhysicsSystem(renderBatchingSystem),
                         new GuiRenderSystem(renderBatchingSystem)
                 )
                 .build();

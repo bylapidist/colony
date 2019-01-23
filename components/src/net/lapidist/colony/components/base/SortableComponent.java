@@ -1,8 +1,8 @@
-package net.lapidist.colony.components.render;
+package net.lapidist.colony.components.base;
 
 import com.artemis.Component;
 
-public class RenderableComponent extends Component {
+public class SortableComponent extends Component {
 
     private int layer = 0;
 

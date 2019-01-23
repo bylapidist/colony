@@ -12,7 +12,8 @@ import net.lapidist.colony.components.base.RotationComponent;
 import net.lapidist.colony.components.base.ScaleComponent;
 import net.lapidist.colony.components.gui.GuiComponent;
 import net.lapidist.colony.components.gui.LabelComponent;
-import net.lapidist.colony.components.render.RenderableComponent;
+import net.lapidist.colony.components.map.TileComponent;
+import net.lapidist.colony.components.base.SortableComponent;
 
 @Wire
 public class EntityFactorySystem extends BaseSystem {
@@ -23,6 +24,8 @@ public class EntityFactorySystem extends BaseSystem {
 
     public Archetype getArchetype(String type) {
         switch (type) {
+            case "tile":
+                return createTile().build(world);
             case "terrain":
                 return createTerrain().build(world);
             case "label":
@@ -32,6 +35,13 @@ public class EntityFactorySystem extends BaseSystem {
         throw new RuntimeException("Unknown archetype");
     }
 
+    private ArchetypeBuilder createTile() {
+        return new ArchetypeBuilder()
+                .add(TileComponent.class)
+                .add(PositionComponent.class)
+                .add(OriginComponent.class);
+    }
+
     private ArchetypeBuilder createTerrain() {
         return new ArchetypeBuilder()
                 .add(TextureComponent.class)
@@ -39,7 +49,7 @@ public class EntityFactorySystem extends BaseSystem {
                 .add(OriginComponent.class)
                 .add(PositionComponent.class)
                 .add(ScaleComponent.class)
-                .add(RenderableComponent.class);
+                .add(SortableComponent.class);
     }
 
     private ArchetypeBuilder createLabel() {
@@ -48,7 +58,7 @@ public class EntityFactorySystem extends BaseSystem {
                 .add(FontComponent.class)
                 .add(LabelComponent.class)
                 .add(GuiComponent.class)
-                .add(RenderableComponent.class);
+                .add(SortableComponent.class);
     }
 
     @Override

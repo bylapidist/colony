@@ -1,8 +1,9 @@
-package net.lapidist.colony.core.systems.render;
+package net.lapidist.colony.core.systems.gui;
 
 import com.artemis.Aspect;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import net.lapidist.colony.components.assets.FontComponent;
 import net.lapidist.colony.components.base.PositionComponent;
@@ -15,7 +16,7 @@ import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
 import net.lapidist.colony.core.systems.delegate.EntityProcessPrincipal;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
-import net.lapidist.colony.core.systems.gui.GuiAssetSystem;
+import net.lapidist.colony.core.systems.map.MapPhysicsSystem;
 
 import static com.artemis.E.E;
 
@@ -25,6 +26,7 @@ public class GuiRenderSystem extends AbstractRenderSystem {
     private CameraSystem cameraSystem;
     private GuiAssetSystem assetSystem;
     private EntityFactorySystem entityFactorySystem;
+    private MapPhysicsSystem mapPhysicsSystem;
 
     public GuiRenderSystem(EntityProcessPrincipal principal) {
         super(Aspect.all(GuiComponent.class), principal);
@@ -74,6 +76,6 @@ public class GuiRenderSystem extends AbstractRenderSystem {
         E(e).positionComponentPosition(new Vector3(16, 32, 0));
         E(e).fontComponentFont(assetSystem.getFont("default"));
         E(e).labelComponentText(Gdx.graphics.getFramesPerSecond() + " FPS");
-        E(e).renderableComponentLayer(1000);
+        E(e).sortableComponentLayer(1000);
     }
 }
