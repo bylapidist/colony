@@ -4,11 +4,14 @@ import com.artemis.Archetype;
 import com.artemis.ArchetypeBuilder;
 import com.artemis.BaseSystem;
 import com.artemis.annotations.Wire;
+import net.lapidist.colony.components.assets.FontComponent;
 import net.lapidist.colony.components.assets.TextureComponent;
 import net.lapidist.colony.components.base.OriginComponent;
 import net.lapidist.colony.components.base.PositionComponent;
 import net.lapidist.colony.components.base.RotationComponent;
 import net.lapidist.colony.components.base.ScaleComponent;
+import net.lapidist.colony.components.gui.GuiComponent;
+import net.lapidist.colony.components.gui.LabelComponent;
 import net.lapidist.colony.components.render.RenderableComponent;
 
 @Wire
@@ -22,6 +25,8 @@ public class EntityFactorySystem extends BaseSystem {
         switch (type) {
             case "terrain":
                 return createTerrain().build(world);
+            case "label":
+                return createLabel().build(world);
         }
 
         throw new RuntimeException("Unknown archetype");
@@ -34,6 +39,15 @@ public class EntityFactorySystem extends BaseSystem {
                 .add(OriginComponent.class)
                 .add(PositionComponent.class)
                 .add(ScaleComponent.class)
+                .add(RenderableComponent.class);
+    }
+
+    private ArchetypeBuilder createLabel() {
+        return new ArchetypeBuilder()
+                .add(PositionComponent.class)
+                .add(FontComponent.class)
+                .add(LabelComponent.class)
+                .add(GuiComponent.class)
                 .add(RenderableComponent.class);
     }
 

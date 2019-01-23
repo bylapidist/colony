@@ -77,18 +77,18 @@ public class MapRenderSystem extends AbstractRenderSystem {
     }
 
     protected void onResize(int width, int height) {
-        cameraSystem.camera.setToOrtho(true, width, height);
+        cameraSystem.camera.setToOrtho(false, width, height);
         cameraSystem.camera.update();
     }
 
     protected void onInit() {
         int e = entityFactorySystem.create(entityFactorySystem.getArchetype("terrain"));
 
-        E(e).getTextureComponent().setTexture(assetSystem.getTexture("dirt"));
-        E(e).getRotationComponent().setRotation(0);
-        E(e).getOriginComponent().setOrigin(new Vector2(0.5f, 0.5f));
-        E(e).getPositionComponent().setPosition(new Vector3(0, 0, 0));
-        E(e).getScaleComponent().setScale(1);
-        E(e).getRenderableComponent().setLayer(0);
+        E(e).textureComponentTexture(assetSystem.getTexture("dirt"));
+        E(e).rotationComponentRotation(0);
+        E(e).originComponentOrigin(new Vector2(0.5f, 0.5f));
+        E(e).positionComponentPosition(new Vector3(0, 0, 0));
+        E(e).scaleComponentScale(1);
+        E(e).renderableComponentLayer(0);
     }
 }

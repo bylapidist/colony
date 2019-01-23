@@ -1,8 +1,6 @@
 package net.lapidist.colony.core.systems.render;
 
-import com.artemis.ArchetypeBuilder;
 import com.artemis.Aspect;
-import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
@@ -10,13 +8,13 @@ import net.lapidist.colony.components.assets.FontComponent;
 import net.lapidist.colony.components.base.PositionComponent;
 import net.lapidist.colony.components.gui.GuiComponent;
 import net.lapidist.colony.components.gui.LabelComponent;
-import net.lapidist.colony.components.render.RenderableComponent;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.gui.GuiInitEvent;
 import net.lapidist.colony.core.events.render.ScreenResizeEvent;
 import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
 import net.lapidist.colony.core.systems.delegate.EntityProcessPrincipal;
+import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 import net.lapidist.colony.core.systems.gui.GuiAssetSystem;
 
 import static com.artemis.E.E;
@@ -26,6 +24,7 @@ public class GuiRenderSystem extends AbstractRenderSystem {
 
     private CameraSystem cameraSystem;
     private GuiAssetSystem assetSystem;
+    private EntityFactorySystem entityFactorySystem;
 
     public GuiRenderSystem(EntityProcessPrincipal principal) {
         super(Aspect.all(GuiComponent.class), principal);
@@ -54,7 +53,7 @@ public class GuiRenderSystem extends AbstractRenderSystem {
         final LabelComponent labelC = E(e).getLabelComponent();
         final FontComponent fontC = E(e).getFontComponent();
 
-        labelC.setText(Gdx.graphics.getFramesPerSecond() + " FPS");
+        E(e).labelComponentText(Gdx.graphics.getFramesPerSecond() + " FPS");
 
         if (fontC != null) drawLabel(labelC, fontC, posC);
     }
@@ -70,16 +69,11 @@ public class GuiRenderSystem extends AbstractRenderSystem {
     }
 
     protected void onInit() {
-        Entity e = world.createEntity(new ArchetypeBuilder()
-                .add(PositionComponent.class)
-                .add(FontComponent.class)
-                .add(LabelComponent.class)
-                .add(GuiComponent.class)
-                .add(RenderableComponent.class)
-                .build(world));
+        int e = entityFactorySystem.create(entityFactorySystem.getArchetype("label"));
 
-        E(e).getPositionComponent().setPosition(new Vector3(16, 32, 0));
-        E(e).getFontComponent().setFont(assetSystem.getFont("default"));
-        E(e).getLabelComponent().setText(Gdx.graphics.getFramesPerSecond() + " FPS");
+        E(e).positionComponentPosition(new Vector3(16, 32, 0));
+        E(e).fontComponentFont(assetSystem.getFont("default"));
+        E(e).labelComponentText(Gdx.graphics.getFramesPerSecond() + " FPS");
+        E(e).renderableComponentLayer(1000);
     }
 }
