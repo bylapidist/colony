@@ -61,7 +61,8 @@ public class MapPhysicsSystem extends AbstractRenderSystem {
 
     @Override
     protected void end() {
-        rayHandler.render();
+//        rayHandler.render();
+        debugRenderer.render(physicsWorld, cameraSystem.camera.combined.cpy().scl(Constants.PPM));
     }
 
     @Override

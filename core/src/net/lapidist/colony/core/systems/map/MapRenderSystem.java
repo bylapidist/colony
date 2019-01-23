@@ -65,7 +65,8 @@ public class MapRenderSystem extends AbstractRenderSystem {
             final ScaleComponent scaleC = E(e).getScaleComponent();
             final OriginComponent originC = E(e).getOriginComponent();
 
-            drawTexture(textureC, rotationC, originC, posC, scaleC, cameraSystem.zoom);
+            if (isWithinBounds(posC.getPosition().x, posC.getPosition().y))
+                drawTexture(textureC, rotationC, originC, posC, scaleC, cameraSystem.zoom);
         }
     }
 

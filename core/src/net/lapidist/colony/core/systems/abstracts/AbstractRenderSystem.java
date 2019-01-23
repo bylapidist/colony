@@ -3,6 +3,8 @@ package net.lapidist.colony.core.systems.abstracts;
 import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.systems.EntityProcessingSystem;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import net.lapidist.colony.components.assets.FontComponent;
@@ -12,6 +14,7 @@ import net.lapidist.colony.components.base.OriginComponent;
 import net.lapidist.colony.components.base.PositionComponent;
 import net.lapidist.colony.components.base.ScaleComponent;
 import net.lapidist.colony.components.gui.LabelComponent;
+import net.lapidist.colony.core.Constants;
 
 public abstract class AbstractRenderSystem extends EntityProcessingSystem {
 
@@ -70,6 +73,13 @@ public abstract class AbstractRenderSystem extends EntityProcessingSystem {
                 posC.getPosition().x,
                 posC.getPosition().y
         );
+    }
+
+    protected boolean isWithinBounds(final float x, final float y) {
+        return !(x < -Constants.PPM * 2
+                || x > Gdx.graphics.getWidth() + Constants.PPM
+                || y < -Constants.PPM * 2
+                || y > Gdx.graphics.getHeight() + Constants.PPM);
     }
 
     private float roundToPixels(final float val, final float zoom) {
