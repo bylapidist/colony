@@ -80,6 +80,7 @@ public class MapGenerationSystem extends BaseSystem {
         ));
         E(e).scaleComponentScale(1);
         E(e).velocityComponentVelocity(new Vector2(0, 0));
+        E(e).sortableComponentLayer(1);
         E(e).dynamicBodyComponentFixtureDef().shape = new CircleShape();
         E(e).dynamicBodyComponentFixtureDef().shape.setRadius(0.5f);
         E(e).dynamicBodyComponentBodyDef().position.set(

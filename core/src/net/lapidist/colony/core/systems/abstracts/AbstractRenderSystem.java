@@ -4,7 +4,6 @@ import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import net.lapidist.colony.components.assets.FontComponent;
@@ -42,7 +41,10 @@ public abstract class AbstractRenderSystem extends EntityProcessingSystem {
     ) {
         float ox = textureC.getTexture().getWidth() * scaleC.getScale() * originC.getOrigin().x;
         float oy = textureC.getTexture().getHeight() * scaleC.getScale() * originC.getOrigin().y;
+
         tmpTextureRegion.setTexture(textureC.getTexture());
+        tmpTextureRegion.setRegionWidth(textureC.getTexture().getWidth());
+        tmpTextureRegion.setRegionHeight(textureC.getTexture().getHeight());
 
         if (angleC.getRotation() != 0) {
             batch.draw(tmpTextureRegion,
@@ -50,15 +52,19 @@ public abstract class AbstractRenderSystem extends EntityProcessingSystem {
                     roundToPixels(posC.getPosition().y, zoom),
                     ox,
                     oy,
-                    textureC.getTexture().getWidth() * scaleC.getScale(),
-                    textureC.getTexture().getHeight() * scaleC.getScale(), 1, 1,
-                    angleC.getRotation());
+                    tmpTextureRegion.getRegionWidth() * scaleC.getScale(),
+                    tmpTextureRegion.getRegionHeight() * scaleC.getScale(),
+                    1,
+                    1,
+                    angleC.getRotation()
+            );
         } else {
             batch.draw(tmpTextureRegion,
                     roundToPixels(posC.getPosition().x, zoom),
                     roundToPixels(posC.getPosition().y, zoom),
-                    textureC.getTexture().getWidth() * scaleC.getScale(),
-                    textureC.getTexture().getHeight() * scaleC.getScale());
+                    tmpTextureRegion.getRegionWidth() * scaleC.getScale(),
+                    tmpTextureRegion.getRegionHeight() * scaleC.getScale()
+            );
         }
     }
 

@@ -51,8 +51,8 @@ public class MapPhysicsSystem extends AbstractRenderSystem {
 
         E(e).dynamicBodyComponentBody().setTransform(
                 tmpVec2.set(
-                        E(e).positionComponentPosition().x / mapGenerationSystem.getTileWidth(),
-                        E(e).positionComponentPosition().y / mapGenerationSystem.getTileHeight()
+                        (E(e).positionComponentPosition().x + (E(e).originComponentOrigin().x * E(e).textureComponentTexture().getWidth())) / mapGenerationSystem.getTileWidth(),
+                        (E(e).positionComponentPosition().y + (E(e).originComponentOrigin().y * E(e).textureComponentTexture().getHeight())) / mapGenerationSystem.getTileHeight()
                 ),
                 E(e).rotationComponentRotation()
         );

@@ -10,21 +10,18 @@ public class CameraSystem extends BaseSystem {
     public OrthographicCamera guiCamera;
     public final float zoom;
 
-    public CameraSystem( float width, float height ) {
+    public CameraSystem(float width, float height) {
         this.zoom = 1;
-        setupViewport(width,height);
+        setupViewport(width, height);
     }
 
-    /**
-     * @param zoom How much
-     */
-    public CameraSystem( float zoom ) {
+    public CameraSystem(float zoom) {
         this.zoom = zoom;
         float zoomFactorInverter = 1f/zoom;
         setupViewport(Gdx.graphics.getWidth() * zoomFactorInverter, Gdx.graphics.getHeight() * zoomFactorInverter);
     }
 
-    protected void setupViewport( float width, float height) {
+    protected void setupViewport(float width, float height) {
         camera = new OrthographicCamera(width, height);
         camera.setToOrtho(false, width, height);
         camera.update();
