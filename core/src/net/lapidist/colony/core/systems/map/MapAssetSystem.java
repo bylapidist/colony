@@ -24,7 +24,8 @@ public class MapAssetSystem extends AbstractAssetSystem {
         final String[] textures = {
                 "player",
                 "empty",
-                "dirt"
+                "dirt",
+                "grass"
         };
 
         for (String texture: textures) {

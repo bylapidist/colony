@@ -36,7 +36,7 @@ public class MapScreen implements Screen {
                         new EntityFactorySystem(),
                         new MapAssetSystem(FileLocation.INTERNAL),
                         new GuiAssetSystem(FileLocation.INTERNAL),
-                        new MapGenerationSystem(256, 256, Constants.PPM, Constants.PPM),
+                        new MapGenerationSystem(12, 12, Constants.PPM, Constants.PPM),
                         new MapRenderSystem(),
                         new MapPhysicsSystem(),
                         new GuiRenderSystem()

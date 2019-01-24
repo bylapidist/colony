@@ -6,14 +6,11 @@ import com.artemis.BaseSystem;
 import com.artemis.annotations.Wire;
 import net.lapidist.colony.components.assets.FontComponent;
 import net.lapidist.colony.components.assets.TextureComponent;
-import net.lapidist.colony.components.base.OriginComponent;
-import net.lapidist.colony.components.base.PositionComponent;
-import net.lapidist.colony.components.base.RotationComponent;
-import net.lapidist.colony.components.base.ScaleComponent;
+import net.lapidist.colony.components.base.*;
 import net.lapidist.colony.components.gui.GuiComponent;
 import net.lapidist.colony.components.gui.LabelComponent;
 import net.lapidist.colony.components.map.TileComponent;
-import net.lapidist.colony.components.base.SortableComponent;
+import net.lapidist.colony.components.player.PlayerComponent;
 
 @Wire
 public class EntityFactorySystem extends BaseSystem {
@@ -30,6 +27,8 @@ public class EntityFactorySystem extends BaseSystem {
                 return createTerrain().build(world);
             case "label":
                 return createLabel().build(world);
+            case "player":
+                return createPlayer().build(world);
         }
 
         throw new RuntimeException("Unknown archetype");
@@ -59,6 +58,18 @@ public class EntityFactorySystem extends BaseSystem {
                 .add(LabelComponent.class)
                 .add(GuiComponent.class)
                 .add(SortableComponent.class);
+    }
+
+    private ArchetypeBuilder createPlayer() {
+        return new ArchetypeBuilder()
+                .add(PlayerComponent.class)
+                .add(TextureComponent.class)
+                .add(RotationComponent.class)
+                .add(PositionComponent.class)
+                .add(OriginComponent.class)
+                .add(VelocityComponent.class)
+                .add(ScaleComponent.class)
+                .add(DynamicBodyComponent.class);
     }
 
     @Override

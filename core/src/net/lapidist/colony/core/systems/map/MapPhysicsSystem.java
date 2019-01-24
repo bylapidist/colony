@@ -15,10 +15,13 @@ import net.lapidist.colony.core.events.logic.MapPhysicsInitEvent;
 import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
 import net.lapidist.colony.core.systems.camera.CameraSystem;
 
+import static com.artemis.E.E;
+
 @Wire
 public class MapPhysicsSystem extends AbstractRenderSystem {
 
     private CameraSystem cameraSystem;
+    private MapGenerationSystem mapGenerationSystem;
     private World physicsWorld;
     private RayHandler rayHandler;
     private Vector2 tmpVec2;
@@ -45,6 +48,14 @@ public class MapPhysicsSystem extends AbstractRenderSystem {
     @Override
     protected void process(Entity e) {
         physicsWorld.step(Gdx.graphics.getDeltaTime(), 6, 2);
+
+        E(e).dynamicBodyComponentBody().setTransform(
+                tmpVec2.set(
+                        E(e).positionComponentPosition().x / mapGenerationSystem.getTileWidth(),
+                        E(e).positionComponentPosition().y / mapGenerationSystem.getTileHeight()
+                ),
+                E(e).rotationComponentRotation()
+        );
     }
 
     @Override
@@ -61,7 +72,7 @@ public class MapPhysicsSystem extends AbstractRenderSystem {
 
     @Override
     protected void end() {
-//        rayHandler.render();
+        rayHandler.render();
         debugRenderer.render(physicsWorld, cameraSystem.camera.combined.cpy().scl(Constants.PPM));
     }
 
@@ -80,5 +91,9 @@ public class MapPhysicsSystem extends AbstractRenderSystem {
 
     @Override
     protected void onInit() {
+    }
+
+    public World getPhysicsWorld() {
+        return physicsWorld;
     }
 }

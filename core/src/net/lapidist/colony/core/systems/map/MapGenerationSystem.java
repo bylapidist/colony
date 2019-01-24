@@ -4,6 +4,7 @@ import com.artemis.BaseSystem;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 
 import static com.artemis.E.E;
@@ -13,6 +14,7 @@ public class MapGenerationSystem extends BaseSystem {
 
     private EntityFactorySystem entityFactorySystem;
     private MapAssetSystem assetSystem;
+    private MapPhysicsSystem physicsSystem;
     private int width;
     private int height;
     private int tileWidth;
@@ -29,8 +31,8 @@ public class MapGenerationSystem extends BaseSystem {
 
     @Override
     protected void initialize() {
-        for (int ty = 0; ty < height; ty++) {
-            for (int tx = 0; tx < width; tx++) {
+        for (int ty = 0; ty < getHeight(); ty++) {
+            for (int tx = 0; tx < getWidth(); tx++) {
                 map[tx][ty] = entityFactorySystem.create(entityFactorySystem.getArchetype("tile"));
 
                 E(map[tx][ty]).tileComponentTile(tileWidth, tileHeight);
@@ -50,7 +52,7 @@ public class MapGenerationSystem extends BaseSystem {
             for (int tx = 0; tx < getWidth(); tx++) {
                 int e = entityFactorySystem.create(entityFactorySystem.getArchetype("terrain"));
 
-                E(e).textureComponentTexture(assetSystem.getTexture("dirt"));
+                E(e).textureComponentTexture(assetSystem.getTexture("grass"));
                 E(e).rotationComponentRotation(0);
                 E(e).originComponentOrigin(new Vector2(0.5f, 0.5f));
                 E(e).positionComponentPosition(new Vector3(
@@ -62,6 +64,32 @@ public class MapGenerationSystem extends BaseSystem {
                 E(e).sortableComponentLayer(0);
             }
         }
+
+        int e = entityFactorySystem.create(entityFactorySystem.getArchetype("player"));
+        E(e).textureComponentTexture(assetSystem.getTexture("dirt"));
+        E(e).rotationComponentRotation(0);
+        E(e).originComponentOrigin(new Vector2(0.5f, 0.5f));
+        E(e).positionComponentPosition(new Vector3(
+                (getWidth() / 2f) * getTileWidth(),
+                (getHeight() / 2f) * getTileHeight(),
+                0
+        ));
+        E(e).scaleComponentScale(1);
+        E(e).velocityComponentVelocity(new Vector2(0, 0));
+        E(e).dynamicBodyComponentFixtureDef().shape = new CircleShape();
+        E(e).dynamicBodyComponentFixtureDef().shape.setRadius(0.5f);
+        E(e).dynamicBodyComponentBodyDef().position.set(
+                E(e).positionComponentPosition().x,
+                E(e).positionComponentPosition().y
+        );
+        E(e).dynamicBodyComponentBody(
+                physicsSystem.getPhysicsWorld().createBody(
+                        E(e).dynamicBodyComponentBodyDef()
+                )
+        );
+        E(e).dynamicBodyComponentBody().createFixture(
+                E(e).dynamicBodyComponentFixtureDef()
+        );
     }
 
     public int getWidth() {
