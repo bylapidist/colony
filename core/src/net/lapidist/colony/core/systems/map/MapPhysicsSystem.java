@@ -96,4 +96,8 @@ public class MapPhysicsSystem extends AbstractRenderSystem {
     public World getPhysicsWorld() {
         return physicsWorld;
     }
+
+    public RayHandler getRayHandler() {
+        return rayHandler;
+    }
 }

@@ -50,10 +50,10 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
-        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-        compile "com.badlogicgames.box2dlights:box2dlights:$box2dLightsVersion"
+//        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+//        compile "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
+//        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+//        compile "com.badlogicgames.box2dlights:box2dlights:$box2dLightsVersion"
 //        compile "net.mostlyoriginal.artemis-odb:contrib-core:$artemisContribVersion"
 //        compile "net.mostlyoriginal.artemis-odb:contrib-jam:$artemisContribVersion"
 //        compile "net.mostlyoriginal.artemis-odb:contrib-eventbus:$artemisContribVersion"
@@ -71,6 +71,8 @@ project(":components") {
 
     dependencies {
         compile "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
+        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        compile "com.badlogicgames.box2dlights:box2dlights:$box2dLightsVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
     }

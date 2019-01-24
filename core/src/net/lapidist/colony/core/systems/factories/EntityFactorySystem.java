@@ -13,7 +13,7 @@ import net.lapidist.colony.components.map.TileComponent;
 import net.lapidist.colony.components.player.PlayerComponent;
 
 @Wire
-public class EntityFactorySystem extends BaseSystem {
+public final class EntityFactorySystem extends BaseSystem {
 
     public int create(Archetype archetype) {
         return world.create(archetype);

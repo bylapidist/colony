@@ -1,11 +1,14 @@
 package net.lapidist.colony.core.systems.map;
 
+import box2dLight.PointLight;
 import com.artemis.BaseSystem;
 import com.artemis.annotations.Wire;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
+import net.lapidist.colony.core.systems.factories.LightFactorySystem;
 
 import static com.artemis.E.E;
 
@@ -13,6 +16,7 @@ import static com.artemis.E.E;
 public class MapGenerationSystem extends BaseSystem {
 
     private EntityFactorySystem entityFactorySystem;
+    private LightFactorySystem lightFactorySystem;
     private MapAssetSystem assetSystem;
     private MapPhysicsSystem physicsSystem;
     private int width;
@@ -90,6 +94,15 @@ public class MapGenerationSystem extends BaseSystem {
         E(e).dynamicBodyComponentBody().createFixture(
                 E(e).dynamicBodyComponentFixtureDef()
         );
+
+        PointLight light = lightFactorySystem.createPointlight(
+                physicsSystem.getRayHandler(),
+                E(e).dynamicBodyComponentBody(),
+                new Color(1, 1, 1, 0.4f),
+                10
+        );
+
+        E(e).pointLightComponentPointLights().add(light);
     }
 
     public int getWidth() {
