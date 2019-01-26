@@ -17,6 +17,7 @@ import net.lapidist.colony.core.events.map.ClickTileWithinReachEvent;
 import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
 import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
+import net.lapidist.colony.core.systems.logic.TimeSystem;
 
 import static com.artemis.E.E;
 
@@ -26,6 +27,7 @@ public class MapPhysicsSystem extends AbstractRenderSystem {
     private AbstractCameraSystem cameraSystem;
     private MapGenerationSystem mapGenerationSystem;
     private EntityFactorySystem entityFactorySystem;
+    private TimeSystem timeSystem;
     private MapAssetSystem assetSystem;
     private World physicsWorld;
     private RayHandler rayHandler;
@@ -43,7 +45,7 @@ public class MapPhysicsSystem extends AbstractRenderSystem {
 
     @Override
     protected void initialize() {
-        rayHandler.setAmbientLight(0.1f, 0.1f, 0.1f, 0.1f);
+        rayHandler.setAmbientLight(timeSystem.getCurrentTime().getAmbientLight(timeSystem.getCurrentTime()));
         rayHandler.setBlurNum(3);
         rayHandler.setShadows(true);
 
