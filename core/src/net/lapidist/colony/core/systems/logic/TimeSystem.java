@@ -14,7 +14,7 @@ public class TimeSystem extends BaseSystem {
     private Season currentSeason = Season.SPRING;
     private TimeOfDay currentTime = TimeOfDay.DAWN;
     private int currentTimeTick = 0;
-    private float dayLengthMultiplier = 0.01f;
+    private float dayLengthMultiplier = 0.1f;
     private int seasonLengthSpring = 5;
     private int seasonLengthSummer = 5;
     private int seasonLengthAutumn = 5;
@@ -147,10 +147,10 @@ public class TimeSystem extends BaseSystem {
         private final int durationAutumn;
         private final int durationWinter;
 
-        private final Color colorSpring = new Color(1, 1, 1, 1);
-        private final Color colorSummer = new Color(1, 1, 1, 1);
-        private final Color colorAutumn = new Color(1, 1, 1, 1);
-        private final Color colorWinter = new Color(1, 1, 1, 1);
+        private final Color colorSpring = new Color(0.9f, 0.9f, 0.9f, 1);
+        private final Color colorSummer = new Color(1f, 1f, 1f, 1);
+        private final Color colorAutumn = new Color(1f, 0.5f, 0.5f, 1);
+        private final Color colorWinter = new Color(0.3f, 0.3f, 1f, 1);
 
         private final Color ambientLightNight = new Color(0.1f, 0.1f, 0.1f, 0.1f);
         private final Color ambientLightDawn = new Color(0.1f, 0.1f, 0.1f, 0.3f);

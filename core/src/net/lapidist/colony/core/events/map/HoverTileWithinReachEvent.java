@@ -17,8 +17,7 @@ public class HoverTileWithinReachEvent extends AbstractEvent {
         this("gridX=" + gridX +
                 ", gridY=" + gridY +
                 ", screenX=" + screenX +
-                ", screenY=" + screenY +
-                '}');
+                ", screenY=" + screenY);
 
         this.gridX = gridX;
         this.gridY = gridY;

@@ -8,8 +8,7 @@ public class SeasonChangeEvent extends AbstractEvent {
     private TimeSystem.Season season;
 
     public SeasonChangeEvent(TimeSystem.Season season) {
-        super("season=" + season +
-                '}');
+        super("season=" + season);
 
         setSeason(season);
     }

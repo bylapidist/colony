@@ -8,8 +8,7 @@ public class TimeChangeEvent extends AbstractEvent {
     private TimeSystem.TimeOfDay timeOfDay;
 
     public TimeChangeEvent(TimeSystem.TimeOfDay timeOfDay) {
-        super("timeOfDay=" + timeOfDay +
-                '}');
+        super("timeOfDay=" + timeOfDay);
 
         setTimeOfDay(timeOfDay);
     }
