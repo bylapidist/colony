@@ -72,7 +72,6 @@ public class MapPhysicsSystem extends AbstractRenderSystem {
             );
 
             E(e).dynamicBodyComponentFixtureDef().shape = shape;
-            E(e).dynamicBodyComponentFixtureDef().density = 1000f;
             E(e).dynamicBodyComponentBodyDef().position.set(
                     E(e).worldPositionComponentPosition().x,
                     E(e).worldPositionComponentPosition().y

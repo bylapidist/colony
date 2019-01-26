@@ -79,7 +79,6 @@ public final class EntityFactorySystem extends BaseSystem {
                 .add(VelocityComponent.class)
                 .add(ScaleComponent.class)
                 .add(DynamicBodyComponent.class)
-                .add(CollisionComponent.class)
                 .add(SortableComponent.class);
     }
 

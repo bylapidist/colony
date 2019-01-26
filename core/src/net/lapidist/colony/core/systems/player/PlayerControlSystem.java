@@ -125,10 +125,10 @@ public class PlayerControlSystem extends AbstractControlSystem {
                 tmpPosition.y + (E(e).textureComponentTexture().getHeight() / 2f)
         );
 
-        if (mapBounds.contains(tmpOrigin.x, tmpOrigin.y) && !E(e).collisionComponentIsColliding()) {
+        if (mapBounds.contains(tmpOrigin.x, tmpOrigin.y)) {
             E(e).velocityComponentVelocity().set(tmpVelocity);
         } else {
-            E(e).velocityComponentVelocity().scl(1f).rotate(180);
+            E(e).velocityComponentVelocity().scl(0);
             return;
         }
 

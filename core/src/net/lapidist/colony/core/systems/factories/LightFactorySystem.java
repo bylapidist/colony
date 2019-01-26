@@ -1,5 +1,6 @@
 package net.lapidist.colony.core.systems.factories;
 
+import box2dLight.ConeLight;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 import com.artemis.BaseSystem;
@@ -19,6 +20,17 @@ public final class LightFactorySystem extends BaseSystem {
         pointLight.setSoft(true);
 
         return pointLight;
+    }
+
+    public ConeLight createConeLight(RayHandler rayHandler, Body body, Color color, float intensity, float direction, float coneDegree) {
+        ConeLight coneLight = new ConeLight(rayHandler, 128, color, intensity, 0, 0, direction, coneDegree);
+        coneLight.setSoftnessLength(0f);
+        coneLight.attachToBody(body);
+        coneLight.setXray(false);
+        coneLight.setStaticLight(false);
+        coneLight.setSoft(true);
+
+        return coneLight;
     }
 
     @Override
