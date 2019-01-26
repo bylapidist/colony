@@ -3,7 +3,7 @@ package net.lapidist.colony.components.base;
 import com.artemis.Component;
 import com.badlogic.gdx.math.Vector3;
 
-public class PositionComponent extends Component {
+public class WorldPositionComponent extends Component {
 
     private Vector3 position;
 

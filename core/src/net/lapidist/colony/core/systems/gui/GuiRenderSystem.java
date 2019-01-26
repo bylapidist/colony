@@ -6,7 +6,7 @@ import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import net.lapidist.colony.components.assets.FontComponent;
-import net.lapidist.colony.components.base.PositionComponent;
+import net.lapidist.colony.components.base.WorldPositionComponent;
 import net.lapidist.colony.components.gui.GuiComponent;
 import net.lapidist.colony.components.gui.LabelComponent;
 import net.lapidist.colony.core.events.Events;
@@ -48,7 +48,7 @@ public class GuiRenderSystem extends AbstractRenderSystem {
 
     @Override
     protected void process(Entity e) {
-        final PositionComponent posC = E(e).getPositionComponent();
+        final WorldPositionComponent posC = E(e).getWorldPositionComponent();
         final LabelComponent labelC = E(e).getLabelComponent();
         final FontComponent fontC = E(e).getFontComponent();
 
@@ -70,7 +70,7 @@ public class GuiRenderSystem extends AbstractRenderSystem {
     protected void onInit() {
         int e = entityFactorySystem.create(entityFactorySystem.getArchetype("label"));
 
-        E(e).positionComponentPosition(new Vector3(16, 32, 0));
+        E(e).worldPositionComponentPosition(new Vector3(16, 32, 0));
         E(e).fontComponentFont(assetSystem.getFont("default"));
         E(e).labelComponentText(Gdx.graphics.getFramesPerSecond() + " FPS");
         E(e).sortableComponentLayer(1000);

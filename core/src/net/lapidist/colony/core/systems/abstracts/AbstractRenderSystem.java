@@ -10,7 +10,7 @@ import net.lapidist.colony.components.assets.FontComponent;
 import net.lapidist.colony.components.assets.TextureComponent;
 import net.lapidist.colony.components.base.RotationComponent;
 import net.lapidist.colony.components.base.OriginComponent;
-import net.lapidist.colony.components.base.PositionComponent;
+import net.lapidist.colony.components.base.WorldPositionComponent;
 import net.lapidist.colony.components.base.ScaleComponent;
 import net.lapidist.colony.components.gui.LabelComponent;
 import net.lapidist.colony.core.Constants;
@@ -35,7 +35,7 @@ public abstract class AbstractRenderSystem extends EntityProcessingSystem {
             TextureComponent textureC,
             RotationComponent angleC,
             OriginComponent originC,
-            PositionComponent posC,
+            WorldPositionComponent posC,
             ScaleComponent scaleC,
             float zoom
     ) {
@@ -71,7 +71,7 @@ public abstract class AbstractRenderSystem extends EntityProcessingSystem {
     protected void drawLabel(
             LabelComponent labelC,
             FontComponent fontC,
-            PositionComponent posC
+            WorldPositionComponent posC
     ) {
         fontC.getFont().draw(
                 batch,
@@ -81,11 +81,11 @@ public abstract class AbstractRenderSystem extends EntityProcessingSystem {
         );
     }
 
-    protected boolean isWithinBounds(final float x, final float y) {
-        return !(x < -Constants.PPM * 2
-                || x > Gdx.graphics.getWidth() + Constants.PPM
-                || y < -Constants.PPM * 2
-                || y > Gdx.graphics.getHeight() + Constants.PPM);
+    protected boolean isWithinBounds(final float screenX, final float screenY) {
+        return !(screenX < -Constants.PPM * 2
+                || screenX > Gdx.graphics.getWidth() + Constants.PPM
+                || screenY < -Constants.PPM * 2
+                || screenY > Gdx.graphics.getHeight() + Constants.PPM);
     }
 
     private float roundToPixels(final float val, final float zoom) {

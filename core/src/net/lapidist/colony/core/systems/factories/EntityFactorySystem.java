@@ -37,7 +37,7 @@ public final class EntityFactorySystem extends BaseSystem {
     private ArchetypeBuilder createTile() {
         return new ArchetypeBuilder()
                 .add(TileComponent.class)
-                .add(PositionComponent.class)
+                .add(WorldPositionComponent.class)
                 .add(OriginComponent.class);
     }
 
@@ -46,14 +46,14 @@ public final class EntityFactorySystem extends BaseSystem {
                 .add(TextureComponent.class)
                 .add(RotationComponent.class)
                 .add(OriginComponent.class)
-                .add(PositionComponent.class)
+                .add(WorldPositionComponent.class)
                 .add(ScaleComponent.class)
                 .add(SortableComponent.class);
     }
 
     private ArchetypeBuilder createLabel() {
         return new ArchetypeBuilder()
-                .add(PositionComponent.class)
+                .add(WorldPositionComponent.class)
                 .add(FontComponent.class)
                 .add(LabelComponent.class)
                 .add(GuiComponent.class)
@@ -65,7 +65,7 @@ public final class EntityFactorySystem extends BaseSystem {
                 .add(PlayerComponent.class)
                 .add(TextureComponent.class)
                 .add(RotationComponent.class)
-                .add(PositionComponent.class)
+                .add(WorldPositionComponent.class)
                 .add(OriginComponent.class)
                 .add(VelocityComponent.class)
                 .add(ScaleComponent.class)

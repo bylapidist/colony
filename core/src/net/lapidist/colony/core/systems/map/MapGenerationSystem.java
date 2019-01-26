@@ -40,7 +40,7 @@ public class MapGenerationSystem extends BaseSystem {
                 map[tx][ty] = entityFactorySystem.create(entityFactorySystem.getArchetype("tile"));
 
                 E(map[tx][ty]).tileComponentTile(tileWidth, tileHeight);
-                E(map[tx][ty]).positionComponentPosition(new Vector3(tx, ty, 0));
+                E(map[tx][ty]).worldPositionComponentPosition(new Vector3(tx, ty, 0));
                 E(map[tx][ty]).originComponentOrigin(new Vector2(0.5f, 0.5f));
             }
         }
@@ -59,7 +59,7 @@ public class MapGenerationSystem extends BaseSystem {
                 E(e).textureComponentTexture(assetSystem.getTexture("grass"));
                 E(e).rotationComponentRotation(0);
                 E(e).originComponentOrigin(new Vector2(0.5f, 0.5f));
-                E(e).positionComponentPosition(new Vector3(
+                E(e).worldPositionComponentPosition(new Vector3(
                         tx * getTileWidth(),
                         ty * getTileHeight(),
                         0
@@ -73,7 +73,7 @@ public class MapGenerationSystem extends BaseSystem {
         E(e).textureComponentTexture(assetSystem.getTexture("dirt"));
         E(e).rotationComponentRotation(0);
         E(e).originComponentOrigin(new Vector2(0.5f, 0.5f));
-        E(e).positionComponentPosition(new Vector3(
+        E(e).worldPositionComponentPosition(new Vector3(
                 (getWidth() / 2f) * getTileWidth(),
                 (getHeight() / 2f) * getTileHeight(),
                 0
@@ -84,8 +84,8 @@ public class MapGenerationSystem extends BaseSystem {
         E(e).dynamicBodyComponentFixtureDef().shape = new CircleShape();
         E(e).dynamicBodyComponentFixtureDef().shape.setRadius(0.5f);
         E(e).dynamicBodyComponentBodyDef().position.set(
-                E(e).positionComponentPosition().x,
-                E(e).positionComponentPosition().y
+                E(e).worldPositionComponentPosition().x,
+                E(e).worldPositionComponentPosition().y
         );
         E(e).dynamicBodyComponentBody(
                 physicsSystem.getPhysicsWorld().createBody(

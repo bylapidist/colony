@@ -3,9 +3,10 @@ package net.lapidist.colony.core.systems.map;
 import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
+import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.components.assets.TextureComponent;
 import net.lapidist.colony.components.base.OriginComponent;
-import net.lapidist.colony.components.base.PositionComponent;
+import net.lapidist.colony.components.base.WorldPositionComponent;
 import net.lapidist.colony.components.base.RotationComponent;
 import net.lapidist.colony.components.base.ScaleComponent;
 import net.lapidist.colony.components.render.InvisibleComponent;
@@ -26,6 +27,7 @@ public class MapRenderSystem extends AbstractRenderSystem {
     private EntityFactorySystem entityFactorySystem;
     private MapGenerationSystem mapGenerationSystem;
     private MapPhysicsSystem mapPhysicsSystem;
+    private Vector2 tmpVec2;
 
     public MapRenderSystem() {
         super(Aspect.all(SortableComponent.class).exclude(InvisibleComponent.class));
@@ -35,6 +37,7 @@ public class MapRenderSystem extends AbstractRenderSystem {
     protected void initialize() {
         super.initialize();
 
+        tmpVec2 = new Vector2();
         Events.on(MapInitEvent.class, mapInitEvent -> onInit());
         Events.on(ScreenResizeEvent.class, event -> onResize(event.getWidth(), event.getHeight()));
     }
@@ -56,16 +59,17 @@ public class MapRenderSystem extends AbstractRenderSystem {
                 E(e).hasTextureComponent() &&
                 E(e).hasRotationComponent() &&
                 E(e).hasOriginComponent() &&
-                E(e).hasPositionComponent() &&
+                E(e).hasWorldPositionComponent() &&
                 E(e).hasScaleComponent()
         ) {
-            final PositionComponent posC = E(e).getPositionComponent();
+            final WorldPositionComponent posC = E(e).getWorldPositionComponent();
             final TextureComponent textureC = E(e).getTextureComponent();
             final RotationComponent rotationC = E(e).getRotationComponent();
             final ScaleComponent scaleC = E(e).getScaleComponent();
             final OriginComponent originC = E(e).getOriginComponent();
 
-            if (isWithinBounds(posC.getPosition().x, posC.getPosition().y))
+            tmpVec2.set(cameraSystem.screenCoordsFromWorldCoords(posC.getPosition().x, posC.getPosition().y));
+            if (isWithinBounds(tmpVec2.x, tmpVec2.y))
                 drawTexture(textureC, rotationC, originC, posC, scaleC, cameraSystem.zoom);
         }
     }

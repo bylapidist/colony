@@ -20,10 +20,10 @@ public class PlayerCameraSystem extends AbstractCameraSystem {
     @Override
     protected void process(int e) {
         camera.position.x =
-                (E(e).positionComponentPosition().x + (E(e).positionComponentPosition().x * E(e).originComponentOrigin().x) / mapGenerationSystem.getTileWidth()) / zoom;
+                (E(e).worldPositionComponentPosition().x + (E(e).worldPositionComponentPosition().x * E(e).originComponentOrigin().x) / mapGenerationSystem.getTileWidth()) / zoom;
 
         camera.position.y =
-                (E(e).positionComponentPosition().y + (E(e).positionComponentPosition().y * E(e).originComponentOrigin().y) / mapGenerationSystem.getTileHeight()) / zoom;
+                (E(e).worldPositionComponentPosition().y + (E(e).worldPositionComponentPosition().y * E(e).originComponentOrigin().y) / mapGenerationSystem.getTileHeight()) / zoom;
 
         camera.update();
     }
