@@ -3,16 +3,24 @@ package net.lapidist.colony.core.screens;
 import com.artemis.*;
 import com.artemis.managers.TagManager;
 import com.badlogic.gdx.Screen;
-import net.lapidist.colony.common.events.Events;
+import com.badlogic.gdx.graphics.Color;
 import net.lapidist.colony.core.Constants;
-import net.lapidist.colony.core.events.ScreenResizeEvent;
-import net.lapidist.colony.core.events.WorldInitEvent;
-import net.lapidist.colony.core.systems.camera.CameraSystem;
-import net.lapidist.colony.core.systems.camera.PlayerCameraSystem;
-import net.lapidist.colony.core.systems.logic.*;
-import net.lapidist.colony.core.systems.render.GuiRenderingSystem;
-import net.lapidist.colony.core.systems.render.PhysicsSystem;
-import net.lapidist.colony.core.systems.render.MapRenderingSystem;
+import net.lapidist.colony.core.events.Events;
+import net.lapidist.colony.core.events.logic.GamePauseEvent;
+import net.lapidist.colony.core.events.logic.GameResumeEvent;
+import net.lapidist.colony.core.events.render.ScreenResizeEvent;
+import net.lapidist.colony.core.io.FileLocation;
+import net.lapidist.colony.core.systems.player.PlayerCameraSystem;
+import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
+import net.lapidist.colony.core.systems.factories.LightFactorySystem;
+import net.lapidist.colony.core.systems.gui.GuiAssetSystem;
+import net.lapidist.colony.core.systems.map.MapAssetSystem;
+import net.lapidist.colony.core.systems.map.MapGenerationSystem;
+import net.lapidist.colony.core.systems.map.MapPhysicsSystem;
+import net.lapidist.colony.core.systems.player.PlayerControlSystem;
+import net.lapidist.colony.core.systems.render.ClearScreenSystem;
+import net.lapidist.colony.core.systems.gui.GuiRenderSystem;
+import net.lapidist.colony.core.systems.map.MapRenderSystem;
 
 public class MapScreen implements Screen {
 
@@ -22,25 +30,24 @@ public class MapScreen implements Screen {
         WorldConfiguration config = new WorldConfigurationBuilder()
                 .with(WorldConfigurationBuilder.Priority.HIGHEST,
                         new SuperMapper(),
-                        new TagManager()
+                        new TagManager(),
+                        new MapAssetSystem(FileLocation.INTERNAL),
+                        new EntityFactorySystem(),
+                        new LightFactorySystem()
                 )
                 .with(WorldConfigurationBuilder.Priority.NORMAL,
-                        new CameraSystem(1f),
-                        new PlayerCameraSystem(),
+                        new ClearScreenSystem(Color.BLACK),
+                        new PlayerCameraSystem(1),
                         new PlayerControlSystem(),
-                        new EntityFactorySystem(),
-                        new MapGenerationSystem(32, 32, Constants.PPM, Constants.PPM),
-                        new MapRenderingSystem(),
-                        new LightFactorySystem(),
-                        new PhysicsSystem(),
-                        new GuiEntityFactorySystem(),
-                        new GuiRenderingSystem()
+                        new GuiAssetSystem(FileLocation.INTERNAL),
+                        new MapGenerationSystem(25, 25, Constants.PPM, Constants.PPM),
+                        new MapRenderSystem(),
+                        new MapPhysicsSystem(),
+                        new GuiRenderSystem()
                 )
                 .build();
 
         world = new World(config);
-
-        Events.fire(new WorldInitEvent());
     }
 
     @Override
@@ -48,22 +55,24 @@ public class MapScreen implements Screen {
     }
 
     @Override
-    public void render(float delta) {
+    public void render(final float delta) {
         world.setDelta(delta);
         world.process();
     }
 
     @Override
-    public void resize(int width, int height) {
+    public void resize(final int width, final int height) {
         Events.fire(new ScreenResizeEvent(width, height));
     }
 
     @Override
     public void pause() {
+        Events.fire(new GamePauseEvent());
     }
 
     @Override
     public void resume() {
+        Events.fire(new GameResumeEvent());
     }
 
     @Override
