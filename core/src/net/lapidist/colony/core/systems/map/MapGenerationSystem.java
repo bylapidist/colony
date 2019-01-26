@@ -6,7 +6,7 @@ import com.artemis.annotations.Wire;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.*;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 import net.lapidist.colony.core.systems.factories.LightFactorySystem;
 
@@ -104,6 +104,28 @@ public class MapGenerationSystem extends BaseSystem {
         );
 
         E(e).pointLightComponentPointLights().add(light);
+
+        physicsSystem.getPhysicsWorld().setContactListener(new ContactListener() {
+            @Override
+            public void beginContact(Contact contact) {
+                E(e).collisionComponentColliding(true);
+            }
+
+            @Override
+            public void endContact(Contact contact) {
+                E(e).collisionComponentColliding(false);
+            }
+
+            @Override
+            public void preSolve(Contact contact, Manifold oldManifold) {
+
+            }
+
+            @Override
+            public void postSolve(Contact contact, ContactImpulse impulse) {
+
+            }
+        });
     }
 
     public int getWidth() {

@@ -125,10 +125,10 @@ public class PlayerControlSystem extends AbstractControlSystem {
                 tmpPosition.y + (E(e).textureComponentTexture().getHeight() / 2f)
         );
 
-        if (mapBounds.contains(tmpOrigin.x, tmpOrigin.y)) {
+        if (mapBounds.contains(tmpOrigin.x, tmpOrigin.y) && !E(e).collisionComponentIsColliding()) {
             E(e).velocityComponentVelocity().set(tmpVelocity);
         } else {
-            E(e).velocityComponentVelocity().set(0, 0);
+            E(e).velocityComponentVelocity().scl(1f).rotate(180);
             return;
         }
 
@@ -185,8 +185,8 @@ public class PlayerControlSystem extends AbstractControlSystem {
     @Override
     protected void process(int e) {
         reachBounds.set(
-                E(e).worldPositionComponentPosition().x,
-                E(e).worldPositionComponentPosition().y,
+                tmpOrigin.x,
+                tmpOrigin.y,
                 (BASE_REACH * mapGenerationSystem.getTileWidth()) / 2f
         );
 

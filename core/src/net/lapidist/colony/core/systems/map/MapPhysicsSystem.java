@@ -7,14 +7,16 @@ import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.*;
 import net.lapidist.colony.components.base.DynamicBodyComponent;
 import net.lapidist.colony.core.Constants;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.logic.MapPhysicsInitEvent;
+import net.lapidist.colony.core.events.map.ClickTileWithinReachEvent;
 import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
 import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
+import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 
 import static com.artemis.E.E;
 
@@ -23,6 +25,8 @@ public class MapPhysicsSystem extends AbstractRenderSystem {
 
     private AbstractCameraSystem cameraSystem;
     private MapGenerationSystem mapGenerationSystem;
+    private EntityFactorySystem entityFactorySystem;
+    private MapAssetSystem assetSystem;
     private World physicsWorld;
     private RayHandler rayHandler;
     private Vector2 tmpVec2;
@@ -44,6 +48,45 @@ public class MapPhysicsSystem extends AbstractRenderSystem {
         rayHandler.setShadows(true);
 
         Events.fire(new MapPhysicsInitEvent());
+
+        Events.on(ClickTileWithinReachEvent.class, event -> {
+            int e = entityFactorySystem.create(entityFactorySystem.getArchetype("building"));
+
+            E(e).textureComponentTexture(assetSystem.getTexture("grass"));
+            E(e).rotationComponentRotation(0);
+            E(e).originComponentOrigin(new Vector2(0.5f, 0.5f));
+            E(e).worldPositionComponentPosition(new Vector3(
+                    event.getGridX() * mapGenerationSystem.getTileWidth(),
+                    event.getGridY() * mapGenerationSystem.getTileHeight(),
+                    0
+            ));
+            E(e).scaleComponentScale(1);
+            E(e).velocityComponentVelocity(new Vector2(0, 0));
+            E(e).sortableComponentLayer(1);
+            PolygonShape shape = new PolygonShape();
+            shape.setAsBox(
+                    0.5f,
+                    0.5f,
+                    new Vector2(0, 0),
+                    0
+            );
+
+            E(e).dynamicBodyComponentFixtureDef().shape = shape;
+            E(e).dynamicBodyComponentFixtureDef().density = 1000f;
+            E(e).dynamicBodyComponentBodyDef().position.set(
+                    E(e).worldPositionComponentPosition().x,
+                    E(e).worldPositionComponentPosition().y
+            );
+            E(e).dynamicBodyComponentBodyDef().type = BodyDef.BodyType.StaticBody;
+            E(e).dynamicBodyComponentBody(
+                    physicsWorld.createBody(
+                            E(e).dynamicBodyComponentBodyDef()
+                    )
+            );
+            E(e).dynamicBodyComponentBody().createFixture(
+                    E(e).dynamicBodyComponentFixtureDef()
+            );
+        });
     }
 
     @Override

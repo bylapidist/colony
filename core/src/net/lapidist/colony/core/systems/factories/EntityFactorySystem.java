@@ -7,6 +7,7 @@ import com.artemis.annotations.Wire;
 import net.lapidist.colony.components.assets.FontComponent;
 import net.lapidist.colony.components.assets.TextureComponent;
 import net.lapidist.colony.components.base.*;
+import net.lapidist.colony.components.building.BuildingComponent;
 import net.lapidist.colony.components.gui.GuiComponent;
 import net.lapidist.colony.components.gui.LabelComponent;
 import net.lapidist.colony.components.map.TileComponent;
@@ -29,6 +30,8 @@ public final class EntityFactorySystem extends BaseSystem {
                 return createLabel().build(world);
             case "player":
                 return createPlayer().build(world);
+            case "building":
+                return createBuilding().build(world);
             case "hoveredTile":
                 return createHoveredTile().build(world);
         }
@@ -74,6 +77,19 @@ public final class EntityFactorySystem extends BaseSystem {
                 .add(WorldPositionComponent.class)
                 .add(OriginComponent.class)
                 .add(VelocityComponent.class)
+                .add(ScaleComponent.class)
+                .add(DynamicBodyComponent.class)
+                .add(CollisionComponent.class)
+                .add(SortableComponent.class);
+    }
+
+    private ArchetypeBuilder createBuilding() {
+        return new ArchetypeBuilder()
+                .add(BuildingComponent.class)
+                .add(TextureComponent.class)
+                .add(RotationComponent.class)
+                .add(WorldPositionComponent.class)
+                .add(OriginComponent.class)
                 .add(ScaleComponent.class)
                 .add(DynamicBodyComponent.class)
                 .add(SortableComponent.class);
