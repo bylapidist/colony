@@ -1,3 +1,16 @@
+<a name="5.1.0"></a>
+# [5.1.0](https://gitlab.com/getbrett/colony/compare/v5.0.0...v5.1.0) (2019-01-26)
+
+
+### Features
+
+* **engine:** implement variable season and time of day colours ([32d6a67](https://gitlab.com/getbrett/colony/commit/32d6a67))
+* **gameplay:** player's flashlight is only enabled during night, dawn, evening and dusk ([962ad52](https://gitlab.com/getbrett/colony/commit/962ad52))
+* **gui:** give seasons to GUI ([67320ff](https://gitlab.com/getbrett/colony/commit/67320ff))
+* **logic:** implement TimeSystem ([5242e78](https://gitlab.com/getbrett/colony/commit/5242e78))
+
+
+
 <a name="5.0.0"></a>
 # [5.0.0](https://gitlab.com/getbrett/colony/compare/v4.3.0...v5.0.0) (2019-01-26)
 
