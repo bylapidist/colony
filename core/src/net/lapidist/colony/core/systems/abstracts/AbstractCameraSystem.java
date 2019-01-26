@@ -35,6 +35,21 @@ public abstract class AbstractCameraSystem extends IteratingSystem {
         guiCamera.update();
     }
 
+    public Vector2 screenCoordsFromWorldCoords(float worldX, float worldY) {
+        camera.update();
+        camera.project(tmpVec3.set(worldX, worldY, 0));
+
+        return tmpVec2.set(tmpVec3.x, tmpVec3.y);
+    }
+
+    public Vector2 worldCoordsFromScreenCoords(float screenX, float screenY) {
+        camera.update();
+        camera.unproject(tmpVec3.set(screenX, screenY, 0));
+
+        return tmpVec2.set(tmpVec3.x, tmpVec3.y);
+    }
+
+
     @Override
     protected void process(int entityId) {
 
