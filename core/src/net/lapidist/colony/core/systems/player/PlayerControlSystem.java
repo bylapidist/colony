@@ -4,10 +4,7 @@ import com.artemis.Aspect;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.*;
 import net.lapidist.colony.components.player.PlayerComponent;
 import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
 import net.lapidist.colony.core.systems.abstracts.AbstractControlSystem;
@@ -22,24 +19,32 @@ public class PlayerControlSystem extends AbstractControlSystem {
     private AbstractCameraSystem cameraSystem;
     private MapGenerationSystem mapGenerationSystem;
 
-    private final static float BASE_FRICTION = 200f;
-    private final static float BASE_ACCELERATION = BASE_FRICTION + 300f;
-    private final static float BASE_MAX_VELOCITY = 100f;
-    private final static float MIN_VELOCITY = 3f;
-    private final static float MIN_ZOOM = 1f;
-    private final static float MAX_ZOOM = 2f;
-    private final static float ZOOM_SPEED = 0.06f;
-
-    private final Vector2 position = new Vector2();
-    private final Vector2 origin = new Vector2();
+    private final float BASE_FRICTION = 200f;
+    private final float BASE_ACCELERATION = BASE_FRICTION + 300f;
+    private final float BASE_MAX_VELOCITY = 100f;
+    private final float MIN_VELOCITY = 3f;
+    private final float MIN_ZOOM = 1f;
+    private final float MAX_ZOOM = 2f;
+    private final float ZOOM_SPEED = 0.06f;
     private final Vector3 tmpPosition = new Vector3();
-    private final Vector2 tmpVelocity = new Vector2();
     private final Vector2 tmpOrigin = new Vector2();
+    private final Vector2 tmpVelocity = new Vector2();
+    private final Rectangle mapBounds = new Rectangle();
 
     public PlayerControlSystem() {
         super(Aspect.all(PlayerComponent.class));
 
         inputMultiplexer.addProcessor(this);
+    }
+
+    @Override
+    protected void initialize() {
+        mapBounds.set(
+                0,
+                0,
+                mapGenerationSystem.getWidth() * mapGenerationSystem.getTileWidth(),
+                mapGenerationSystem.getHeight() * mapGenerationSystem.getTileHeight()
+        );
     }
 
     private void processInput(int e) {
@@ -100,7 +105,18 @@ public class PlayerControlSystem extends AbstractControlSystem {
 
         limitVelocity();
 
-        E(e).velocityComponentVelocity().set(tmpVelocity);
+        tmpOrigin.set(
+                tmpPosition.x + (E(e).textureComponentTexture().getWidth() / 2f),
+                tmpPosition.y + (E(e).textureComponentTexture().getHeight() / 2f)
+        );
+
+        if (mapBounds.contains(tmpOrigin.x, tmpOrigin.y)) {
+            E(e).velocityComponentVelocity().set(tmpVelocity);
+        } else {
+            E(e).velocityComponentVelocity().set(0, 0);
+            return;
+        }
+
         E(e).worldPositionComponentPosition().set(tmpPosition);
     }
 
@@ -130,23 +146,23 @@ public class PlayerControlSystem extends AbstractControlSystem {
         }
     }
 
-    private void applyVerticalFriction(float baseFriction) {
-        tmpVelocity.y -= baseFriction * Gdx.graphics.getDeltaTime();
+    private void applyVerticalFriction(float friction) {
+        tmpVelocity.y -= friction * Gdx.graphics.getDeltaTime();
         tmpPosition.y -= tmpVelocity.y * Gdx.graphics.getDeltaTime();
     }
 
-    private void applyHorizontalFriction(float baseFriction) {
-        tmpVelocity.x -= baseFriction * Gdx.graphics.getDeltaTime();
+    private void applyHorizontalFriction(float friction) {
+        tmpVelocity.x -= friction * Gdx.graphics.getDeltaTime();
         tmpPosition.x -= tmpVelocity.x * Gdx.graphics.getDeltaTime();
     }
 
-    private void accelerateHorizontally(float baseAcceleration) {
-        tmpVelocity.x += baseAcceleration * Gdx.graphics.getDeltaTime();
+    private void accelerateHorizontally(float acceleration) {
+        tmpVelocity.x += acceleration * Gdx.graphics.getDeltaTime();
         tmpPosition.x -= tmpVelocity.x * Gdx.graphics.getDeltaTime();
     }
 
-    private void accelerateVertically(float v) {
-        tmpVelocity.y += v * Gdx.graphics.getDeltaTime();
+    private void accelerateVertically(float acceleration) {
+        tmpVelocity.y += acceleration * Gdx.graphics.getDeltaTime();
         tmpPosition.y -= tmpVelocity.y * Gdx.graphics.getDeltaTime();
     }
 
