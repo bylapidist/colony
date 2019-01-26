@@ -3,6 +3,7 @@ package net.lapidist.colony.core.systems.map;
 import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.components.assets.TextureComponent;
 import net.lapidist.colony.components.base.OriginComponent;
@@ -52,6 +53,7 @@ public class MapRenderSystem extends AbstractRenderSystem {
     protected void begin() {
         batch.begin();
         batch.setProjectionMatrix(cameraSystem.camera.combined);
+        batch.setColor(timeSystem.getCurrentTime().getColor(timeSystem.getCurrentSeason()));
     }
 
     @Override
@@ -79,6 +81,20 @@ public class MapRenderSystem extends AbstractRenderSystem {
                 drawTexture(textureC, rotationC, originC, posC, scaleC, cameraSystem.zoom);
         }
 
+        if (E(e).hasPlayerComponent()) {
+            if (
+                timeSystem.getCurrentTime() == TimeSystem.TimeOfDay.NIGHT
+                || timeSystem.getCurrentTime() == TimeSystem.TimeOfDay.DAWN
+                || timeSystem.getCurrentTime() == TimeSystem.TimeOfDay.EVENING
+                || timeSystem.getCurrentTime() == TimeSystem.TimeOfDay.DUSK
+            ) {
+                E(e).coneLightComponentConeLights().get(0).setColor(new Color(1, 1, 1, 0.5f));
+                E(e).pointLightComponentPointLights().get(0).setColor(new Color(1, 1, 1, 0.4f));
+            } else {
+                E(e).coneLightComponentConeLights().get(0).setColor(Color.CLEAR);
+                E(e).pointLightComponentPointLights().get(0).setColor(Color.CLEAR);
+            }
+        }
     }
 
     @Override
