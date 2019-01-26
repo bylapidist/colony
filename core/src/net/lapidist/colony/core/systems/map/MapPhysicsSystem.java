@@ -5,6 +5,7 @@ import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -54,7 +55,7 @@ public class MapPhysicsSystem extends AbstractRenderSystem {
                         (E(e).worldPositionComponentPosition().x + (E(e).originComponentOrigin().x * E(e).textureComponentTexture().getWidth())) / mapGenerationSystem.getTileWidth(),
                         (E(e).worldPositionComponentPosition().y + (E(e).originComponentOrigin().y * E(e).textureComponentTexture().getHeight())) / mapGenerationSystem.getTileHeight()
                 ),
-                E(e).rotationComponentRotation()
+                E(e).rotationComponentRotation() + MathUtils.PI
         );
     }
 

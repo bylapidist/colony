@@ -56,43 +56,50 @@ public class PlayerControlSystem extends AbstractControlSystem {
 
     private void processInput(int e) {
         tmpVelocity.set(E(e).velocityComponentVelocity());
-        tmpPosition.set(E(e).worldPositionComponentPosition());
-        lastRotation = MathUtils.atan2(tmpVelocity.y, tmpVelocity.x);
+        tmpPosition.set(E(e).worldPositionComponentPosition());;
 
         if (singleKeyDown(Input.Keys.W)) {
             accelerateVertically(-BASE_ACCELERATION);
+            lastRotation = MathUtils.atan2(tmpVelocity.y, tmpVelocity.x);
         }
 
         if (singleKeyDown(Input.Keys.A)) {
             accelerateHorizontally(BASE_ACCELERATION);
+            lastRotation = MathUtils.atan2(tmpVelocity.y, tmpVelocity.x);
         }
 
         if (singleKeyDown(Input.Keys.S)) {
             accelerateVertically(BASE_ACCELERATION);
+            lastRotation = MathUtils.atan2(tmpVelocity.y, tmpVelocity.x);
         }
 
         if (singleKeyDown(Input.Keys.D)) {
             accelerateHorizontally(-BASE_ACCELERATION);
+            lastRotation = MathUtils.atan2(tmpVelocity.y, tmpVelocity.x);
         }
 
         if (twoKeysDown(Input.Keys.W, Input.Keys.D)) {
             accelerateVertically(-BASE_ACCELERATION);
             accelerateHorizontally(-BASE_ACCELERATION);
+            lastRotation = MathUtils.atan2(tmpVelocity.y, tmpVelocity.x);
         }
 
         if (twoKeysDown(Input.Keys.A, Input.Keys.W)) {
             accelerateHorizontally(BASE_ACCELERATION);
             accelerateVertically(-BASE_ACCELERATION);
+            lastRotation = MathUtils.atan2(tmpVelocity.y, tmpVelocity.x);
         }
 
         if (twoKeysDown(Input.Keys.S, Input.Keys.D)) {
             accelerateVertically(BASE_ACCELERATION);
             accelerateHorizontally(-BASE_ACCELERATION);
+            lastRotation = MathUtils.atan2(tmpVelocity.y, tmpVelocity.x);
         }
 
         if (twoKeysDown(Input.Keys.A, Input.Keys.S)) {
             accelerateHorizontally(BASE_ACCELERATION);
             accelerateVertically(BASE_ACCELERATION);
+            lastRotation = MathUtils.atan2(tmpVelocity.y, tmpVelocity.x);
         }
 
         if (tmpVelocity.x > 0) {
