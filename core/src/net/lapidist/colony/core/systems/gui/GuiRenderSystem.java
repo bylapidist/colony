@@ -17,6 +17,7 @@ import net.lapidist.colony.core.events.render.ScreenResizeEvent;
 import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
 import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
+import net.lapidist.colony.core.systems.logic.TimeSystem;
 import net.lapidist.colony.core.systems.map.MapGenerationSystem;
 
 import static com.artemis.E.E;
@@ -28,7 +29,10 @@ public class GuiRenderSystem extends AbstractRenderSystem {
     private GuiAssetSystem assetSystem;
     private EntityFactorySystem entityFactorySystem;
     private MapGenerationSystem mapGenerationSystem;
+    private TimeSystem timeSystem;
     private int hoveredTile;
+    private int fpsCounter;
+    private int season;
 
     public GuiRenderSystem() {
         super(Aspect.all(GuiComponent.class));
@@ -58,7 +62,13 @@ public class GuiRenderSystem extends AbstractRenderSystem {
         final LabelComponent labelC = E(e).getLabelComponent();
         final FontComponent fontC = E(e).getFontComponent();
 
-        E(e).labelComponentText(Gdx.graphics.getFramesPerSecond() + " FPS");
+        E(fpsCounter).labelComponentText(Gdx.graphics.getFramesPerSecond() + " FPS");
+        E(season).labelComponentText(
+                "Year " + String.valueOf(timeSystem.getYear()) + ", " +
+                "Day " + String.valueOf(timeSystem.getDay()) + "\n" +
+                timeSystem.getCurrentSeason().toString() + ", " +
+                timeSystem.getCurrentTime().toString()
+        );
 
         if (fontC != null) drawLabel(labelC, fontC, posC);
     }
@@ -75,25 +85,30 @@ public class GuiRenderSystem extends AbstractRenderSystem {
 
     protected void onInit() {
         int e = entityFactorySystem.create(entityFactorySystem.getArchetype("label"));
-
         E(e).worldPositionComponentPosition(new Vector3(16, 32, 0));
         E(e).fontComponentFont(assetSystem.getFont("default"));
-        E(e).labelComponentText(Gdx.graphics.getFramesPerSecond() + " FPS");
+        E(e).labelComponentText("");
         E(e).sortableComponentLayer(1000);
+        fpsCounter = e;
+
+        int e2 = entityFactorySystem.create(entityFactorySystem.getArchetype("label"));
+        E(e2).worldPositionComponentPosition(new Vector3(16, Gdx.graphics.getHeight() - 16, 0));
+        E(e2).fontComponentFont(assetSystem.getFont("default"));
+        E(e2).labelComponentText("");
+        E(e2).sortableComponentLayer(1000);
+        season = e2;
 
         hoveredTile = entityFactorySystem.create(entityFactorySystem.getArchetype("hoveredTile"));
-        e = hoveredTile;
-
-        E(e).textureComponentTexture(assetSystem.getTexture("hoveredTile"));
-        E(e).rotationComponentRotation(0);
-        E(e).originComponentOrigin(new Vector2(0.5f, 0.5f));
-        E(e).worldPositionComponentPosition(new Vector3(
+        E(hoveredTile).textureComponentTexture(assetSystem.getTexture("hoveredTile"));
+        E(hoveredTile).rotationComponentRotation(0);
+        E(hoveredTile).originComponentOrigin(new Vector2(0.5f, 0.5f));
+        E(hoveredTile).worldPositionComponentPosition(new Vector3(
                 -10000,
                 -10000,
                 0
         ));
-        E(e).scaleComponentScale(1);
-        E(e).sortableComponentLayer(10);
+        E(hoveredTile).scaleComponentScale(1);
+        E(hoveredTile).sortableComponentLayer(10);
     }
 
     private void onHoverTileWithinReach(int worldX, int worldY) {

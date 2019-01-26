@@ -13,8 +13,7 @@ public class ClickTileOutsideReachEvent extends AbstractEvent {
 
     public ClickTileOutsideReachEvent(int gridX, int gridY) {
         this("gridX=" + gridX +
-                ", gridY=" + gridY +
-                '}');
+                ", gridY=" + gridY);
 
         this.gridX = gridX;
         this.gridY = gridY;

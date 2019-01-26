@@ -10,6 +10,7 @@ import net.lapidist.colony.components.base.*;
 import net.lapidist.colony.components.building.BuildingComponent;
 import net.lapidist.colony.components.gui.GuiComponent;
 import net.lapidist.colony.components.gui.LabelComponent;
+import net.lapidist.colony.components.map.TerrainComponent;
 import net.lapidist.colony.components.map.TileComponent;
 import net.lapidist.colony.components.player.PlayerComponent;
 
@@ -46,52 +47,43 @@ public final class EntityFactorySystem extends BaseSystem {
                 .add(OriginComponent.class);
     }
 
+    private ArchetypeBuilder createSortable() {
+        return new ArchetypeBuilder()
+                .add(TextureComponent.class)
+                .add(RotationComponent.class)
+                .add(OriginComponent.class)
+                .add(WorldPositionComponent.class)
+                .add(VelocityComponent.class)
+                .add(ScaleComponent.class)
+                .add(SortableComponent.class);
+    }
+
     private ArchetypeBuilder createHoveredTile() {
-        return createTerrain();
+        return createSortable();
     }
 
     private ArchetypeBuilder createTerrain() {
-        return new ArchetypeBuilder()
-                .add(TextureComponent.class)
-                .add(RotationComponent.class)
-                .add(OriginComponent.class)
-                .add(WorldPositionComponent.class)
-                .add(ScaleComponent.class)
-                .add(SortableComponent.class);
+        return createSortable()
+                .add(TerrainComponent.class);
     }
 
     private ArchetypeBuilder createLabel() {
-        return new ArchetypeBuilder()
-                .add(WorldPositionComponent.class)
+        return createSortable()
                 .add(FontComponent.class)
                 .add(LabelComponent.class)
-                .add(GuiComponent.class)
-                .add(SortableComponent.class);
+                .add(GuiComponent.class);
     }
 
     private ArchetypeBuilder createPlayer() {
-        return new ArchetypeBuilder()
+        return createSortable()
                 .add(PlayerComponent.class)
-                .add(TextureComponent.class)
-                .add(RotationComponent.class)
-                .add(WorldPositionComponent.class)
-                .add(OriginComponent.class)
-                .add(VelocityComponent.class)
-                .add(ScaleComponent.class)
-                .add(DynamicBodyComponent.class)
-                .add(SortableComponent.class);
+                .add(DynamicBodyComponent.class);
     }
 
     private ArchetypeBuilder createBuilding() {
-        return new ArchetypeBuilder()
+        return createSortable()
                 .add(BuildingComponent.class)
-                .add(TextureComponent.class)
-                .add(RotationComponent.class)
-                .add(WorldPositionComponent.class)
-                .add(OriginComponent.class)
-                .add(ScaleComponent.class)
-                .add(DynamicBodyComponent.class)
-                .add(SortableComponent.class);
+                .add(DynamicBodyComponent.class);
     }
 
     @Override

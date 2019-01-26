@@ -115,6 +115,7 @@ public class MapGenerationSystem extends BaseSystem {
         );
 
         E(e).pointLightComponentPointLights().add(light);
+        E(e).coneLightComponentConeLights().add(coneLight);
     }
 
     public int getWidth() {
