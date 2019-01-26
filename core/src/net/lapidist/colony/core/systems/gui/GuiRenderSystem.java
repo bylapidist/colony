@@ -13,7 +13,7 @@ import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.gui.GuiInitEvent;
 import net.lapidist.colony.core.events.render.ScreenResizeEvent;
 import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
-import net.lapidist.colony.core.systems.camera.AbstractCameraSystem;
+import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 
 import static com.artemis.E.E;

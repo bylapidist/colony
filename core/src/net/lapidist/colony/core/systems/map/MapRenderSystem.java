@@ -15,7 +15,7 @@ import net.lapidist.colony.core.events.logic.MapInitEvent;
 import net.lapidist.colony.core.events.render.ScreenResizeEvent;
 import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
-import net.lapidist.colony.core.systems.camera.AbstractCameraSystem;
+import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
 
 import static com.artemis.E.E;
 

@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.systems.camera;
+package net.lapidist.colony.core.systems.abstracts;
 
 import com.artemis.Aspect;
 import com.artemis.systems.IteratingSystem;
@@ -16,7 +16,7 @@ public abstract class AbstractCameraSystem extends IteratingSystem {
 
     public final float zoom;
 
-    AbstractCameraSystem(Aspect.Builder aspect, float zoom) {
+    public AbstractCameraSystem(Aspect.Builder aspect, float zoom) {
         super(aspect);
 
         this.zoom = 1;

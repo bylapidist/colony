@@ -13,7 +13,7 @@ import net.lapidist.colony.core.Constants;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.logic.MapPhysicsInitEvent;
 import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
-import net.lapidist.colony.core.systems.camera.AbstractCameraSystem;
+import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
 
 import static com.artemis.E.E;
 

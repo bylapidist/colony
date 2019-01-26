@@ -3,6 +3,7 @@ package net.lapidist.colony.core.systems.camera;
 import com.artemis.Aspect;
 import com.artemis.annotations.Wire;
 import net.lapidist.colony.components.player.PlayerComponent;
+import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
 
 import static com.artemis.E.E;
 
