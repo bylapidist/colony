@@ -12,6 +12,11 @@ import net.lapidist.colony.core.systems.abstracts.AbstractAssetSystem;
 public class MapAssetSystem extends AbstractAssetSystem {
 
     private boolean initialised;
+    private final String[] textures = {
+            "player",
+            "dirt",
+            "grass"
+    };
 
     public MapAssetSystem(FileLocation fileLocation) {
         super(fileLocation);
@@ -20,13 +25,6 @@ public class MapAssetSystem extends AbstractAssetSystem {
     @Override
     protected void initialize() {
         super.initialize();
-
-        final String[] textures = {
-                "player",
-                "empty",
-                "dirt",
-                "grass"
-        };
 
         for (String texture: textures) {
             Entity e = world.createEntity(new ArchetypeBuilder()

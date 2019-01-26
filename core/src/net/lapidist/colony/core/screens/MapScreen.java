@@ -30,15 +30,15 @@ public class MapScreen implements Screen {
         WorldConfiguration config = new WorldConfigurationBuilder()
                 .with(WorldConfigurationBuilder.Priority.HIGHEST,
                         new SuperMapper(),
-                        new TagManager()
+                        new TagManager(),
+                        new MapAssetSystem(FileLocation.INTERNAL),
+                        new EntityFactorySystem(),
+                        new LightFactorySystem()
                 )
                 .with(WorldConfigurationBuilder.Priority.NORMAL,
                         new ClearScreenSystem(Color.BLACK),
                         new PlayerCameraSystem(1),
                         new PlayerControlSystem(),
-                        new EntityFactorySystem(),
-                        new LightFactorySystem(),
-                        new MapAssetSystem(FileLocation.INTERNAL),
                         new GuiAssetSystem(FileLocation.INTERNAL),
                         new MapGenerationSystem(25, 25, Constants.PPM, Constants.PPM),
                         new MapRenderSystem(),

@@ -27,6 +27,7 @@ public class MapRenderSystem extends AbstractRenderSystem {
     private EntityFactorySystem entityFactorySystem;
     private MapGenerationSystem mapGenerationSystem;
     private MapPhysicsSystem mapPhysicsSystem;
+    private MapAssetSystem assetSystem;
     private final Vector2 tmpVec2 = new Vector2();
 
     public MapRenderSystem() {
@@ -71,6 +72,7 @@ public class MapRenderSystem extends AbstractRenderSystem {
             if (isWithinBounds(tmpVec2.x, tmpVec2.y))
                 drawTexture(textureC, rotationC, originC, posC, scaleC, cameraSystem.zoom);
         }
+
     }
 
     @Override

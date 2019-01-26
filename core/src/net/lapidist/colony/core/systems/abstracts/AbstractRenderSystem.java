@@ -6,6 +6,7 @@ import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import net.lapidist.colony.components.assets.FontComponent;
 import net.lapidist.colony.components.assets.TextureComponent;
 import net.lapidist.colony.components.base.RotationComponent;
@@ -56,7 +57,7 @@ public abstract class AbstractRenderSystem extends EntityProcessingSystem {
                     tmpTextureRegion.getRegionHeight() * scaleC.getScale(),
                     1,
                     1,
-                    angleC.getRotation()
+                    angleC.getRotation() * 180f / MathUtils.PI
             );
         } else {
             batch.draw(tmpTextureRegion,

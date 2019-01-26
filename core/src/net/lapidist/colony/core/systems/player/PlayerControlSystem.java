@@ -7,10 +7,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.*;
 import net.lapidist.colony.components.player.PlayerComponent;
 import net.lapidist.colony.core.events.Events;
-import net.lapidist.colony.core.events.gui.ClickTileOutsideReachEvent;
-import net.lapidist.colony.core.events.gui.ClickTileWithinReachEvent;
-import net.lapidist.colony.core.events.gui.HoverTileOutsideReachEvent;
-import net.lapidist.colony.core.events.gui.HoverTileWithinReachEvent;
+import net.lapidist.colony.core.events.map.ClickTileOutsideReachEvent;
+import net.lapidist.colony.core.events.map.ClickTileWithinReachEvent;
+import net.lapidist.colony.core.events.map.HoverTileOutsideReachEvent;
+import net.lapidist.colony.core.events.map.HoverTileWithinReachEvent;
 import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
 import net.lapidist.colony.core.systems.abstracts.AbstractControlSystem;
 import net.lapidist.colony.core.systems.map.MapGenerationSystem;
@@ -36,6 +36,7 @@ public class PlayerControlSystem extends AbstractControlSystem {
     private final Vector2 tmpVelocity = new Vector2();
     private final Rectangle mapBounds = new Rectangle();
     private final Circle reachBounds = new Circle();
+    private float lastRotation = 0f;
 
     public PlayerControlSystem() {
         super(Aspect.all(PlayerComponent.class));
@@ -56,6 +57,7 @@ public class PlayerControlSystem extends AbstractControlSystem {
     private void processInput(int e) {
         tmpVelocity.set(E(e).velocityComponentVelocity());
         tmpPosition.set(E(e).worldPositionComponentPosition());
+        lastRotation = MathUtils.atan2(tmpVelocity.y, tmpVelocity.x);
 
         if (singleKeyDown(Input.Keys.W)) {
             accelerateVertically(-BASE_ACCELERATION);
@@ -124,6 +126,7 @@ public class PlayerControlSystem extends AbstractControlSystem {
         }
 
         E(e).worldPositionComponentPosition().set(tmpPosition);
+        E(e).rotationComponentRotation(lastRotation);
     }
 
     private void limitVelocity() {

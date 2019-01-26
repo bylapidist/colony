@@ -29,6 +29,8 @@ public final class EntityFactorySystem extends BaseSystem {
                 return createLabel().build(world);
             case "player":
                 return createPlayer().build(world);
+            case "hoveredTile":
+                return createHoveredTile().build(world);
         }
 
         throw new RuntimeException("Unknown archetype");
@@ -39,6 +41,10 @@ public final class EntityFactorySystem extends BaseSystem {
                 .add(TileComponent.class)
                 .add(WorldPositionComponent.class)
                 .add(OriginComponent.class);
+    }
+
+    private ArchetypeBuilder createHoveredTile() {
+        return createTerrain();
     }
 
     private ArchetypeBuilder createTerrain() {

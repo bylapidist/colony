@@ -1,17 +1,17 @@
-package net.lapidist.colony.core.events.gui;
+package net.lapidist.colony.core.events.map;
 
 import net.lapidist.colony.core.events.AbstractEvent;
 
-public class HoverTileOutsideReachEvent extends AbstractEvent {
+public class ClickTileOutsideReachEvent extends AbstractEvent {
 
     private int gridX;
     private int gridY;
 
-    public HoverTileOutsideReachEvent(String payload) {
+    private ClickTileOutsideReachEvent(String payload) {
         super(payload);
     }
 
-    public HoverTileOutsideReachEvent(int gridX, int gridY) {
+    public ClickTileOutsideReachEvent(int gridX, int gridY) {
         this("gridX=" + gridX +
                 ", gridY=" + gridY +
                 '}');

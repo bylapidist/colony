@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.events.gui;
+package net.lapidist.colony.core.events.map;
 
 import net.lapidist.colony.core.events.AbstractEvent;
 
