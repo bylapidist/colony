@@ -14,9 +14,12 @@ import net.lapidist.colony.components.base.SortableComponent;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.logic.MapInitEvent;
 import net.lapidist.colony.core.events.render.ScreenResizeEvent;
+import net.lapidist.colony.core.events.time.SeasonChangeEvent;
+import net.lapidist.colony.core.events.time.TimeChangeEvent;
 import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
+import net.lapidist.colony.core.systems.logic.TimeSystem;
 
 import static com.artemis.E.E;
 
@@ -28,6 +31,7 @@ public class MapRenderSystem extends AbstractRenderSystem {
     private MapGenerationSystem mapGenerationSystem;
     private MapPhysicsSystem mapPhysicsSystem;
     private MapAssetSystem assetSystem;
+    private TimeSystem timeSystem;
     private final Vector2 tmpVec2 = new Vector2();
 
     public MapRenderSystem() {
@@ -40,6 +44,8 @@ public class MapRenderSystem extends AbstractRenderSystem {
 
         Events.on(MapInitEvent.class, mapInitEvent -> onInit());
         Events.on(ScreenResizeEvent.class, event -> onResize(event.getWidth(), event.getHeight()));
+        Events.on(SeasonChangeEvent.class, event -> onSeasonChange(event.getSeason()));
+        Events.on(TimeChangeEvent.class, event -> onTimeChange(event.getTimeOfDay()));
     }
 
     @Override
@@ -87,5 +93,13 @@ public class MapRenderSystem extends AbstractRenderSystem {
 
     protected void onInit() {
         mapGenerationSystem.generate();
+    }
+
+    private void onSeasonChange(TimeSystem.Season season) {
+        batch.setColor(timeSystem.getCurrentTime().getColor(season));
+    }
+
+    private void onTimeChange(TimeSystem.TimeOfDay timeOfDay) {
+        mapPhysicsSystem.getRayHandler().setAmbientLight(timeSystem.getCurrentTime().getAmbientLight(timeOfDay));
     }
 }

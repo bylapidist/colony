@@ -2,6 +2,7 @@ package net.lapidist.colony.core.systems.logic;
 
 import com.artemis.BaseSystem;
 import com.artemis.annotations.Wire;
+import com.badlogic.gdx.graphics.Color;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.time.SeasonChangeEvent;
 import net.lapidist.colony.core.events.time.TimeChangeEvent;
@@ -13,7 +14,7 @@ public class TimeSystem extends BaseSystem {
     private Season currentSeason = Season.SPRING;
     private TimeOfDay currentTime = TimeOfDay.DAWN;
     private int currentTimeTick = 0;
-    private float dayLengthMultiplier = 0.025f;
+    private float dayLengthMultiplier = 0.01f;
     private int seasonLengthSpring = 5;
     private int seasonLengthSummer = 5;
     private int seasonLengthAutumn = 5;
@@ -106,6 +107,14 @@ public class TimeSystem extends BaseSystem {
         return currentTime;
     }
 
+    public int getYearByDay(int day) {
+        return day / (seasonLengthSpring + seasonLengthSummer + seasonLengthAutumn + seasonLengthWinter) + 1;
+    }
+
+    public int getYear() {
+        return day / (seasonLengthSpring + seasonLengthSummer + seasonLengthAutumn + seasonLengthWinter) + 1;
+    }
+
     public enum Season {
         WINTER("Winter"),
         SPRING("Spring"),
@@ -138,6 +147,18 @@ public class TimeSystem extends BaseSystem {
         private final int durationAutumn;
         private final int durationWinter;
 
+        private final Color colorSpring = new Color(1, 1, 1, 1);
+        private final Color colorSummer = new Color(1, 1, 1, 1);
+        private final Color colorAutumn = new Color(1, 1, 1, 1);
+        private final Color colorWinter = new Color(1, 1, 1, 1);
+
+        private final Color ambientLightNight = new Color(0.1f, 0.1f, 0.1f, 0.1f);
+        private final Color ambientLightDawn = new Color(0.1f, 0.1f, 0.1f, 0.3f);
+        private final Color ambientLightMorning = new Color(0.1f, 0.1f, 0.1f, 0.5f);
+        private final Color ambientLightMidday = new Color(0.1f, 0.1f, 0.1f, 0.7f);
+        private final Color ambientLightEvening = new Color(0.1f, 0.1f, 0.1f, 0.5f);
+        private final Color ambientLightDusk = new Color(0.1f, 0.1f, 0.1f, 0.2f);
+
         TimeOfDay(String timeOfDayText, int durationSpring, int durationSummer, int durationAutumn, int durationWinter) {
             this.timeOfDayText = timeOfDayText;
             this.durationSpring = durationSpring;
@@ -158,6 +179,40 @@ public class TimeSystem extends BaseSystem {
                     return durationAutumn;
                 default:
                     return durationSpring;
+            }
+        }
+
+        public Color getColor(Season season) {
+            switch(Season.values()[season.ordinal()]) {
+                case WINTER:
+                    return colorWinter;
+                case SPRING:
+                    return colorSpring;
+                case SUMMER:
+                    return colorSummer;
+                case AUTUMN:
+                    return colorAutumn;
+                default:
+                    return colorSpring;
+            }
+        }
+
+        public Color getAmbientLight(TimeOfDay timeOfDay) {
+            switch(TimeOfDay.values()[timeOfDay.ordinal()]) {
+                case NIGHT:
+                    return ambientLightNight;
+                case DAWN:
+                    return ambientLightDawn;
+                case MORNING:
+                    return ambientLightMorning;
+                case MIDDAY:
+                    return ambientLightMidday;
+                case EVENING:
+                    return ambientLightEvening;
+                case DUSK:
+                    return ambientLightDusk;
+                default:
+                    return colorSpring;
             }
         }
 
