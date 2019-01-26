@@ -1,3 +1,41 @@
+<a name="5.0.0"></a>
+# [5.0.0](https://gitlab.com/getbrett/colony/compare/v4.3.0...v5.0.0) (2019-01-26)
+
+
+### Bug Fixes
+
+* **engine:** camera orientation ([e3cd7bc](https://gitlab.com/getbrett/colony/commit/e3cd7bc))
+* **engine:** Fix width of rendered sprites ([253fdd5](https://gitlab.com/getbrett/colony/commit/253fdd5))
+
+
+### Features
+
+* **engine:** allow placing buildings in world ([41dcc8d](https://gitlab.com/getbrett/colony/commit/41dcc8d))
+* **engine:** async asset loading system ([bfdd748](https://gitlab.com/getbrett/colony/commit/bfdd748))
+* **engine:** better asset logging ([9a91d0d](https://gitlab.com/getbrett/colony/commit/9a91d0d))
+* **engine:** center PlayerCamera on player origin ([93155a7](https://gitlab.com/getbrett/colony/commit/93155a7))
+* **engine:** don't render tiles outside viewport ([34346c7](https://gitlab.com/getbrett/colony/commit/34346c7))
+* **engine:** give hovered flag to TileComponent ([0006dd2](https://gitlab.com/getbrett/colony/commit/0006dd2))
+* **engine:** give player a pointlight ([f827c62](https://gitlab.com/getbrett/colony/commit/f827c62))
+* **engine:** implement abstract sortable component batching ([72b4e62](https://gitlab.com/getbrett/colony/commit/72b4e62))
+* **engine:** implement conelights ([241d812](https://gitlab.com/getbrett/colony/commit/241d812))
+* **engine:** implement EntityFactorySystem ([811e478](https://gitlab.com/getbrett/colony/commit/811e478))
+* **engine:** implement GuiRenderSystem FPS counter ([63a50e4](https://gitlab.com/getbrett/colony/commit/63a50e4))
+* **engine:** implement limiting player to map bounds ([cbfde36](https://gitlab.com/getbrett/colony/commit/cbfde36))
+* **engine:** implement PlayerComponent and hook to MapPhysicsSystem ([a4f0d14](https://gitlab.com/getbrett/colony/commit/a4f0d14))
+* **engine:** let's go back to basics ([d8b7db2](https://gitlab.com/getbrett/colony/commit/d8b7db2))
+* **engine:** player rotation ([16f78b6](https://gitlab.com/getbrett/colony/commit/16f78b6))
+* **engine:** properly center on player character ([b0d87c5](https://gitlab.com/getbrett/colony/commit/b0d87c5))
+* **engine:** reimplement player control ([3f70dfb](https://gitlab.com/getbrett/colony/commit/3f70dfb))
+* **engine:** update legacy events to extend AbstractEvent ([01e6351](https://gitlab.com/getbrett/colony/commit/01e6351))
+
+
+### Performance Improvements
+
+* **engine:** remove unnecessary calls to .set() in CameraSystem ([6327e62](https://gitlab.com/getbrett/colony/commit/6327e62))
+
+
+
 <a name="4.3.0"></a>
 # [4.3.0](https://gitlab.com/getbrett/colony/compare/v4.2.0...v4.3.0) (2019-01-19)
 
