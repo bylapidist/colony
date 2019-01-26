@@ -27,7 +27,7 @@ public class MapRenderSystem extends AbstractRenderSystem {
     private EntityFactorySystem entityFactorySystem;
     private MapGenerationSystem mapGenerationSystem;
     private MapPhysicsSystem mapPhysicsSystem;
-    private Vector2 tmpVec2;
+    private final Vector2 tmpVec2 = new Vector2();
 
     public MapRenderSystem() {
         super(Aspect.all(SortableComponent.class).exclude(InvisibleComponent.class));
@@ -37,7 +37,6 @@ public class MapRenderSystem extends AbstractRenderSystem {
     protected void initialize() {
         super.initialize();
 
-        tmpVec2 = new Vector2();
         Events.on(MapInitEvent.class, mapInitEvent -> onInit());
         Events.on(ScreenResizeEvent.class, event -> onResize(event.getWidth(), event.getHeight()));
     }
