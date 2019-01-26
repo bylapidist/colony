@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.systems.camera;
+package net.lapidist.colony.core.systems.player;
 
 import com.artemis.Aspect;
 import com.artemis.annotations.Wire;
