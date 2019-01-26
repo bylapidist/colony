@@ -1,15 +1,25 @@
 package net.lapidist.colony.core.events.gui;
 
-import net.lapidist.colony.core.events.IEvent;
+import net.lapidist.colony.core.events.AbstractEvent;
 
-public class HoverTileWithinReachEvent implements IEvent {
+public class HoverTileWithinReachEvent extends AbstractEvent {
 
     private int gridX;
     private int gridY;
     private float screenX;
     private float screenY;
 
+    public HoverTileWithinReachEvent(String payload) {
+        super(payload);
+    }
+
     public HoverTileWithinReachEvent(int gridX, int gridY, float screenX, float screenY) {
+        this("gridX=" + gridX +
+                ", gridY=" + gridY +
+                ", screenX=" + screenX +
+                ", screenY=" + screenY +
+                '}');
+
         this.gridX = gridX;
         this.gridY = gridY;
         this.screenX = screenX;
