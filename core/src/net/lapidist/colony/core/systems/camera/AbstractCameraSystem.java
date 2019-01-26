@@ -1,27 +1,31 @@
 package net.lapidist.colony.core.systems.camera;
 
-import com.artemis.BaseSystem;
+import com.artemis.Aspect;
+import com.artemis.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
-public class CameraSystem extends BaseSystem {
+public abstract class AbstractCameraSystem extends IteratingSystem {
 
     public OrthographicCamera camera;
     public OrthographicCamera guiCamera;
+    protected static Vector3 tmpVec3 = new Vector3();
+    protected static Vector2 tmpVec2 = new Vector2();
+
     public final float zoom;
 
-    public CameraSystem(float width, float height) {
-        this.zoom = 1;
-        setupViewport(width, height);
-    }
+    AbstractCameraSystem(Aspect.Builder aspect, float zoom) {
+        super(aspect);
 
-    public CameraSystem(float zoom) {
-        this.zoom = zoom;
-        float zoomFactorInverter = 1f/zoom;
+        this.zoom = 1;
+        float zoomFactorInverter = 1f / zoom;
+
         setupViewport(Gdx.graphics.getWidth() * zoomFactorInverter, Gdx.graphics.getHeight() * zoomFactorInverter);
     }
 
-    protected void setupViewport(float width, float height) {
+    private void setupViewport(float width, float height) {
         camera = new OrthographicCamera(width, height);
         camera.setToOrtho(false, width, height);
         camera.update();
@@ -32,7 +36,7 @@ public class CameraSystem extends BaseSystem {
     }
 
     @Override
-    protected void processSystem() {
+    protected void process(int entityId) {
 
     }
 }

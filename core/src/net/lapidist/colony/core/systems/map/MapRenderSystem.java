@@ -15,14 +15,14 @@ import net.lapidist.colony.core.events.logic.MapInitEvent;
 import net.lapidist.colony.core.events.render.ScreenResizeEvent;
 import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
-import net.lapidist.colony.core.systems.camera.CameraSystem;
+import net.lapidist.colony.core.systems.camera.AbstractCameraSystem;
 
 import static com.artemis.E.E;
 
 @Wire
 public class MapRenderSystem extends AbstractRenderSystem {
 
-    private CameraSystem cameraSystem;
+    private AbstractCameraSystem cameraSystem;
     private EntityFactorySystem entityFactorySystem;
     private MapGenerationSystem mapGenerationSystem;
     private MapPhysicsSystem mapPhysicsSystem;

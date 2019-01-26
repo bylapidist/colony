@@ -12,7 +12,6 @@ import net.lapidist.colony.core.events.render.ScreenResizeEvent;
 import net.lapidist.colony.core.io.FileLocation;
 import net.lapidist.colony.core.systems.camera.PlayerCameraSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
-import net.lapidist.colony.core.systems.camera.CameraSystem;
 import net.lapidist.colony.core.systems.factories.LightFactorySystem;
 import net.lapidist.colony.core.systems.gui.GuiAssetSystem;
 import net.lapidist.colony.core.systems.map.MapAssetSystem;
@@ -34,8 +33,7 @@ public class MapScreen implements Screen {
                 )
                 .with(WorldConfigurationBuilder.Priority.NORMAL,
                         new ClearScreenSystem(Color.GOLD),
-                        new CameraSystem(1),
-                        new PlayerCameraSystem(),
+                        new PlayerCameraSystem(1),
                         new EntityFactorySystem(),
                         new LightFactorySystem(),
                         new MapAssetSystem(FileLocation.INTERNAL),

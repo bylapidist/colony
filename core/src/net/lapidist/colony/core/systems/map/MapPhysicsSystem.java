@@ -13,14 +13,14 @@ import net.lapidist.colony.core.Constants;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.logic.MapPhysicsInitEvent;
 import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
-import net.lapidist.colony.core.systems.camera.CameraSystem;
+import net.lapidist.colony.core.systems.camera.AbstractCameraSystem;
 
 import static com.artemis.E.E;
 
 @Wire
 public class MapPhysicsSystem extends AbstractRenderSystem {
 
-    private CameraSystem cameraSystem;
+    private AbstractCameraSystem cameraSystem;
     private MapGenerationSystem mapGenerationSystem;
     private World physicsWorld;
     private RayHandler rayHandler;
