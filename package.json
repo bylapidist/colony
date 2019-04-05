@@ -6,7 +6,7 @@
   "scripts": {
     "info": "npm-scripts-info",
     "version": "standard-version",
-    "reset": "git clean -dfx && git reset --hard",
+    "reset": "git clean -dfx && git reset --hard && npm i",
     "prepare-release": "run-s reset version"
   },
   "scripts-info": {
