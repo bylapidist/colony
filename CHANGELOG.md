@@ -1,3 +1,23 @@
+# Change Log
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+# [5.2.0](https://gitlab.com/getbrett/colony/compare/v5.1.0...v5.2.0) (2019-04-05)
+
+
+### Bug Fixes
+
+* blah ([83090ad](https://gitlab.com/getbrett/colony/commit/83090ad))
+* run npm i ([adc8d4f](https://gitlab.com/getbrett/colony/commit/adc8d4f))
+* this stuff ([b89a10c](https://gitlab.com/getbrett/colony/commit/b89a10c))
+
+
+### Features
+
+* add standard-version ([b8088f9](https://gitlab.com/getbrett/colony/commit/b8088f9))
+
+
+
 <a name="5.1.0"></a>
 # [5.1.0](https://gitlab.com/getbrett/colony/compare/v5.0.0...v5.1.0) (2019-01-26)
 
@@ -205,6 +225,3 @@
 ### Features
 
 * **engine:** Implement 3D hex grid engine ([5944382](https://gitlab.com/getbrett/colony/commit/5944382))
-
-
-
