@@ -7,7 +7,7 @@ import net.lapidist.colony.components.assets.FontComponent;
 import net.lapidist.colony.components.assets.TextureComponent;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.gui.GuiInitEvent;
-import net.lapidist.colony.core.io.FileLocation;
+import net.lapidist.colony.core.utils.io.FileLocation;
 import net.lapidist.colony.core.systems.abstracts.AbstractAssetSystem;
 
 public class GuiAssetSystem extends AbstractAssetSystem {

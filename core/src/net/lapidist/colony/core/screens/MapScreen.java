@@ -9,7 +9,8 @@ import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.logic.GamePauseEvent;
 import net.lapidist.colony.core.events.logic.GameResumeEvent;
 import net.lapidist.colony.core.events.render.ScreenResizeEvent;
-import net.lapidist.colony.core.io.FileLocation;
+import net.lapidist.colony.core.utils.io.FileLocation;
+import net.lapidist.colony.core.systems.generators.TerrainGeneratorSystem;
 import net.lapidist.colony.core.systems.logic.TimeSystem;
 import net.lapidist.colony.core.systems.player.PlayerCameraSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
@@ -42,7 +43,8 @@ public class MapScreen implements Screen {
                         new PlayerCameraSystem(1),
                         new PlayerControlSystem(),
                         new GuiAssetSystem(FileLocation.INTERNAL),
-                        new MapGenerationSystem(25, 25, Constants.PPM, Constants.PPM),
+                        new TerrainGeneratorSystem("testing", 25, 25),
+                        new MapGenerationSystem(64, 64, Constants.PPM, Constants.PPM),
                         new MapRenderSystem(),
                         new MapPhysicsSystem(),
                         new GuiRenderSystem()

@@ -58,8 +58,8 @@ public class MapPhysicsSystem extends AbstractRenderSystem {
             E(e).rotationComponentRotation(0);
             E(e).originComponentOrigin(new Vector2(0.5f, 0.5f));
             E(e).worldPositionComponentPosition(new Vector3(
-                    event.getGridX() * mapGenerationSystem.getTileWidth(),
-                    event.getGridY() * mapGenerationSystem.getTileHeight(),
+                    event.getGridX() * Constants.PPM,
+                    event.getGridY() * Constants.PPM,
                     0
             ));
             E(e).scaleComponentScale(1);
@@ -96,8 +96,8 @@ public class MapPhysicsSystem extends AbstractRenderSystem {
 
         E(e).dynamicBodyComponentBody().setTransform(
                 tmpVec2.set(
-                        (E(e).worldPositionComponentPosition().x + (E(e).originComponentOrigin().x * E(e).textureComponentTexture().getWidth())) / mapGenerationSystem.getTileWidth(),
-                        (E(e).worldPositionComponentPosition().y + (E(e).originComponentOrigin().y * E(e).textureComponentTexture().getHeight())) / mapGenerationSystem.getTileHeight()
+                        (E(e).worldPositionComponentPosition().x + (E(e).originComponentOrigin().x * E(e).textureComponentTexture().getWidth())) / Constants.PPM,
+                        (E(e).worldPositionComponentPosition().y + (E(e).originComponentOrigin().y * E(e).textureComponentTexture().getHeight())) / Constants.PPM
                 ),
                 E(e).rotationComponentRotation() + MathUtils.PI
         );

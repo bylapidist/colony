@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.IntSet;
+import net.lapidist.colony.core.views.ViewController;
 
 public abstract class AbstractControlSystem extends IteratingSystem implements InputProcessor {
 
@@ -13,13 +14,12 @@ public abstract class AbstractControlSystem extends IteratingSystem implements I
     protected final static float MAX_ZOOM = 2f;
     protected final static float ZOOM_SPEED = 0.06f;
     protected final static InputMultiplexer inputMultiplexer = new InputMultiplexer();
+    public final static ViewController viewController = new ViewController();
 
     private IntSet downKeys = new IntSet(20);
 
     public AbstractControlSystem(Aspect.Builder aspect) {
         super(aspect);
-
-        Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
     protected boolean singleKeyDown(int keycode) {
@@ -36,11 +36,11 @@ public abstract class AbstractControlSystem extends IteratingSystem implements I
 
     @Override
     protected void initialize() {
+        Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
     @Override
     protected void process(int entityId) {
-
     }
 
     @Override

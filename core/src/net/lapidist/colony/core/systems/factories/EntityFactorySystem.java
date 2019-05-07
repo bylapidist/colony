@@ -10,6 +10,8 @@ import net.lapidist.colony.components.base.*;
 import net.lapidist.colony.components.building.BuildingComponent;
 import net.lapidist.colony.components.gui.GuiComponent;
 import net.lapidist.colony.components.gui.LabelComponent;
+import net.lapidist.colony.components.items.ItemComponent;
+import net.lapidist.colony.components.map.ChunkComponent;
 import net.lapidist.colony.components.map.TerrainComponent;
 import net.lapidist.colony.components.map.TileComponent;
 import net.lapidist.colony.components.player.PlayerComponent;
@@ -25,6 +27,10 @@ public final class EntityFactorySystem extends BaseSystem {
         switch (type) {
             case "tile":
                 return createTile().build(world);
+            case "chunk":
+                return createChunk().build(world);
+            case "item":
+                return createItem().build(world);
             case "terrain":
                 return createTerrain().build(world);
             case "label":
@@ -34,7 +40,7 @@ public final class EntityFactorySystem extends BaseSystem {
             case "building":
                 return createBuilding().build(world);
             case "hoveredTile":
-                return createHoveredTile().build(world);
+                return createSortable().build(world);
         }
 
         throw new RuntimeException("Unknown archetype");
@@ -47,6 +53,18 @@ public final class EntityFactorySystem extends BaseSystem {
                 .add(OriginComponent.class);
     }
 
+    private ArchetypeBuilder createChunk() {
+        return new ArchetypeBuilder()
+                .add(ChunkComponent.class)
+                .add(WorldPositionComponent.class)
+                .add(OriginComponent.class);
+    }
+
+    private ArchetypeBuilder createItem() {
+        return createSortable()
+                .add(ItemComponent.class);
+    }
+
     private ArchetypeBuilder createSortable() {
         return new ArchetypeBuilder()
                 .add(TextureComponent.class)
@@ -56,10 +74,6 @@ public final class EntityFactorySystem extends BaseSystem {
                 .add(VelocityComponent.class)
                 .add(ScaleComponent.class)
                 .add(SortableComponent.class);
-    }
-
-    private ArchetypeBuilder createHoveredTile() {
-        return createSortable();
     }
 
     private ArchetypeBuilder createTerrain() {
@@ -77,7 +91,8 @@ public final class EntityFactorySystem extends BaseSystem {
     private ArchetypeBuilder createPlayer() {
         return createSortable()
                 .add(PlayerComponent.class)
-                .add(DynamicBodyComponent.class);
+                .add(DynamicBodyComponent.class)
+                .add(InventoryComponent.class);
     }
 
     private ArchetypeBuilder createBuilding() {
