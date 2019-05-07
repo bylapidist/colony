@@ -9,6 +9,8 @@ buildscript {
         artemisVersion = '2.2.0'
         artemisContribVersion = '2.3.0'
         aiVersion = '1.8.1'
+        jUnitVersion = '4.12'
+        mockitoVersion = '2.2.7'
     }
     repositories {
         mavenLocal()
@@ -50,19 +52,8 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
-//        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-//        compile "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
-//        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-//        compile "com.badlogicgames.box2dlights:box2dlights:$box2dLightsVersion"
-//        compile "net.mostlyoriginal.artemis-odb:contrib-core:$artemisContribVersion"
-//        compile "net.mostlyoriginal.artemis-odb:contrib-jam:$artemisContribVersion"
-//        compile "net.mostlyoriginal.artemis-odb:contrib-eventbus:$artemisContribVersion"
-//        compile "net.mostlyoriginal.artemis-odb:contrib-plugin-operations:$artemisContribVersion"
-//        compile "net.mostlyoriginal.artemis-odb:contrib-plugin-profiler:$artemisContribVersion"
         compile "net.onedaybeard.artemis:artemis-odb-serializer:$artemisVersion:sources"
         compile "net.onedaybeard.artemis:artemis-odb-serializer-json-libgdx:$artemisVersion:sources"
-//        compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
-//        compile "com.github.czyzby:noise4j:$noise4jVersion"
     }
 }
 
@@ -75,6 +66,26 @@ project(":components") {
         compile "com.badlogicgames.box2dlights:box2dlights:$box2dLightsVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+    }
+}
+
+project(":tests") {
+    apply plugin: "java"
+
+    sourceSets.test.java.srcDirs = ["src/"]
+
+    dependencies {
+        compile project(":core")
+
+        compile "junit:junit:$jUnitVersion"
+        compile "org.mockito:mockito-core:$mockitoVersion"
+        compile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        testCompile "junit:junit:$jUnitVersion"
+        testCompile "org.mockito:mockito-core:$mockitoVersion"
+        testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     }
 }
 
