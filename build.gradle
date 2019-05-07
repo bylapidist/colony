@@ -3,14 +3,12 @@ buildscript {
         appName = "colony"
         gdxVersion = '1.9.9'
         box2dLightsVersion = '1.4'
-        tweenEngineVersion = '6.3.3'
-        noise4jVersion = '0.1.0'
-        roboVMVersion = '2.3.3'
         artemisVersion = '2.2.0'
-        artemisContribVersion = '2.3.0'
-        aiVersion = '1.8.1'
         jUnitVersion = '4.12'
         mockitoVersion = '2.2.7'
+        visuiVersion = '1.4.3-SNAPSHOT'
+        gdxLmlVersion = '1.9.1.9.8-SNAPSHOT'
+        noise4jVersion = '0.1.0'
     }
     repositories {
         mavenLocal()
@@ -52,6 +50,9 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+        compile "com.kotcrab.vis:vis-ui:$visuiVersion"
+        compile "com.github.czyzby:gdx-lml:$gdxLmlVersion"
+        compile "com.github.czyzby:gdx-lml-vis:$gdxLmlVersion"
         compile "net.onedaybeard.artemis:artemis-odb-serializer:$artemisVersion:sources"
         compile "net.onedaybeard.artemis:artemis-odb-serializer-json-libgdx:$artemisVersion:sources"
     }

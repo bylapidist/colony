@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.*;
 import net.lapidist.colony.components.player.PlayerComponent;
+import net.lapidist.colony.core.Constants;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.map.ClickTileOutsideReachEvent;
 import net.lapidist.colony.core.events.map.ClickTileWithinReachEvent;
@@ -14,6 +15,7 @@ import net.lapidist.colony.core.events.map.HoverTileWithinReachEvent;
 import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
 import net.lapidist.colony.core.systems.abstracts.AbstractControlSystem;
 import net.lapidist.colony.core.systems.map.MapGenerationSystem;
+import net.lapidist.colony.core.views.InventoryWindow;
 
 import static com.artemis.E.E;
 
@@ -40,8 +42,6 @@ public class PlayerControlSystem extends AbstractControlSystem {
 
     public PlayerControlSystem() {
         super(Aspect.all(PlayerComponent.class));
-
-        inputMultiplexer.addProcessor(this);
     }
 
     @Override
@@ -49,9 +49,16 @@ public class PlayerControlSystem extends AbstractControlSystem {
         mapBounds.set(
                 0,
                 0,
-                mapGenerationSystem.getWidth() * mapGenerationSystem.getTileWidth(),
-                mapGenerationSystem.getHeight() * mapGenerationSystem.getTileHeight()
+                mapGenerationSystem.getWidth() * mapGenerationSystem.getChunkWidth(),
+                mapGenerationSystem.getHeight() * mapGenerationSystem.getChunkHeight()
         );
+
+        viewController.create();
+        viewController.setView(InventoryWindow.class);
+
+        super.initialize();
+        inputMultiplexer.addProcessor(viewController.getCurrentView().getStage());
+        inputMultiplexer.addProcessor(this);
     }
 
     private void processInput(int e) {
@@ -187,7 +194,7 @@ public class PlayerControlSystem extends AbstractControlSystem {
         reachBounds.set(
                 tmpOrigin.x,
                 tmpOrigin.y,
-                (BASE_REACH * mapGenerationSystem.getTileWidth()) / 2f
+                (BASE_REACH * mapGenerationSystem.getChunkWidth()) / 2f
         );
 
         tileHovered(
@@ -204,8 +211,8 @@ public class PlayerControlSystem extends AbstractControlSystem {
 
         tmpPosition.set(cameraSystem.worldCoordsFromScreenCoords(screenX, screenY).x, cameraSystem.worldCoordsFromScreenCoords(screenX, screenY).y, 0);
 
-        int estimatedGridX = (int) tmpPosition.x / mapGenerationSystem.getTileWidth();
-        int estimatedGridY = (int) tmpPosition.y / mapGenerationSystem.getTileHeight();
+        int estimatedGridX = (int) tmpPosition.x / Constants.PPM;
+        int estimatedGridY = (int) tmpPosition.y / Constants.PPM;
 
         if (mapBounds.contains(tmpPosition.x, tmpPosition.y)) {
             if (reachBounds.contains(tmpPosition.x, tmpPosition.y) && mapBounds.contains(tmpPosition.x, tmpPosition.y)) {
@@ -222,8 +229,8 @@ public class PlayerControlSystem extends AbstractControlSystem {
     public boolean tileHovered(int screenX, int screenY) {
         tmpPosition.set(cameraSystem.worldCoordsFromScreenCoords(screenX, screenY).x, cameraSystem.worldCoordsFromScreenCoords(screenX, screenY).y, 0);
 
-        int estimatedGridX = (int) tmpPosition.x / mapGenerationSystem.getTileWidth();
-        int estimatedGridY = (int) tmpPosition.y / mapGenerationSystem.getTileHeight();
+        int estimatedGridX = (int) tmpPosition.x / Constants.PPM;
+        int estimatedGridY = (int) tmpPosition.y / Constants.PPM;
 
         if (mapBounds.contains(tmpPosition.x, tmpPosition.y)) {
             if (reachBounds.contains(tmpPosition.x, tmpPosition.y)) {
