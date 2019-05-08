@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Disposable;
 import net.lapidist.colony.components.assets.AssetComponent;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.render.AssetRegisterEvent;
-import net.lapidist.colony.core.io.FileLocation;
+import net.lapidist.colony.core.utils.io.FileLocation;
 
 import java.util.Collection;
 import java.util.HashMap;

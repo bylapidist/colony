@@ -7,10 +7,11 @@ import com.artemis.annotations.Wire;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import net.lapidist.colony.core.Constants;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 import net.lapidist.colony.core.systems.factories.LightFactorySystem;
+import net.lapidist.colony.core.systems.generators.TerrainGeneratorSystem;
 
 import static com.artemis.E.E;
 
@@ -21,29 +22,26 @@ public class MapGenerationSystem extends BaseSystem {
     private LightFactorySystem lightFactorySystem;
     private MapAssetSystem assetSystem;
     private MapPhysicsSystem physicsSystem;
+    private TerrainGeneratorSystem terrainGeneratorSystem;
     private int width;
     private int height;
-    private int tileWidth;
-    private int tileHeight;
-    private int[][] map;
+    private int chunkWidth;
+    private int chunkHeight;
+    private int[][] chunkMap;
 
-    public MapGenerationSystem(int width, int height, int tileWidth, int tileHeight) {
+    public MapGenerationSystem(int width, int height, int chunkWidth, int chunkHeight) {
         this.width = width;
         this.height = height;
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
-        this.map = new int[width][height];
+        this.chunkWidth = chunkWidth;
+        this.chunkHeight = chunkHeight;
+        this.chunkMap = new int[width][height];
     }
 
     @Override
     protected void initialize() {
         for (int ty = 0; ty < getHeight(); ty++) {
             for (int tx = 0; tx < getWidth(); tx++) {
-                map[tx][ty] = entityFactorySystem.create(entityFactorySystem.getArchetype("tile"));
-
-                E(map[tx][ty]).tileComponentTile(tileWidth, tileHeight);
-                E(map[tx][ty]).worldPositionComponentPosition(new Vector3(tx, ty, 0));
-                E(map[tx][ty]).originComponentOrigin(new Vector2(0.5f, 0.5f));
+                chunkMap[tx][ty] = generateChunk(tx, ty);
             }
         }
     }
@@ -53,31 +51,38 @@ public class MapGenerationSystem extends BaseSystem {
 
     }
 
-    public void generate() {
-        for (int ty = 0; ty < getHeight(); ty++) {
-            for (int tx = 0; tx < getWidth(); tx++) {
-                int e = entityFactorySystem.create(entityFactorySystem.getArchetype("terrain"));
+    private int generateChunk(int x, int y) {
+        int chunk = entityFactorySystem.create(entityFactorySystem.getArchetype("chunk"));
+        E(chunk).originComponentOrigin(new Vector2(x, y));
+        E(chunk).worldPositionComponentPosition(new Vector3(x * getChunkWidth(), y * getChunkHeight(), 0));
 
-                E(e).textureComponentTexture(assetSystem.getTexture("grass"));
-                E(e).rotationComponentRotation(0);
-                E(e).originComponentOrigin(new Vector2(0.5f, 0.5f));
-                E(e).worldPositionComponentPosition(new Vector3(
-                        tx * getTileWidth(),
-                        ty * getTileHeight(),
-                        0
-                ));
-                E(e).scaleComponentScale(1);
-                E(e).sortableComponentLayer(0);
+        for (int ty = 0; ty < getChunkWidth(); ty++) {
+            for (int tx = 0; tx < getChunkHeight(); tx++) {
+                int tile = entityFactorySystem.create(entityFactorySystem.getArchetype("tile"));
+                E(tile).tileComponentTile(Constants.PPM, Constants.PPM);
+                E(tile).worldPositionComponentPosition(new Vector3(tx, ty, 0));
+                E(tile).originComponentOrigin(new Vector2(0.5f, 0.5f));
+
+                E(chunk).chunkComponentTile(tx, ty, tile);
             }
         }
 
+        return chunk;
+    }
+
+    void generate() {
+        createTerrain();
+        createPlayer();
+    }
+
+    private int createPlayer() {
         int e = entityFactorySystem.create(entityFactorySystem.getArchetype("player"));
         E(e).textureComponentTexture(assetSystem.getTexture("dirt"));
         E(e).rotationComponentRotation(0);
         E(e).originComponentOrigin(new Vector2(0.5f, 0.5f));
         E(e).worldPositionComponentPosition(new Vector3(
-                (getWidth() / 2f) * getTileWidth(),
-                (getHeight() / 2f) * getTileHeight(),
+                (getWidth() / 2f) * getChunkWidth(),
+                (getHeight() / 2f) * getChunkHeight(),
                 0
         ));
         E(e).scaleComponentScale(1);
@@ -116,6 +121,27 @@ public class MapGenerationSystem extends BaseSystem {
 
         E(e).pointLightComponentPointLights().add(light);
         E(e).coneLightComponentConeLights().add(coneLight);
+
+        return e;
+    }
+
+    private void createTerrain() {
+        for (int ty = 0; ty < getHeight(); ty++) {
+            for (int tx = 0; tx < getWidth(); tx++) {
+                int e = entityFactorySystem.create(entityFactorySystem.getArchetype("terrain"));
+
+                E(e).textureComponentTexture(assetSystem.getTexture("grass"));
+                E(e).rotationComponentRotation(0);
+                E(e).originComponentOrigin(new Vector2(0.5f, 0.5f));
+                E(e).worldPositionComponentPosition(new Vector3(
+                        tx * E(chunkMap[tx][ty]).originComponentOrigin().x,
+                        ty * E(chunkMap[tx][ty]).originComponentOrigin().y,
+                        0
+                ));
+                E(e).scaleComponentScale(1);
+                E(e).sortableComponentLayer(0);
+            }
+        }
     }
 
     public int getWidth() {
@@ -126,15 +152,11 @@ public class MapGenerationSystem extends BaseSystem {
         return height;
     }
 
-    public int getTileWidth() {
-        return tileWidth;
+    public int getChunkWidth() {
+        return chunkWidth;
     }
 
-    public int getTileHeight() {
-        return tileHeight;
-    }
-
-    public int[][] getMap() {
-        return map;
+    public int getChunkHeight() {
+        return chunkHeight;
     }
 }

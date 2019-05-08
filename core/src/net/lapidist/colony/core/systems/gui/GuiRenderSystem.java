@@ -10,6 +10,7 @@ import net.lapidist.colony.components.assets.FontComponent;
 import net.lapidist.colony.components.base.WorldPositionComponent;
 import net.lapidist.colony.components.gui.GuiComponent;
 import net.lapidist.colony.components.gui.LabelComponent;
+import net.lapidist.colony.core.Constants;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.gui.GuiInitEvent;
 import net.lapidist.colony.core.events.map.HoverTileWithinReachEvent;
@@ -19,6 +20,7 @@ import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 import net.lapidist.colony.core.systems.logic.TimeSystem;
 import net.lapidist.colony.core.systems.map.MapGenerationSystem;
+import net.lapidist.colony.core.systems.player.PlayerControlSystem;
 
 import static com.artemis.E.E;
 
@@ -29,6 +31,7 @@ public class GuiRenderSystem extends AbstractRenderSystem {
     private GuiAssetSystem assetSystem;
     private EntityFactorySystem entityFactorySystem;
     private MapGenerationSystem mapGenerationSystem;
+    private PlayerControlSystem playerControlSystem;
     private TimeSystem timeSystem;
     private int hoveredTile;
     private int fpsCounter;
@@ -47,6 +50,7 @@ public class GuiRenderSystem extends AbstractRenderSystem {
 
     @Override
     protected void begin() {
+        PlayerControlSystem.viewController.render();
         batch.begin();
         batch.setProjectionMatrix(cameraSystem.guiCamera.combined);
     }
@@ -116,8 +120,8 @@ public class GuiRenderSystem extends AbstractRenderSystem {
                 || worldY < 0 || worldY > mapGenerationSystem.getHeight()) return;
 
         E(hoveredTile).worldPositionComponentPosition().set(
-                worldX * mapGenerationSystem.getTileWidth(),
-                worldY * mapGenerationSystem.getTileHeight(),
+                worldX * Constants.PPM,
+                worldY * Constants.PPM,
                 0
         );
     }
