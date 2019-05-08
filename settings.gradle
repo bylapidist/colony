@@ -1,2 +1,2 @@
-include 'core', 'components'
+include 'core', 'components', 'tests'
 
