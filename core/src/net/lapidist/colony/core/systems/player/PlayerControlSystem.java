@@ -49,8 +49,8 @@ public class PlayerControlSystem extends AbstractControlSystem {
         mapBounds.set(
                 0,
                 0,
-                mapGenerationSystem.getWidth() * mapGenerationSystem.getChunkWidth(),
-                mapGenerationSystem.getHeight() * mapGenerationSystem.getChunkHeight()
+                mapGenerationSystem.getWidth() * mapGenerationSystem.getTileWidth(),
+                mapGenerationSystem.getHeight() * mapGenerationSystem.getTileHeight()
         );
 
         viewController.create();
@@ -194,7 +194,7 @@ public class PlayerControlSystem extends AbstractControlSystem {
         reachBounds.set(
                 tmpOrigin.x,
                 tmpOrigin.y,
-                (BASE_REACH * mapGenerationSystem.getChunkWidth()) / 2f
+                (BASE_REACH * mapGenerationSystem.getTileWidth()) / 2f
         );
 
         tileHovered(
