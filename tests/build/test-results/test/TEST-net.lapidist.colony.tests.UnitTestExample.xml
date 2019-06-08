@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="net.lapidist.colony.tests.UnitTestExample" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-05-07T22:34:37" hostname="UNKNOWN" time="0.0">
-  <properties/>
-  <testcase name="oneEqualsOne" classname="net.lapidist.colony.tests.UnitTestExample" time="0.0"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
