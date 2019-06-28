@@ -19,7 +19,7 @@ public class EventQueue<T extends IEvent> {
     /**
      * Add a new Event to the queue.
      *
-     * @param event
+     * @param event Event payload
      */
     public void add(IEvent event) {
         queue.add((T) event);
