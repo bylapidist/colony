@@ -1,8 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Launcher" type="Application" factoryName="Application">
+  <configuration default="false" name="LauncherWindows" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="net.lapidist.colony.core.Launcher" />
-    <module name="core_main" />
-    <option name="VM_PARAMETERS" value="-XstartOnFirstThread" />
+    <module name="colony.core.main" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/core/assets" />
     <method v="2">
       <option name="Gradle.BeforeRunTask" enabled="true" tasks="build" externalProjectPath="$PROJECT_DIR$/core" vmOptions="" scriptParameters="" />
