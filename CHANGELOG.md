@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [5.5.0](https://gitlab.com/getbrett/colony/compare/v5.4.0...v5.5.0) (2019-06-28)
+
+
+### Features
+
+* implement GdxTestRunner and FileLocation tests ([e166dfd](https://gitlab.com/getbrett/colony/commit/e166dfd))
+
+
+
 # [5.4.0](https://gitlab.com/getbrett/colony/compare/v5.3.0...v5.4.0) (2019-05-07)
 
 
