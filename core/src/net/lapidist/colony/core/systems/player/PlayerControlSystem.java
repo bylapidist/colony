@@ -14,7 +14,6 @@ import net.lapidist.colony.core.events.map.HoverTileOutsideReachEvent;
 import net.lapidist.colony.core.events.map.HoverTileWithinReachEvent;
 import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
 import net.lapidist.colony.core.systems.abstracts.AbstractControlSystem;
-import net.lapidist.colony.core.systems.map.MapGenerationSystem;
 import net.lapidist.colony.core.views.InventoryWindow;
 
 import static com.artemis.E.E;
@@ -23,7 +22,6 @@ import static com.artemis.E.E;
 public class PlayerControlSystem extends AbstractControlSystem {
 
     private AbstractCameraSystem cameraSystem;
-    private MapGenerationSystem mapGenerationSystem;
 
     private final float BASE_FRICTION = 200f;
     private final float BASE_ACCELERATION = BASE_FRICTION + 300f;
@@ -36,7 +34,6 @@ public class PlayerControlSystem extends AbstractControlSystem {
     private final Vector3 tmpPosition = new Vector3();
     private final Vector2 tmpOrigin = new Vector2();
     private final Vector2 tmpVelocity = new Vector2();
-    private final Rectangle mapBounds = new Rectangle();
     private final Circle reachBounds = new Circle();
     private float lastRotation = 0f;
 
@@ -46,13 +43,6 @@ public class PlayerControlSystem extends AbstractControlSystem {
 
     @Override
     protected void initialize() {
-        mapBounds.set(
-                0,
-                0,
-                mapGenerationSystem.getWidth() * mapGenerationSystem.getChunkWidth(),
-                mapGenerationSystem.getHeight() * mapGenerationSystem.getChunkHeight()
-        );
-
         viewController.create();
         viewController.setView(InventoryWindow.class);
 
@@ -132,13 +122,7 @@ public class PlayerControlSystem extends AbstractControlSystem {
                 tmpPosition.y + (E(e).textureComponentTexture().getHeight() / 2f)
         );
 
-        if (mapBounds.contains(tmpOrigin.x, tmpOrigin.y)) {
-            E(e).velocityComponentVelocity().set(tmpVelocity);
-        } else {
-            E(e).velocityComponentVelocity().scl(0);
-            return;
-        }
-
+        E(e).velocityComponentVelocity().set(tmpVelocity);
         E(e).worldPositionComponentPosition().set(tmpPosition);
         E(e).rotationComponentRotation(lastRotation);
     }
@@ -194,7 +178,7 @@ public class PlayerControlSystem extends AbstractControlSystem {
         reachBounds.set(
                 tmpOrigin.x,
                 tmpOrigin.y,
-                (BASE_REACH * mapGenerationSystem.getChunkWidth()) / 2f
+                (BASE_REACH * Constants.PPM) / 2f
         );
 
         tileHovered(
@@ -214,14 +198,12 @@ public class PlayerControlSystem extends AbstractControlSystem {
         int estimatedGridX = (int) tmpPosition.x / Constants.PPM;
         int estimatedGridY = (int) tmpPosition.y / Constants.PPM;
 
-        if (mapBounds.contains(tmpPosition.x, tmpPosition.y)) {
-            if (reachBounds.contains(tmpPosition.x, tmpPosition.y) && mapBounds.contains(tmpPosition.x, tmpPosition.y)) {
-                Events.fire(new ClickTileWithinReachEvent(estimatedGridX, estimatedGridY, tmpPosition.x, tmpPosition.y));
-                return true;
-            }
-
-            Events.fire(new ClickTileOutsideReachEvent(estimatedGridX, estimatedGridY));
+        if (reachBounds.contains(tmpPosition.x, tmpPosition.y)) {
+            Events.fire(new ClickTileWithinReachEvent(estimatedGridX, estimatedGridY, tmpPosition.x, tmpPosition.y));
+            return true;
         }
+
+        Events.fire(new ClickTileOutsideReachEvent(estimatedGridX, estimatedGridY));
 
         return false;
     }
@@ -232,14 +214,12 @@ public class PlayerControlSystem extends AbstractControlSystem {
         int estimatedGridX = (int) tmpPosition.x / Constants.PPM;
         int estimatedGridY = (int) tmpPosition.y / Constants.PPM;
 
-        if (mapBounds.contains(tmpPosition.x, tmpPosition.y)) {
-            if (reachBounds.contains(tmpPosition.x, tmpPosition.y)) {
-                Events.fire(new HoverTileWithinReachEvent(estimatedGridX, estimatedGridY, tmpPosition.x, tmpPosition.y));
-                return true;
-            }
-
-            Events.fire(new HoverTileOutsideReachEvent(estimatedGridX, estimatedGridY));
+        if (reachBounds.contains(tmpPosition.x, tmpPosition.y)) {
+            Events.fire(new HoverTileWithinReachEvent(estimatedGridX, estimatedGridY, tmpPosition.x, tmpPosition.y));
+            return true;
         }
+
+        Events.fire(new HoverTileOutsideReachEvent(estimatedGridX, estimatedGridY));
 
         return false;
     }
