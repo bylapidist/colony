@@ -44,7 +44,14 @@ public class MapScreen implements Screen {
                         new PlayerControlSystem(),
                         new GuiAssetSystem(FileLocation.INTERNAL),
                         new TerrainGeneratorSystem("testing", 25, 25),
-                        new MapGenerationSystem(10, 10, Constants.PPM, Constants.PPM),
+                        new MapGenerationSystem(
+                                42,
+                                42,
+                                Constants.PPM,
+                                Constants.PPM,
+                                Constants.CHUNK_SIZE,
+                                Constants.CHUNK_SIZE
+                        ),
                         new MapRenderSystem(),
                         new MapPhysicsSystem(),
                         new GuiRenderSystem()

@@ -27,13 +27,17 @@ public class MapGenerationSystem extends BaseSystem {
     private int height;
     private int tileWidth;
     private int tileHeight;
+    private int chunkWidth;
+    private int chunkHeight;
     private int[][] chunkMap;
 
-    public MapGenerationSystem(int width, int height, int tileWidth, int tileHeight) {
+    public MapGenerationSystem(int width, int height, int tileWidth, int tileHeight, int chunkWidth, int chunkHeight) {
         this.width = width;
         this.height = height;
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
+        this.chunkWidth = chunkWidth;
+        this.chunkHeight = chunkHeight;
         this.chunkMap = new int[width][height];
     }
 
@@ -56,29 +60,18 @@ public class MapGenerationSystem extends BaseSystem {
     }
 
     private void generateTerrain(int chunk) {
-        Rectangle bounds = new Rectangle(
+        int e = entityFactorySystem.create(entityFactorySystem.getArchetype("terrain"));
+
+        E(e).textureComponentTexture(assetSystem.getTexture("grass"));
+        E(e).rotationComponentRotation(0);
+        E(e).originComponentOrigin(new Vector2(0.5f, 0.5f));
+        E(e).worldPositionComponentPosition(new Vector3(
                 E(chunk).worldPositionComponentPosition().x,
                 E(chunk).worldPositionComponentPosition().y,
-                getTileWidth() * getWidth(),
-                getTileHeight() * getTileHeight()
-        );
-
-        for (float ty = bounds.getY(); ty < bounds.getY() + bounds.getHeight(); ty += getTileHeight()) {
-            for (float tx = bounds.getX(); tx < bounds.getX() + bounds.getWidth(); tx += getTileWidth()) {
-                int e = entityFactorySystem.create(entityFactorySystem.getArchetype("terrain"));
-
-                E(e).textureComponentTexture(assetSystem.getTexture("grass"));
-                E(e).rotationComponentRotation(0);
-                E(e).originComponentOrigin(new Vector2(0.5f, 0.5f));
-                E(e).worldPositionComponentPosition(new Vector3(
-                        tx,
-                        ty,
-                        0
-                ));
-                E(e).scaleComponentScale(1);
-                E(e).sortableComponentLayer(0);
-            }
-        }
+                0
+        ));
+        E(e).scaleComponentScale(1);
+        E(e).sortableComponentLayer(0);
     }
 
     void generate() {
@@ -155,5 +148,13 @@ public class MapGenerationSystem extends BaseSystem {
 
     public int getTileHeight() {
         return tileHeight;
+    }
+
+    public int getChunkWidth() {
+        return chunkWidth;
+    }
+
+    public int getChunkHeight() {
+        return chunkHeight;
     }
 }
