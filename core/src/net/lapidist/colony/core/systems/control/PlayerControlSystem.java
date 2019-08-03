@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.systems.player;
+package net.lapidist.colony.core.systems.control;
 
 import com.artemis.Aspect;
 import com.artemis.annotations.Wire;
@@ -53,7 +53,7 @@ public class PlayerControlSystem extends AbstractControlSystem {
 
     private void processInput(int e) {
         tmpVelocity.set(E(e).velocityComponentVelocity());
-        tmpPosition.set(E(e).worldPositionComponentPosition());;
+        tmpPosition.set(E(e).worldPositionComponentPosition());
 
         if (singleKeyDown(Input.Keys.W)) {
             accelerateVertically(-BASE_ACCELERATION);

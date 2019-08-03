@@ -20,7 +20,6 @@ import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 import net.lapidist.colony.core.systems.logic.TimeSystem;
 import net.lapidist.colony.core.systems.map.MapGenerationSystem;
-import net.lapidist.colony.core.systems.player.PlayerControlSystem;
 
 import static com.artemis.E.E;
 
@@ -31,9 +30,8 @@ public class GuiRenderSystem extends AbstractRenderSystem {
     private GuiAssetSystem assetSystem;
     private EntityFactorySystem entityFactorySystem;
     private MapGenerationSystem mapGenerationSystem;
-    private PlayerControlSystem playerControlSystem;
     private TimeSystem timeSystem;
-    private int hoveredTile;
+//    private int hoveredTile;
     private int fpsCounter;
     private int season;
 
@@ -50,7 +48,6 @@ public class GuiRenderSystem extends AbstractRenderSystem {
 
     @Override
     protected void begin() {
-        PlayerControlSystem.viewController.render();
         batch.begin();
         batch.setProjectionMatrix(cameraSystem.guiCamera.combined);
     }
@@ -102,27 +99,27 @@ public class GuiRenderSystem extends AbstractRenderSystem {
         E(e2).sortableComponentLayer(1000);
         season = e2;
 
-        hoveredTile = entityFactorySystem.create(entityFactorySystem.getArchetype("hoveredTile"));
-        E(hoveredTile).textureComponentTexture(assetSystem.getTexture("hoveredTile"));
-        E(hoveredTile).rotationComponentRotation(0);
-        E(hoveredTile).originComponentOrigin(new Vector2(0.5f, 0.5f));
-        E(hoveredTile).worldPositionComponentPosition(new Vector3(
-                -10000,
-                -10000,
-                0
-        ));
-        E(hoveredTile).scaleComponentScale(1);
-        E(hoveredTile).sortableComponentLayer(10);
+//        hoveredTile = entityFactorySystem.create(entityFactorySystem.getArchetype("hoveredTile"));
+//        E(hoveredTile).textureComponentTexture(assetSystem.getTexture("hoveredTile"));
+//        E(hoveredTile).rotationComponentRotation(0);
+//        E(hoveredTile).originComponentOrigin(new Vector2(0.5f, 0.5f));
+//        E(hoveredTile).worldPositionComponentPosition(new Vector3(
+//                -10000,
+//                -10000,
+//                0
+//        ));
+//        E(hoveredTile).scaleComponentScale(1);
+//        E(hoveredTile).sortableComponentLayer(10);
     }
 
     private void onHoverTileWithinReach(int worldX, int worldY) {
-        if (worldX < 0 || worldX > mapGenerationSystem.getWidth()
-                || worldY < 0 || worldY > mapGenerationSystem.getHeight()) return;
+//        if (worldX < 0 || worldX > mapGenerationSystem.getWidth()
+//                || worldY < 0 || worldY > mapGenerationSystem.getHeight()) return;
 
-        E(hoveredTile).worldPositionComponentPosition().set(
-                worldX * Constants.PPM,
-                worldY * Constants.PPM,
-                0
-        );
+//        E(hoveredTile).worldPositionComponentPosition().set(
+//                worldX * Constants.PPM,
+//                worldY * Constants.PPM,
+//                0
+//        );
     }
 }
