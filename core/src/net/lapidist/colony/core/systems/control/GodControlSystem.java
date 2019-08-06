@@ -10,11 +10,8 @@ import com.badlogic.gdx.math.Vector3;
 import net.lapidist.colony.core.Constants;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.map.ClickTileWithinReachEvent;
-import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
-import net.lapidist.colony.core.systems.abstracts.AbstractControlSystem;
-import net.lapidist.colony.core.views.InventoryWindow;
-
-import static com.artemis.E.E;
+import net.lapidist.colony.core.systems.AbstractCameraSystem;
+import net.lapidist.colony.core.systems.AbstractControlSystem;
 
 @Wire
 public class GodControlSystem extends AbstractControlSystem {
@@ -37,12 +34,8 @@ public class GodControlSystem extends AbstractControlSystem {
 
     @Override
     protected void initialize() {
-        viewController.create();
-        viewController.setView(InventoryWindow.class);
-
         super.initialize();
-        inputMultiplexer.addProcessor(viewController.getCurrentView().getStage());
-        inputMultiplexer.addProcessor(this);
+        getInputMultiplexer().addProcessor(this);
     }
 
     private void processInput(int e) {
@@ -188,6 +181,6 @@ public class GodControlSystem extends AbstractControlSystem {
 
     @Override
     protected void dispose() {
-        inputMultiplexer.removeProcessor(this);
+        getInputMultiplexer().removeProcessor(this);
     }
 }

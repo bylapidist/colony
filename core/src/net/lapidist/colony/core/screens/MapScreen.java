@@ -16,13 +16,13 @@ import net.lapidist.colony.core.systems.generators.TerrainGeneratorSystem;
 import net.lapidist.colony.core.systems.logic.TimeSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 import net.lapidist.colony.core.systems.factories.LightFactorySystem;
-import net.lapidist.colony.core.systems.gui.GuiAssetSystem;
-import net.lapidist.colony.core.systems.map.MapAssetSystem;
-import net.lapidist.colony.core.systems.map.MapGenerationSystem;
-import net.lapidist.colony.core.systems.map.MapPhysicsSystem;
+import net.lapidist.colony.core.systems.assets.GuiAssetSystem;
+import net.lapidist.colony.core.systems.assets.MapAssetSystem;
+import net.lapidist.colony.core.systems.generators.MapGeneratorSystem;
+import net.lapidist.colony.core.systems.physics.MapPhysicsSystem;
 import net.lapidist.colony.core.systems.render.ClearScreenSystem;
-import net.lapidist.colony.core.systems.gui.GuiRenderSystem;
-import net.lapidist.colony.core.systems.map.MapRenderSystem;
+import net.lapidist.colony.core.systems.render.GuiRenderSystem;
+import net.lapidist.colony.core.systems.render.MapRenderSystem;
 
 public class MapScreen implements Screen {
 
@@ -44,7 +44,7 @@ public class MapScreen implements Screen {
                         new GodControlSystem(),
                         new GuiAssetSystem(FileLocation.INTERNAL),
                         new TerrainGeneratorSystem("testing", 25, 25),
-                        new MapGenerationSystem(
+                        new MapGeneratorSystem(
                                 42,
                                 42,
                                 Constants.PPM,

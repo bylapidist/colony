@@ -1,22 +1,22 @@
-package net.lapidist.colony.core.systems.map;
+package net.lapidist.colony.core.systems.generators;
 
 import box2dLight.ConeLight;
 import box2dLight.PointLight;
 import com.artemis.BaseSystem;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 import net.lapidist.colony.core.systems.factories.LightFactorySystem;
-import net.lapidist.colony.core.systems.generators.TerrainGeneratorSystem;
+import net.lapidist.colony.core.systems.assets.MapAssetSystem;
+import net.lapidist.colony.core.systems.physics.MapPhysicsSystem;
 
 import static com.artemis.E.E;
 
 @Wire
-public class MapGenerationSystem extends BaseSystem {
+public class MapGeneratorSystem extends BaseSystem {
 
     private EntityFactorySystem entityFactorySystem;
     private LightFactorySystem lightFactorySystem;
@@ -31,7 +31,7 @@ public class MapGenerationSystem extends BaseSystem {
     private int chunkHeight;
     private int[][] chunkMap;
 
-    public MapGenerationSystem(int width, int height, int tileWidth, int tileHeight, int chunkWidth, int chunkHeight) {
+    public MapGeneratorSystem(int width, int height, int tileWidth, int tileHeight, int chunkWidth, int chunkHeight) {
         this.width = width;
         this.height = height;
         this.tileWidth = tileWidth;
@@ -74,7 +74,7 @@ public class MapGenerationSystem extends BaseSystem {
         E(e).sortableComponentLayer(0);
     }
 
-    void generate() {
+    public void generate() {
         for (int ty = 0; ty < getHeight(); ty++) {
             for (int tx = 0; tx < getWidth(); tx++) {
                 chunkMap[tx][ty] = generateChunk(tx, ty);

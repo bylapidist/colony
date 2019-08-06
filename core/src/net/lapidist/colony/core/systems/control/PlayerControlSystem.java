@@ -12,9 +12,8 @@ import net.lapidist.colony.core.events.map.ClickTileOutsideReachEvent;
 import net.lapidist.colony.core.events.map.ClickTileWithinReachEvent;
 import net.lapidist.colony.core.events.map.HoverTileOutsideReachEvent;
 import net.lapidist.colony.core.events.map.HoverTileWithinReachEvent;
-import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
-import net.lapidist.colony.core.systems.abstracts.AbstractControlSystem;
-import net.lapidist.colony.core.views.InventoryWindow;
+import net.lapidist.colony.core.systems.AbstractCameraSystem;
+import net.lapidist.colony.core.systems.AbstractControlSystem;
 
 import static com.artemis.E.E;
 
@@ -43,12 +42,8 @@ public class PlayerControlSystem extends AbstractControlSystem {
 
     @Override
     protected void initialize() {
-        viewController.create();
-        viewController.setView(InventoryWindow.class);
-
         super.initialize();
-        inputMultiplexer.addProcessor(viewController.getCurrentView().getStage());
-        inputMultiplexer.addProcessor(this);
+        getInputMultiplexer().addProcessor(this);
     }
 
     private void processInput(int e) {
@@ -243,6 +238,6 @@ public class PlayerControlSystem extends AbstractControlSystem {
 
     @Override
     protected void dispose() {
-        inputMultiplexer.removeProcessor(this);
+        getInputMultiplexer().removeProcessor(this);
     }
 }

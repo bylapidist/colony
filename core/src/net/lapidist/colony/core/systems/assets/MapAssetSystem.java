@@ -1,26 +1,24 @@
-package net.lapidist.colony.core.systems.gui;
+package net.lapidist.colony.core.systems.assets;
 
 import com.artemis.ArchetypeBuilder;
 import com.artemis.Entity;
 import net.lapidist.colony.components.assets.AssetComponent;
-import net.lapidist.colony.components.assets.FontComponent;
 import net.lapidist.colony.components.assets.TextureComponent;
 import net.lapidist.colony.core.events.Events;
-import net.lapidist.colony.core.events.gui.GuiInitEvent;
+import net.lapidist.colony.core.events.logic.MapInitEvent;
 import net.lapidist.colony.core.utils.io.FileLocation;
-import net.lapidist.colony.core.systems.abstracts.AbstractAssetSystem;
+import net.lapidist.colony.core.systems.AbstractAssetSystem;
 
-public class GuiAssetSystem extends AbstractAssetSystem {
+public class MapAssetSystem extends AbstractAssetSystem {
 
     private boolean initialised;
-    private final String[] fonts = {
-            "default"
-    };
     private final String[] textures = {
-            "hoveredTile"
+            "player",
+            "dirt",
+            "grass"
     };
 
-    public GuiAssetSystem(FileLocation fileLocation) {
+    public MapAssetSystem(FileLocation fileLocation) {
         super(fileLocation);
     }
 
@@ -28,20 +26,11 @@ public class GuiAssetSystem extends AbstractAssetSystem {
     protected void initialize() {
         super.initialize();
 
-        for (String font: fonts) {
-            Entity e = world.createEntity(new ArchetypeBuilder()
-                    .add(AssetComponent.class)
-                    .add(FontComponent.class)
-                    .build(world));
-
-            register(font, e);
-        }
-
         for (String texture: textures) {
             Entity e = world.createEntity(new ArchetypeBuilder()
                     .add(AssetComponent.class)
                     .add(TextureComponent.class)
-                    .build(world));
+            .build(world));
 
             register(texture, e);
         }
@@ -53,7 +42,7 @@ public class GuiAssetSystem extends AbstractAssetSystem {
 
         if (loaded && !initialised) {
             initialised = true;
-            Events.fire(new GuiInitEvent());
+            Events.fire(new MapInitEvent());
         }
     }
 }

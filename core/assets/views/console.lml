@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE window SYSTEM "../../lml.dtd">
+
+<window
+    title="@consoleTitle"
+    resizable="false"
+    onecolumn="true"
+    height="480"
+    width="640"
+>
+    <textarea
+        id="console"
+        disabled="true"
+        height="440"
+        width="640"
+        multiline="true"
+    />
+    <textbutton
+        onclick="roll"
+        height="40"
+        width="640"
+    >
+        @randomPrompt
+    </textbutton>
+</window>

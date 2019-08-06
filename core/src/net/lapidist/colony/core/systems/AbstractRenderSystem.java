@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.systems.abstracts;
+package net.lapidist.colony.core.systems;
 
 import com.artemis.Aspect;
 import com.artemis.Entity;

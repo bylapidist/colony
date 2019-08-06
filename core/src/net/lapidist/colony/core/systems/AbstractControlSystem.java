@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.systems.abstracts;
+package net.lapidist.colony.core.systems;
 
 import com.artemis.Aspect;
 import com.artemis.systems.IteratingSystem;
@@ -6,17 +6,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.IntSet;
-import net.lapidist.colony.core.views.ViewController;
 
 public abstract class AbstractControlSystem extends IteratingSystem implements InputProcessor {
 
     protected final static float MIN_ZOOM = 1f;
     protected final static float MAX_ZOOM = 2f;
     protected final static float ZOOM_SPEED = 0.06f;
-    protected final static InputMultiplexer inputMultiplexer = new InputMultiplexer();
-    public final static ViewController viewController = new ViewController();
 
-    private IntSet downKeys = new IntSet(20);
+    private final static InputMultiplexer inputMultiplexer = new InputMultiplexer();
+    private final static IntSet downKeys = new IntSet(20);
 
     public AbstractControlSystem(Aspect.Builder aspect) {
         super(aspect);
@@ -92,5 +90,9 @@ public abstract class AbstractControlSystem extends IteratingSystem implements I
     @Override
     public boolean scrolled(int amount) {
         return false;
+    }
+
+    public static InputMultiplexer getInputMultiplexer() {
+        return inputMultiplexer;
     }
 }
