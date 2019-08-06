@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [5.6.0](https://gitlab.com/getbrett/colony/compare/v5.5.0...v5.6.0) (2019-08-06)
+
+
+### Features
+
+* implement (slightly broken) chunks ([c90ef44](https://gitlab.com/getbrett/colony/commit/c90ef44))
+* implement Console window ([834b4bb](https://gitlab.com/getbrett/colony/commit/834b4bb))
+* implement GodControl and GodCamera systems ([20fb4a3](https://gitlab.com/getbrett/colony/commit/20fb4a3))
+
+
 
 # [5.5.0](https://gitlab.com/getbrett/colony/compare/v5.4.0...v5.5.0) (2019-06-28)
 
