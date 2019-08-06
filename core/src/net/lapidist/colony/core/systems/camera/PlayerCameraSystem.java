@@ -4,7 +4,7 @@ import com.artemis.Aspect;
 import com.artemis.annotations.Wire;
 import net.lapidist.colony.components.player.PlayerComponent;
 import net.lapidist.colony.core.Constants;
-import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
+import net.lapidist.colony.core.systems.AbstractCameraSystem;
 
 import static com.artemis.E.E;
 

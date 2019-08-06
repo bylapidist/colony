@@ -1,7 +1,6 @@
-package net.lapidist.colony.core.systems.abstracts;
+package net.lapidist.colony.core.systems;
 
 import com.artemis.BaseSystem;
-import net.lapidist.colony.core.systems.chunks.IChunk;
 
 public abstract class AbstractChunkSystem extends BaseSystem {
 

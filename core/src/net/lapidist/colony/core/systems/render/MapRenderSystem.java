@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.systems.map;
+package net.lapidist.colony.core.systems.render;
 
 import com.artemis.Aspect;
 import com.artemis.Entity;
@@ -20,10 +20,13 @@ import net.lapidist.colony.core.events.logic.MapInitEvent;
 import net.lapidist.colony.core.events.render.ScreenResizeEvent;
 import net.lapidist.colony.core.events.time.SeasonChangeEvent;
 import net.lapidist.colony.core.events.time.TimeChangeEvent;
-import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
+import net.lapidist.colony.core.systems.AbstractRenderSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
-import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
+import net.lapidist.colony.core.systems.AbstractCameraSystem;
 import net.lapidist.colony.core.systems.logic.TimeSystem;
+import net.lapidist.colony.core.systems.assets.MapAssetSystem;
+import net.lapidist.colony.core.systems.generators.MapGeneratorSystem;
+import net.lapidist.colony.core.systems.physics.MapPhysicsSystem;
 
 import static com.artemis.E.E;
 
@@ -32,7 +35,7 @@ public class MapRenderSystem extends AbstractRenderSystem {
 
     private AbstractCameraSystem cameraSystem;
     private EntityFactorySystem entityFactorySystem;
-    private MapGenerationSystem mapGenerationSystem;
+    private MapGeneratorSystem mapGeneratorSystem;
     private MapPhysicsSystem mapPhysicsSystem;
     private MapAssetSystem assetSystem;
     private TimeSystem timeSystem;
@@ -169,7 +172,7 @@ public class MapRenderSystem extends AbstractRenderSystem {
     }
 
     protected void onInit() {
-        mapGenerationSystem.generate();
+        mapGeneratorSystem.generate();
     }
 
     private void onSeasonChange(TimeSystem.Season season) {

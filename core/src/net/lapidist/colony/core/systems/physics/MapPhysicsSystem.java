@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.systems.map;
+package net.lapidist.colony.core.systems.physics;
 
 import box2dLight.RayHandler;
 import com.artemis.Aspect;
@@ -14,10 +14,12 @@ import net.lapidist.colony.core.Constants;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.logic.MapPhysicsInitEvent;
 import net.lapidist.colony.core.events.map.ClickTileWithinReachEvent;
-import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
-import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
+import net.lapidist.colony.core.systems.AbstractRenderSystem;
+import net.lapidist.colony.core.systems.AbstractCameraSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 import net.lapidist.colony.core.systems.logic.TimeSystem;
+import net.lapidist.colony.core.systems.assets.MapAssetSystem;
+import net.lapidist.colony.core.systems.generators.MapGeneratorSystem;
 
 import static com.artemis.E.E;
 
@@ -25,7 +27,7 @@ import static com.artemis.E.E;
 public class MapPhysicsSystem extends AbstractRenderSystem {
 
     private AbstractCameraSystem cameraSystem;
-    private MapGenerationSystem mapGenerationSystem;
+    private MapGeneratorSystem mapGeneratorSystem;
     private EntityFactorySystem entityFactorySystem;
     private TimeSystem timeSystem;
     private MapAssetSystem assetSystem;
