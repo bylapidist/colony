@@ -1,26 +1,15 @@
 package net.lapidist.colony.core;
 
 import com.badlogic.gdx.Game;
-import net.lapidist.colony.core.events.Events;
-import net.lapidist.colony.core.events.logic.GameInitEvent;
-import net.lapidist.colony.core.screens.MapScreen;
+import com.badlogic.gdx.ai.msg.MessageManager;
+import net.lapidist.colony.core.systems.Events;
+import net.lapidist.colony.core.ui.screens.MapScreen;
 
 public class Colony extends Game {
 
-    private static Colony instance;
-
     @Override
     public void create() {
-        instance = this;
-        restart();
-    }
-
-    public void restart() {
-        Events.fire(new GameInitEvent());
+        MessageManager.getInstance().dispatchMessage(0, null, Events.GAME_INIT);
         setScreen(new MapScreen());
-    }
-
-    public static Colony getInstance() {
-        return instance;
     }
 }

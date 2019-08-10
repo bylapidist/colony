@@ -4,28 +4,28 @@ import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.msg.MessageManager;
+import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.math.Vector3;
-import net.lapidist.colony.components.assets.FontComponent;
-import net.lapidist.colony.components.base.WorldPositionComponent;
-import net.lapidist.colony.components.gui.GuiComponent;
-import net.lapidist.colony.components.gui.LabelComponent;
-import net.lapidist.colony.core.events.Events;
-import net.lapidist.colony.core.events.gui.GuiInitEvent;
-import net.lapidist.colony.core.events.render.ScreenResizeEvent;
-import net.lapidist.colony.core.systems.AbstractControlSystem;
-import net.lapidist.colony.core.systems.AbstractRenderSystem;
-import net.lapidist.colony.core.systems.AbstractCameraSystem;
+import net.lapidist.colony.components.FontComponent;
+import net.lapidist.colony.components.WorldPositionComponent;
+import net.lapidist.colony.components.GuiComponent;
+import net.lapidist.colony.components.LabelComponent;
+import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
+import net.lapidist.colony.core.systems.abstracts.AbstractControlSystem;
+import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
 import net.lapidist.colony.core.systems.assets.GuiAssetSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
-import net.lapidist.colony.core.systems.logic.TimeSystem;
+import net.lapidist.colony.core.systems.physics.TimeSystem;
 import net.lapidist.colony.core.systems.generators.MapGeneratorSystem;
-import net.lapidist.colony.core.views.ConsoleWindow;
-import net.lapidist.colony.core.views.ViewRenderer;
+import net.lapidist.colony.core.ui.views.ConsoleWindow;
+import net.lapidist.colony.core.systems.Events;
+import net.lapidist.colony.core.systems.IListener;
 
 import static com.artemis.E.E;
 
 @Wire
-public class GuiRenderSystem extends AbstractRenderSystem {
+public class GuiRenderSystem extends AbstractRenderSystem implements IListener {
 
     private final ViewRenderer viewRenderer = new ViewRenderer();
     private AbstractCameraSystem cameraSystem;
@@ -42,19 +42,16 @@ public class GuiRenderSystem extends AbstractRenderSystem {
 
     @Override
     protected void initialize() {
-        Events.on(GuiInitEvent.class, guiInitEvent -> onInit());
-        Events.on(ScreenResizeEvent.class, event -> onResize(event.getWidth(), event.getHeight()));
-
+        addMessageListeners();
         viewRenderer.create();
         viewRenderer.setView(ConsoleWindow.class);
-
         AbstractControlSystem
                 .getInputMultiplexer()
                 .addProcessor(
-                    viewRenderer
-                            .getCurrentView()
-                            .getStage()
-        );
+                        getViewRenderer()
+                                .getCurrentView()
+                                .getStage()
+                );
     }
 
     @Override
@@ -89,6 +86,25 @@ public class GuiRenderSystem extends AbstractRenderSystem {
     @Override
     protected void dispose() {
         super.dispose();
+    }
+
+    @Override
+    public void addMessageListeners() {
+        MessageManager.getInstance().addListener(this, Events.RESIZE);
+        MessageManager.getInstance().addListener(this, Events.GUI_INIT);
+    }
+
+    @Override
+    public boolean handleMessage(Telegram msg) {
+        switch (msg.message) {
+            case Events.RESIZE:
+                onResize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+                break;
+            case Events.GUI_INIT:
+                onInit();
+                break;
+        }
+        return true;
     }
 
     protected void onResize(int width, int height) {

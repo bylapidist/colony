@@ -2,12 +2,12 @@ package net.lapidist.colony.core.systems.assets;
 
 import com.artemis.ArchetypeBuilder;
 import com.artemis.Entity;
-import net.lapidist.colony.components.assets.AssetComponent;
-import net.lapidist.colony.components.assets.TextureComponent;
-import net.lapidist.colony.core.events.Events;
-import net.lapidist.colony.core.events.logic.MapInitEvent;
+import com.badlogic.gdx.ai.msg.MessageManager;
+import net.lapidist.colony.components.AssetComponent;
+import net.lapidist.colony.components.TextureComponent;
+import net.lapidist.colony.core.systems.Events;
 import net.lapidist.colony.core.utils.io.FileLocation;
-import net.lapidist.colony.core.systems.AbstractAssetSystem;
+import net.lapidist.colony.core.systems.abstracts.AbstractAssetSystem;
 
 public class MapAssetSystem extends AbstractAssetSystem {
 
@@ -42,7 +42,7 @@ public class MapAssetSystem extends AbstractAssetSystem {
 
         if (loaded && !initialised) {
             initialised = true;
-            Events.fire(new MapInitEvent());
+            MessageManager.getInstance().dispatchMessage(0, null, Events.MAP_INIT);
         }
     }
 }

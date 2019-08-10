@@ -4,17 +4,15 @@ import com.artemis.Archetype;
 import com.artemis.ArchetypeBuilder;
 import com.artemis.BaseSystem;
 import com.artemis.annotations.Wire;
-import net.lapidist.colony.components.assets.FontComponent;
-import net.lapidist.colony.components.assets.TextureComponent;
-import net.lapidist.colony.components.base.*;
-import net.lapidist.colony.components.building.BuildingComponent;
-import net.lapidist.colony.components.gui.GuiComponent;
-import net.lapidist.colony.components.gui.LabelComponent;
-import net.lapidist.colony.components.items.ItemComponent;
-import net.lapidist.colony.components.map.ChunkComponent;
-import net.lapidist.colony.components.map.TerrainComponent;
-import net.lapidist.colony.components.map.TileComponent;
-import net.lapidist.colony.components.player.PlayerComponent;
+import net.lapidist.colony.components.*;
+import net.lapidist.colony.components.BuildingComponent;
+import net.lapidist.colony.components.GuiComponent;
+import net.lapidist.colony.components.LabelComponent;
+import net.lapidist.colony.components.ItemComponent;
+import net.lapidist.colony.components.ChunkComponent;
+import net.lapidist.colony.components.TerrainComponent;
+import net.lapidist.colony.components.TileComponent;
+import net.lapidist.colony.components.PlayerComponent;
 
 @Wire
 public final class EntityFactorySystem extends BaseSystem {

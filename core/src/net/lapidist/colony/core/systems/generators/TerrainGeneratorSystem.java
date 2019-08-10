@@ -1,7 +1,7 @@
 package net.lapidist.colony.core.systems.generators;
 
 import com.artemis.annotations.Wire;
-import net.lapidist.colony.core.systems.AbstractGeneratorSystem;
+import net.lapidist.colony.core.systems.abstracts.AbstractGeneratorSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 
 import static com.artemis.E.E;
