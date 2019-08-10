@@ -4,26 +4,25 @@ import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.msg.MessageManager;
+import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
-import net.lapidist.colony.components.assets.TextureComponent;
-import net.lapidist.colony.components.base.OriginComponent;
-import net.lapidist.colony.components.base.WorldPositionComponent;
-import net.lapidist.colony.components.base.RotationComponent;
-import net.lapidist.colony.components.base.ScaleComponent;
-import net.lapidist.colony.components.gui.GuiComponent;
-import net.lapidist.colony.components.render.InvisibleComponent;
-import net.lapidist.colony.components.base.SortableComponent;
-import net.lapidist.colony.core.events.Events;
-import net.lapidist.colony.core.events.logic.MapInitEvent;
-import net.lapidist.colony.core.events.render.ScreenResizeEvent;
-import net.lapidist.colony.core.events.time.SeasonChangeEvent;
-import net.lapidist.colony.core.events.time.TimeChangeEvent;
-import net.lapidist.colony.core.systems.AbstractRenderSystem;
+import net.lapidist.colony.components.TextureComponent;
+import net.lapidist.colony.components.OriginComponent;
+import net.lapidist.colony.components.WorldPositionComponent;
+import net.lapidist.colony.components.RotationComponent;
+import net.lapidist.colony.components.ScaleComponent;
+import net.lapidist.colony.components.GuiComponent;
+import net.lapidist.colony.components.InvisibleComponent;
+import net.lapidist.colony.components.SortableComponent;
+import net.lapidist.colony.core.systems.Events;
+import net.lapidist.colony.core.systems.IListener;
+import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
-import net.lapidist.colony.core.systems.AbstractCameraSystem;
-import net.lapidist.colony.core.systems.logic.TimeSystem;
+import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
+import net.lapidist.colony.core.systems.physics.TimeSystem;
 import net.lapidist.colony.core.systems.assets.MapAssetSystem;
 import net.lapidist.colony.core.systems.generators.MapGeneratorSystem;
 import net.lapidist.colony.core.systems.physics.MapPhysicsSystem;
@@ -31,7 +30,7 @@ import net.lapidist.colony.core.systems.physics.MapPhysicsSystem;
 import static com.artemis.E.E;
 
 @Wire
-public class MapRenderSystem extends AbstractRenderSystem {
+public class MapRenderSystem extends AbstractRenderSystem implements IListener {
 
     private AbstractCameraSystem cameraSystem;
     private EntityFactorySystem entityFactorySystem;
@@ -60,6 +59,7 @@ public class MapRenderSystem extends AbstractRenderSystem {
     @Override
     protected void initialize() {
         super.initialize();
+        addMessageListeners();
 
         startingSeasonColor.set(timeSystem.getCurrentTime().getColor(timeSystem.getCurrentSeason()));
         targetSeasonColor.set(timeSystem.getCurrentTime().getColor(timeSystem.getCurrentSeason()));
@@ -68,11 +68,6 @@ public class MapRenderSystem extends AbstractRenderSystem {
         startingTimeColor.set(timeSystem.getCurrentTime().getAmbientLight(timeSystem.getCurrentTime()));
         targetTimeColor.set(timeSystem.getCurrentTime().getAmbientLight(timeSystem.getCurrentTime()));
         timeColor.set(timeSystem.getCurrentTime().getAmbientLight(timeSystem.getCurrentTime()));
-
-        Events.on(MapInitEvent.class, mapInitEvent -> onInit());
-        Events.on(ScreenResizeEvent.class, event -> onResize(event.getWidth(), event.getHeight()));
-        Events.on(SeasonChangeEvent.class, event -> onSeasonChange(event.getSeason()));
-        Events.on(TimeChangeEvent.class, event -> onTimeChange(event.getTimeOfDay()));
     }
 
     @Override
@@ -127,7 +122,39 @@ public class MapRenderSystem extends AbstractRenderSystem {
         updateSeasonColor(Gdx.graphics.getDeltaTime());
         updateTimeColor(Gdx.graphics.getDeltaTime());
     }
-    
+
+    @Override
+    protected void dispose() {
+        super.dispose();
+    }
+
+    @Override
+    public void addMessageListeners() {
+        MessageManager.getInstance().addListener(this, Events.RESIZE);
+        MessageManager.getInstance().addListener(this, Events.MAP_INIT);
+        MessageManager.getInstance().addListener(this, Events.SEASON_CHANGE);
+        MessageManager.getInstance().addListener(this, Events.TIME_CHANGE);
+    }
+
+    @Override
+    public boolean handleMessage(Telegram msg) {
+        switch (msg.message) {
+            case Events.RESIZE:
+                onResize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+                break;
+            case Events.MAP_INIT:
+                onInit();
+                break;
+            case Events.SEASON_CHANGE:
+                onSeasonChange(timeSystem.getCurrentSeason());
+                break;
+            case Events.TIME_CHANGE:
+                onTimeChange(timeSystem.getCurrentTime());
+                break;
+        }
+        return true;
+    }
+
     private void updateSeasonColor(float delta) {
         if (elapsedSeasonColorChangeTime < seasonChangeDuration) {
             elapsedSeasonColorChangeTime = Math.min(elapsedSeasonColorChangeTime + delta, seasonChangeDuration);
@@ -159,11 +186,6 @@ public class MapRenderSystem extends AbstractRenderSystem {
         startingTimeColor.set(timeColor);
         elapsedTimeColorChangeTime = 0;
         timeChangeDuration = duration;
-    }
-
-    @Override
-    protected void dispose() {
-        super.dispose();
     }
 
     protected void onResize(int width, int height) {
