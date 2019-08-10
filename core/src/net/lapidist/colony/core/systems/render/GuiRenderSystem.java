@@ -11,6 +11,7 @@ import net.lapidist.colony.components.FontComponent;
 import net.lapidist.colony.components.WorldPositionComponent;
 import net.lapidist.colony.components.GuiComponent;
 import net.lapidist.colony.components.LabelComponent;
+import net.lapidist.colony.core.EntityType;
 import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
 import net.lapidist.colony.core.systems.abstracts.AbstractControlSystem;
 import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
@@ -111,14 +112,14 @@ public class GuiRenderSystem extends AbstractRenderSystem implements IListener {
     }
 
     protected void onInit() {
-        int e = entityFactorySystem.create(entityFactorySystem.getArchetype("label"));
+        int e = entityFactorySystem.create(entityFactorySystem.getArchetype(EntityType.LABEL));
         E(e).worldPositionComponentPosition(new Vector3(16, 32, 0));
         E(e).fontComponentFont(assetSystem.getFont("default"));
         E(e).labelComponentText("");
         E(e).sortableComponentLayer(1000);
         fpsCounter = e;
 
-        int e2 = entityFactorySystem.create(entityFactorySystem.getArchetype("label"));
+        int e2 = entityFactorySystem.create(entityFactorySystem.getArchetype(EntityType.LABEL));
         E(e2).worldPositionComponentPosition(new Vector3(16, Gdx.graphics.getHeight() - 16, 0));
         E(e2).fontComponentFont(assetSystem.getFont("default"));
         E(e2).labelComponentText("");

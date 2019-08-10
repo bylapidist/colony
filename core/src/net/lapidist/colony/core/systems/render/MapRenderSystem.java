@@ -104,19 +104,6 @@ public class MapRenderSystem extends AbstractRenderSystem implements IListener {
             }
         }
 
-        if (E(e).hasPlayerComponent()) {
-            if (
-                timeSystem.getCurrentTime() == TimeSystem.TimeOfDay.NIGHT
-                || timeSystem.getCurrentTime() == TimeSystem.TimeOfDay.DAWN
-                || timeSystem.getCurrentTime() == TimeSystem.TimeOfDay.EVENING
-                || timeSystem.getCurrentTime() == TimeSystem.TimeOfDay.DUSK
-            ) {
-                E(e).coneLightComponentConeLights().get(0).setColor(new Color(1, 1, 1, 0.5f));
-            } else {
-                E(e).coneLightComponentConeLights().get(0).setColor(Color.CLEAR);
-            }
-        }
-
         updateSeasonColor(Gdx.graphics.getDeltaTime());
         updateTimeColor(Gdx.graphics.getDeltaTime());
     }

@@ -5,6 +5,7 @@ import com.artemis.ArchetypeBuilder;
 import com.artemis.BaseSystem;
 import com.artemis.annotations.Wire;
 import net.lapidist.colony.components.*;
+import net.lapidist.colony.core.EntityType;
 
 @Wire
 public final class EntityFactorySystem extends BaseSystem {
@@ -13,17 +14,19 @@ public final class EntityFactorySystem extends BaseSystem {
         return world.create(archetype);
     }
 
-    public Archetype getArchetype(String type) {
+    public Archetype getArchetype(EntityType type) {
         switch (type) {
-            case "tile":
+            case TILE:
                 return createTile().build(world);
-            case "chunk":
+            case CHUNK:
                 return createChunk().build(world);
-            case "item":
+            case ITEM:
                 return createItem().build(world);
-            case "terrain":
+            case TERRAIN:
                 return createTerrain().build(world);
-            case "label":
+            case COLLECTOR:
+                return createCollector().build(world);
+            case LABEL:
                 return createLabel().build(world);
         }
 
@@ -49,6 +52,21 @@ public final class EntityFactorySystem extends BaseSystem {
                 .add(ItemComponent.class);
     }
 
+    private ArchetypeBuilder createUnit() {
+        return createSortable()
+                .add(UnitComponent.class);
+    }
+
+    private ArchetypeBuilder createBuilding() {
+        return createSortable()
+                .add(BuildingComponent.class);
+    }
+
+    private ArchetypeBuilder createTerrain() {
+        return createSortable()
+                .add(TerrainComponent.class);
+    }
+
     private ArchetypeBuilder createSortable() {
         return new ArchetypeBuilder()
                 .add(TextureComponent.class)
@@ -60,16 +78,16 @@ public final class EntityFactorySystem extends BaseSystem {
                 .add(SortableComponent.class);
     }
 
-    private ArchetypeBuilder createTerrain() {
-        return createSortable()
-                .add(TerrainComponent.class);
-    }
-
     private ArchetypeBuilder createLabel() {
         return createSortable()
                 .add(FontComponent.class)
                 .add(LabelComponent.class)
                 .add(GuiComponent.class);
+    }
+
+    private ArchetypeBuilder createCollector() {
+        return createUnit()
+                .add(CollectorComponent.class);
     }
 
     @Override

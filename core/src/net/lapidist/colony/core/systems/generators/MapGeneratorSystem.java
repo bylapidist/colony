@@ -4,6 +4,7 @@ import com.artemis.BaseSystem;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import net.lapidist.colony.core.EntityType;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 import net.lapidist.colony.core.systems.assets.MapAssetSystem;
 
@@ -42,7 +43,7 @@ public class MapGeneratorSystem extends BaseSystem {
     }
 
     private int generateChunk(int x, int y) {
-        int chunk = entityFactorySystem.create(entityFactorySystem.getArchetype("chunk"));
+        int chunk = entityFactorySystem.create(entityFactorySystem.getArchetype(EntityType.CHUNK));
         E(chunk).originComponentOrigin(new Vector2(x, y));
         E(chunk).worldPositionComponentPosition(new Vector3(x * getTileWidth(), y * getTileHeight(), 0));
         generateTerrain(chunk);
@@ -51,7 +52,7 @@ public class MapGeneratorSystem extends BaseSystem {
     }
 
     private void generateTerrain(int chunk) {
-        int e = entityFactorySystem.create(entityFactorySystem.getArchetype("terrain"));
+        int e = entityFactorySystem.create(entityFactorySystem.getArchetype(EntityType.TERRAIN));
 
         E(e).textureComponentTexture(assetSystem.getTexture("grass"));
         E(e).rotationComponentRotation(0);
