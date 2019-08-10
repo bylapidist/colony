@@ -11,7 +11,6 @@ import net.lapidist.colony.core.systems.player.PlayerCameraSystem;
 import net.lapidist.colony.core.systems.player.PlayerControlSystem;
 //import net.lapidist.colony.core.systems.render.GuiRenderSystem;
 import net.lapidist.colony.core.utils.io.FileLocation;
-import net.lapidist.colony.core.systems.generators.TerrainGeneratorSystem;
 import net.lapidist.colony.core.systems.physics.TimeSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 import net.lapidist.colony.core.systems.factories.LightFactorySystem;
@@ -41,7 +40,6 @@ public class MapScreen implements Screen {
                         new TimeSystem(),
                         new GuiAssetSystem(FileLocation.INTERNAL),
                         new PlayerCameraSystem(1),
-                        new TerrainGeneratorSystem("testing", 25, 25),
                         new MapGeneratorSystem(
                                 42,
                                 42,

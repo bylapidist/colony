@@ -20,7 +20,6 @@ import net.lapidist.colony.components.SortableComponent;
 import net.lapidist.colony.core.systems.Events;
 import net.lapidist.colony.core.systems.IListener;
 import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
-import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
 import net.lapidist.colony.core.systems.physics.TimeSystem;
 import net.lapidist.colony.core.systems.assets.MapAssetSystem;
@@ -33,7 +32,6 @@ import static com.artemis.E.E;
 public class MapRenderSystem extends AbstractRenderSystem implements IListener {
 
     private AbstractCameraSystem cameraSystem;
-    private EntityFactorySystem entityFactorySystem;
     private MapGeneratorSystem mapGeneratorSystem;
     private MapPhysicsSystem mapPhysicsSystem;
     private MapAssetSystem assetSystem;

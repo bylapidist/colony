@@ -17,7 +17,6 @@ import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
 import net.lapidist.colony.core.systems.assets.GuiAssetSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 import net.lapidist.colony.core.systems.physics.TimeSystem;
-import net.lapidist.colony.core.systems.generators.MapGeneratorSystem;
 import net.lapidist.colony.core.ui.views.ConsoleWindow;
 import net.lapidist.colony.core.systems.Events;
 import net.lapidist.colony.core.systems.IListener;
@@ -31,7 +30,6 @@ public class GuiRenderSystem extends AbstractRenderSystem implements IListener {
     private AbstractCameraSystem cameraSystem;
     private GuiAssetSystem assetSystem;
     private EntityFactorySystem entityFactorySystem;
-    private MapGeneratorSystem mapGeneratorSystem;
     private TimeSystem timeSystem;
     private int fpsCounter;
     private int season;
