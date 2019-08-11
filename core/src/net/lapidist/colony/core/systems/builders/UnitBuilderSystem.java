@@ -5,6 +5,7 @@ import com.artemis.annotations.Wire;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import net.lapidist.colony.core.states.CollectorState;
 import net.lapidist.colony.core.systems.assets.MapAssetSystem;
 import net.lapidist.colony.core.systems.factories.ArchetypeFactorySystem;
 import net.lapidist.colony.core.systems.factories.Archetypes;
@@ -26,6 +27,7 @@ public class UnitBuilderSystem extends BaseSystem {
                 archetypeFactorySystem.getArchetype(Archetypes.COLLECTOR)
         );
 
+        E(e).unitComponentState(CollectorState.IDLE);
         E(e).textureComponentTexture(mapAssetSystem.getTexture("dirt"));
         E(e).rotationComponentRotation(0);
         E(e).originComponentOrigin(new Vector2(0.5f, 0.5f));

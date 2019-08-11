@@ -9,6 +9,7 @@ import net.lapidist.colony.core.Constants;
 import net.lapidist.colony.core.systems.Events;
 import net.lapidist.colony.core.systems.builders.TerrainBuilderSystem;
 import net.lapidist.colony.core.systems.builders.UnitBuilderSystem;
+import net.lapidist.colony.core.systems.mobs.CollectorControlSystem;
 import net.lapidist.colony.core.systems.player.PlayerCameraSystem;
 import net.lapidist.colony.core.systems.player.PlayerControlSystem;
 //import net.lapidist.colony.core.systems.render.GuiRenderSystem;
@@ -55,7 +56,8 @@ public class MapScreen implements Screen {
                         new MapRenderSystem(),
                         new MapPhysicsSystem(),
 //                        new GuiRenderSystem(),
-                        new PlayerControlSystem()
+                        new PlayerControlSystem(),
+                        new CollectorControlSystem()
                 )
                 .build();
 
