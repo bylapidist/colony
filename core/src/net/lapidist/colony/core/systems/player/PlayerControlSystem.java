@@ -12,11 +12,13 @@ import net.lapidist.colony.core.Constants;
 import net.lapidist.colony.core.systems.Events;
 import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
 import net.lapidist.colony.core.systems.abstracts.AbstractControlSystem;
+import net.lapidist.colony.core.systems.builders.UnitBuilderSystem;
 
 @Wire
 public class PlayerControlSystem extends AbstractControlSystem {
 
     private AbstractCameraSystem cameraSystem;
+    private UnitBuilderSystem unitBuilderSystem;
 
     private final float BASE_FRICTION = 1f;
     private final float BASE_ACCELERATION = BASE_FRICTION + 10f;
@@ -165,6 +167,9 @@ public class PlayerControlSystem extends AbstractControlSystem {
 
         lastGridTouch.set(estimatedGridX, estimatedGridY);
         MessageManager.getInstance().dispatchMessage(0, null, Events.CLICK_TILE);
+
+        unitBuilderSystem.createCollector(estimatedGridX, estimatedGridY);
+
         return true;
     }
 

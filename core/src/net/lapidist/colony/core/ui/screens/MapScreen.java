@@ -7,12 +7,14 @@ import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.graphics.Color;
 import net.lapidist.colony.core.Constants;
 import net.lapidist.colony.core.systems.Events;
+import net.lapidist.colony.core.systems.builders.TerrainBuilderSystem;
+import net.lapidist.colony.core.systems.builders.UnitBuilderSystem;
 import net.lapidist.colony.core.systems.player.PlayerCameraSystem;
 import net.lapidist.colony.core.systems.player.PlayerControlSystem;
 //import net.lapidist.colony.core.systems.render.GuiRenderSystem;
 import net.lapidist.colony.core.utils.io.FileLocation;
 import net.lapidist.colony.core.systems.physics.TimeSystem;
-import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
+import net.lapidist.colony.core.systems.factories.ArchetypeFactorySystem;
 import net.lapidist.colony.core.systems.factories.LightFactorySystem;
 import net.lapidist.colony.core.systems.assets.GuiAssetSystem;
 import net.lapidist.colony.core.systems.assets.MapAssetSystem;
@@ -32,8 +34,10 @@ public class MapScreen implements Screen {
                         new SuperMapper(),
                         new TagManager(),
                         new MapAssetSystem(FileLocation.INTERNAL),
-                        new EntityFactorySystem(),
-                        new LightFactorySystem()
+                        new ArchetypeFactorySystem(),
+                        new LightFactorySystem(),
+                        new TerrainBuilderSystem(),
+                        new UnitBuilderSystem()
                 )
                 .with(WorldConfigurationBuilder.Priority.NORMAL,
                         new ClearScreenSystem(Color.BLACK),

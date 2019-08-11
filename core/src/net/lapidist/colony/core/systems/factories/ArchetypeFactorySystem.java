@@ -5,16 +5,15 @@ import com.artemis.ArchetypeBuilder;
 import com.artemis.BaseSystem;
 import com.artemis.annotations.Wire;
 import net.lapidist.colony.components.*;
-import net.lapidist.colony.core.EntityType;
 
 @Wire
-public final class EntityFactorySystem extends BaseSystem {
+public final class ArchetypeFactorySystem extends BaseSystem {
 
     public int create(Archetype archetype) {
         return world.create(archetype);
     }
 
-    public Archetype getArchetype(EntityType type) {
+    public Archetype getArchetype(Archetypes type) {
         switch (type) {
             case TILE:
                 return createTile().build(world);
@@ -24,6 +23,10 @@ public final class EntityFactorySystem extends BaseSystem {
                 return createItem().build(world);
             case TERRAIN:
                 return createTerrain().build(world);
+            case BUILDING:
+                return createBuilding().build(world);
+            case UNIT:
+                return createUnit().build(world);
             case COLLECTOR:
                 return createCollector().build(world);
             case LABEL:
@@ -57,6 +60,12 @@ public final class EntityFactorySystem extends BaseSystem {
                 .add(UnitComponent.class);
     }
 
+    private ArchetypeBuilder createCollector() {
+        return createSortable()
+                .add(UnitComponent.class)
+                .add(CollectorComponent.class);
+    }
+
     private ArchetypeBuilder createBuilding() {
         return createSortable()
                 .add(BuildingComponent.class);
@@ -83,11 +92,6 @@ public final class EntityFactorySystem extends BaseSystem {
                 .add(FontComponent.class)
                 .add(LabelComponent.class)
                 .add(GuiComponent.class);
-    }
-
-    private ArchetypeBuilder createCollector() {
-        return createUnit()
-                .add(CollectorComponent.class);
     }
 
     @Override

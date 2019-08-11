@@ -11,12 +11,12 @@ import net.lapidist.colony.components.FontComponent;
 import net.lapidist.colony.components.WorldPositionComponent;
 import net.lapidist.colony.components.GuiComponent;
 import net.lapidist.colony.components.LabelComponent;
-import net.lapidist.colony.core.EntityType;
+import net.lapidist.colony.core.systems.factories.Archetypes;
 import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
 import net.lapidist.colony.core.systems.abstracts.AbstractControlSystem;
 import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
 import net.lapidist.colony.core.systems.assets.GuiAssetSystem;
-import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
+import net.lapidist.colony.core.systems.factories.ArchetypeFactorySystem;
 import net.lapidist.colony.core.systems.physics.TimeSystem;
 import net.lapidist.colony.core.ui.views.ConsoleWindow;
 import net.lapidist.colony.core.systems.Events;
@@ -30,7 +30,7 @@ public class GuiRenderSystem extends AbstractRenderSystem implements IListener {
     private final ViewRenderer viewRenderer = new ViewRenderer();
     private AbstractCameraSystem cameraSystem;
     private GuiAssetSystem assetSystem;
-    private EntityFactorySystem entityFactorySystem;
+    private ArchetypeFactorySystem archetypeFactorySystem;
     private TimeSystem timeSystem;
     private int fpsCounter;
     private int season;
@@ -112,14 +112,14 @@ public class GuiRenderSystem extends AbstractRenderSystem implements IListener {
     }
 
     protected void onInit() {
-        int e = entityFactorySystem.create(entityFactorySystem.getArchetype(EntityType.LABEL));
+        int e = archetypeFactorySystem.create(archetypeFactorySystem.getArchetype(Archetypes.LABEL));
         E(e).worldPositionComponentPosition(new Vector3(16, 32, 0));
         E(e).fontComponentFont(assetSystem.getFont("default"));
         E(e).labelComponentText("");
         E(e).sortableComponentLayer(1000);
         fpsCounter = e;
 
-        int e2 = entityFactorySystem.create(entityFactorySystem.getArchetype(EntityType.LABEL));
+        int e2 = archetypeFactorySystem.create(archetypeFactorySystem.getArchetype(Archetypes.LABEL));
         E(e2).worldPositionComponentPosition(new Vector3(16, Gdx.graphics.getHeight() - 16, 0));
         E(e2).fontComponentFont(assetSystem.getFont("default"));
         E(e2).labelComponentText("");

@@ -2,19 +2,13 @@ package net.lapidist.colony.core.systems.generators;
 
 import com.artemis.BaseSystem;
 import com.artemis.annotations.Wire;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import net.lapidist.colony.core.EntityType;
-import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
-import net.lapidist.colony.core.systems.assets.MapAssetSystem;
-
-import static com.artemis.E.E;
+import net.lapidist.colony.core.systems.builders.TerrainBuilderSystem;
 
 @Wire
 public class MapGeneratorSystem extends BaseSystem {
 
-    private EntityFactorySystem entityFactorySystem;
-    private MapAssetSystem assetSystem;
+    private TerrainBuilderSystem terrainBuilderSystem;
+
     private int width;
     private int height;
     private int tileWidth;
@@ -39,31 +33,10 @@ public class MapGeneratorSystem extends BaseSystem {
 
     @Override
     protected void processSystem() {
-
     }
 
     private int generateChunk(int x, int y) {
-        int chunk = entityFactorySystem.create(entityFactorySystem.getArchetype(EntityType.CHUNK));
-        E(chunk).originComponentOrigin(new Vector2(x, y));
-        E(chunk).worldPositionComponentPosition(new Vector3(x * getTileWidth(), y * getTileHeight(), 0));
-        generateTerrain(chunk);
-
-        return chunk;
-    }
-
-    private void generateTerrain(int chunk) {
-        int e = entityFactorySystem.create(entityFactorySystem.getArchetype(EntityType.TERRAIN));
-
-        E(e).textureComponentTexture(assetSystem.getTexture("grass"));
-        E(e).rotationComponentRotation(0);
-        E(e).originComponentOrigin(new Vector2(0.5f, 0.5f));
-        E(e).worldPositionComponentPosition(new Vector3(
-                E(chunk).worldPositionComponentPosition().x,
-                E(chunk).worldPositionComponentPosition().y,
-                0
-        ));
-        E(e).scaleComponentScale(1);
-        E(e).sortableComponentLayer(0);
+        return terrainBuilderSystem.createChunk(x, y);
     }
 
     public void generate() {
