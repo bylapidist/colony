@@ -7,6 +7,7 @@ import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import net.lapidist.colony.components.DynamicBodyComponent;
 import net.lapidist.colony.core.Constants;
@@ -52,6 +53,14 @@ public class MapPhysicsSystem extends AbstractRenderSystem {
                 ),
                 E(e).rotationComponentRotation() + MathUtils.PI
         );
+        E(e).worldPositionComponentPosition().set(
+                E(e).worldPositionComponentPosition()
+                        .add(new Vector3(
+                                E(e).velocityComponentVelocity().x,
+                                E(e).velocityComponentVelocity().y,
+                                0)
+                        )
+        );
     }
 
     @Override
@@ -69,7 +78,7 @@ public class MapPhysicsSystem extends AbstractRenderSystem {
     @Override
     protected void end() {
         rayHandler.render();
-        debugRenderer.render(physicsWorld, cameraSystem.camera.combined.cpy().scl(Constants.PPM));
+//        debugRenderer.render(physicsWorld, cameraSystem.camera.combined.cpy().scl(Constants.PPM));
     }
 
     @Override

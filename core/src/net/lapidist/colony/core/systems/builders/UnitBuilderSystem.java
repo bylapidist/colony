@@ -1,7 +1,10 @@
 package net.lapidist.colony.core.systems.builders;
 
+import box2dLight.ConeLight;
+import box2dLight.PointLight;
 import com.artemis.BaseSystem;
 import com.artemis.annotations.Wire;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -9,6 +12,7 @@ import net.lapidist.colony.core.states.CollectorState;
 import net.lapidist.colony.core.systems.assets.MapAssetSystem;
 import net.lapidist.colony.core.systems.factories.ArchetypeFactorySystem;
 import net.lapidist.colony.core.systems.factories.Archetypes;
+import net.lapidist.colony.core.systems.factories.LightFactorySystem;
 import net.lapidist.colony.core.systems.generators.MapGeneratorSystem;
 import net.lapidist.colony.core.systems.physics.MapPhysicsSystem;
 
@@ -21,14 +25,15 @@ public class UnitBuilderSystem extends BaseSystem {
     private MapGeneratorSystem mapGeneratorSystem;
     private MapAssetSystem mapAssetSystem;
     private MapPhysicsSystem mapPhysicsSystem;
+    private LightFactorySystem lightFactorySystem;
 
     public int createCollector(int x, int y) {
         int e = archetypeFactorySystem.create(
                 archetypeFactorySystem.getArchetype(Archetypes.COLLECTOR)
         );
 
-        E(e).unitComponentState(CollectorState.IDLE);
-        E(e).textureComponentTexture(mapAssetSystem.getTexture("dirt"));
+        E(e).unitComponentState(CollectorState.WANDERING);
+        E(e).textureComponentTexture(mapAssetSystem.getTexture("collector"));
         E(e).rotationComponentRotation(0);
         E(e).originComponentOrigin(new Vector2(0.5f, 0.5f));
         E(e).worldPositionComponentPosition(new Vector3(
@@ -53,6 +58,25 @@ public class UnitBuilderSystem extends BaseSystem {
         E(e).dynamicBodyComponentBody().createFixture(
                 E(e).dynamicBodyComponentFixtureDef()
         );
+
+        PointLight light = lightFactorySystem.createPointlight(
+                mapPhysicsSystem.getRayHandler(),
+                E(e).dynamicBodyComponentBody(),
+                new Color(1, 1, 1, 0.4f),
+                2
+        );
+
+        ConeLight coneLight = lightFactorySystem.createConeLight(
+                mapPhysicsSystem.getRayHandler(),
+                E(e).dynamicBodyComponentBody(),
+                new Color(1, 1, 1, 0.5f),
+                5,
+                E(e).rotationComponentRotation(),
+                30
+        );
+
+        E(e).pointLightComponentPointLights().add(light);
+        E(e).coneLightComponentConeLights().add(coneLight);
 
         return e;
     }

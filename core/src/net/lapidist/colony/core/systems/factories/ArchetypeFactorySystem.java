@@ -57,6 +57,9 @@ public final class ArchetypeFactorySystem extends BaseSystem {
 
     private ArchetypeBuilder createUnit() {
         return createSortable()
+                .add(DynamicBodyComponent.class)
+                .add(PointLightComponent.class)
+                .add(ConeLightComponent.class)
                 .add(UnitComponent.class);
     }
 

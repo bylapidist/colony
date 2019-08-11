@@ -4,33 +4,37 @@ import com.artemis.Entity;
 import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
 
+import static com.artemis.E.*;
+
 public enum CollectorState implements State<Entity> {
     IDLE() {
         @Override
-        public void enter(Entity entity) {
-            super.enter(entity);
+        public void enter(Entity e) {
+            super.enter(e);
+        }
+    },
+
+    WANDERING() {
+        @Override
+        public void enter(Entity e) {
+            super.enter(e);
         }
     };
 
-    private static final String TAG = "[CollectorState]";
-
     @Override
-    public void enter(Entity entity) {
-
+    public void enter(Entity e) {
     }
 
     @Override
-    public void update(Entity entity) {
-
+    public void update(Entity e) {
     }
 
     @Override
-    public void exit(Entity entity) {
-
+    public void exit(Entity e) {
     }
 
     @Override
-    public boolean onMessage(Entity entity, Telegram telegram) {
+    public boolean onMessage(Entity e, Telegram telegram) {
         return false;
     }
 }
