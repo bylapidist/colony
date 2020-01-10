@@ -17,12 +17,11 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
-script:
-  - ./gradlew clean test
-  - ./gradlew build -i
-
 jobs:
   include:
     - stage: release
       node_js: lts/*
-      script: npm i -g semantic-release && semantic-release
+      script:
+        - ./gradlew clean test
+        - ./gradlew build -i
+        - npm i -g semantic-release && semantic-release
