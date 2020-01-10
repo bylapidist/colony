@@ -2,11 +2,6 @@ dist: trusty
 os: linux
 language: java
 
-env:
-  global:
-    - GRADLE_OPTS=-Xmx512m
-    - CI=true
-
 before_install:
   - nvm install 11
   - nvm use 11
