@@ -25,4 +25,4 @@ jobs:
   include:
     - stage: release
       node_js: lts/*
-      script: npm i --no-save semantic-release && semantic-release
+      script: npm i -g semantic-release && semantic-release
