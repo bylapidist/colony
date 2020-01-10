@@ -1,7 +1,7 @@
 {
   "name": "@lapidist/colony",
   "author": "Brett Dorrans <hello@lapidist.net>",
-  "version": "5.6.0",
+  "version": "5.6.1",
   "private": true,
   "scripts": {
     "info": "npx npm-scripts-info",
