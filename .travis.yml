@@ -1,5 +1,5 @@
 dist: trusty
-sudo: required
+os: linux
 language: java
 
 env:
@@ -8,7 +8,8 @@ env:
     - CI=true
 
 before_install:
-  - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
+  - nvm install 11
+  - nvm use 11
   - chmod +x ./gradlew
 
 cache:
@@ -19,3 +20,9 @@ cache:
 script:
   - ./gradlew clean test
   - ./gradlew build -i
+
+jobs:
+  include:
+    - stage: release
+      node_js: lts/*
+      script: npm i -g semantic-release && semantic-release
