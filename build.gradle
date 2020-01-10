@@ -1,12 +1,13 @@
 buildscript {
     ext {
         appName = "colony"
-        gdxVersion = '1.9.9'
+        gdxVersion = '1.9.10'
+        gdxAiVersion = '1.8.2'
         box2dLightsVersion = '1.4'
         artemisVersion = '2.2.0'
         jUnitVersion = '4.12'
         mockitoVersion = '2.2.7'
-        visuiVersion = '1.4.3-SNAPSHOT'
+        visuiVersion = '1.4.3'
         gdxLmlVersion = '1.9.1.9.8-SNAPSHOT'
         noise4jVersion = '0.1.0'
     }
@@ -50,6 +51,7 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
         compile "com.kotcrab.vis:vis-ui:$visuiVersion"
         compile "com.github.czyzby:gdx-lml:$gdxLmlVersion"
         compile "com.github.czyzby:gdx-lml-vis:$gdxLmlVersion"

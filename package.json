@@ -1,31 +1,19 @@
 {
   "name": "@lapidist/colony",
-  "version": "5.6.0",
-  "description": "Colony",
-  "license": "UNLICENSED",
+  "author": "Brett Dorrans <hello@lapidist.net>",
+  "version": "5.6.1",
+  "private": true,
   "scripts": {
-    "info": "npm-scripts-info",
-    "version": "standard-version",
+    "info": "npx npm-scripts-info",
+    "version": "npx standard-version",
     "reset": "git clean -dfx && git reset --hard && npm i",
-    "prepare-release": "run-s reset version"
+    "prepare-release": "npm run reset && npm run version"
   },
   "scripts-info": {
     "info": "Display information about the package scripts",
     "version": "Bump package.json version, update CHANGELOG.md, tag release",
     "reset": "Delete all untracked files and reset the repo to the last commit",
     "prepare-release": "One-step: clean and prep a release"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@gitlab.com/getbrett/colony.git"
-  },
-  "author": "Brett Dorrans",
-  "homepage": "https://gitlab.com/getbrett/colony#readme",
-  "devDependencies": {
-    "conventional-changelog": "^3.0.6",
-    "npm-run-all": "^4.1.5",
-    "npm-scripts-info": "^0.3.9",
-    "standard-version": "^5.0.2"
   },
   "config": {
     "commitizen": {
