@@ -1,10 +1,11 @@
-package net.lapidist.colony.core;
+package net.lapidist.colony.client;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.glutils.HdpiMode;
+import net.lapidist.colony.core.Constants;
 
-public class Launcher {
+public class ClientLauncher {
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 

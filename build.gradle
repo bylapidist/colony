@@ -10,6 +10,7 @@ buildscript {
         visuiVersion = '1.4.3'
         gdxLmlVersion = '1.9.1.9.8-SNAPSHOT'
         noise4jVersion = '0.1.0'
+        nettyVersion = '4.1.24.Final'
     }
     repositories {
         mavenLocal()
@@ -40,23 +41,39 @@ allprojects {
     }
 }
 
+project(":client") {
+    apply plugin: "java"
+
+    dependencies {
+        compile project(":core")
+
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+        compile "com.kotcrab.vis:vis-ui:$visuiVersion"
+        compile "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
+        compile "com.github.czyzby:gdx-lml:$gdxLmlVersion"
+        compile "com.github.czyzby:gdx-lml-vis:$gdxLmlVersion"
+        compile "io.netty:netty-all:$nettyVersion"
+    }
+}
+
 project(":core") {
     apply plugin: "java"
 
     dependencies {
         compile project(":components")
-        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+
+        compile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
-        compile "com.kotcrab.vis:vis-ui:$visuiVersion"
-        compile "com.github.czyzby:gdx-lml:$gdxLmlVersion"
-        compile "com.github.czyzby:gdx-lml-vis:$gdxLmlVersion"
         compile "net.onedaybeard.artemis:artemis-odb-serializer:$artemisVersion:sources"
         compile "net.onedaybeard.artemis:artemis-odb-serializer-json-libgdx:$artemisVersion:sources"
+        compile "io.netty:netty-all:$nettyVersion"
     }
 }
 
@@ -69,6 +86,17 @@ project(":components") {
         compile "com.badlogicgames.box2dlights:box2dlights:$box2dLightsVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+    }
+}
+
+project(":server") {
+    apply plugin: "java"
+
+    dependencies {
+        compile project(":core")
+
+        compile "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
+        compile "io.netty:netty-all:$nettyVersion"
     }
 }
 

@@ -4,7 +4,7 @@ import com.artemis.BaseSystem;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.graphics.Color;
-import net.lapidist.colony.core.systems.Events;
+import net.lapidist.colony.core.events.Events;
 
 @Wire
 public class TimeSystem extends BaseSystem {
@@ -37,7 +37,7 @@ public class TimeSystem extends BaseSystem {
 
     private void incrementDay() {
         ++day;
-        MessageManager.getInstance().dispatchMessage(0, null, Events.TIME_CHANGE);
+        MessageManager.getInstance().dispatchMessage(0, Events.TIME_CHANGE, getCurrentTime());
     }
 
     private void incrementSeason() {
@@ -57,7 +57,7 @@ public class TimeSystem extends BaseSystem {
 
         seasonStart = day;
         currentTimeTick = 0;
-        MessageManager.getInstance().dispatchMessage(0, null, Events.SEASON_CHANGE);
+        MessageManager.getInstance().dispatchMessage(0, Events.SEASON_CHANGE, getCurrentSeason());
     }
 
     private void runTimeChange() {

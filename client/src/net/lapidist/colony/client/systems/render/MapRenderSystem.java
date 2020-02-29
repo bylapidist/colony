@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.systems.render;
+package net.lapidist.colony.client.systems.render;
 
 import com.artemis.Aspect;
 import com.artemis.Entity;
@@ -17,13 +17,13 @@ import net.lapidist.colony.components.ScaleComponent;
 import net.lapidist.colony.components.GuiComponent;
 import net.lapidist.colony.components.InvisibleComponent;
 import net.lapidist.colony.components.SortableComponent;
-import net.lapidist.colony.core.systems.Events;
-import net.lapidist.colony.core.systems.IListener;
 import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
+import net.lapidist.colony.core.events.Events;
+import net.lapidist.colony.core.events.IListener;
 import net.lapidist.colony.core.systems.physics.TimeSystem;
-import net.lapidist.colony.core.systems.assets.MapAssetSystem;
+import net.lapidist.colony.client.systems.assets.MapAssetSystem;
 import net.lapidist.colony.core.systems.generators.MapGeneratorSystem;
 import net.lapidist.colony.core.systems.physics.MapPhysicsSystem;
 
@@ -101,7 +101,7 @@ public class MapRenderSystem extends AbstractRenderSystem implements IListener {
                 if (E(e).hasTerrainComponent())
                     batch.setColor(seasonColor);
 
-                drawTexture(textureC, rotationC, originC, posC, scaleC, cameraSystem.zoom);
+                //drawTexture(textureC, rotationC, originC, posC, scaleC, cameraSystem.zoom);
                 batch.setColor(Color.WHITE);
             }
         }

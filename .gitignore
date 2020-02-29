@@ -114,7 +114,9 @@ gradle-app.setting
 /ios/build/
 /ios-moe/build/
 /components/build/
-/common/build/
+/client/build/
+/server/build/
+/tests/build/
 
 ## OS Specific
 .DS_Store
@@ -132,4 +134,8 @@ Thumbs.db
 /ios-moe/xcode/native/
 
 /node_modules/
-components/out
+/components/out/
+/server/out/
+/client/out/
+/core/out/
+/tests/out/

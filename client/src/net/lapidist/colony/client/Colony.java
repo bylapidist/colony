@@ -1,9 +1,9 @@
-package net.lapidist.colony.core;
+package net.lapidist.colony.client;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.ai.msg.MessageManager;
-import net.lapidist.colony.core.systems.Events;
-import net.lapidist.colony.core.screens.MapScreen;
+import net.lapidist.colony.core.events.Events;
+import net.lapidist.colony.client.screens.MapScreen;
 
 public class Colony extends Game {
 

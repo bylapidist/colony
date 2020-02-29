@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.systems;
+package net.lapidist.colony.core.events;
 
 public class Events {
     public static final int GAME_INIT = 0;

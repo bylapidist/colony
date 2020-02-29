@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.systems.render;
+package net.lapidist.colony.client.systems.render;
 
 import com.artemis.Aspect;
 import com.artemis.Entity;
@@ -13,14 +13,14 @@ import net.lapidist.colony.components.GuiComponent;
 import net.lapidist.colony.components.LabelComponent;
 import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
 import net.lapidist.colony.core.systems.abstracts.AbstractControlSystem;
+import net.lapidist.colony.client.systems.assets.GuiAssetSystem;
 import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
-import net.lapidist.colony.core.systems.assets.GuiAssetSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
+import net.lapidist.colony.core.events.Events;
+import net.lapidist.colony.core.events.IListener;
 import net.lapidist.colony.core.systems.physics.TimeSystem;
 import net.lapidist.colony.core.systems.generators.MapGeneratorSystem;
-import net.lapidist.colony.core.windows.ConsoleWindow;
-import net.lapidist.colony.core.systems.Events;
-import net.lapidist.colony.core.systems.IListener;
+import net.lapidist.colony.client.windows.ConsoleWindow;
 
 import static com.artemis.E.E;
 

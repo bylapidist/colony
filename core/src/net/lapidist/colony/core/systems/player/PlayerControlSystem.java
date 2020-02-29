@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import net.lapidist.colony.core.Constants;
-import net.lapidist.colony.core.systems.Events;
+import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
 import net.lapidist.colony.core.systems.abstracts.AbstractControlSystem;
 
@@ -164,7 +164,7 @@ public class PlayerControlSystem extends AbstractControlSystem {
         int estimatedGridY = (int) tmpPosition.y / Constants.PPM;
 
         lastGridTouch.set(estimatedGridX, estimatedGridY);
-        MessageManager.getInstance().dispatchMessage(0, null, Events.CLICK_TILE);
+        MessageManager.getInstance().dispatchMessage(0, Events.CLICK_TILE, lastGridTouch);
         return true;
     }
 

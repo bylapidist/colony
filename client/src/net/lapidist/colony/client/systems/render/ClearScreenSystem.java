@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.systems.render;
+package net.lapidist.colony.client.systems.render;
 
 import com.artemis.BaseSystem;
 import com.badlogic.gdx.Gdx;
