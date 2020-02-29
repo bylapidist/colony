@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.ui.screens;
+package net.lapidist.colony.core.screens;
 
 import com.artemis.*;
 import com.artemis.managers.TagManager;

@@ -3,7 +3,7 @@ package net.lapidist.colony.core;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.ai.msg.MessageManager;
 import net.lapidist.colony.core.systems.Events;
-import net.lapidist.colony.core.ui.screens.MapScreen;
+import net.lapidist.colony.core.screens.MapScreen;
 
 public class Colony extends Game {
 
