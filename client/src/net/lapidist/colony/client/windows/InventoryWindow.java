@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.windows;
+package net.lapidist.colony.client.windows;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;

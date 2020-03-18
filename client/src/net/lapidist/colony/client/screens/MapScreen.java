@@ -1,26 +1,28 @@
-package net.lapidist.colony.core.screens;
+package net.lapidist.colony.client.screens;
 
 import com.artemis.*;
 import com.artemis.managers.TagManager;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.graphics.Color;
+import net.lapidist.colony.client.systems.render.GuiRenderSystem;
 import net.lapidist.colony.core.Constants;
-import net.lapidist.colony.core.systems.Events;
+import net.lapidist.colony.core.network.ClientSystem;
+import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.systems.player.PlayerCameraSystem;
 import net.lapidist.colony.core.systems.player.PlayerControlSystem;
-//import net.lapidist.colony.core.systems.render.GuiRenderSystem;
+//import net.lapidist.colony.client.systems.render.GuiRenderSystem;
 import net.lapidist.colony.core.utils.io.FileLocation;
 import net.lapidist.colony.core.systems.generators.TerrainGeneratorSystem;
 import net.lapidist.colony.core.systems.physics.TimeSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 import net.lapidist.colony.core.systems.factories.LightFactorySystem;
-import net.lapidist.colony.core.systems.assets.GuiAssetSystem;
-import net.lapidist.colony.core.systems.assets.MapAssetSystem;
+import net.lapidist.colony.client.systems.assets.GuiAssetSystem;
+import net.lapidist.colony.client.systems.assets.MapAssetSystem;
 import net.lapidist.colony.core.systems.generators.MapGeneratorSystem;
 import net.lapidist.colony.core.systems.physics.MapPhysicsSystem;
-import net.lapidist.colony.core.systems.render.ClearScreenSystem;
-import net.lapidist.colony.core.systems.render.MapRenderSystem;
+import net.lapidist.colony.client.systems.render.ClearScreenSystem;
+import net.lapidist.colony.client.systems.render.MapRenderSystem;
 
 public class MapScreen implements Screen {
 
@@ -28,6 +30,14 @@ public class MapScreen implements Screen {
 
     public MapScreen() {
         MessageManager.getInstance().setDebugEnabled(true);
+
+        try {
+            ClientSystem clientSystem = new ClientSystem("127.0.0.1", 9966);
+            clientSystem.state = ClientSystem.ClientState.CONNECTED;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         WorldConfiguration config = new WorldConfigurationBuilder()
                 .with(WorldConfigurationBuilder.Priority.HIGHEST,
                         new SuperMapper(),
@@ -52,13 +62,13 @@ public class MapScreen implements Screen {
                         ),
                         new MapRenderSystem(),
                         new MapPhysicsSystem(),
-//                        new GuiRenderSystem(),
+                        new GuiRenderSystem(),
                         new PlayerControlSystem()
                 )
                 .build();
-
         world = new World(config);
     }
+
     @Override
     public void render(final float delta) {
         world.setDelta(delta);

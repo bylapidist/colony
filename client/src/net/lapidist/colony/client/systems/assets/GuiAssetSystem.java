@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.systems.assets;
+package net.lapidist.colony.client.systems.assets;
 
 import com.artemis.ArchetypeBuilder;
 import com.artemis.Entity;
@@ -6,7 +6,7 @@ import com.badlogic.gdx.ai.msg.MessageManager;
 import net.lapidist.colony.components.AssetComponent;
 import net.lapidist.colony.components.FontComponent;
 import net.lapidist.colony.components.TextureComponent;
-import net.lapidist.colony.core.systems.Events;
+import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.utils.io.FileLocation;
 import net.lapidist.colony.core.systems.abstracts.AbstractAssetSystem;
 
