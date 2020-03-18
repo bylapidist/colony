@@ -9,13 +9,14 @@ import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import net.lapidist.colony.components.DynamicBodyComponent;
 import net.lapidist.colony.core.Constants;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.IListener;
-import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
 import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
+import net.lapidist.colony.core.systems.abstracts.AbstractRenderSystem;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 import net.lapidist.colony.core.systems.generators.MapGeneratorSystem;
 import net.lapidist.colony.core.systems.player.PlayerControlSystem;
@@ -23,7 +24,12 @@ import net.lapidist.colony.core.systems.player.PlayerControlSystem;
 import static com.artemis.E.E;
 
 @Wire
-public class MapPhysicsSystem extends AbstractRenderSystem implements IListener {
+public class MapPhysicsSystem
+        extends AbstractRenderSystem implements IListener {
+
+    private static final int VELOCITY_ITERATIONS = 6;
+    private static final int POSITION_ITERATIONS = 2;
+    private static final int RAY_BLURS = 3;
 
     private AbstractCameraSystem cameraSystem;
     private MapGeneratorSystem mapGeneratorSystem;
@@ -45,77 +51,106 @@ public class MapPhysicsSystem extends AbstractRenderSystem implements IListener 
     }
 
     @Override
-    protected void initialize() {
+    protected final void initialize() {
         addMessageListeners();
-        rayHandler.setAmbientLight(timeSystem.getCurrentTime().getAmbientLight(timeSystem.getCurrentTime()));
-        rayHandler.setBlurNum(3);
+        rayHandler.setAmbientLight(
+                timeSystem.getCurrentTime().getAmbientLight(
+                        timeSystem.getCurrentTime()
+                )
+        );
+        rayHandler.setBlurNum(RAY_BLURS);
         rayHandler.setShadows(true);
     }
 
     @Override
-    protected void process(Entity e) {
-        physicsWorld.step(Gdx.graphics.getDeltaTime(), 6, 2);
+    protected final void process(final Entity e) {
+        physicsWorld.step(
+                Gdx.graphics.getDeltaTime(),
+                VELOCITY_ITERATIONS,
+                POSITION_ITERATIONS
+        );
 
         E(e).dynamicBodyComponentBody().setTransform(
                 tmpVec2.set(
-                        (E(e).worldPositionComponentPosition().x + (E(e).originComponentOrigin().x * E(e).textureComponentTexture().getWidth())) / Constants.PPM,
-                        (E(e).worldPositionComponentPosition().y + (E(e).originComponentOrigin().y * E(e).textureComponentTexture().getHeight())) / Constants.PPM
+                        (E(e).worldPositionComponentPosition().x
+                                + (E(e).originComponentOrigin().x
+                                * E(e).textureComponentTexture().getWidth()
+                        )) / Constants.PPM,
+                        (E(e).worldPositionComponentPosition().y
+                                + (E(e).originComponentOrigin().y
+                                * E(e).textureComponentTexture().getHeight()
+                        )) / Constants.PPM
                 ),
                 E(e).rotationComponentRotation() + MathUtils.PI
         );
     }
 
     @Override
-    protected void begin() {
+    protected final void begin() {
         rayHandler.update();
         rayHandler.setCombinedMatrix(
-                cameraSystem.camera.combined.cpy().scl(Constants.PPM),
+                cameraSystem.getCamera().combined.cpy().scl(Constants.PPM),
                 0,
                 0,
-                cameraSystem.camera.viewportWidth * cameraSystem.camera.zoom,
-                cameraSystem.camera.viewportHeight * cameraSystem.camera.zoom
+                cameraSystem.getCamera().viewportWidth
+                        * cameraSystem.getCamera().zoom,
+                cameraSystem.getCamera().viewportHeight
+                        * cameraSystem.getCamera().zoom
         );
     }
 
     @Override
-    protected void end() {
+    protected final void end() {
         rayHandler.render();
-        debugRenderer.render(physicsWorld, cameraSystem.camera.combined.cpy().scl(Constants.PPM));
+        debugRenderer.render(
+                physicsWorld,
+                cameraSystem.getCamera().combined.cpy().scl(Constants.PPM)
+        );
     }
 
     @Override
-    public void addMessageListeners() {
+    public final void addMessageListeners() {
         MessageManager.getInstance().addListener(this, Events.CLICK_TILE);
     }
 
     @Override
-    public boolean handleMessage(Telegram msg) {
+    public final boolean handleMessage(final Telegram msg) {
         switch (msg.message) {
             case Events.CLICK_TILE:
                 onClickTile(playerControlSystem.getLastGridTouch());
                 break;
+            default:
         }
         return true;
     }
 
     @Override
-    protected void dispose() {
-        super.dispose();
+    protected final void disposePhysics() {
         rayHandler.dispose();
         physicsWorld.dispose();
         debugRenderer.dispose();
     }
 
     @Override
-    protected void onResize(int width, int height) {
+    protected void disposeGui() {
+    }
+
+    @Override
+    protected void disposeMap() {
+    }
+
+    @Override
+    protected void onResize(final int width, final int height) {
     }
 
     @Override
     protected void onInit() {
     }
 
-    private void onClickTile(Vector2 tile) {
-//        int e = entityFactorySystem.create(entityFactorySystem.getArchetype("building"));
+    private void onClickTile(final Vector2 tile) {
+//        int e = entityFactorySystem.create(
+//        entityFactorySystem.getArchetype("building")
+//        );
 //
 //        E(e).textureComponentTexture(assetSystem.getTexture("grass"));
 //        E(e).rotationComponentRotation(0);
@@ -152,11 +187,11 @@ public class MapPhysicsSystem extends AbstractRenderSystem implements IListener 
 //        );
     }
 
-    public World getPhysicsWorld() {
+    public final World getPhysicsWorld() {
         return physicsWorld;
     }
 
-    public RayHandler getRayHandler() {
+    public final RayHandler getRayHandler() {
         return rayHandler;
     }
 }

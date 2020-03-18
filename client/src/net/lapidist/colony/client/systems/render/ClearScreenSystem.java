@@ -13,13 +13,13 @@ public class ClearScreenSystem extends BaseSystem {
         this(Color.BLACK);
     }
 
-    public ClearScreenSystem(Color color) {
-        this.color = color;
+    public ClearScreenSystem(final Color colorToClear) {
+        this.color = colorToClear;
     }
 
     @Override
-    protected void processSystem( ) {
-        Gdx.gl.glClearColor(color.r, color.g,color.b,color.a);
+    protected final void processSystem() {
+        Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 }

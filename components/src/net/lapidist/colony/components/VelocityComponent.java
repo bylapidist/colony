@@ -7,11 +7,11 @@ public class VelocityComponent extends Component {
 
     private Vector2 velocity;
 
-    public Vector2 getVelocity() {
+    public final Vector2 getVelocity() {
         return velocity;
     }
 
-    public void setVelocity(Vector2 velocity) {
-        this.velocity = velocity;
+    public final void setVelocity(final Vector2 velocityToSet) {
+        this.velocity = velocityToSet;
     }
 }

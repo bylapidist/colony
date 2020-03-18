@@ -8,26 +8,34 @@ public abstract class AbstractGeneratorSystem extends BaseSystem {
     private final int width;
     private final int height;
     private final String seed;
-    protected int[][] map;
+    private int[][] map;
 
-    public AbstractGeneratorSystem(String seed, int width, int height) {
-        this.seed = seed;
-        this.width = width;
-        this.height = height;
-        this.map = new int[width][height];
+    public AbstractGeneratorSystem(
+            final String seedToSet,
+            final int widthToSet,
+            final int heightToSet
+    ) {
+        this.seed = seedToSet;
+        this.width = widthToSet;
+        this.height = heightToSet;
+        this.map = new int[widthToSet][heightToSet];
 
         SimplexNoise.seed(seed.hashCode());
     }
 
-    public int getWidth() {
+    public final int getWidth() {
         return width;
     }
 
-    public int getHeight() {
+    public final int getHeight() {
         return height;
     }
 
-    public String getSeed() {
+    public final String getSeed() {
         return seed;
+    }
+
+    public final int[][] getMap() {
+        return map;
     }
 }

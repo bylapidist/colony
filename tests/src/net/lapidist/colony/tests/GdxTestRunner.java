@@ -15,14 +15,19 @@ import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 
-public class GdxTestRunner extends BlockJUnit4ClassRunner implements ApplicationListener {
+public class GdxTestRunner
+        extends BlockJUnit4ClassRunner implements ApplicationListener {
 
-    private final Map<FrameworkMethod, RunNotifier> invokeInRender = new HashMap<>();
+    private static final int MILLIS = 10;
 
-    public GdxTestRunner(Class<?> klass) throws InitializationError {
+    private final Map<FrameworkMethod, RunNotifier> invokeInRender
+            = new HashMap<>();
+
+    public GdxTestRunner(final Class<?> klass) throws InitializationError {
         super(klass);
 
-        HeadlessApplicationConfiguration config = new HeadlessApplicationConfiguration();
+        HeadlessApplicationConfiguration config =
+                new HeadlessApplicationConfiguration();
         new HeadlessApplication(this, config);
         Gdx.gl = mock(GL20.class);
     }
@@ -30,10 +35,11 @@ public class GdxTestRunner extends BlockJUnit4ClassRunner implements Application
     private void waitUntilInvokedInRenderMethod() {
         try {
             while (true) {
-                Thread.sleep(10);
+                Thread.sleep(MILLIS);
                 synchronized (invokeInRender) {
-                    if (invokeInRender.isEmpty())
+                    if (invokeInRender.isEmpty()) {
                         break;
+                    }
                 }
             }
         } catch (InterruptedException e) {
@@ -42,7 +48,10 @@ public class GdxTestRunner extends BlockJUnit4ClassRunner implements Application
     }
 
     @Override
-    protected void runChild(FrameworkMethod method, RunNotifier notifier) {
+    protected final void runChild(
+            final FrameworkMethod method,
+            final RunNotifier notifier
+    ) {
         synchronized (invokeInRender) {
             invokeInRender.put(method, notifier);
         }
@@ -54,13 +63,16 @@ public class GdxTestRunner extends BlockJUnit4ClassRunner implements Application
     }
 
     @Override
-    public void resize(int width, int height) {
+    public void resize(final int width, final int height) {
     }
 
     @Override
-    public void render() {
+    public final void render() {
         synchronized (invokeInRender) {
-            for (Map.Entry<FrameworkMethod, RunNotifier> each : invokeInRender.entrySet()) {
+            for (
+                    Map.Entry<FrameworkMethod, RunNotifier> each
+                    : invokeInRender.entrySet()
+            ) {
                 super.runChild(each.getKey(), each.getValue());
             }
             invokeInRender.clear();

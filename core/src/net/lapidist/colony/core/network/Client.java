@@ -16,18 +16,20 @@ import net.lapidist.colony.core.events.IListener;
 
 import java.net.InetSocketAddress;
 
-public class ClientSystem implements IListener {
+public class Client implements IListener {
 
     public enum ClientState {
         DISCONNECTED, CONNECTED
     }
 
-    public ClientState state = ClientState.DISCONNECTED;
-
+    private ClientState state = ClientState.DISCONNECTED;
     private Channel channel;
     private InetSocketAddress remoteAddress;
 
-    public ClientSystem(String host, int port) throws InterruptedException {
+    public Client(
+            final String host,
+            final int port
+    ) throws InterruptedException {
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
         Bootstrap b = new Bootstrap();
@@ -52,21 +54,36 @@ public class ClientSystem implements IListener {
     }
 
     @Override
-    public void addMessageListeners() {
+    public final void addMessageListeners() {
         MessageManager.getInstance().addListener(this, Events.CLICK_TILE);
         MessageManager.getInstance().addListener(this, Events.SEASON_CHANGE);
         MessageManager.getInstance().addListener(this, Events.TIME_CHANGE);
     }
 
     @Override
-    public boolean handleMessage(Telegram msg) {
+    public final boolean handleMessage(final Telegram msg) {
         TelegramPacketEncoder packet = new TelegramPacketEncoder(msg);
 
-        if (packet.getPacket().readableBytes() > 0 && this.channel != null && this.remoteAddress != null) {
-            this.channel.writeAndFlush(new DatagramPacket(packet.getPacket(), this.remoteAddress));
+        if (
+                packet.getPacket().readableBytes() > 0
+                        && this.channel != null
+                        && this.remoteAddress != null
+        ) {
+            this.channel.writeAndFlush(
+                    new DatagramPacket(packet.getPacket(), this.remoteAddress)
+            );
+
             return true;
         }
 
         return false;
+    }
+
+    public final ClientState getState() {
+        return state;
+    }
+
+    public final void setState(final ClientState stateToSet) {
+        this.state = stateToSet;
     }
 }

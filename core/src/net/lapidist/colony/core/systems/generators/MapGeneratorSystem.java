@@ -1,16 +1,11 @@
 package net.lapidist.colony.core.systems.generators;
 
-import box2dLight.ConeLight;
-import box2dLight.PointLight;
 import com.artemis.BaseSystem;
 import com.artemis.annotations.Wire;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
 import net.lapidist.colony.core.systems.factories.LightFactorySystem;
-//import net.lapidist.colony.client.systems.assets.MapAssetSystem;
 import net.lapidist.colony.core.systems.physics.MapPhysicsSystem;
 
 import static com.artemis.E.E;
@@ -18,11 +13,11 @@ import static com.artemis.E.E;
 @Wire
 public class MapGeneratorSystem extends BaseSystem {
 
+    private static final float ORIGIN_OFFSET = 0.5f;
+
     private EntityFactorySystem entityFactorySystem;
     private LightFactorySystem lightFactorySystem;
-//    private MapAssetSystem assetSystem;
     private MapPhysicsSystem physicsSystem;
-    private TerrainGeneratorSystem terrainGeneratorSystem;
     private int width;
     private int height;
     private int tileWidth;
@@ -31,14 +26,21 @@ public class MapGeneratorSystem extends BaseSystem {
     private int chunkHeight;
     private int[][] chunkMap;
 
-    public MapGeneratorSystem(int width, int height, int tileWidth, int tileHeight, int chunkWidth, int chunkHeight) {
-        this.width = width;
-        this.height = height;
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
-        this.chunkWidth = chunkWidth;
-        this.chunkHeight = chunkHeight;
-        this.chunkMap = new int[width][height];
+    public MapGeneratorSystem(
+            final int widthToSet,
+            final int heightToSet,
+            final int tileWidthToSet,
+            final int tileHeightToSet,
+            final int chunkWidthToSet,
+            final int chunkHeightToSet
+    ) {
+        this.width = widthToSet;
+        this.height = heightToSet;
+        this.tileWidth = tileWidthToSet;
+        this.tileHeight = tileHeightToSet;
+        this.chunkWidth = chunkWidthToSet;
+        this.chunkHeight = chunkHeightToSet;
+        this.chunkMap = new int[widthToSet][heightToSet];
     }
 
     @Override
@@ -47,24 +49,33 @@ public class MapGeneratorSystem extends BaseSystem {
 
     @Override
     protected void processSystem() {
-
     }
 
-    private int generateChunk(int x, int y) {
-        int chunk = entityFactorySystem.create(entityFactorySystem.getArchetype("chunk"));
+    private int generateChunk(final int x, final int y) {
+        int chunk = entityFactorySystem.create(
+                entityFactorySystem.getArchetype("chunk")
+        );
         E(chunk).originComponentOrigin(new Vector2(x, y));
-        E(chunk).worldPositionComponentPosition(new Vector3(x * getTileWidth(), y * getTileHeight(), 0));
+        E(chunk).worldPositionComponentPosition(
+                new Vector3(
+                        x * getTileWidth(),
+                        y * getTileHeight(),
+                        0
+                )
+        );
         generateTerrain(chunk);
 
         return chunk;
     }
 
-    private void generateTerrain(int chunk) {
-        int e = entityFactorySystem.create(entityFactorySystem.getArchetype("terrain"));
+    private void generateTerrain(final int chunk) {
+        int e = entityFactorySystem.create(
+                entityFactorySystem.getArchetype("terrain")
+        );
 
 //        E(e).textureComponentTexture(assetSystem.getTexture("grass"));
         E(e).rotationComponentRotation(0);
-        E(e).originComponentOrigin(new Vector2(0.5f, 0.5f));
+        E(e).originComponentOrigin(new Vector2(ORIGIN_OFFSET, ORIGIN_OFFSET));
         E(e).worldPositionComponentPosition(new Vector3(
                 E(chunk).worldPositionComponentPosition().x,
                 E(chunk).worldPositionComponentPosition().y,
@@ -74,87 +85,35 @@ public class MapGeneratorSystem extends BaseSystem {
         E(e).sortableComponentLayer(0);
     }
 
-    public void generate() {
+    public final void generate() {
         for (int ty = 0; ty < getHeight(); ty++) {
             for (int tx = 0; tx < getWidth(); tx++) {
                 chunkMap[tx][ty] = generateChunk(tx, ty);
             }
         }
-//
-//        createPlayer();
     }
-//
-//    private int createPlayer() {
-//        int e = entityFactorySystem.create(entityFactorySystem.getArchetype("player"));
-//        E(e).textureComponentTexture(assetSystem.getTexture("dirt"));
-//        E(e).rotationComponentRotation(0);
-//        E(e).originComponentOrigin(new Vector2(0.5f, 0.5f));
-//        E(e).worldPositionComponentPosition(new Vector3(
-//                (getWidth() / 2f) * getTileWidth(),
-//                (getHeight() / 2f) * getTileHeight(),
-//                0
-//        ));
-//        E(e).scaleComponentScale(1);
-//        E(e).velocityComponentVelocity(new Vector2(0, 0));
-//        E(e).sortableComponentLayer(1);
-//        E(e).dynamicBodyComponentFixtureDef().shape = new CircleShape();
-//        E(e).dynamicBodyComponentFixtureDef().shape.setRadius(0.5f);
-//        E(e).dynamicBodyComponentBodyDef().position.set(
-//                E(e).worldPositionComponentPosition().x,
-//                E(e).worldPositionComponentPosition().y
-//        );
-//        E(e).dynamicBodyComponentBody(
-//                physicsSystem.getPhysicsWorld().createBody(
-//                        E(e).dynamicBodyComponentBodyDef()
-//                )
-//        );
-//        E(e).dynamicBodyComponentBody().createFixture(
-//                E(e).dynamicBodyComponentFixtureDef()
-//        );
-//
-//        PointLight light = lightFactorySystem.createPointlight(
-//                physicsSystem.getRayHandler(),
-//                E(e).dynamicBodyComponentBody(),
-//                new Color(1, 1, 1, 0.4f),
-//                10
-//        );
-//
-//        ConeLight coneLight = lightFactorySystem.createConeLight(
-//                physicsSystem.getRayHandler(),
-//                E(e).dynamicBodyComponentBody(),
-//                new Color(1, 1, 1, 0.5f),
-//                20,
-//                E(e).rotationComponentRotation(),
-//                30
-//        );
-//
-//        E(e).pointLightComponentPointLights().add(light);
-//        E(e).coneLightComponentConeLights().add(coneLight);
-//
-//        return e;
-//    }
 
-    public int getWidth() {
+    public final int getWidth() {
         return width;
     }
 
-    public int getHeight() {
+    public final int getHeight() {
         return height;
     }
 
-    public int getTileWidth() {
+    public final int getTileWidth() {
         return tileWidth;
     }
 
-    public int getTileHeight() {
+    public final int getTileHeight() {
         return tileHeight;
     }
 
-    public int getChunkWidth() {
+    public final int getChunkWidth() {
         return chunkWidth;
     }
 
-    public int getChunkHeight() {
+    public final int getChunkHeight() {
         return chunkHeight;
     }
 }

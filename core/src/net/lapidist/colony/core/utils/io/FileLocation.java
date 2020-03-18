@@ -11,7 +11,7 @@ public enum FileLocation {
     EXTERNAL,
     ABSOLUTE;
 
-    public FileHandle getFile(String path) {
+    public FileHandle getFile(final String path) {
         switch (this) {
             case CLASSPATH:
                 return Gdx.files.classpath(path);
@@ -28,7 +28,7 @@ public enum FileLocation {
         }
     }
 
-    public FileHandleResolver getResolver() {
+    public final FileHandleResolver getResolver() {
         return this::getFile;
     }
 }

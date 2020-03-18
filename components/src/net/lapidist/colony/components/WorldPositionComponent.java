@@ -7,11 +7,11 @@ public class WorldPositionComponent extends Component {
 
     private Vector3 position;
 
-    public Vector3 getPosition() {
+    public final Vector3 getPosition() {
         return position;
     }
 
-    public void setPosition(Vector3 position) {
-        this.position = position;
+    public final void setPosition(final Vector3 positionToSet) {
+        this.position = positionToSet;
     }
 }

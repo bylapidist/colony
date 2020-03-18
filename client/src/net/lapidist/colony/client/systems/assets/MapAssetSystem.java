@@ -6,43 +6,52 @@ import com.badlogic.gdx.ai.msg.MessageManager;
 import net.lapidist.colony.components.AssetComponent;
 import net.lapidist.colony.components.TextureComponent;
 import net.lapidist.colony.core.events.Events;
-import net.lapidist.colony.core.utils.io.FileLocation;
 import net.lapidist.colony.core.systems.abstracts.AbstractAssetSystem;
+import net.lapidist.colony.core.utils.io.FileLocation;
 
 public class MapAssetSystem extends AbstractAssetSystem {
 
-    private boolean initialised;
     private final String[] textures = {
             "player",
             "dirt",
             "grass"
     };
 
-    public MapAssetSystem(FileLocation fileLocation) {
+    private boolean initialised;
+
+    public MapAssetSystem(final FileLocation fileLocation) {
         super(fileLocation);
     }
 
     @Override
-    protected void initialize() {
-        super.initialize();
+    protected void initializeGui() {
+    }
 
-        for (String texture: textures) {
+    @Override
+    protected final void initializeMap() {
+        for (String texture : textures) {
             Entity e = world.createEntity(new ArchetypeBuilder()
                     .add(AssetComponent.class)
                     .add(TextureComponent.class)
-            .build(world));
+                    .build(world));
 
             register(texture, e);
         }
     }
 
     @Override
-    protected void process(int entityId) {
-        super.process(entityId);
+    protected void processGui(final int entityId) {
+    }
 
-        if (loaded && !initialised) {
+    @Override
+    protected final void processMap(final int entityId) {
+        if (isLoaded() && !initialised) {
             initialised = true;
-            MessageManager.getInstance().dispatchMessage(0, null, Events.MAP_INIT);
+            MessageManager.getInstance().dispatchMessage(
+                    0,
+                    null,
+                    Events.MAP_INIT
+            );
         }
     }
 }

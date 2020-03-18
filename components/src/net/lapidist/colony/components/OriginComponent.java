@@ -7,11 +7,11 @@ public class OriginComponent extends Component {
 
     private Vector2 origin;
 
-    public Vector2 getOrigin() {
+    public final Vector2 getOrigin() {
         return origin;
     }
 
-    public void setOrigin(Vector2 origin) {
-        this.origin = origin;
+    public final void setOrigin(final Vector2 originToSet) {
+        this.origin = originToSet;
     }
 }

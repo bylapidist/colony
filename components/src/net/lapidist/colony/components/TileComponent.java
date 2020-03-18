@@ -7,24 +7,24 @@ public class TileComponent extends Component {
     private int width;
     private int height;
 
-    public void setTile(int width, int height) {
-        setWidth(width);
-        setHeight(height);
+    public final void setTile(final int widthToSet, final int heightToSet) {
+        setWidth(widthToSet);
+        setHeight(heightToSet);
     }
 
-    public int getWidth() {
+    public final int getWidth() {
         return width;
     }
 
-    public void setWidth(int width) {
-        this.width = width;
+    public final void setWidth(final int widthToSet) {
+        this.width = widthToSet;
     }
 
-    public int getHeight() {
+    public final int getHeight() {
         return height;
     }
 
-    public void setHeight(int height) {
-        this.height = height;
+    public final void setHeight(final int heightToSet) {
+        this.height = heightToSet;
     }
 }

@@ -4,5 +4,9 @@ import com.artemis.Component;
 
 public class AssetComponent extends Component {
 
-    public String name;
+    private String name;
+
+    public final String getName() {
+        return name;
+    }
 }

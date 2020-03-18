@@ -6,11 +6,11 @@ public class SortableComponent extends Component {
 
     private int layer = 0;
 
-    public int getLayer() {
+    public final int getLayer() {
         return layer;
     }
 
-    public void setLayer(int layer) {
-        this.layer = layer;
+    public final void setLayer(final int layerToSet) {
+        this.layer = layerToSet;
     }
 }

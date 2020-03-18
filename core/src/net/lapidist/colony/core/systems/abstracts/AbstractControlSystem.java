@@ -7,45 +7,60 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.IntSet;
 
-public abstract class AbstractControlSystem extends IteratingSystem implements InputProcessor {
+public abstract class AbstractControlSystem
+        extends IteratingSystem implements InputProcessor {
 
-    protected final static float MIN_ZOOM = 1f;
-    protected final static float MAX_ZOOM = 2f;
-    protected final static float ZOOM_SPEED = 0.06f;
+    protected static final float MIN_ZOOM = 1f;
+    protected static final float MAX_ZOOM = 2f;
+    protected static final float ZOOM_SPEED = 0.06f;
 
-    private final static InputMultiplexer inputMultiplexer = new InputMultiplexer();
-    private final static IntSet downKeys = new IntSet(20);
+    private static final InputMultiplexer INPUT_MULTIPLEXER =
+            new InputMultiplexer();
+    private static final IntSet DOWN_KEYS =
+            new IntSet(20);
 
-    public AbstractControlSystem(Aspect.Builder aspect) {
+    public AbstractControlSystem(final Aspect.Builder aspect) {
         super(aspect);
     }
 
-    protected boolean singleKeyDown(int keycode) {
-        return downKeys.contains(keycode) && downKeys.size == 1;
+    public static InputMultiplexer getInputMultiplexer() {
+        return INPUT_MULTIPLEXER;
     }
 
-    protected boolean twoKeysDown(int keycode1, int keycode2) {
-        return downKeys.contains(keycode1) && downKeys.contains(keycode2) && downKeys.size == 2;
+    protected final boolean singleKeyDown(final int keycode) {
+        return DOWN_KEYS.contains(keycode) && DOWN_KEYS.size == 1;
     }
 
-    protected boolean multipleKeysDown(int lastKeycode) {
+    protected final boolean twoKeysDown(
+            final int keycode1,
+            final int keycode2
+    ) {
+        return DOWN_KEYS.contains(keycode1)
+                && DOWN_KEYS.contains(keycode2)
+                && DOWN_KEYS.size == 2;
+    }
+
+    protected final boolean multipleKeysDown(final int lastKeycode) {
         return false;
     }
 
     @Override
-    protected void initialize() {
-        Gdx.input.setInputProcessor(inputMultiplexer);
+    protected final void initialize() {
+        Gdx.input.setInputProcessor(INPUT_MULTIPLEXER);
+        initializePlayer();
+    }
+
+    protected abstract void initializePlayer();
+
+    @Override
+    protected void process(final int entityId) {
     }
 
     @Override
-    protected void process(int entityId) {
-    }
+    public final boolean keyDown(final int keycode) {
+        DOWN_KEYS.add(keycode);
 
-    @Override
-    public boolean keyDown(int keycode) {
-        downKeys.add(keycode);
-
-        if (downKeys.size >= 2) {
+        if (DOWN_KEYS.size >= 2) {
             return multipleKeysDown(keycode);
         }
 
@@ -53,46 +68,73 @@ public abstract class AbstractControlSystem extends IteratingSystem implements I
     }
 
     @Override
-    public boolean keyUp(int keycode) {
-        downKeys.remove(keycode);
+    public final boolean keyUp(final int keycode) {
+        DOWN_KEYS.remove(keycode);
         return false;
     }
 
     @Override
-    public boolean keyTyped(char character) {
+    public final boolean keyTyped(final char character) {
         return false;
     }
 
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        downKeys.add(button);
+    public final boolean touchDown(
+            final int screenX,
+            final int screenY,
+            final int pointer,
+            final int button
+    ) {
+        DOWN_KEYS.add(button);
+
+        touchDownPlayer(
+                screenX,
+                screenY,
+                pointer,
+                button
+        );
+
+        return false;
+    }
+
+    protected abstract boolean touchDownPlayer(
+            final int screenX,
+            final int screenY,
+            final int pointer,
+            final int button
+    );
+
+    @Override
+    public final boolean touchUp(
+            final int screenX,
+            final int screenY,
+            final int pointer,
+            final int button
+    ) {
+        DOWN_KEYS.remove(button);
 
         return false;
     }
 
     @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        downKeys.remove(button);
-
+    public final boolean touchDragged(
+            final int screenX,
+            final int screenY,
+            final int pointer
+    ) {
         return false;
     }
 
     @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
+    public final boolean mouseMoved(final int screenX, final int screenY) {
         return false;
     }
 
     @Override
-    public boolean mouseMoved(int screenX, int screenY) {
+    public final boolean scrolled(final int amount) {
+        scrolledPlayer(amount);
         return false;
     }
 
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
-    }
-
-    public static InputMultiplexer getInputMultiplexer() {
-        return inputMultiplexer;
-    }
+    protected abstract boolean scrolledPlayer(final int amount);
 }

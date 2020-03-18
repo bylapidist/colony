@@ -16,25 +16,33 @@ public class ConsoleWindow extends AbstractLmlView {
     @LmlActor("console")
     private VisTextArea console;
 
+    private static final int ROLL_CHANCE = 1000;
+
     public ConsoleWindow() {
-        super(new Stage(new ScalingViewport(Scaling.none, Gdx.graphics.getWidth(), Gdx.graphics.getHeight())));
+        super(new Stage(
+                new ScalingViewport(
+                        Scaling.none,
+                        Gdx.graphics.getWidth(),
+                        Gdx.graphics.getHeight()
+                )
+        ));
     }
 
-    public void addLine(String line) {
+    public final void addLine(final String line) {
         console.setText(console.getText() + line + "\n");
     }
 
-    public void roll() {
-        addLine(String.valueOf((int) (MathUtils.random() * 1000)));
+    public final void roll() {
+        addLine(String.valueOf((int) (MathUtils.random() * ROLL_CHANCE)));
     }
 
     @Override
-    public FileHandle getTemplateFile() {
+    public final FileHandle getTemplateFile() {
         return FileLocation.INTERNAL.getFile("views/console.lml");
     }
 
     @Override
-    public String getViewId() {
+    public final String getViewId() {
         return "console";
     }
 }

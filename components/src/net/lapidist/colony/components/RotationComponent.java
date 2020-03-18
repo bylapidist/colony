@@ -6,11 +6,11 @@ public class RotationComponent extends Component {
 
     private float rotation = 0f;
 
-    public float getRotation() {
+    public final float getRotation() {
         return rotation;
     }
 
-    public void setRotation(float rotation) {
-        this.rotation = rotation;
+    public final void setRotation(final float rotationToSet) {
+        this.rotation = rotationToSet;
     }
 }

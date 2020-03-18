@@ -4,16 +4,17 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioDatagramChannel;
+import net.lapidist.colony.core.Constants;
 import net.lapidist.colony.core.codecs.decoders.PacketDecoder;
 
 import java.net.InetAddress;
 
-public class ServerLauncher {
+public final class ServerLauncher {
 
-    private static final Integer SERVER_PORT = 9966;
-    private static final Integer MAX_PACKET_SIZE = 10_000;
+    private ServerLauncher() {
+    }
 
-    public static void main(String[] arg) throws Exception {
+    public static void main(final String[] arg) throws Exception {
         EventLoopGroup group = new NioEventLoopGroup();
 
         try {
@@ -21,13 +22,22 @@ public class ServerLauncher {
             b.group(group)
                     .channel(NioDatagramChannel.class)
                     .option(ChannelOption.SO_BROADCAST, true)
-                    .option(ChannelOption.SO_RCVBUF, MAX_PACKET_SIZE)
-                    .option(ChannelOption.RCVBUF_ALLOCATOR, new FixedRecvByteBufAllocator(MAX_PACKET_SIZE))
-                    .localAddress(SERVER_PORT)
+                    .option(ChannelOption.SO_RCVBUF, Constants.MAX_PACKET_SIZE)
+                    .option(
+                            ChannelOption.RCVBUF_ALLOCATOR,
+                            new FixedRecvByteBufAllocator(
+                                    Constants.MAX_PACKET_SIZE
+                            )
+                    )
+                    .localAddress(Constants.DEFAULT_PORT)
                     .handler(channelInitializer());
 
             String address = InetAddress.getLocalHost().getHostAddress();
-            System.out.printf("Server started!\nListening on: %s:%d\n", address, SERVER_PORT);
+            System.out.printf(
+                    "Server started!\nListening on: %s:%d\n",
+                    address,
+                    Constants.DEFAULT_PORT
+            );
 
             // Start the server.
             ChannelFuture f = b.bind().sync();
@@ -39,7 +49,7 @@ public class ServerLauncher {
             group.shutdownGracefully();
 
             // Wait until all threads are terminated.
-           group.terminationFuture().sync();
+            group.terminationFuture().sync();
         }
     }
 

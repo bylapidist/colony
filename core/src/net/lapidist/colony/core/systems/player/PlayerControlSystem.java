@@ -16,31 +16,30 @@ import net.lapidist.colony.core.systems.abstracts.AbstractControlSystem;
 @Wire
 public class PlayerControlSystem extends AbstractControlSystem {
 
-    private AbstractCameraSystem cameraSystem;
+    private static final float BASE_FRICTION = 1f;
+    private static final float BASE_ACCELERATION = BASE_FRICTION + 10f;
+    private static final float BASE_MAX_VELOCITY = 10f;
+    private static final float MIN_VELOCITY = 3f;
+    private static final float MIN_ZOOM = 1f;
+    private static final float MAX_ZOOM = 2f;
+    private static final float ZOOM_SPEED = 0.06f;
 
-    private final float BASE_FRICTION = 1f;
-    private final float BASE_ACCELERATION = BASE_FRICTION + 10f;
-    private final float BASE_MAX_VELOCITY = 10f;
-    private final float MIN_VELOCITY = 3f;
-    private final float MIN_ZOOM = 1f;
-    private final float MAX_ZOOM = 2f;
-    private final float ZOOM_SPEED = 0.06f;
     private final Vector3 tmpPosition = new Vector3();
     private final Vector2 tmpVelocity = new Vector2();
     private final Vector2 lastGridTouch = new Vector2();
+    private AbstractCameraSystem cameraSystem;
 
     public PlayerControlSystem() {
         super(Aspect.all());
     }
 
     @Override
-    protected void initialize() {
-        super.initialize();
+    protected final void initializePlayer() {
         AbstractControlSystem.getInputMultiplexer().addProcessor(this);
     }
 
-    private void processInput(int e) {
-        tmpPosition.set(cameraSystem.camera.position);
+    private void processInput(final int e) {
+        tmpPosition.set(cameraSystem.getCamera().position);
 
         if (singleKeyDown(Input.Keys.W)) {
             accelerateVertically(-BASE_ACCELERATION);
@@ -96,7 +95,7 @@ public class PlayerControlSystem extends AbstractControlSystem {
 
         limitVelocity();
 
-        cameraSystem.camera.position.set(tmpPosition);
+        cameraSystem.getCamera().position.set(tmpPosition);
     }
 
     private void limitVelocity() {
@@ -125,68 +124,89 @@ public class PlayerControlSystem extends AbstractControlSystem {
         }
     }
 
-    private void applyVerticalFriction(float friction) {
+    private void applyVerticalFriction(final float friction) {
         tmpVelocity.y -= friction * Gdx.graphics.getDeltaTime();
         tmpPosition.y -= tmpVelocity.y * Gdx.graphics.getDeltaTime();
     }
 
-    private void applyHorizontalFriction(float friction) {
+    private void applyHorizontalFriction(final float friction) {
         tmpVelocity.x -= friction * Gdx.graphics.getDeltaTime();
         tmpPosition.x -= tmpVelocity.x * Gdx.graphics.getDeltaTime();
     }
 
-    private void accelerateHorizontally(float acceleration) {
+    private void accelerateHorizontally(final float acceleration) {
         tmpVelocity.x += acceleration * Gdx.graphics.getDeltaTime();
         tmpPosition.x -= tmpVelocity.x * Gdx.graphics.getDeltaTime();
     }
 
-    private void accelerateVertically(float acceleration) {
+    private void accelerateVertically(final float acceleration) {
         tmpVelocity.y += acceleration * Gdx.graphics.getDeltaTime();
         tmpPosition.y -= tmpVelocity.y * Gdx.graphics.getDeltaTime();
     }
 
-    public Vector2 getLastGridTouch() {
+    public final Vector2 getLastGridTouch() {
         return lastGridTouch;
     }
 
     @Override
-    protected void process(int e) {
+    protected final void process(final int e) {
         processInput(e);
     }
 
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        super.touchDown(screenX, screenY, pointer, button);
-
-        tmpPosition.set(cameraSystem.worldCoordsFromScreenCoords(screenX, screenY).x, cameraSystem.worldCoordsFromScreenCoords(screenX, screenY).y, 0);
+    public final boolean touchDownPlayer(
+            final int screenX,
+            final int screenY,
+            final int pointer,
+            final int button
+    ) {
+        tmpPosition.set(
+                cameraSystem.worldCoordsFromScreenCoords(screenX, screenY).x,
+                cameraSystem.worldCoordsFromScreenCoords(screenX, screenY).y,
+                0
+        );
 
         int estimatedGridX = (int) tmpPosition.x / Constants.PPM;
         int estimatedGridY = (int) tmpPosition.y / Constants.PPM;
 
         lastGridTouch.set(estimatedGridX, estimatedGridY);
-        MessageManager.getInstance().dispatchMessage(0, Events.CLICK_TILE, lastGridTouch);
+        MessageManager.getInstance().dispatchMessage(
+                0,
+                Events.CLICK_TILE,
+                lastGridTouch
+        );
         return true;
     }
 
     @Override
-    public boolean scrolled(int amount) {
+    public final boolean scrolledPlayer(final int amount) {
         // Zoom out
         if (amount == 1) {
-            cameraSystem.camera.zoom += ZOOM_SPEED;
-            cameraSystem.camera.zoom = MathUtils.clamp(cameraSystem.camera.zoom, MIN_ZOOM, MAX_ZOOM);
+            cameraSystem.getCamera().zoom += ZOOM_SPEED;
+            cameraSystem.getCamera().zoom =
+                    MathUtils.clamp(
+                            cameraSystem.getCamera().zoom,
+                            MIN_ZOOM,
+                            MAX_ZOOM
+                    );
         }
 
         // Zoom in
         if (amount == -1) {
-            cameraSystem.camera.zoom -= ZOOM_SPEED;
-            cameraSystem.camera.zoom = MathUtils.clamp(cameraSystem.camera.zoom, MIN_ZOOM, MAX_ZOOM);
+            cameraSystem.getCamera().zoom -= ZOOM_SPEED;
+            cameraSystem.getCamera().zoom =
+                    MathUtils.clamp(
+                            cameraSystem.getCamera().zoom,
+                            MIN_ZOOM,
+                            MAX_ZOOM
+                    );
         }
 
         return false;
     }
 
     @Override
-    protected void dispose() {
+    protected final void dispose() {
         getInputMultiplexer().removeProcessor(this);
     }
 }
