@@ -12,7 +12,7 @@ public class PointLightComponent extends Component {
         pointLights = new Array<>();
     }
 
-    public Array<PointLight> getPointLights() {
+    public final Array<PointLight> getPointLights() {
         return pointLights;
     }
 }

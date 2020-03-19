@@ -7,41 +7,40 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import net.lapidist.colony.components.FontComponent;
-import net.lapidist.colony.components.TextureComponent;
-import net.lapidist.colony.components.RotationComponent;
-import net.lapidist.colony.components.OriginComponent;
-import net.lapidist.colony.components.WorldPositionComponent;
-import net.lapidist.colony.components.ScaleComponent;
-import net.lapidist.colony.components.LabelComponent;
+import net.lapidist.colony.components.*;
 import net.lapidist.colony.core.Constants;
 
 public abstract class AbstractRenderSystem extends EntityProcessingSystem {
 
-    protected SpriteBatch batch;
+    private static final int SPRITEBATCH_SIZE = 2000;
+    private static final float ONE_EIGHTY_DEGREES = 180f;
+
+    private SpriteBatch batch;
     private TextureRegion tmpTextureRegion;
 
-    public AbstractRenderSystem(Aspect.Builder aspect) {
+    public AbstractRenderSystem(final Aspect.Builder aspect) {
         super(aspect);
 
         tmpTextureRegion = new TextureRegion();
-        batch = new SpriteBatch(2000);
+        batch = new SpriteBatch(SPRITEBATCH_SIZE);
     }
 
     protected abstract void onResize(int width, int height);
 
     protected abstract void onInit();
 
-    protected void drawTexture(
-            TextureComponent textureC,
-            RotationComponent angleC,
-            OriginComponent originC,
-            WorldPositionComponent posC,
-            ScaleComponent scaleC,
-            float zoom
+    protected final void drawTexture(
+            final TextureComponent textureC,
+            final RotationComponent angleC,
+            final OriginComponent originC,
+            final WorldPositionComponent posC,
+            final ScaleComponent scaleC,
+            final float zoom
     ) {
-        float ox = textureC.getTexture().getWidth() * scaleC.getScale() * originC.getOrigin().x;
-        float oy = textureC.getTexture().getHeight() * scaleC.getScale() * originC.getOrigin().y;
+        float ox = textureC.getTexture().getWidth()
+                * scaleC.getScale() * originC.getOrigin().x;
+        float oy = textureC.getTexture().getHeight()
+                * scaleC.getScale() * originC.getOrigin().y;
 
         tmpTextureRegion.setTexture(textureC.getTexture());
         tmpTextureRegion.setRegionWidth(textureC.getTexture().getWidth());
@@ -53,11 +52,14 @@ public abstract class AbstractRenderSystem extends EntityProcessingSystem {
                     roundToPixels(posC.getPosition().y, zoom),
                     ox,
                     oy,
-                    tmpTextureRegion.getRegionWidth() * scaleC.getScale(),
-                    tmpTextureRegion.getRegionHeight() * scaleC.getScale(),
+                    tmpTextureRegion.getRegionWidth()
+                            * scaleC.getScale(),
+                    tmpTextureRegion.getRegionHeight()
+                            * scaleC.getScale(),
                     1,
                     1,
-                    angleC.getRotation() * 180f / MathUtils.PI
+                    angleC.getRotation()
+                            * ONE_EIGHTY_DEGREES / MathUtils.PI
             );
         } else {
             batch.draw(tmpTextureRegion,
@@ -69,10 +71,10 @@ public abstract class AbstractRenderSystem extends EntityProcessingSystem {
         }
     }
 
-    protected void drawLabel(
-            LabelComponent labelC,
-            FontComponent fontC,
-            WorldPositionComponent posC
+    protected final void drawLabel(
+            final LabelComponent labelC,
+            final FontComponent fontC,
+            final WorldPositionComponent posC
     ) {
         fontC.getFont().draw(
                 batch,
@@ -82,7 +84,10 @@ public abstract class AbstractRenderSystem extends EntityProcessingSystem {
         );
     }
 
-    protected boolean isWithinBounds(final float screenX, final float screenY) {
+    protected final boolean isWithinBounds(
+            final float screenX,
+            final float screenY
+    ) {
         return !(screenX < -Constants.PPM * 2
                 || screenX > Gdx.graphics.getWidth() + Constants.PPM
                 || screenY < -Constants.PPM * 2
@@ -90,7 +95,7 @@ public abstract class AbstractRenderSystem extends EntityProcessingSystem {
     }
 
     private float roundToPixels(final float val, final float zoom) {
-        return ((int)(val * zoom)) / zoom;
+        return ((int) (val * zoom)) / zoom;
     }
 
     @Override
@@ -106,12 +111,24 @@ public abstract class AbstractRenderSystem extends EntityProcessingSystem {
     }
 
     @Override
-    protected void dispose() {
+    protected final void dispose() {
         batch.dispose();
+        disposePhysics();
+        disposeGui();
+        disposeMap();
     }
 
-    @Override
-    protected void process(Entity e) {
+    protected abstract void disposePhysics();
 
+    protected abstract void disposeGui();
+
+    protected abstract void disposeMap();
+
+    @Override
+    protected void process(final Entity e) {
+    }
+
+    public final SpriteBatch getBatch() {
+        return batch;
     }
 }

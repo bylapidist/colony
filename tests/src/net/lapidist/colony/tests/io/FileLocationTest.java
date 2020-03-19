@@ -17,7 +17,7 @@ public class FileLocationTest {
     }
 
     @Test
-    public void testReadFileInternal() {
+    public final void testReadFileInternal() {
         FileHandle file = FileLocation.INTERNAL.getFile("textures/grass.png");
         assertNotNull(file);
     }

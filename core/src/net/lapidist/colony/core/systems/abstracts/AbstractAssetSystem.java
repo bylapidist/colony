@@ -17,46 +17,54 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.artemis.E.*;
 import static com.artemis.Aspect.all;
+import static com.artemis.E.E;
 
-public abstract class AbstractAssetSystem extends IteratingSystem implements Disposable {
+public abstract class AbstractAssetSystem
+        extends IteratingSystem implements Disposable {
 
-    protected boolean loaded;
-    protected final AssetManager assetManager;
-
+    private final AssetManager assetManager;
     private final Map<String, Entity> assetsByName;
     private final Map<Entity, String> namesByAsset;
     private final BitVector registered;
+    private boolean loaded;
     private FileLocation fileLocation;
     private boolean disposed;
 
-    public AbstractAssetSystem(FileLocation fileLocation) {
+    public AbstractAssetSystem(final FileLocation fileLocationToSet) {
         super(Aspect.all(AssetComponent.class));
 
-        this.assetManager = new AssetManager(fileLocation.getResolver());
+        this.assetManager = new AssetManager(fileLocationToSet.getResolver());
         this.assetsByName = new HashMap<>();
         this.namesByAsset = new HashMap<>();
         this.registered = new BitVector();
-        this.fileLocation = fileLocation;
+        this.fileLocation = fileLocationToSet;
     }
 
     @Override
-    protected void initialize() {
+    protected final void initialize() {
         world.getAspectSubscriptionManager()
                 .get(all(AssetComponent.class))
                 .addSubscriptionListener(new SubscriptionListener() {
                     @Override
-                    public void inserted(IntBag entities) { }
+                    public void inserted(final IntBag entities) {
+                    }
 
                     @Override
-                    public void removed(IntBag entities) {
+                    public void removed(final IntBag entities) {
                         deleted(entities);
                     }
                 });
+
+        initializeGui();
+        initializeMap();
     }
 
-    private void deleted(IntBag entities) {
+    protected abstract void initializeGui();
+
+    protected abstract void initializeMap();
+
+    private void deleted(final IntBag entities) {
         int[] ids = entities.getData();
 
         for (int i = 0, s = entities.size(); s > i; i++) {
@@ -68,14 +76,16 @@ public abstract class AbstractAssetSystem extends IteratingSystem implements Dis
                 registered.clear(id);
 
                 if (E(id).hasTextureComponent()) {
-                    String path = fileLocation.getFile("textures/" + removedName + ".png").path();
+                    String path = fileLocation.getFile(
+                            "textures/" + removedName + ".png"
+                    ).path();
                     assetManager.unload(path);
                 }
             }
         }
     }
 
-    protected void register(String name, Entity e) {
+    protected final void register(final String name, final Entity e) {
         unregister(name);
 
         if (getName(e) != null) {
@@ -87,23 +97,27 @@ public abstract class AbstractAssetSystem extends IteratingSystem implements Dis
         registered.set(e.getId());
 
         if (E(e).hasTextureComponent()) {
-            String path = fileLocation.getFile("textures/" + name + ".png").path();
+            String path = fileLocation.getFile(
+                    "textures/" + name + ".png"
+            ).path();
 
             assetManager.load(path, Texture.class);
         }
 
         if (E(e).hasFontComponent()) {
-            String path = fileLocation.getFile("fonts/" + name + ".fnt").path();
+            String path = fileLocation.getFile(
+                    "fonts/" + name + ".fnt"
+            ).path();
 
             assetManager.load(path, BitmapFont.class);
         }
     }
 
-    protected void register(String name, int entityId) {
+    protected final void register(final String name, final int entityId) {
         register(name, world.getEntity(entityId));
     }
 
-    protected void unregister(String name) {
+    protected final void unregister(final String name) {
         Entity removed = assetsByName.remove(name);
 
         if (removed != null) {
@@ -112,33 +126,35 @@ public abstract class AbstractAssetSystem extends IteratingSystem implements Dis
         }
     }
 
-    protected boolean isRegistered(String name) {
+    protected final boolean isRegistered(final String name) {
         return assetsByName.containsKey(name);
     }
 
-    protected Entity getEntity(String name) {
+    protected final Entity getEntity(final String name) {
         return assetsByName.get(name);
     }
 
-    protected int getEntityId(String name) {
+    protected final int getEntityId(final String name) {
         Entity e = getEntity(name);
         return e != null ? e.getId() : -1;
     }
 
-    protected String getName(Entity e) {
+    protected final String getName(final Entity e) {
         return namesByAsset.get(e);
     }
 
-    protected String getName(int entityId) {
+    protected final String getName(final int entityId) {
         return getName(world.getEntity(entityId));
     }
 
-    public Texture getTexture(String name) {
+    public final Texture getTexture(final String name) {
         if (isRegistered(name)) {
             Entity e = getEntity(name);
 
             if (E(e).hasTextureComponent()) {
-                String path = fileLocation.getFile("textures/" + name + ".png").path();
+                String path = fileLocation.getFile(
+                        "textures/" + name + ".png"
+                ).path();
                 return assetManager.get(path, Texture.class);
             }
         }
@@ -146,12 +162,14 @@ public abstract class AbstractAssetSystem extends IteratingSystem implements Dis
         return null;
     }
 
-    public BitmapFont getFont(String name) {
+    public final BitmapFont getFont(final String name) {
         if (isRegistered(name)) {
             Entity e = getEntity(name);
 
             if (E(e).hasFontComponent()) {
-                String path = fileLocation.getFile("fonts/" + name + ".fnt").path();
+                String path = fileLocation.getFile(
+                        "fonts/" + name + ".fnt"
+                ).path();
                 return assetManager.get(path, BitmapFont.class);
             }
         }
@@ -159,12 +177,12 @@ public abstract class AbstractAssetSystem extends IteratingSystem implements Dis
         return null;
     }
 
-    protected Collection<String> getRegisteredAssets() {
+    protected final Collection<String> getRegisteredAssets() {
         return namesByAsset.values();
     }
 
     @Override
-    public void dispose() {
+    public final void dispose() {
         if (!disposed) {
             disposed = true;
             assetManager.dispose();
@@ -172,7 +190,7 @@ public abstract class AbstractAssetSystem extends IteratingSystem implements Dis
     }
 
     @Override
-    protected void process(int entityId) {
+    protected final void process(final int entityId) {
         if (!loaded) {
             loaded = assetManager.update();
             return;
@@ -180,14 +198,29 @@ public abstract class AbstractAssetSystem extends IteratingSystem implements Dis
 
         if (E(entityId).hasTextureComponent()) {
             if (E(entityId).getTextureComponent().getTexture() == null) {
-                E(entityId).getTextureComponent().setTexture(getTexture(getName(entityId)));
+                E(entityId).getTextureComponent().setTexture(
+                        getTexture(getName(entityId))
+                );
             }
         }
 
         if (E(entityId).hasFontComponent()) {
             if (E(entityId).getFontComponent().getFont() == null) {
-                E(entityId).getFontComponent().setFont(getFont(getName(entityId)));
+                E(entityId).getFontComponent().setFont(
+                        getFont(getName(entityId))
+                );
             }
         }
+
+        processGui(entityId);
+        processMap(entityId);
+    }
+
+    protected abstract void processGui(final int entityId);
+
+    protected abstract void processMap(final int entityId);
+
+    protected final boolean isLoaded() {
+        return loaded;
     }
 }

@@ -14,12 +14,16 @@ import java.util.List;
 public class PacketDecoder extends MessageToMessageDecoder<DatagramPacket> {
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, DatagramPacket msg, List<Object> out) throws Exception {
+    protected final void decode(
+            final ChannelHandlerContext ctx,
+            final DatagramPacket msg,
+            final List<Object> out
+    ) throws Exception {
         byte[] bytes = readBytesFromBuffer(msg.content());
         System.out.println("Received packet, length: " + bytes.length);
         Object payload = deserialize(bytes);
 
-        if (payload instanceof TelegramPacket){
+        if (payload instanceof TelegramPacket) {
             TelegramPacket packet = (TelegramPacket) payload;
             System.out.println(packet.getExtraInfo());
             out.add(packet);
@@ -28,14 +32,16 @@ public class PacketDecoder extends MessageToMessageDecoder<DatagramPacket> {
         }
     }
 
-    private byte[] readBytesFromBuffer(ByteBuf in) {
+    private byte[] readBytesFromBuffer(final ByteBuf in) {
         int readableBytes = in.readableBytes();
         byte[] bytes = new byte[readableBytes];
         in.readBytes(bytes);
         return bytes;
     }
 
-    private Object deserialize(byte[] data) throws IOException, ClassNotFoundException {
+    private Object deserialize(
+            final byte[] data
+    ) throws IOException, ClassNotFoundException {
         ByteArrayInputStream in = new ByteArrayInputStream(data);
         ObjectInputStream is = new ObjectInputStream(in);
         return is.readObject();

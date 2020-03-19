@@ -12,7 +12,7 @@ public class ConeLightComponent extends Component {
         coneLights = new Array<>();
     }
 
-    public Array<ConeLight> getConeLights() {
+    public final Array<ConeLight> getConeLights() {
         return coneLights;
     }
 }

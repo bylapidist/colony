@@ -29,6 +29,7 @@ buildscript {
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
+    apply plugin: "checkstyle"
 
     version = '1.0'
 

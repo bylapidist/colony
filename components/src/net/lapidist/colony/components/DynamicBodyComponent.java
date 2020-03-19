@@ -18,34 +18,37 @@ public class DynamicBodyComponent extends Component {
         bodyDef.type = BodyDef.BodyType.DynamicBody;
     }
 
-    public DynamicBodyComponent(BodyDef bodyDef, FixtureDef fixtureDef) {
+    public DynamicBodyComponent(
+            final BodyDef bodyDefToSet,
+            final FixtureDef fixtureDefToSet
+    ) {
         this();
 
-        setBodyDef(bodyDef);
-        setFixtureDef(fixtureDef);
+        setBodyDef(bodyDefToSet);
+        setFixtureDef(fixtureDefToSet);
     }
 
-    public BodyDef getBodyDef() {
+    public final BodyDef getBodyDef() {
         return bodyDef;
     }
 
-    public void setBodyDef(BodyDef bodyDef) {
-        this.bodyDef = bodyDef;
+    public final void setBodyDef(final BodyDef bodyDefToSet) {
+        this.bodyDef = bodyDefToSet;
     }
 
-    public Body getBody() {
+    public final Body getBody() {
         return body;
     }
 
-    public void setBody(Body body) {
-        this.body = body;
+    public final void setBody(final Body bodyToSet) {
+        this.body = bodyToSet;
     }
 
-    public FixtureDef getFixtureDef() {
+    public final FixtureDef getFixtureDef() {
         return fixtureDef;
     }
 
-    public void setFixtureDef(FixtureDef fixtureDef) {
-        this.fixtureDef = fixtureDef;
+    public final void setFixtureDef(final FixtureDef fixtureDefToSet) {
+        this.fixtureDef = fixtureDefToSet;
     }
 }

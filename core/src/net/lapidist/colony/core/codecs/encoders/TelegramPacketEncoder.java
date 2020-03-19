@@ -11,19 +11,19 @@ import java.io.ObjectOutputStream;
 
 public class TelegramPacketEncoder extends AbstractPacketEncoder {
 
-    public TelegramPacketEncoder(Telegram telegram) {
+    public TelegramPacketEncoder(final Telegram telegram) {
         setPacket(encode(new TelegramPacket(telegram)));
     }
 
-    protected ByteBuf encode(Object obj) {
+    protected final ByteBuf encode(final Object obj) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ObjectOutputStream os;
         try {
-             os = new ObjectOutputStream(out);
+            os = new ObjectOutputStream(out);
             os.writeObject(obj);
-            } catch (IOException e) {
-           e.printStackTrace();
-           }
-           return Unpooled.copiedBuffer(out.toByteArray());
-     }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Unpooled.copiedBuffer(out.toByteArray());
+    }
 }

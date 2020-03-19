@@ -7,11 +7,11 @@ public class FontComponent extends Component {
 
     private BitmapFont font;
 
-    public BitmapFont getFont() {
+    public final BitmapFont getFont() {
         return font;
     }
 
-    public void setFont(BitmapFont font) {
-        this.font = font;
+    public final void setFont(final BitmapFont fontToSet) {
+        this.font = fontToSet;
     }
 }

@@ -30,6 +30,8 @@ jobs:
       run: chmod +x gradlew
     - name: Run Tests
       run: ./gradlew clean test
+    - name: Run checkstyle
+      run: ./gradlew check
 
   release:
     runs-on: ubuntu-latest

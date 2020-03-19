@@ -1,6 +1,10 @@
 package net.lapidist.colony.core.events;
 
-public class Events {
+public final class Events {
+
+    private Events() {
+    }
+
     public static final int GAME_INIT = 0;
     public static final int PAUSE = 1;
     public static final int RESUME = 2;

@@ -7,11 +7,11 @@ public class TextureComponent extends Component {
 
     private Texture texture;
 
-    public Texture getTexture() {
+    public final Texture getTexture() {
         return texture;
     }
 
-    public void setTexture(Texture texture) {
-        this.texture = texture;
+    public final void setTexture(final Texture textureToSet) {
+        this.texture = textureToSet;
     }
 }

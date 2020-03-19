@@ -9,27 +9,27 @@ public class InventoryComponent extends Component {
 
     private List<Integer> items = new ArrayList<>();
 
-    public List<Integer> getItems() {
+    public final List<Integer> getItems() {
         return items;
     }
 
-    public void addItem(int item) {
+    public final void addItem(final int item) {
         addItem(items.size(), item);
     }
 
-    public void addItem(int slot, int item) {
+    public final void addItem(final int slot, final int item) {
         items.add(slot, item);
     }
 
-    public int getItem(int slot) {
+    public final int getItem(final int slot) {
         return items.get(slot);
     }
 
-    public void removeItem(int slot) {
+    public final void removeItem(final int slot) {
         items.remove(slot);
     }
 
-    public int size() {
+    public final int size() {
         return items.size();
     }
 }

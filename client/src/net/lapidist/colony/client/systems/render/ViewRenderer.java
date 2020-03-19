@@ -9,14 +9,16 @@ import com.github.czyzby.lml.vis.util.VisLml;
 public class ViewRenderer extends LmlApplicationListener {
 
     @Override
-    protected LmlParser createParser() {
+    protected final LmlParser createParser() {
         return VisLml.parser()
-                .i18nBundle(I18NBundle.createBundle(Gdx.files.internal("i18n/bundle")))
+                .i18nBundle(I18NBundle.createBundle(
+                        Gdx.files.internal("i18n/bundle")
+                ))
                 .build();
     }
 
     @Override
-    public void render() {
+    public final void render() {
         if (getCurrentView() != null) {
             getCurrentView().render(Gdx.graphics.getDeltaTime());
         }

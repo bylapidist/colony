@@ -6,11 +6,11 @@ public class ScaleComponent extends Component {
 
     private float scale = 1f;
 
-    public float getScale() {
+    public final float getScale() {
         return scale;
     }
 
-    public void setScale(float scale) {
-        this.scale = scale;
+    public final void setScale(final float scaleToSet) {
+        this.scale = scaleToSet;
     }
 }

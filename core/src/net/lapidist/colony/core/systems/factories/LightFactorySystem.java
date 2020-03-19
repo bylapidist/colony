@@ -11,8 +11,22 @@ import com.badlogic.gdx.physics.box2d.Body;
 @Wire
 public final class LightFactorySystem extends BaseSystem {
 
-    public PointLight createPointlight(RayHandler rayHandler, Body body, Color color, float intensity) {
-        PointLight pointLight = new PointLight(rayHandler, 128, color, intensity, 0, 0);
+    private static final int NUM_RAYS = 128;
+
+    public PointLight createPointlight(
+            final RayHandler rayHandler,
+            final Body body,
+            final Color color,
+            final float intensity
+    ) {
+        PointLight pointLight = new PointLight(
+                rayHandler,
+                NUM_RAYS,
+                color,
+                intensity,
+                0,
+                0
+        );
         pointLight.setSoftnessLength(0f);
         pointLight.attachToBody(body);
         pointLight.setXray(false);
@@ -22,8 +36,24 @@ public final class LightFactorySystem extends BaseSystem {
         return pointLight;
     }
 
-    public ConeLight createConeLight(RayHandler rayHandler, Body body, Color color, float intensity, float direction, float coneDegree) {
-        ConeLight coneLight = new ConeLight(rayHandler, 128, color, intensity, 0, 0, direction, coneDegree);
+    public ConeLight createConeLight(
+            final RayHandler rayHandler,
+            final Body body,
+            final Color color,
+            final float intensity,
+            final float direction,
+            final float coneDegree
+    ) {
+        ConeLight coneLight = new ConeLight(
+                rayHandler,
+                NUM_RAYS,
+                color,
+                intensity,
+                0,
+                0,
+                direction,
+                coneDegree
+        );
         coneLight.setSoftnessLength(0f);
         coneLight.attachToBody(body);
         coneLight.setXray(false);

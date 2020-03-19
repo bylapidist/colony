@@ -4,22 +4,20 @@ import com.badlogic.gdx.ai.msg.Telegram;
 
 public class TelegramPacket extends AbstractPacket {
 
-    /** The message type. */
     private int message;
 
-    /** Any additional information that may accompany the message */
     private Object extraInfo;
 
-    public TelegramPacket(Telegram msg) {
+    public TelegramPacket(final Telegram msg) {
         this.message = msg.message;
         this.extraInfo = msg.extraInfo;
     }
 
-    public int getMessage() {
+    public final int getMessage() {
         return message;
     }
 
-    public Object getExtraInfo() {
+    public final Object getExtraInfo() {
         return extraInfo;
     }
 }

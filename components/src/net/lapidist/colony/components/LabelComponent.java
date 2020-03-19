@@ -6,11 +6,11 @@ public class LabelComponent extends Component {
 
     private String text;
 
-    public String getText() {
+    public final String getText() {
         return text;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public final void setText(final String textToSet) {
+        this.text = textToSet;
     }
 }

@@ -10,16 +10,21 @@ import net.lapidist.colony.core.utils.io.FileLocation;
 public class InventoryWindow extends AbstractLmlView {
 
     public InventoryWindow() {
-        super(new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight())));
+        super(new Stage(
+                new FitViewport(
+                        Gdx.graphics.getWidth(),
+                        Gdx.graphics.getHeight()
+                )
+        ));
     }
 
     @Override
-    public FileHandle getTemplateFile() {
+    public final FileHandle getTemplateFile() {
         return FileLocation.INTERNAL.getFile("views/inventory.lml");
     }
 
     @Override
-    public String getViewId() {
+    public final String getViewId() {
         return "inventory";
     }
 }

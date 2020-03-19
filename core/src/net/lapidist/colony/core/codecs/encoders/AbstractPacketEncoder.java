@@ -6,12 +6,12 @@ public abstract class AbstractPacketEncoder {
 
     private ByteBuf packet;
 
-    public ByteBuf getPacket() {
+    public final ByteBuf getPacket() {
         return packet;
     }
 
-    public void setPacket(ByteBuf packet) {
-        this.packet = packet;
+    public final void setPacket(final ByteBuf packetToSet) {
+        this.packet = packetToSet;
     }
 
     protected abstract ByteBuf encode(Object obj);

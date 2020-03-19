@@ -7,12 +7,12 @@ import net.lapidist.colony.core.systems.abstracts.AbstractCameraSystem;
 @Wire
 public class PlayerCameraSystem extends AbstractCameraSystem {
 
-    public PlayerCameraSystem(float zoom) {
+    public PlayerCameraSystem(final float zoom) {
         super(Aspect.all(), zoom);
     }
 
     @Override
-    protected void process(int e) {
-        camera.update();
+    protected final void process(final int e) {
+        getCamera().update();
     }
 }

@@ -7,26 +7,26 @@ public class ChunkComponent extends Component {
     private int[][] tiles;
 
     public ChunkComponent() {
-        this(32, 32);
+        tiles = new int[0][0];
     }
 
-    public ChunkComponent(int chunkWidth, int chunkHeight) {
+    public ChunkComponent(final int chunkWidth, final int chunkHeight) {
         tiles = new int[chunkWidth][chunkHeight];
     }
 
-    public int[][] getTiles() {
+    public final int[][] getTiles() {
         return tiles;
     }
 
-    public int getTile(int x, int y) {
+    public final void setTiles(final int[][] tilesToSet) {
+        this.tiles = tilesToSet;
+    }
+
+    public final int getTile(final int x, final int y) {
         return tiles[x][y];
     }
 
-    public void setTiles(int[][] tiles) {
-        this.tiles = tiles;
-    }
-
-    public void setTile(int x, int y, int tile) {
+    public final void setTile(final int x, final int y, final int tile) {
         this.tiles[x][y] = tile;
     }
 }
