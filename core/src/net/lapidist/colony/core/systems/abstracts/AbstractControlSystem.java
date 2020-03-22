@@ -98,10 +98,10 @@ public abstract class AbstractControlSystem
     }
 
     protected abstract boolean touchDownPlayer(
-            final int screenX,
-            final int screenY,
-            final int pointer,
-            final int button
+            int screenX,
+            int screenY,
+            int pointer,
+            int button
     );
 
     @Override
@@ -136,5 +136,5 @@ public abstract class AbstractControlSystem
         return false;
     }
 
-    protected abstract boolean scrolledPlayer(final int amount);
+    protected abstract boolean scrolledPlayer(int amount);
 }
