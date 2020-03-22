@@ -12,7 +12,9 @@ jobs:
       - name: Update version
         uses: brettdorrans/write-version-to-file@master
         with:
-          filename: '/home/runner/work/Colony/Colony/core/src/net/lapidist/colony/core/Constants.java'
+          filename: './core/src/net/lapidist/colony/core/Constants.java'
+      - name: List files
+        run: ls -la
 
   build:
     runs-on: ubuntu-latest
