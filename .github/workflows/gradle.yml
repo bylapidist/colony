@@ -3,9 +3,21 @@ name: Java CI
 on: [push, pull_request]
 
 jobs:
+  write-version:
+    runs-on: ubuntu-latest
+    name: Write Version to File
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Update version
+        uses: brettdorrans/write-version-to-file@master
+        with:
+          filename: '/core/src/net/lapidist/colony/core/Constants.java'
+
   build:
     runs-on: ubuntu-latest
     name: Build
+    needs: [write-version]
     steps:
     - uses: actions/checkout@v2
     - name: Setup JDK
