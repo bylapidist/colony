@@ -50,47 +50,50 @@ project(":client") {
     apply plugin: "java"
 
     dependencies {
-        compile project(":core")
+        implementation project(":core")
+        implementation project(":components")
 
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
-        compile "com.kotcrab.vis:vis-ui:$visuiVersion"
-        compile "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
-        compile "com.github.czyzby:gdx-lml:$gdxLmlVersion"
-        compile "com.github.czyzby:gdx-lml-vis:$gdxLmlVersion"
-        compile "io.netty:netty-all:$nettyVersion"
+        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+        implementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+        implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+        implementation "com.kotcrab.vis:vis-ui:$visuiVersion"
+        implementation "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
+        implementation "com.github.czyzby:gdx-lml:$gdxLmlVersion"
+        implementation "com.github.czyzby:gdx-lml-vis:$gdxLmlVersion"
+        implementation "io.netty:netty-all:$nettyVersion"
     }
 }
 
 project(":core") {
     apply plugin: "java"
+    apply plugin: "java-library"
 
     dependencies {
-        compile project(":components")
+        implementation project(":components")
 
-        compile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
-        compile "net.onedaybeard.artemis:artemis-odb-serializer:$artemisVersion:sources"
-        compile "net.onedaybeard.artemis:artemis-odb-serializer-json-libgdx:$artemisVersion:sources"
-        compile "io.netty:netty-all:$nettyVersion"
+        api "net.onedaybeard.artemis:artemis-fluid-core:$artemisVersion"
+        implementation "net.onedaybeard.artemis:artemis-odb-serializer:$artemisVersion:sources"
+        implementation "net.onedaybeard.artemis:artemis-odb-serializer-json-libgdx:$artemisVersion:sources"
+        implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
+        implementation "io.netty:netty-all:$nettyVersion"
     }
 }
 
 project(":components") {
-    apply plugin: "java"
+    apply plugin: "java-library"
 
     dependencies {
-        compile "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
-        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-        compile "com.badlogicgames.box2dlights:box2dlights:$box2dLightsVersion"
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        api "com.badlogicgames.box2dlights:box2dlights:$box2dLightsVersion"
+        implementation "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
+        implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
     }
 }
 
@@ -98,10 +101,10 @@ project(":server") {
     apply plugin: "java"
 
     dependencies {
-        compile project(":core")
+        implementation project(":core")
 
-        compile "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
-        compile "io.netty:netty-all:$nettyVersion"
+        implementation "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
+        implementation "io.netty:netty-all:$nettyVersion"
     }
 }
 
@@ -111,16 +114,16 @@ project(":tests") {
     sourceSets.test.java.srcDirs = ["src/"]
 
     dependencies {
-        compile project(":core")
+        implementation project(":core")
 
-        compile "junit:junit:$jUnitVersion"
-        compile "org.mockito:mockito-core:$mockitoVersion"
-        compile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        testCompile "junit:junit:$jUnitVersion"
-        testCompile "org.mockito:mockito-core:$mockitoVersion"
-        testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-        testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        implementation "junit:junit:$jUnitVersion"
+        implementation "org.mockito:mockito-core:$mockitoVersion"
+        implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+        testImplementation "junit:junit:$jUnitVersion"
+        testImplementation "org.mockito:mockito-core:$mockitoVersion"
+        testImplementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+        testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     }
 }
