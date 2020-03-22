@@ -9,12 +9,16 @@ jobs:
     if: github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v2
-      - name: List files
-        run: ls -la
       - name: Update version
-        uses: brettdorrans/write-version-to-file@master
-        with:
-          filename: './core/src/net/lapidist/colony/core/Constants.java'
+        run: |
+          fileName="./core/src/net/lapidist/colony/core/Constants.java"
+          content=$(cat "$fileName")
+          latestVersionTag=$(git describe --tags "$(git rev-list --tags --max-count=1)")
+          echo "File Contents: $content"
+          echo "Updating Version To: $latestVersionTag"
+          updatedContent=$(cat "$filename" | sed "s/\${VERSION}/$latestVersionTag/g")
+          echo "Updated Content: $updatedContent"
+          echo "$updatedContent" > "$fileName"
 
   build:
     runs-on: ubuntu-latest
