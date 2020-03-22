@@ -9,12 +9,12 @@ jobs:
     if: github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v2
+      - name: List files
+        run: ls -la
       - name: Update version
         uses: brettdorrans/write-version-to-file@master
         with:
           filename: './core/src/net/lapidist/colony/core/Constants.java'
-      - name: List files
-        run: ls -la
 
   build:
     runs-on: ubuntu-latest
