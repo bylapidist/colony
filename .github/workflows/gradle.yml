@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Update version
-        uses: brettdorrans/write-version-to-file
+        uses: brettdorrans/write-version-to-file@master
         with:
           filename: '/core/src/net/lapidist/colony/core/Constants.java'
 
