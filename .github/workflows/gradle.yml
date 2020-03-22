@@ -15,10 +15,10 @@ jobs:
           fileName="./core/src/net/lapidist/colony/core/Constants.java"
           content=$(cat "$fileName")
           latestVersionTag=$(git describe --tags "$(git rev-list --tags --max-count=1)")
-          echo "File Contents: $content"
+          echo "File Contents:\n $content"
           echo "Updating Version To: $latestVersionTag"
           updatedContent=$(cat "$fileName" | sed "s/\${VERSION}/$latestVersionTag/g")
-          echo "Updated Content: $updatedContent"
+          echo "Updated Content:\n $updatedContent"
           echo "$updatedContent" > "$fileName"
 
   build:
