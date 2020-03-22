@@ -17,7 +17,7 @@ jobs:
           latestVersionTag=$(git describe --tags "$(git rev-list --tags --max-count=1)")
           echo "File Contents: $content"
           echo "Updating Version To: $latestVersionTag"
-          updatedContent=$(cat "$filename" | sed "s/\${VERSION}/$latestVersionTag/g")
+          updatedContent=$(cat "$fileName" | sed "s/\${VERSION}/$latestVersionTag/g")
           echo "Updated Content: $updatedContent"
           echo "$updatedContent" > "$fileName"
 
