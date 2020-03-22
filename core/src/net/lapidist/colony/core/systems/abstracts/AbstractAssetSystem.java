@@ -216,9 +216,9 @@ public abstract class AbstractAssetSystem
         processMap(entityId);
     }
 
-    protected abstract void processGui(final int entityId);
+    protected abstract void processGui(int entityId);
 
-    protected abstract void processMap(final int entityId);
+    protected abstract void processMap(int entityId);
 
     protected final boolean isLoaded() {
         return loaded;

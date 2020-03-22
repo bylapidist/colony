@@ -42,6 +42,10 @@ allprojects {
     }
 }
 
+checkstyle {
+    project.ext.checkstyleVersion = '8.30'
+}
+
 project(":client") {
     apply plugin: "java"
 
@@ -119,8 +123,4 @@ project(":tests") {
         testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     }
-}
-
-tasks.eclipse.doLast {
-    delete ".project"
 }
