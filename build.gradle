@@ -31,8 +31,6 @@ allprojects {
     apply plugin: "idea"
     apply plugin: "checkstyle"
 
-    version = '1.0'
-
     repositories {
         mavenLocal()
         mavenCentral()

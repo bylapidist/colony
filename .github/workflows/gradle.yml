@@ -3,37 +3,6 @@ name: Java CI
 on: [push, pull_request]
 
 jobs:
-  write-version:
-    runs-on: ubuntu-latest
-    name: Write Version to File
-    if: github.ref == 'refs/heads/master'
-    steps:
-      - uses: actions/checkout@v2
-      - name: Update version
-        run: |
-          git fetch --tags
-          fileName="./core/src/net/lapidist/colony/core/Constants.java"
-          content=$(cat "$fileName")
-          latestVersionTag=$(git describe --tags "$(git rev-list --tags --max-count=1)")
-          echo "Updating Version To: $latestVersionTag"
-          updatedContent=$(cat "$fileName" | sed "s/\${VERSION}/$latestVersionTag/g")
-          echo "$updatedContent" > "$fileName"
-
-  build:
-    runs-on: ubuntu-latest
-    name: Build
-    needs: [write-version]
-    steps:
-    - uses: actions/checkout@v2
-    - name: Setup JDK
-      uses: actions/setup-java@v1
-      with:
-        java-version: 14
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build
-      run: ./gradlew build -i
-
   test:
     runs-on: ubuntu-latest
     name: Test
@@ -52,7 +21,7 @@ jobs:
 
   release:
     runs-on: ubuntu-latest
-    needs: [build, test]
+    needs: [test]
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -64,5 +33,36 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
+      - name: Setup JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 14
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Update version constant
+        run: |
+          git fetch --tags
+          fileName="./core/src/net/lapidist/colony/core/Constants.java"
+          content=$(cat "$fileName")
+          latestVersionTag=$(git describe --tags "$(git rev-list --tags --max-count=1)")
+          echo "Updating Version To: $latestVersionTag"
+          updatedContent=$(cat "$fileName" | sed "s/\${VERSION}/$latestVersionTag/g")
+          echo "$updatedContent" > "$fileName"
+      - name: Build client jar
+        run: ./gradlew client:clean client:build client:jar -i
+      - name: Build server jar
+        run: ./gradlew server:clean server:build server:jar -i
+      - name: Upload client build
+        uses: JasonEtco/upload-to-release@v0.1.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: "client/build/libs/client.jar"
+      - name: Upload server build
+        uses: JasonEtco/upload-to-release@v0.1.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: "server/build/libs/server.jar"
       - name: Semantic release
         run: npm i -g semantic-release && semantic-release
