@@ -54,17 +54,27 @@ jobs:
         run: ./gradlew client:clean client:build client:jar -i
       - name: Build server jar
         run: ./gradlew server:clean server:build server:jar -i
-      - name: Upload client build
-        uses: Shopify/upload-to-release@v1.0.0
+      - name: Upload client artifact
+        uses: actions/upload-artifact@v1.0.0
         with:
-          name: Client
+          name: client
+          path: client/build/libs/client.jar
+      - name: Upload server artifact
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: server
+          path: server/build/libs/client.jar
+      - name: Upload client build
+        uses: Shopify/upload-to-release
+        with:
+          name: client
           path: client/build/libs/client.jar
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           content-type: application/zip
       - name: Upload server build
-        uses: Shopify/upload-to-release@v1.0.0
+        uses: Shopify/upload-to-release
         with:
-          name: Server
+          name: server
           path: server/build/libs/server.jar
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           content-type: application/zip
