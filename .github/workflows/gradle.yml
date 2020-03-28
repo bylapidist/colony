@@ -55,14 +55,16 @@ jobs:
       - name: Build server jar
         run: ./gradlew server:clean server:build server:jar -i
       - name: Upload client build
-        uses: JasonEtco/upload-to-release@v0.1.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: Shopify/upload-to-release@v1.0.0
         with:
-          args: "client/build/libs/client.jar application/zip"
+          name: Client
+          path: client/build/libs/client.jar
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          content-type: application/zip
       - name: Upload server build
-        uses: JasonEtco/upload-to-release@v0.1.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: Shopify/upload-to-release@v1.0.0
         with:
-          args: "server/build/libs/server.jar application/zip"
+          name: Server
+          path: server/build/libs/server.jar
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          content-type: application/zip
