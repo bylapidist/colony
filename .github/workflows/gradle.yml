@@ -63,7 +63,7 @@ jobs:
         uses: actions/upload-artifact@v1.0.0
         with:
           name: server
-          path: server/build/libs/client.jar
+          path: server/build/libs/server.jar
       - name: Upload client build
         uses: Shopify/upload-to-release@1.0.0
         with:
