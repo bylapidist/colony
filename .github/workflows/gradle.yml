@@ -65,14 +65,14 @@ jobs:
           name: server
           path: server/build/libs/client.jar
       - name: Upload client build
-        uses: Shopify/upload-to-release
+        uses: Shopify/upload-to-release@1.0.0
         with:
           name: client
           path: client/build/libs/client.jar
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           content-type: application/zip
       - name: Upload server build
-        uses: Shopify/upload-to-release
+        uses: Shopify/upload-to-release@1.0.0
         with:
           name: server
           path: server/build/libs/server.jar
