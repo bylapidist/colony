@@ -39,6 +39,8 @@ jobs:
           java-version: 14
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+      - name: Semantic release
+        run: npm i -g semantic-release && semantic-release
       - name: Update version constant
         run: |
           git fetch --tags
@@ -57,12 +59,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: "client/build/libs/client.jar"
+          args: "client/build/libs/client.jar application/zip"
       - name: Upload server build
         uses: JasonEtco/upload-to-release@v0.1.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: "server/build/libs/server.jar"
-      - name: Semantic release
-        run: npm i -g semantic-release && semantic-release
+          args: "server/build/libs/server.jar application/zip"
