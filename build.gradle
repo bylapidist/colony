@@ -1,6 +1,21 @@
+import org.apache.commons.lang3.SystemUtils
+
+switch (true) {
+    case SystemUtils.IS_OS_LINUX:
+        project.ext.lwjglNatives = "natives-linux"
+        break
+    case SystemUtils.IS_OS_WINDOWS:
+        project.ext.lwjglNatives = "natives-windows"
+        break
+    case SystemUtils.IS_OS_MAC_OSX:
+        project.ext.lwjglNatives = "natives-macos"
+        break
+}
+
 buildscript {
     ext {
         appName = "colony"
+        lwjglVersion = '3.2.3'
         gdxVersion = '1.9.10'
         gdxAiVersion = '1.8.2'
         box2dLightsVersion = '1.5'
@@ -52,6 +67,18 @@ project(":client") {
     dependencies {
         implementation project(":core")
         implementation project(":components")
+
+        implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+        implementation "org.lwjgl:lwjgl"
+        implementation "org.lwjgl:lwjgl-glfw"
+        implementation "org.lwjgl:lwjgl-openal"
+        implementation "org.lwjgl:lwjgl-opengl"
+        implementation "org.lwjgl:lwjgl-stb"
+        runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
+        runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
+        runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
+        runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
+        runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
 
 //        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
 //        implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
