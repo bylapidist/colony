@@ -53,16 +53,16 @@ project(":client") {
         implementation project(":core")
         implementation project(":components")
 
-        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        implementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
-        implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
-        implementation "com.kotcrab.vis:vis-ui:$visuiVersion"
-        implementation "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
-        implementation "com.github.czyzby:gdx-lml:$gdxLmlVersion"
-        implementation "com.github.czyzby:gdx-lml-vis:$gdxLmlVersion"
+//        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+//        implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+//        implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+//        implementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+//        implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+//        implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+//        implementation "com.kotcrab.vis:vis-ui:$visuiVersion"
+//        implementation "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
+//        implementation "com.github.czyzby:gdx-lml:$gdxLmlVersion"
+//        implementation "com.github.czyzby:gdx-lml-vis:$gdxLmlVersion"
         implementation "io.netty:netty-all:$nettyVersion"
     }
 }
@@ -77,10 +77,10 @@ project(":core") {
         api "net.onedaybeard.artemis:artemis-fluid-core:$artemisVersion"
         implementation "net.onedaybeard.artemis:artemis-odb-serializer:$artemisVersion:sources"
         implementation "net.onedaybeard.artemis:artemis-odb-serializer-json-libgdx:$artemisVersion:sources"
-        implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
+//        implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+//        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+//        implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+//        implementation "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
         implementation "io.netty:netty-all:$nettyVersion"
     }
 }
@@ -89,11 +89,11 @@ project(":components") {
     apply plugin: "java-library"
 
     dependencies {
-        api "com.badlogicgames.box2dlights:box2dlights:$box2dLightsVersion"
+//        api "com.badlogicgames.box2dlights:box2dlights:$box2dLightsVersion"
         implementation "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
-        implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+//        implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+//        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+//        implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
     }
 }
 
@@ -103,7 +103,7 @@ project(":server") {
     dependencies {
         implementation project(":core")
 
-        implementation "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
+//        implementation "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
         implementation "io.netty:netty-all:$nettyVersion"
     }
 }
@@ -118,12 +118,12 @@ project(":tests") {
 
         implementation "junit:junit:$jUnitVersion"
         implementation "org.mockito:mockito-core:$mockitoVersion"
-        implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+//        implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+//        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
         testImplementation "junit:junit:$jUnitVersion"
         testImplementation "org.mockito:mockito-core:$mockitoVersion"
-        testImplementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-        testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
-        testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+//        testImplementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+//        testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+//        testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     }
 }
