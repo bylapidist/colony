@@ -11,6 +11,7 @@ buildscript {
         gdxLmlVersion = '1.9.1.9.10-SNAPSHOT'
         noise4jVersion = '0.1.0'
         nettyVersion = '4.1.48.Final'
+        shadowVersion = '5.2.0'
     }
     repositories {
         mavenLocal()
@@ -23,6 +24,7 @@ buildscript {
     dependencies {
         classpath "net.onedaybeard.artemis:artemis-odb-gradle-plugin:$artemisVersion"
         classpath "net.onedaybeard.artemis:artemis-fluid-gradle-plugin:$artemisVersion"
+        classpath "com.github.jengelman.gradle.plugins:shadow:$shadowVersion"
     }
 }
 
@@ -30,6 +32,7 @@ allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
     apply plugin: "checkstyle"
+    apply plugin: 'com.github.johnrengelman.shadow'
 
     repositories {
         mavenLocal()

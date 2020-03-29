@@ -51,16 +51,16 @@ jobs:
           updatedContent=$(cat "$fileName" | sed "s/\${VERSION}/$latestVersionTag/g")
           echo "$updatedContent" > "$fileName"
       - name: Build client jar
-        run: ./gradlew client:clean client:build client:jar -i
+        run: ./gradlew client:clean client:build client:shadowJar -i
       - name: Build server jar
-        run: ./gradlew server:clean server:build server:jar -i
+        run: ./gradlew server:clean server:build server:shadowJar -i
       - name: Upload client artifact
         uses: actions/upload-artifact@v1.0.0
         with:
           name: client
-          path: client/build/libs/client.jar
+          path: client/build/libs/client-all.jar
       - name: Upload server artifact
         uses: actions/upload-artifact@v1.0.0
         with:
           name: server
-          path: server/build/libs/server.jar
+          path: server/build/libs/server-all.jar
