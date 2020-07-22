@@ -1,7 +1,7 @@
 buildscript {
     ext {
         appName = "colony"
-        gdxVersion = '1.9.10'
+        gdxVersion = '1.9.11'
         gdxAiVersion = '1.8.2'
         box2dLightsVersion = '1.5'
         artemisVersion = '2.3.0'
