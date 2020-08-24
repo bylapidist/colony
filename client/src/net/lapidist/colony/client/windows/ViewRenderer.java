@@ -1,4 +1,4 @@
-package net.lapidist.colony.client.systems.render;
+package net.lapidist.colony.client.windows;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.I18NBundle;
