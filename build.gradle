@@ -29,7 +29,7 @@ buildscript {
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
-    apply plugin: "checkstyle"
+//    apply plugin: "checkstyle"
 
     repositories {
         mavenLocal()
@@ -40,9 +40,9 @@ allprojects {
     }
 }
 
-checkstyle {
-    project.ext.checkstyleVersion = '8.30'
-}
+//checkstyle {
+//    project.ext.checkstyleVersion = '8.30'
+//}
 
 project(":client") {
     apply plugin: "java"
