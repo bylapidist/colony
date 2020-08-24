@@ -8,7 +8,7 @@ buildscript {
         jUnitVersion = '4.13'
         mockitoVersion = '3.5.2'
         visuiVersion = '1.4.6'
-        gdxLmlVersion = '1.9.1.9.10-SNAPSHOT'
+        gdxLmlVersion = '1.9.1.9.11-SNAPSHOT'
         noise4jVersion = '0.1.0'
         nettyVersion = '4.1.51.Final'
         shadowVersion = '5.2.0'
