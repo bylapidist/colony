@@ -6,7 +6,7 @@ buildscript {
         box2dLightsVersion = '1.5'
         artemisVersion = '2.3.0'
         jUnitVersion = '4.13'
-        mockitoVersion = '3.5.5'
+        mockitoVersion = '3.5.6'
         visuiVersion = '1.4.6'
         gdxLmlVersion = '1.9.1.9.11-SNAPSHOT'
         noise4jVersion = '0.1.0'
