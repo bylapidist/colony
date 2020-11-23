@@ -7,7 +7,7 @@ buildscript {
         artemisVersion = '2.3.0'
         jUnitVersion = '4.13.1'
         mockitoVersion = '3.6.0'
-        visuiVersion = '1.4.6'
+        visuiVersion = '1.4.8'
         gdxLmlVersion = '1.9.1.9.11-SNAPSHOT'
         noise4jVersion = '0.1.0'
         nettyVersion = '4.1.54.Final'
