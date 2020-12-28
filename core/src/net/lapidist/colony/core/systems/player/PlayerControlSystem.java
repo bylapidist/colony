@@ -179,9 +179,12 @@ public class PlayerControlSystem extends AbstractControlSystem {
     }
 
     @Override
-    public final boolean scrolledPlayer(final int amount) {
+    public final boolean scrolledPlayer(
+            final float amountX,
+            final float amountY
+    ) {
         // Zoom out
-        if (amount == 1) {
+        if (amountX == 1) {
             cameraSystem.getCamera().zoom += ZOOM_SPEED;
             cameraSystem.getCamera().zoom =
                     MathUtils.clamp(
@@ -192,7 +195,7 @@ public class PlayerControlSystem extends AbstractControlSystem {
         }
 
         // Zoom in
-        if (amount == -1) {
+        if (amountX == -1) {
             cameraSystem.getCamera().zoom -= ZOOM_SPEED;
             cameraSystem.getCamera().zoom =
                     MathUtils.clamp(

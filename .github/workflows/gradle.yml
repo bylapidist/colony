@@ -11,7 +11,7 @@ jobs:
     - name: Setup JDK
       uses: actions/setup-java@v1
       with:
-        java-version: 14
+        java-version: 15
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Run Tests
@@ -33,24 +33,5 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      - name: Setup JDK
-        uses: actions/setup-java@v1
-        with:
-          java-version: 14
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
       - name: Semantic release
         run: npm i -g semantic-release && semantic-release
-      - name: Update version constant
-        run: |
-          git fetch --tags
-          fileName="./core/src/net/lapidist/colony/core/Constants.java"
-          content=$(cat "$fileName")
-          latestVersionTag=$(git describe --tags "$(git rev-list --tags --max-count=1)")
-          echo "Updating Version To: $latestVersionTag"
-          updatedContent=$(cat "$fileName" | sed "s/\${VERSION}/$latestVersionTag/g")
-          echo "$updatedContent" > "$fileName"
-      - name: Build client jar
-        run: ./gradlew client:clean client:build client:shadowJar -i
-      - name: Build server jar
-        run: ./gradlew server:clean server:build server:shadowJar -i
