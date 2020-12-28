@@ -14,13 +14,14 @@ import net.lapidist.colony.core.network.Client;
 
 public class MapScreen implements Screen {
 
-    private World world;
+    private final World world;
+    private Client client;
 
     public MapScreen() {
         Events.enableDebug();
 
         try {
-            Client client = new Client(
+            client = new Client(
                     Constants.DEFAULT_HOSTNAME,
                     Constants.DEFAULT_PORT
             );
@@ -75,6 +76,7 @@ public class MapScreen implements Screen {
 
     @Override
     public final void dispose() {
+        client.setState(Client.ClientState.DISCONNECTED);
         world.dispose();
     }
 }
