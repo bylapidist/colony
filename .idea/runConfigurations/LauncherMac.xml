@@ -5,7 +5,6 @@
     <option name="VM_PARAMETERS" value="-XstartOnFirstThread" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/core/assets" />
     <method v="2">
-      <option name="Gradle.BeforeRunTask" enabled="true" tasks="build" externalProjectPath="$PROJECT_DIR$/core" vmOptions="" scriptParameters="" />
       <option name="Make" enabled="true" />
     </method>
   </configuration>

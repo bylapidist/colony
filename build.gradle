@@ -3,13 +3,10 @@ buildscript {
         appName = "colony"
         gdxVersion = '1.9.12'
         gdxAiVersion = '1.8.2'
-        box2dLightsVersion = '1.5'
         artemisVersion = '2.3.0'
+        artemisContribVersion = '2.4.0'
         jUnitVersion = '4.13.1'
         mockitoVersion = '3.6.28'
-        visuiVersion = '1.4.8'
-        gdxLmlVersion = '1.9.1.9.11-SNAPSHOT'
-        noise4jVersion = '0.1.0'
         nettyVersion = '4.1.56.Final'
     }
     repositories {
@@ -41,11 +38,13 @@ allprojects {
 }
 
 checkstyle {
-    project.ext.checkstyleVersion = '8.30'
+    project.ext.checkstyleVersion = '8.38'
 }
 
 project(":client") {
     apply plugin: "java"
+
+    sourceSets.test.java.srcDirs = ["src/"]
 
     dependencies {
         implementation project(":core")
@@ -54,13 +53,9 @@ project(":client") {
         implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        implementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
         implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
-        implementation "com.kotcrab.vis:vis-ui:$visuiVersion"
         implementation "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
-        implementation "com.github.czyzby:gdx-lml:$gdxLmlVersion"
-        implementation "com.github.czyzby:gdx-lml-vis:$gdxLmlVersion"
         implementation "io.netty:netty-all:$nettyVersion"
     }
 }
@@ -69,12 +64,16 @@ project(":core") {
     apply plugin: "java"
     apply plugin: "java-library"
 
+    sourceSets.test.java.srcDirs = ["src/"]
+
     dependencies {
         implementation project(":components")
 
         api "net.onedaybeard.artemis:artemis-fluid-core:$artemisVersion"
+        implementation "net.mostlyoriginal.artemis-odb:contrib-core:$artemisContribVersion"
         implementation "net.onedaybeard.artemis:artemis-odb-serializer:$artemisVersion:sources"
         implementation "net.onedaybeard.artemis:artemis-odb-serializer-json-libgdx:$artemisVersion:sources"
+        implementation "net.mostlyoriginal.artemis-odb:contrib-core:$artemisContribVersion:sources"
         implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
@@ -86,17 +85,19 @@ project(":core") {
 project(":components") {
     apply plugin: "java-library"
 
+    sourceSets.test.java.srcDirs = ["src/"]
+
     dependencies {
-        api "com.badlogicgames.box2dlights:box2dlights:$box2dLightsVersion"
         implementation "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
-        implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        implementation "net.mostlyoriginal.artemis-odb:contrib-core:$artemisContribVersion"
         implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
     }
 }
 
 project(":server") {
     apply plugin: "java"
+
+    sourceSets.test.java.srcDirs = ["src/"]
 
     dependencies {
         implementation project(":core")

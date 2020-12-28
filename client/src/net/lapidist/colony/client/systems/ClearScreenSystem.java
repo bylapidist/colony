@@ -1,4 +1,4 @@
-package net.lapidist.colony.client.systems.render;
+package net.lapidist.colony.client.systems;
 
 import com.artemis.BaseSystem;
 import com.badlogic.gdx.Gdx;
@@ -8,10 +8,6 @@ import com.badlogic.gdx.graphics.GL20;
 public class ClearScreenSystem extends BaseSystem {
 
     private final Color color;
-
-    public ClearScreenSystem() {
-        this(Color.BLACK);
-    }
 
     public ClearScreenSystem(final Color colorToClear) {
         this.color = colorToClear;
