@@ -6,7 +6,6 @@ import com.artemis.WorldConfiguration;
 import com.artemis.WorldConfigurationBuilder;
 import com.artemis.managers.TagManager;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.graphics.Color;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
 import net.lapidist.colony.core.Constants;
@@ -15,10 +14,10 @@ import net.lapidist.colony.core.network.Client;
 
 public class MapScreen implements Screen {
 
-    private final World world;
+    private World world;
 
     public MapScreen() {
-        MessageManager.getInstance().setDebugEnabled(true);
+        Events.enableDebug();
 
         try {
             Client client = new Client(
@@ -46,37 +45,36 @@ public class MapScreen implements Screen {
     public final void render(final float delta) {
         world.setDelta(delta);
         world.process();
-        MessageManager.getInstance().update();
+        Events.update();
     }
 
     @Override
     public final void resize(final int width, final int height) {
-        MessageManager.getInstance().dispatchMessage(0, null, Events.RESIZE);
+        Events.dispatch(0, Events.RESIZE);
     }
 
     @Override
     public final void pause() {
-        MessageManager.getInstance().dispatchMessage(0, null, Events.PAUSE);
+        Events.dispatch(0,  Events.PAUSE);
     }
 
     @Override
     public final void resume() {
-        MessageManager.getInstance().dispatchMessage(0, null, Events.RESUME);
+        Events.dispatch(0,  Events.RESUME);
     }
 
     @Override
     public final void hide() {
-        MessageManager.getInstance().dispatchMessage(0, null, Events.HIDE);
+        Events.dispatch(0, Events.HIDE);
     }
 
     @Override
     public final void show() {
-        MessageManager.getInstance().dispatchMessage(0, null, Events.SHOW);
+        Events.dispatch(0, Events.SHOW);
     }
 
     @Override
     public final void dispose() {
         world.dispose();
-        MessageManager.getInstance().clear();
     }
 }

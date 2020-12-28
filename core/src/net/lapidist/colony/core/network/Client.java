@@ -1,6 +1,5 @@
 package net.lapidist.colony.core.network;
 
-import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.ai.msg.Telegram;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -11,7 +10,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.DatagramPacket;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import net.lapidist.colony.core.codecs.encoders.TelegramPacketEncoder;
-import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.IListener;
 
 import java.net.InetSocketAddress;
@@ -55,9 +53,6 @@ public class Client implements IListener {
 
     @Override
     public final void addMessageListeners() {
-        MessageManager.getInstance().addListener(this, Events.CLICK_TILE);
-        MessageManager.getInstance().addListener(this, Events.SEASON_CHANGE);
-        MessageManager.getInstance().addListener(this, Events.TIME_CHANGE);
     }
 
     @Override
