@@ -5,7 +5,7 @@ ext {
     fluidOutputDir = file("$buildDir/generated-sources/fluid/")
 }
 
-sourceCompatibility = 14
+sourceCompatibility = 15
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 sourceSets.main.java.srcDirs = [ "src/", fluidOutputDir ]

@@ -131,10 +131,9 @@ public abstract class AbstractControlSystem
     }
 
     @Override
-    public final boolean scrolled(final int amount) {
-        scrolledPlayer(amount);
-        return false;
+    public final boolean scrolled(final float amountX, final float amountY) {
+        return scrolledPlayer(amountX, amountY);
     }
 
-    protected abstract boolean scrolledPlayer(int amount);
+    protected abstract boolean scrolledPlayer(float amountX, float amountY);
 }

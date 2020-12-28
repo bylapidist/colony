@@ -1,7 +1,7 @@
 buildscript {
     ext {
         appName = "colony"
-        gdxVersion = '1.9.11'
+        gdxVersion = '1.9.12'
         gdxAiVersion = '1.8.2'
         box2dLightsVersion = '1.5'
         artemisVersion = '2.3.0'
@@ -11,7 +11,6 @@ buildscript {
         gdxLmlVersion = '1.9.1.9.11-SNAPSHOT'
         noise4jVersion = '0.1.0'
         nettyVersion = '4.1.56.Final'
-        shadowVersion = '5.2.0'
     }
     repositories {
         mavenLocal()
@@ -24,7 +23,6 @@ buildscript {
     dependencies {
         classpath "net.onedaybeard.artemis:artemis-odb-gradle-plugin:$artemisVersion"
         classpath "net.onedaybeard.artemis:artemis-fluid-gradle-plugin:$artemisVersion"
-        classpath "com.github.jengelman.gradle.plugins:shadow:$shadowVersion"
     }
 }
 
@@ -32,7 +30,6 @@ allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
     apply plugin: "checkstyle"
-    apply plugin: 'com.github.johnrengelman.shadow'
 
     repositories {
         mavenLocal()
