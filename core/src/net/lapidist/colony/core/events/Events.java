@@ -1,5 +1,8 @@
 package net.lapidist.colony.core.events;
 
+import com.badlogic.gdx.ai.msg.MessageManager;
+import com.badlogic.gdx.ai.msg.Telegraph;
+
 public final class Events {
 
     private Events() {
@@ -11,7 +14,105 @@ public final class Events {
     public static final int RESIZE = 3;
     public static final int HIDE = 4;
     public static final int SHOW = 5;
-    public static final int TIME_CHANGE = 6;
-    public static final int SEASON_CHANGE = 7;
-    public static final int CLICK_TILE = 8;
+
+    public static void dispose() {
+        MessageManager.getInstance().clear();
+        MessageManager.getInstance().clearListeners();
+        MessageManager.getInstance().clearProviders();
+        MessageManager.getInstance().clearQueue();
+    }
+
+    public static void update() {
+        MessageManager.getInstance().update();
+    }
+
+    public static void enableDebug() {
+        MessageManager.getInstance().setDebugEnabled(true);
+    }
+
+    public static void dispatch(
+            final float delay,
+            final int message
+    ) {
+        MessageManager.getInstance().dispatchMessage(
+                delay,
+                message
+        );
+    }
+
+    public static void dispatch(
+            final float delay,
+            final Telegraph sender,
+            final int message
+    ) {
+        MessageManager.getInstance().dispatchMessage(
+                delay,
+                sender,
+                message
+        );
+    }
+
+    public void dispatch(
+            final float delay,
+            final Telegraph sender,
+            final Telegraph receiver,
+            final int message
+    ) {
+        MessageManager.getInstance().dispatchMessage(
+                delay,
+                sender,
+                receiver,
+                message
+        );
+    }
+
+    public void dispatch(
+            final float delay,
+            final Telegraph sender,
+            final Telegraph receiver,
+            final int message,
+            final boolean needsReturnReceipt
+    ) {
+        MessageManager.getInstance().dispatchMessage(
+                delay,
+                sender,
+                receiver,
+                message,
+                needsReturnReceipt
+        );
+    }
+
+    public void dispatch(
+            final float delay,
+            final Telegraph sender,
+            final Telegraph receiver,
+            final int message,
+            final Object extraInfo
+    ) {
+        MessageManager.getInstance().dispatchMessage(
+                delay,
+                sender,
+                receiver,
+                message,
+                extraInfo
+        );
+    }
+
+    public void dispatch(
+            final float delay,
+            final Telegraph sender,
+            final Telegraph receiver,
+            final int message,
+            final Object extraInfo,
+            final boolean needsReturnReceipt
+    ) {
+        MessageManager.getInstance().dispatchMessage(
+                delay,
+                sender,
+                receiver,
+                message,
+                extraInfo,
+                needsReturnReceipt
+        );
+    }
 }
