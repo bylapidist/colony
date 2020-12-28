@@ -8,26 +8,14 @@ import com.artemis.managers.TagManager;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.graphics.Color;
-import net.lapidist.colony.client.systems.assets.GuiAssetSystem;
-import net.lapidist.colony.client.systems.assets.MapAssetSystem;
-import net.lapidist.colony.client.systems.render.ClearScreenSystem;
-import net.lapidist.colony.client.systems.render.GuiRenderSystem;
-import net.lapidist.colony.client.systems.render.MapRenderSystem;
+import net.lapidist.colony.client.systems.ClearScreenSystem;
 import net.lapidist.colony.core.Constants;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.network.Client;
-import net.lapidist.colony.core.systems.factories.EntityFactorySystem;
-import net.lapidist.colony.core.systems.factories.LightFactorySystem;
-import net.lapidist.colony.core.systems.generators.MapGeneratorSystem;
-import net.lapidist.colony.core.systems.physics.MapPhysicsSystem;
-import net.lapidist.colony.core.systems.physics.TimeSystem;
-import net.lapidist.colony.core.systems.player.PlayerCameraSystem;
-import net.lapidist.colony.core.systems.player.PlayerControlSystem;
-import net.lapidist.colony.core.utils.io.FileLocation;
 
 public class MapScreen implements Screen {
 
-    private World world;
+    private final World world;
 
     public MapScreen() {
         MessageManager.getInstance().setDebugEnabled(true);
@@ -45,28 +33,10 @@ public class MapScreen implements Screen {
         WorldConfiguration config = new WorldConfigurationBuilder()
                 .with(WorldConfigurationBuilder.Priority.HIGHEST,
                         new SuperMapper(),
-                        new TagManager(),
-                        new MapAssetSystem(FileLocation.INTERNAL),
-                        new EntityFactorySystem(),
-                        new LightFactorySystem()
+                        new TagManager()
                 )
                 .with(WorldConfigurationBuilder.Priority.NORMAL,
-                        new ClearScreenSystem(Color.BLACK),
-                        new TimeSystem(),
-                        new GuiAssetSystem(FileLocation.INTERNAL),
-                        new PlayerCameraSystem(1),
-                        new MapGeneratorSystem(
-                                Constants.MAP_SIZE,
-                                Constants.MAP_SIZE,
-                                Constants.PPM,
-                                Constants.PPM,
-                                Constants.CHUNK_SIZE,
-                                Constants.CHUNK_SIZE
-                        ),
-                        new MapRenderSystem(),
-                        new MapPhysicsSystem(),
-                        new GuiRenderSystem(),
-                        new PlayerControlSystem()
+                        new ClearScreenSystem(Color.BLACK)
                 )
                 .build();
         world = new World(config);

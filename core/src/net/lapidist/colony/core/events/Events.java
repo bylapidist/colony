@@ -11,9 +11,7 @@ public final class Events {
     public static final int RESIZE = 3;
     public static final int HIDE = 4;
     public static final int SHOW = 5;
-    public static final int GUI_INIT = 6;
-    public static final int MAP_INIT = 7;
-    public static final int TIME_CHANGE = 8;
-    public static final int SEASON_CHANGE = 9;
-    public static final int CLICK_TILE = 10;
+    public static final int TIME_CHANGE = 6;
+    public static final int SEASON_CHANGE = 7;
+    public static final int CLICK_TILE = 8;
 }
