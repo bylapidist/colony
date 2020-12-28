@@ -4,7 +4,7 @@ buildscript {
         gdxVersion = '1.9.12'
         gdxAiVersion = '1.8.2'
         artemisVersion = '2.3.0'
-        artemisContribVersion = '2.4.0'
+        artemisContribVersion = '2.5.0'
         jUnitVersion = '4.13.1'
         mockitoVersion = '3.6.28'
         nettyVersion = '4.1.56.Final'
