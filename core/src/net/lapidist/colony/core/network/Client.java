@@ -30,15 +30,19 @@ public class Client implements IListener {
     ) throws InterruptedException {
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
-        Bootstrap b = new Bootstrap();
-        b.group(workerGroup)
-                .channel(NioDatagramChannel.class)
-                .handler(channelInitializer());
+        try {
+            Bootstrap b = new Bootstrap();
+            b.group(workerGroup)
+                    .channel(NioDatagramChannel.class)
+                    .handler(channelInitializer());
 
-        addMessageListeners();
+            addMessageListeners();
 
-        this.remoteAddress = new InetSocketAddress(host, port);
-        this.channel = b.bind(0).sync().channel();
+            this.remoteAddress = new InetSocketAddress(host, port);
+            this.channel = b.bind(0).sync().channel();
+        } finally {
+            workerGroup.shutdownGracefully();
+        }
     }
 
     private ChannelInitializer<NioDatagramChannel> channelInitializer() {
