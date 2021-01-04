@@ -1,7 +1,7 @@
 buildscript {
     ext {
         appName = "colony"
-        gdxVersion = '1.9.12'
+        gdxVersion = '1.9.13'
         gdxAiVersion = '1.8.2'
         artemisVersion = '2.3.0'
         artemisContribVersion = '2.5.0'
