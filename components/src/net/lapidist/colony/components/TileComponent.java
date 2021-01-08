@@ -29,7 +29,7 @@ public class TileComponent extends Component {
     }
 
     public final void setTile(
-            final int positionToSet,
+            final Vector3 positionToSet,
             final int widthToSet,
             final int heightToSet,
             final String textureToSet,
