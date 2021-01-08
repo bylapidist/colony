@@ -1,12 +1,11 @@
 package net.lapidist.colony.components;
 
 import com.artemis.Component;
+import com.badlogic.gdx.math.Vector3;
 
 public class TileComponent extends Component {
 
-    private int x;
-    private int y;
-    private int z;
+    private Vector3 position;
     private int width;
     private int height;
     private String texture;
@@ -30,18 +29,14 @@ public class TileComponent extends Component {
     }
 
     public final void setTile(
-            final int xToSet,
-            final int yToSet,
-            final int zToSet,
+            final int positionToSet,
             final int widthToSet,
             final int heightToSet,
             final String textureToSet,
             final boolean passableToSet,
             final TileType tileTypeToSet
     ) {
-        setX(xToSet);
-        setY(yToSet);
-        setZ(zToSet);
+        setPosition(positionToSet);
         setWidth(widthToSet);
         setHeight(heightToSet);
         setTexture(textureToSet);
@@ -49,28 +44,13 @@ public class TileComponent extends Component {
         setTileType(tileTypeToSet);
     }
 
-    public final int getX() {
-        return x;
+
+    public final Vector3 getPosition() {
+        return position;
     }
 
-    public final void setX(final int xToSet) {
-        this.x = xToSet;
-    }
-
-    public final int getY() {
-        return y;
-    }
-
-    public final int getZ() {
-        return z;
-    }
-
-    public final void setZ(final int zToSet) {
-        this.z = zToSet;
-    }
-
-    public final void setY(final int yToSet) {
-        this.y = yToSet;
+    public final void setPosition(final Vector3 positionToSet) {
+        this.position = positionToSet;
     }
 
     public final int getWidth() {
