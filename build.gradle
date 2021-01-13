@@ -7,7 +7,7 @@ buildscript {
         artemisContribVersion = '2.5.0'
         jUnitVersion = '4.13.1'
         mockitoVersion = '3.7.0'
-        nettyVersion = '4.1.56.Final'
+        nettyVersion = '4.1.57.Final'
     }
     repositories {
         mavenLocal()
