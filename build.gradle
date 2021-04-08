@@ -6,7 +6,7 @@ buildscript {
         artemisVersion = '2.3.0'
         artemisContribVersion = '2.5.0'
         jUnitVersion = '4.13.2'
-        mockitoVersion = '3.8.0'
+        mockitoVersion = '3.9.0'
         nettyVersion = '4.1.63.Final'
     }
     repositories {
