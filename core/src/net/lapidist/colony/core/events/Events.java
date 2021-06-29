@@ -1,118 +1,66 @@
 package net.lapidist.colony.core.events;
 
 import com.badlogic.gdx.ai.msg.MessageManager;
-import com.badlogic.gdx.ai.msg.Telegraph;
+import com.badlogic.gdx.ai.msg.Telegram;
 
 public final class Events {
 
     private Events() {
     }
 
-    public static final int GAME_INIT = 0;
-    public static final int PAUSE = 1;
-    public static final int RESUME = 2;
-    public static final int RESIZE = 3;
-    public static final int HIDE = 4;
-    public static final int SHOW = 5;
+    public enum EventType {
+        GAME_INIT(0, "Game Init"),
+        PAUSE(1, "Pause"),
+        RESUME(2, "Resume"),
+        RESIZE(3, "Resize"),
+        HIDE(4, "Hide"),
+        SHOW(5, "Show");
+
+        private final Telegram telegram;
+
+        EventType(final int messageToSet, final String extraInfoToSet) {
+            this.telegram = new Telegram();
+            this.telegram.message = messageToSet;
+            this.telegram.extraInfo = extraInfoToSet;
+        }
+
+        public int getMessage() {
+            return this.telegram.message;
+        }
+
+        @Override
+        public String toString() {
+            return (String) this.telegram.extraInfo;
+        }
+    }
+
+    public static MessageManager getInstance() {
+        return MessageManager.getInstance();
+    }
 
     public static void dispose() {
-        MessageManager.getInstance().clear();
-        MessageManager.getInstance().clearListeners();
-        MessageManager.getInstance().clearProviders();
-        MessageManager.getInstance().clearQueue();
+        getInstance().clear();
+        getInstance().clearListeners();
+        getInstance().clearProviders();
+        getInstance().clearQueue();
     }
 
     public static void update() {
-        MessageManager.getInstance().update();
+        getInstance().update();
     }
 
     public static void enableDebug() {
-        MessageManager.getInstance().setDebugEnabled(true);
+        getInstance().setDebugEnabled(true);
     }
 
     public static void dispatch(
             final float delay,
-            final int message
+            final EventType event
     ) {
-        MessageManager.getInstance().dispatchMessage(
+        getInstance().dispatchMessage(
                 delay,
-                message
-        );
-    }
-
-    public static void dispatch(
-            final float delay,
-            final Telegraph sender,
-            final int message
-    ) {
-        MessageManager.getInstance().dispatchMessage(
-                delay,
-                sender,
-                message
-        );
-    }
-
-    public void dispatch(
-            final float delay,
-            final Telegraph sender,
-            final Telegraph receiver,
-            final int message
-    ) {
-        MessageManager.getInstance().dispatchMessage(
-                delay,
-                sender,
-                receiver,
-                message
-        );
-    }
-
-    public void dispatch(
-            final float delay,
-            final Telegraph sender,
-            final Telegraph receiver,
-            final int message,
-            final boolean needsReturnReceipt
-    ) {
-        MessageManager.getInstance().dispatchMessage(
-                delay,
-                sender,
-                receiver,
-                message,
-                needsReturnReceipt
-        );
-    }
-
-    public void dispatch(
-            final float delay,
-            final Telegraph sender,
-            final Telegraph receiver,
-            final int message,
-            final Object extraInfo
-    ) {
-        MessageManager.getInstance().dispatchMessage(
-                delay,
-                sender,
-                receiver,
-                message,
-                extraInfo
-        );
-    }
-
-    public void dispatch(
-            final float delay,
-            final Telegraph sender,
-            final Telegraph receiver,
-            final int message,
-            final Object extraInfo,
-            final boolean needsReturnReceipt
-    ) {
-        MessageManager.getInstance().dispatchMessage(
-                delay,
-                sender,
-                receiver,
-                message,
-                extraInfo,
-                needsReturnReceipt
+                event.getMessage(),
+                event.toString()
         );
     }
 }

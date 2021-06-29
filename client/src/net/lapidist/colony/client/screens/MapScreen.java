@@ -51,27 +51,27 @@ public class MapScreen implements Screen {
 
     @Override
     public final void resize(final int width, final int height) {
-        Events.dispatch(0, Events.RESIZE);
+        Events.dispatch(0, Events.EventType.RESIZE);
     }
 
     @Override
     public final void pause() {
-        Events.dispatch(0,  Events.PAUSE);
+        Events.dispatch(0,  Events.EventType.PAUSE);
     }
 
     @Override
     public final void resume() {
-        Events.dispatch(0,  Events.RESUME);
+        Events.dispatch(0,  Events.EventType.RESUME);
     }
 
     @Override
     public final void hide() {
-        Events.dispatch(0, Events.HIDE);
+        Events.dispatch(0, Events.EventType.HIDE);
     }
 
     @Override
     public final void show() {
-        Events.dispatch(0, Events.SHOW);
+        Events.dispatch(0, Events.EventType.SHOW);
     }
 
     @Override
