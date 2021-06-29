@@ -60,9 +60,18 @@ public class Client implements IListener {
 
     @Override
     public final void addMessageListeners() {
-        Events.getInstance().addListener(this, Events.EventType.GAME_INIT.getMessage());
-        Events.getInstance().addListener(this, Events.EventType.PAUSE.getMessage());
-        Events.getInstance().addListener(this, Events.EventType.RESUME.getMessage());
+        Events.getInstance().addListener(
+                this,
+                Events.EventType.GAME_INIT.getMessage()
+        );
+        Events.getInstance().addListener(
+                this,
+                Events.EventType.PAUSE.getMessage()
+        );
+        Events.getInstance().addListener(
+                this,
+                Events.EventType.RESUME.getMessage()
+        );
     }
 
     @Override
