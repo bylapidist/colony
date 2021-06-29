@@ -33,14 +33,15 @@ public final class ServerLauncher {
                     .handler(channelInitializer());
 
             String address = InetAddress.getLocalHost().getHostAddress();
+
+            // Start the server.
+            ChannelFuture f = b.bind().sync();
+
             System.out.printf(
                     "Server started!\nListening on: %s:%d\n",
                     address,
                     Constants.DEFAULT_PORT
             );
-
-            // Start the server.
-            ChannelFuture f = b.bind().sync();
 
             // Wait until the server socket is closed.
             f.channel().closeFuture().sync();

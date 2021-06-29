@@ -10,6 +10,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.DatagramPacket;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import net.lapidist.colony.core.codecs.encoders.TelegramPacketEncoder;
+import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.IListener;
 
 import java.net.InetSocketAddress;
@@ -27,7 +28,7 @@ public class Client implements IListener {
     public Client(
             final String host,
             final int port
-    ) throws InterruptedException {
+    ) {
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
         try {
@@ -40,13 +41,15 @@ public class Client implements IListener {
 
             this.remoteAddress = new InetSocketAddress(host, port);
             this.channel = b.bind(0).sync().channel();
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             workerGroup.shutdownGracefully();
         }
     }
 
     private ChannelInitializer<NioDatagramChannel> channelInitializer() {
-        return new ChannelInitializer<NioDatagramChannel>() {
+        return new ChannelInitializer<>() {
             @Override
             public void initChannel(final NioDatagramChannel ch) {
                 ChannelPipeline p = ch.pipeline();
@@ -57,6 +60,9 @@ public class Client implements IListener {
 
     @Override
     public final void addMessageListeners() {
+        Events.getInstance().addListener(this, Events.EventType.GAME_INIT.getMessage());
+        Events.getInstance().addListener(this, Events.EventType.PAUSE.getMessage());
+        Events.getInstance().addListener(this, Events.EventType.RESUME.getMessage());
     }
 
     @Override
@@ -72,6 +78,7 @@ public class Client implements IListener {
                     new DatagramPacket(packet.getPacket(), this.remoteAddress)
             );
 
+            System.out.printf("[Client] Sent event: %s\n", msg.extraInfo);
             return true;
         }
 
@@ -84,5 +91,9 @@ public class Client implements IListener {
 
     public final void setState(final ClientState stateToSet) {
         this.state = stateToSet;
+    }
+
+    public final boolean isConnected() {
+        return this.channel.isActive();
     }
 }

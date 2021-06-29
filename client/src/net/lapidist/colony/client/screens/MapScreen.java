@@ -8,28 +8,13 @@ import com.artemis.managers.TagManager;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
-import net.lapidist.colony.core.Constants;
 import net.lapidist.colony.core.events.Events;
-import net.lapidist.colony.core.network.Client;
 
 public class MapScreen implements Screen {
 
     private final World world;
-    private Client client;
 
     public MapScreen() {
-        Events.enableDebug();
-
-        try {
-            client = new Client(
-                    Constants.DEFAULT_HOSTNAME,
-                    Constants.DEFAULT_PORT
-            );
-            client.setState(Client.ClientState.CONNECTED);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         WorldConfiguration config = new WorldConfigurationBuilder()
                 .with(WorldConfigurationBuilder.Priority.HIGHEST,
                         new SuperMapper(),
@@ -76,7 +61,6 @@ public class MapScreen implements Screen {
 
     @Override
     public final void dispose() {
-        client.setState(Client.ClientState.DISCONNECTED);
         world.dispose();
     }
 }

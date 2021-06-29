@@ -12,7 +12,7 @@ public class ClientPacketHandler extends
     protected final void channelRead0(
             final ChannelHandlerContext ctx,
             final DatagramPacket msg
-    ) throws Exception {
+    ) {
         byte[] bytes = msg.getData();
         System.out.println("Received packet, length: " + bytes.length);
     }
@@ -24,5 +24,6 @@ public class ClientPacketHandler extends
     ) throws Exception {
         System.err.println(cause.getMessage());
         ctx.close();
+        throw new Exception(cause);
     }
 }
