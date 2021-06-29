@@ -14,7 +14,6 @@ buildscript {
         mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        jcenter()
         google()
     }
     dependencies {
@@ -119,6 +118,7 @@ project(":tests") {
         implementation "org.mockito:mockito-core:$mockitoVersion"
         implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
         testImplementation "junit:junit:$jUnitVersion"
         testImplementation "org.mockito:mockito-core:$mockitoVersion"
         testImplementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"

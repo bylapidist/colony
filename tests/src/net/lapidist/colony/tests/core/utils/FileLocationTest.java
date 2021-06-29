@@ -1,4 +1,4 @@
-package net.lapidist.colony.tests.io;
+package net.lapidist.colony.tests.core.utils;
 
 import com.badlogic.gdx.files.FileHandle;
 import net.lapidist.colony.core.utils.FileLocation;
