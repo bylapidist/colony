@@ -9,6 +9,7 @@ public final class Colony extends Game {
 
     @Override
     public void create() {
+        Events.dispatch(0, Events.EventType.GAME_INIT);
         Events.enableDebug();
         setScreen(new MapScreen());
     }
