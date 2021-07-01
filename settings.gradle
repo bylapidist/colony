@@ -1,2 +1,1 @@
-include 'core', 'client', 'components', 'tests', 'server'
-
+include 'core', 'client', 'components', 'tests'
