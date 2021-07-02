@@ -3,7 +3,7 @@ package net.lapidist.colony.core.events;
 import com.badlogic.gdx.ai.msg.MessageDispatcher;
 import net.lapidist.colony.core.events.payloads.AbstractEventPayload;
 
-public class EventDispatcher extends MessageDispatcher {
+public final class EventDispatcher extends MessageDispatcher {
 
 
     private boolean debugEnabled = false;
@@ -36,7 +36,7 @@ public class EventDispatcher extends MessageDispatcher {
     }
 
     @Override
-    public void setDebugEnabled(boolean debugEnabledToSet) {
+    public void setDebugEnabled(final boolean debugEnabledToSet) {
         this.debugEnabled = debugEnabledToSet;
     }
 }

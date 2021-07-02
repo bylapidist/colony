@@ -30,11 +30,11 @@ public class EventsTest {
 
         Events.getInstance().addListener(event -> {
             assertEquals(
-                    ((ResizePayload) event.extraInfo).width,
+                    ((ResizePayload) event.extraInfo).getWidth(),
                     testWidth
             );
             assertEquals(
-                    ((ResizePayload) event.extraInfo).height,
+                    ((ResizePayload) event.extraInfo).getHeight(),
                     testHeight
             );
             return false;

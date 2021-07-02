@@ -36,7 +36,10 @@ public final class Events {
         dispatch(eventType, null, delay);
     }
 
-    public static void dispatch(final EventType eventType, final AbstractEventPayload payload) {
+    public static void dispatch(
+            final EventType eventType,
+            final AbstractEventPayload payload
+    ) {
         dispatch(eventType, payload, 0.0f);
     }
 
