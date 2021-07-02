@@ -1,9 +1,8 @@
 package net.lapidist.colony.components;
 
-import com.artemis.Component;
 import com.badlogic.gdx.math.Vector3;
 
-public class TileComponent extends Component {
+public class TileComponent extends AbstractComponent {
 
     private Vector3 position;
     private int width;

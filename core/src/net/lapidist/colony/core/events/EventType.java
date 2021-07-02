@@ -6,7 +6,8 @@ public enum EventType {
     RESUME(2, "Resume"),
     RESIZE(3, "Resize"),
     HIDE(4, "Hide"),
-    SHOW(5, "Show");
+    SHOW(5, "Show"),
+    DISPOSE(6, "Dispose");
 
     private final int ordinal;
 

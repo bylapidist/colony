@@ -1,62 +1,10 @@
 apply plugin: "java"
-apply plugin: "artemis"
-apply plugin: "artemis-fluid"
-
-ext {
-    fluidOutputDir = file("$buildDir/generated-sources/fluid/")
-}
 
 sourceCompatibility = 15
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-sourceSets.main.java.srcDirs = [ "src/", fluidOutputDir ]
+sourceSets.main.java.srcDirs = [ "src/" ]
 
-fluid {
-    generatedSourcesDirectory = fluidOutputDir
-    classpath = sourceSets.main.compileClasspath
-
-    preferences.excludeFromClasspath += [
-            // speed up compilation by skipping dependencies without components.
-            "netty-all",
-            "reflections",
-            "guava",
-            "fast-classpath-scanner",
-            "commons-io",
-            "javapoet",
-            "commons-lang3",
-            "javassist",
-            "mockito",
-            "lwjgl"
-    ]
-
-    // optional parameters. Uncomment to activate.
-    // preferences.prefixComponentGetter = "_" // prefix for E::[get]pos()
-    // preferences.prefixComponentCreate = "" // prefix for E::[]pos()
-    // preferences.prefixComponentHas = "has" // prefix for E::[has]Pos()
-    // preferences.prefixComponentRemove = "remove" // prefix for E::[remove]Pos()
-    // preferences.generateTagMethods = true // add tag convenience methods.
-    // preferences.generateGroupMethods = true // add group convenience methods.
-    // preferences.generateBooleanComponentAccessors = true // Generate boolean accessors for flag components?
-    // preferences.swallowGettersWithParameters = false // global setting. overridden by @Fluid annotation.
-}
-
-weave {
-    classesDir = new File(buildDir, "classes/java/main")
-    enableArtemisPlugin = true
-    enablePooledWeaving = true
-    generateLinkMutators = true
-    optimizeEntitySystems = true
-}
-
-compileJava.dependsOn fluid
-
-idea.module {
-    excludeDirs -= file("$buildDir")
-    excludeDirs += file("$buildDir/classes")
-    excludeDirs += file("$buildDir/dependency-cache")
-    excludeDirs += file("$buildDir/libs")
-    excludeDirs += file("$buildDir/tmp")
-}
 
 eclipse.project {
     name = appName + "-core"

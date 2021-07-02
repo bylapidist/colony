@@ -3,8 +3,6 @@ buildscript {
         appName = "colony"
         gdxVersion = '1.10.0'
         gdxAiVersion = '1.8.2'
-        artemisVersion = '2.3.0'
-        artemisContribVersion = '2.5.0'
         jUnitVersion = '4.13.2'
         mockitoVersion = '3.11.2'
     }
@@ -14,10 +12,6 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         google()
-    }
-    dependencies {
-        classpath "net.onedaybeard.artemis:artemis-odb-gradle-plugin:$artemisVersion"
-        classpath "net.onedaybeard.artemis:artemis-fluid-gradle-plugin:$artemisVersion"
     }
 }
 
@@ -66,11 +60,6 @@ project(":core") {
     dependencies {
         implementation project(":components")
 
-        api "net.onedaybeard.artemis:artemis-fluid-core:$artemisVersion"
-        implementation "net.mostlyoriginal.artemis-odb:contrib-core:$artemisContribVersion"
-        implementation "net.onedaybeard.artemis:artemis-odb-serializer:$artemisVersion:sources"
-        implementation "net.onedaybeard.artemis:artemis-odb-serializer-json-libgdx:$artemisVersion:sources"
-        implementation "net.mostlyoriginal.artemis-odb:contrib-core:$artemisContribVersion:sources"
         implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
@@ -84,8 +73,6 @@ project(":components") {
     sourceSets.test.java.srcDirs = ["src/"]
 
     dependencies {
-        implementation "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
-        implementation "net.mostlyoriginal.artemis-odb:contrib-core:$artemisContribVersion"
         implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     }
 }

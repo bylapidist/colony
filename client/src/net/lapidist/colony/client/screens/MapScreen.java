@@ -1,10 +1,5 @@
 package net.lapidist.colony.client.screens;
 
-import com.artemis.SuperMapper;
-import com.artemis.World;
-import com.artemis.WorldConfiguration;
-import com.artemis.WorldConfigurationBuilder;
-import com.artemis.managers.TagManager;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
@@ -14,26 +9,16 @@ import net.lapidist.colony.core.events.payloads.ResizePayload;
 
 public class MapScreen implements Screen {
 
-    private final World world;
+    private final ClearScreenSystem clearScreenSystem;
 
     public MapScreen() {
-        WorldConfiguration config = new WorldConfigurationBuilder()
-                .with(WorldConfigurationBuilder.Priority.HIGHEST,
-                        new SuperMapper(),
-                        new TagManager()
-                )
-                .with(WorldConfigurationBuilder.Priority.NORMAL,
-                        new ClearScreenSystem(Color.BLACK)
-                )
-                .build();
-        world = new World(config);
+        clearScreenSystem = new ClearScreenSystem(Color.BLACK);
     }
 
     @Override
     public final void render(final float delta) {
-        world.setDelta(delta);
-        world.process();
         Events.update();
+        this.clearScreenSystem.update();
     }
 
     @Override
@@ -63,6 +48,6 @@ public class MapScreen implements Screen {
 
     @Override
     public final void dispose() {
-        world.dispose();
+        Events.dispatch(EventType.DISPOSE);
     }
 }
