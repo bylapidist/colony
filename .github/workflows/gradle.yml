@@ -11,15 +11,29 @@ jobs:
     name: Test Java ${{ matrix.java }} 
     steps:
     - uses: actions/checkout@v2
+
     - name: Setup JDK
       uses: actions/setup-java@v2
       with:
         distribution: 'adopt'
         java-version: ${{ matrix.java }}
+
+    - name: Cache Gradle packages
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+
     - name: Run Tests
       run: ./gradlew clean test
+
     - name: Run checkstyle
       run: ./gradlew check
 
@@ -33,9 +47,11 @@ jobs:
     name: Release
     steps:
       - uses: actions/checkout@v2
+
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
           node-version: 12
+
       - name: Semantic release
         run: npm i -g semantic-release && semantic-release
