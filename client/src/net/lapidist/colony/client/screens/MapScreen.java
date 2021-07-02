@@ -47,5 +47,7 @@ public class MapScreen implements Screen {
     }
 
     @Override
-    public final void dispose() {}
+    public final void dispose() {
+        Events.dispatch(EventType.DISPOSE);
+    }
 }
