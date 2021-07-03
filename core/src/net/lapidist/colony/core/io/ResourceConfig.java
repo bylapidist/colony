@@ -4,13 +4,13 @@ import com.badlogic.gdx.utils.Array;
 
 public class ResourceConfig {
 
-    private Array<ResourceImage> images;
+    private Array<ResourceTexture> textures;
     private Array<ResourceSound> sounds;
 
-    public static class ResourceImage {
+    public static class ResourceTexture {
         private String name;
         private String filePath;
-        private Array<ResourceImageRegion> regions;
+        private Array<ResourceTextureRegion> regions;
 
         public final String getName() {
             return name;
@@ -20,12 +20,12 @@ public class ResourceConfig {
             return filePath;
         }
 
-        public final Array<ResourceImageRegion> getRegions() {
+        public final Array<ResourceTextureRegion> getTextureRegions() {
             return regions;
         }
     }
 
-    public static class ResourceImageRegion {
+    public static class ResourceTextureRegion {
         private String name;
         private String bounds;
 
@@ -51,25 +51,25 @@ public class ResourceConfig {
         }
     }
 
-    public final Array<ResourceImage> getImages() {
-        return images;
+    public final Array<ResourceTexture> getTextures() {
+        return textures;
     }
 
-    public final ResourceImage getImage(final int index) {
-        return images.get(index);
+    public final ResourceTexture getTexture(final int index) {
+        return textures.get(index);
     }
 
-    public final ResourceImageRegion getImageRegion(
+    public final ResourceTextureRegion getTextureRegion(
             final int imageIndex,
             final int regionIndex
     ) {
-        return images.get(imageIndex).getRegions().get(regionIndex);
+        return textures.get(imageIndex).getTextureRegions().get(regionIndex);
     }
 
-    public final Array<ResourceImageRegion> getImageRegions(
+    public final Array<ResourceTextureRegion> getTextureRegions(
             final int imageIndex
     ) {
-        return images.get(imageIndex).getRegions();
+        return textures.get(imageIndex).getTextureRegions();
     }
 
     public final Array<ResourceSound> getSounds() {

@@ -1,10 +1,10 @@
 {
-  "images": [{
+  "textures": [{
     "name": "test image",
-    "filePath": "test.png",
+    "filePath": "assets/test.png",
     "regions": [{
       "name": "test region",
-      "bounds": "0 0 600 600"
+      "bounds": "0 0 32 32"
     }]
   }],
   "sounds": [{
