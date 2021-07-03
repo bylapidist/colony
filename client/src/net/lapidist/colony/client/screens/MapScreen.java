@@ -15,14 +15,14 @@ import java.io.IOException;
 public class MapScreen implements Screen {
 
     private final PooledEngine pooledEngine = new PooledEngine();
+    private final ResourceLoader resourceLoader = new ResourceLoader(
+            FileLocation.INTERNAL,
+            "resources.json"
+    );
 
     public MapScreen() {
         pooledEngine.addSystem(new ClearScreenSystem(Color.BLACK));
 
-        ResourceLoader resourceLoader = new ResourceLoader(
-                FileLocation.INTERNAL,
-                "resources.json"
-        );
         try {
             resourceLoader.load();
         } catch (IOException e) {
@@ -63,6 +63,7 @@ public class MapScreen implements Screen {
 
     @Override
     public final void dispose() {
+        resourceLoader.dispose();
         Events.dispatch(EventType.DISPOSE);
     }
 }
