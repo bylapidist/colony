@@ -1,5 +1,6 @@
 package net.lapidist.colony.client.screens;
 
+import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
@@ -9,16 +10,16 @@ import net.lapidist.colony.core.events.payloads.ResizePayload;
 
 public class MapScreen implements Screen {
 
-    private final ClearScreenSystem clearScreenSystem;
+    private final PooledEngine pooledEngine = new PooledEngine();
 
     public MapScreen() {
-        clearScreenSystem = new ClearScreenSystem(Color.BLACK);
+        pooledEngine.addSystem(new ClearScreenSystem(Color.BLACK));
     }
 
     @Override
-    public final void render(final float delta) {
+    public final void render(final float deltaTime) {
         Events.update();
-        this.clearScreenSystem.update();
+        pooledEngine.update(deltaTime);
     }
 
     @Override
