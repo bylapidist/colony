@@ -1,3 +1,14 @@
 {
-  "hello": "world"
+  "images": [{
+    "name": "test image",
+    "filePath": "test.png",
+    "regions": [{
+      "name": "test region",
+      "bounds": "0 0 600 600"
+    }]
+  }],
+  "sounds": [{
+    "name": "test sound",
+    "filePath": "sound.mp3"
+  }]
 }
