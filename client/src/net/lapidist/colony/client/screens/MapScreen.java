@@ -7,6 +7,10 @@ import net.lapidist.colony.client.systems.ClearScreenSystem;
 import net.lapidist.colony.core.events.EventType;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.events.payloads.ResizePayload;
+import net.lapidist.colony.core.io.FileLocation;
+import net.lapidist.colony.core.io.ResourceLoader;
+
+import java.io.IOException;
 
 public class MapScreen implements Screen {
 
@@ -14,6 +18,16 @@ public class MapScreen implements Screen {
 
     public MapScreen() {
         pooledEngine.addSystem(new ClearScreenSystem(Color.BLACK));
+
+        ResourceLoader resourceLoader = new ResourceLoader(
+                FileLocation.INTERNAL,
+                "resources.json"
+        );
+        try {
+            resourceLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
