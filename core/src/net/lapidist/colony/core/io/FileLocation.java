@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.utils;
+package net.lapidist.colony.core.io;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
