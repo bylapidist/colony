@@ -24,10 +24,6 @@ public final class Events {
         INSTANCE.update();
     }
 
-    public static void setDebugEnabled(final boolean enabled) {
-        INSTANCE.setDebugEnabled(enabled);
-    }
-
     public static void dispatch(final EventType eventType) {
         dispatch(eventType, null, 0.0f);
     }

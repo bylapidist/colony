@@ -1,12 +1,10 @@
 package net.lapidist.colony.core.events;
 
 import com.badlogic.gdx.ai.msg.MessageDispatcher;
+import net.lapidist.colony.core.Constants;
 import net.lapidist.colony.core.events.payloads.AbstractEventPayload;
 
 public final class EventDispatcher extends MessageDispatcher {
-
-
-    private boolean debugEnabled = false;
 
     public EventDispatcher() {
     }
@@ -18,25 +16,15 @@ public final class EventDispatcher extends MessageDispatcher {
     ) {
         dispatchMessage(delay, eventType.getOrdinal(), payload);
 
-        if (isDebugEnabled()) {
+        if (Constants.DEBUG) {
             System.out.printf(
                     "[%s] (%s:%s) dispatched with %ss delay.%s",
                     EventDispatcher.class.getSimpleName(),
                     eventType.getOrdinal(),
                     eventType.getName(),
                     delay,
-                    payload == null ? "\n" : String.format("\n\t%s\n", payload)
+                    payload == null ? "\n" : String.format("\n%s\n", payload)
             );
         }
-    }
-
-    @Override
-    public boolean isDebugEnabled() {
-        return this.debugEnabled;
-    }
-
-    @Override
-    public void setDebugEnabled(final boolean debugEnabledToSet) {
-        this.debugEnabled = debugEnabledToSet;
     }
 }

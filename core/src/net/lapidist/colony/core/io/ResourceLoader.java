@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
+import net.lapidist.colony.core.Constants;
 
 import java.io.IOException;
 
@@ -50,9 +51,20 @@ public class ResourceLoader implements Disposable {
             );
         }
 
+        String resourceConfigJson = resourceConfigHandle.readString();
+
         resourceConfig = json.fromJson(
-                ResourceConfig.class, resourceConfigHandle.readString()
+                ResourceConfig.class, resourceConfigJson
         );
+
+        if (Constants.DEBUG) {
+            System.out.printf(
+                    "[%s] ResourceConfig loaded from \"%s\"\n%s\n",
+                    ResourceLoader.class.getSimpleName(),
+                    resourceConfigPath,
+                    resourceConfigJson
+            );
+        }
 
         loadTextureRegions();
 
@@ -87,6 +99,17 @@ public class ResourceLoader implements Disposable {
                         region.getName(),
                         getTextureRegionFromBounds(texture, region.getBounds())
                 );
+
+                if (Constants.DEBUG) {
+                    System.out.printf(
+                            "[%s] (%s:%s:%s) TextureRegion loaded from \"%s\"\n",
+                            ResourceLoader.class.getSimpleName(),
+                            image.getName(),
+                            region.getName(),
+                            region.getBounds(),
+                            image.getFilePath()
+                    );
+                }
             }
         }
     }
