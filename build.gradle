@@ -10,8 +10,6 @@ buildscript {
     repositories {
         mavenLocal()
         mavenCentral()
-        maven { url "https://plugins.gradle.org/m2/" }
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         google()
     }
 }
@@ -25,8 +23,6 @@ allprojects {
         mavenLocal()
         mavenCentral()
         google()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
 }
 
@@ -40,7 +36,6 @@ project(":client") {
     sourceSets.test.java.srcDirs = ["src/"]
 
     dependencies {
-        implementation project(":core")
         implementation project(":components")
 
         implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
@@ -48,24 +43,9 @@ project(":client") {
         implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
-        implementation "com.badlogicgames.ashley:ashley:$ashleyVersion"
-    }
-}
-
-project(":core") {
-    apply plugin: "java"
-    apply plugin: "java-library"
-
-    sourceSets.test.java.srcDirs = ["src/"]
-
-    dependencies {
-        implementation project(":components")
-
-        implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
+        implementation "com.badlogicgames.ashley:ashley:$ashleyVersion"
     }
 }
 
@@ -86,17 +66,15 @@ project(":tests") {
     sourceSets.test.java.srcDirs = ["src/"]
 
     dependencies {
-        implementation project(":core")
+        implementation project(":client")
 
         implementation "junit:junit:$jUnitVersion"
         implementation "org.mockito:mockito-core:$mockitoVersion"
         implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
+
         testImplementation "junit:junit:$jUnitVersion"
         testImplementation "org.mockito:mockito-core:$mockitoVersion"
-        testImplementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-        testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
-        testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     }
 }

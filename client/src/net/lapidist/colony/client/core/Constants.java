@@ -1,4 +1,4 @@
-package net.lapidist.colony.core;
+package net.lapidist.colony.client.core;
 
 public final class Constants {
 

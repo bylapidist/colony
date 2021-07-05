@@ -3,7 +3,7 @@ package net.lapidist.colony.client;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.glutils.HdpiMode;
-import net.lapidist.colony.core.Constants;
+import net.lapidist.colony.client.core.Constants;
 
 public final class ClientLauncher {
 

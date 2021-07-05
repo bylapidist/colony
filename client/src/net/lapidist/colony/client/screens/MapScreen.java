@@ -4,11 +4,11 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
-import net.lapidist.colony.core.events.EventType;
-import net.lapidist.colony.core.events.Events;
-import net.lapidist.colony.core.events.payloads.ResizePayload;
-import net.lapidist.colony.core.io.FileLocation;
-import net.lapidist.colony.core.io.ResourceLoader;
+import net.lapidist.colony.client.core.events.EventType;
+import net.lapidist.colony.client.core.events.Events;
+import net.lapidist.colony.client.core.events.payloads.ResizePayload;
+import net.lapidist.colony.client.core.io.FileLocation;
+import net.lapidist.colony.client.core.io.ResourceLoader;
 
 import java.io.IOException;
 

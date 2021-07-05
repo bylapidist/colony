@@ -1,7 +1,7 @@
 package net.lapidist.colony.tests.core.io;
 
-import net.lapidist.colony.core.io.FileLocation;
-import net.lapidist.colony.core.io.ResourceLoader;
+import net.lapidist.colony.client.core.io.FileLocation;
+import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +17,7 @@ public class ResourceLoaderTest {
     public final void testLoadsResources() throws IOException {
         ResourceLoader resourceLoader = new ResourceLoader(
                 FileLocation.INTERNAL,
-                "assets/resources.json"
+                "resources.json"
         );
 
         resourceLoader.load();

@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.io;
+package net.lapidist.colony.client.core.io;
 
 import com.badlogic.gdx.utils.Array;
 

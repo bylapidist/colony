@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.events;
+package net.lapidist.colony.client.core.events;
 
 public enum EventType {
     GAME_INIT(0, "Game Init"),
