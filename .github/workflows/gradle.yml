@@ -34,9 +34,8 @@ jobs:
     - name: Run Tests
       run: |
         ./gradlew tests:clean tests:build -x test
-        ls -la
         cd tests/build/classes/java/main/net/lapidist/colony/tests
-        java net.lapidist.colony.tests.TestLauncher
+        java -cp . net.lapidist.colony.tests.TestLauncher
 
     - name: Run checkstyle
       run: ./gradlew check
