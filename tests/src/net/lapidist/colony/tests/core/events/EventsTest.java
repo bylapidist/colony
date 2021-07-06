@@ -1,8 +1,8 @@
 package net.lapidist.colony.tests.core.events;
 
-import net.lapidist.colony.core.events.EventType;
-import net.lapidist.colony.core.events.Events;
-import net.lapidist.colony.core.events.payloads.ResizePayload;
+import net.lapidist.colony.client.core.events.EventType;
+import net.lapidist.colony.client.core.events.Events;
+import net.lapidist.colony.client.core.events.payloads.ResizePayload;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;

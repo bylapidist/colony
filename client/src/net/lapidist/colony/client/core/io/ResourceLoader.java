@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.io;
+package net.lapidist.colony.client.core.io;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
-import net.lapidist.colony.core.Constants;
+import net.lapidist.colony.client.core.Constants;
 
 import java.io.IOException;
 

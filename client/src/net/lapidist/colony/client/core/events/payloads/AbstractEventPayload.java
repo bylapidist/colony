@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.events.payloads;
+package net.lapidist.colony.client.core.events.payloads;
 
 import com.badlogic.gdx.utils.Json;
 

@@ -15,3 +15,8 @@ test {
         events "PASSED", "STARTED", "FAILED", "SKIPPED"
     }
 }
+
+tasks.register('copyAssets', Copy) {
+    from project(":client").file("assets");
+    into file(".")
+}

@@ -2,7 +2,7 @@
   <configuration default="false" name="LauncherWindows" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="net.lapidist.colony.client.ClientLauncher" />
     <module name="colony.client.main" />
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/core/assets" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/client/assets" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

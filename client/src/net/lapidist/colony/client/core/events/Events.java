@@ -1,6 +1,6 @@
-package net.lapidist.colony.core.events;
+package net.lapidist.colony.client.core.events;
 
-import net.lapidist.colony.core.events.payloads.AbstractEventPayload;
+import net.lapidist.colony.client.core.events.payloads.AbstractEventPayload;
 
 public final class Events {
 

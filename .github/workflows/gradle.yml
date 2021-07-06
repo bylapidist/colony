@@ -32,7 +32,9 @@ jobs:
       run: chmod +x gradlew
 
     - name: Run Tests
-      run: ./gradlew clean test
+      run: |
+        ./gradlew tests:copyAssets
+        ./gradlew clean test
 
     - name: Run checkstyle
       run: ./gradlew check
