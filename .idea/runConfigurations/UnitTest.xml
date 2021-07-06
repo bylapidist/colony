@@ -1,10 +1,25 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="UnitTest" type="Application" factoryName="Application">
-    <option name="MAIN_CLASS_NAME" value="net.lapidist.colony.tests.TestLauncher" />
-    <module name="colony.tests.main" />
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/client/assets" />
+  <configuration default="false" name="UnitTest" type="GradleRunConfiguration" factoryName="Gradle">
+    <ExternalSystemSettings>
+      <option name="executionName" />
+      <option name="externalProjectPath" value="$PROJECT_DIR$/tests" />
+      <option name="externalSystemIdString" value="GRADLE" />
+      <option name="scriptParameters" value="--stacktrace" />
+      <option name="taskDescriptions">
+        <list />
+      </option>
+      <option name="taskNames">
+        <list>
+          <option value="build" />
+        </list>
+      </option>
+      <option name="vmOptions" value="" />
+    </ExternalSystemSettings>
+    <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+    <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+    <DebugAllEnabled>false</DebugAllEnabled>
     <method v="2">
-      <option name="Make" enabled="true" />
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="copyAssets" externalProjectPath="$PROJECT_DIR$/tests" vmOptions="" scriptParameters="" />
     </method>
   </configuration>
 </component>

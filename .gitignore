@@ -139,3 +139,10 @@ Thumbs.db
 /client/out/
 /core/out/
 /tests/out/
+
+## Resources
+tests/fonts
+tests/i18n
+tests/skin
+tests/textures
+tests/resources.json
