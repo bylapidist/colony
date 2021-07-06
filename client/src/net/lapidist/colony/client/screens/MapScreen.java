@@ -9,6 +9,7 @@ import net.lapidist.colony.client.core.events.Events;
 import net.lapidist.colony.client.core.events.payloads.ResizePayload;
 import net.lapidist.colony.client.core.io.FileLocation;
 import net.lapidist.colony.client.core.io.ResourceLoader;
+import net.lapidist.colony.client.systems.UISystem;
 
 import java.io.IOException;
 
@@ -22,6 +23,7 @@ public class MapScreen implements Screen {
 
     public MapScreen() {
         pooledEngine.addSystem(new ClearScreenSystem(Color.BLACK));
+        pooledEngine.addSystem(new UISystem());
 
         try {
             resourceLoader.load();
