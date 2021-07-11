@@ -19,40 +19,32 @@ import java.io.IOException;
 
 public class MapScreen implements Screen {
 
+    private static final Vector2 ORIGIN = new Vector2(512, 512);
+    private static final int RADIUS = 128;
+    private static final int ANGLE = 0;
+
     private final PooledEngine pooledEngine = new PooledEngine();
     private final ResourceLoader resourceLoader = new ResourceLoader(
             FileLocation.INTERNAL,
             "resources.json"
     );
-    private final Entity planet;
-    private final Entity planet2;
 
     public MapScreen() {
         pooledEngine.addSystem(new ClearScreenSystem(Color.BLACK));
         pooledEngine.addSystem(new OrbitRenderSystem());
         pooledEngine.addSystem(new UISystem());
 
-        planet = pooledEngine.createEntity();
-        OrbitalRadiusComponent orbitalRadiusComponent = pooledEngine.createComponent(
-                OrbitalRadiusComponent.class
-        );
-        orbitalRadiusComponent.setRadius(new Vector2(100, 128));
-        orbitalRadiusComponent.setOrigin(new Vector2(512, 512));
-        orbitalRadiusComponent.setAngle(1);
-        planet.add(orbitalRadiusComponent);
+        pooledEngine.addEntity(createPlanet(
+                ORIGIN,
+                RADIUS,
+                ANGLE
+        ));
 
-        pooledEngine.addEntity(planet);
-
-        planet2 = pooledEngine.createEntity();
-        OrbitalRadiusComponent orbitalRadiusComponent2 = pooledEngine.createComponent(
-                OrbitalRadiusComponent.class
-        );
-        orbitalRadiusComponent2.setRadius(new Vector2(50, 64));
-        orbitalRadiusComponent2.setOrigin(new Vector2(512, 512));
-        orbitalRadiusComponent2.setAngle(1);
-        planet2.add(orbitalRadiusComponent2);
-
-        pooledEngine.addEntity(planet2);
+        pooledEngine.addEntity(createPlanet(
+                ORIGIN,
+                RADIUS / 2f,
+                ANGLE
+        ));
 
         try {
             resourceLoader.load();
@@ -61,16 +53,24 @@ public class MapScreen implements Screen {
         }
     }
 
+    private Entity createPlanet(final Vector2 origin, final float radius, final float angle) {
+        final Entity planetE = pooledEngine.createEntity();
+        final OrbitalRadiusComponent orbitC = pooledEngine.createComponent(
+                OrbitalRadiusComponent.class
+        );
+
+        orbitC.setOrigin(origin);
+        orbitC.setRadius(radius);
+        orbitC.setAngle(angle);
+        planetE.add(orbitC);
+
+        return planetE;
+    }
+
     @Override
     public final void render(final float deltaTime) {
         Events.update();
         pooledEngine.update(deltaTime);
-        planet.getComponent(OrbitalRadiusComponent.class).setAngle(
-                planet.getComponent(OrbitalRadiusComponent.class).getAngle() + 0.01f
-        );
-        planet2.getComponent(OrbitalRadiusComponent.class).setAngle(
-                planet2.getComponent(OrbitalRadiusComponent.class).getAngle() + 0.015f
-        );
     }
 
     @Override
