@@ -10,6 +10,4 @@ public final class Mappers {
 
     public static final ComponentMapper<RenderableComponent> RENDERABLES =
             ComponentMapper.getFor(RenderableComponent.class);
-    public static final ComponentMapper<OrbitalRadiusComponent> ORBITS =
-            ComponentMapper.getFor(OrbitalRadiusComponent.class);
 }
