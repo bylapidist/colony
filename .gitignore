@@ -141,8 +141,9 @@ Thumbs.db
 /tests/out/
 
 ## Resources
-tests/fonts
-tests/i18n
-tests/skin
-tests/textures
+tests/assets
+tests/fonts/
+tests/i18n/
+tests/skin/
+tests/textures/
 tests/resources.json
