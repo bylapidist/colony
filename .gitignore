@@ -141,6 +141,7 @@ Thumbs.db
 /tests/out/
 
 ## Resources
+tests/assets
 tests/fonts
 tests/i18n
 tests/skin
