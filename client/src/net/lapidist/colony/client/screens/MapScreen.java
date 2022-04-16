@@ -16,6 +16,9 @@ import java.io.IOException;
 
 public class MapScreen implements Screen {
 
+    private final int mapWidth = 100;
+
+    private final int mapHeight = 100;
     private final PooledEngine pooledEngine = new PooledEngine();
     private final ResourceLoader resourceLoader = new ResourceLoader(
             FileLocation.INTERNAL,
@@ -24,7 +27,7 @@ public class MapScreen implements Screen {
 
     public MapScreen() {
         pooledEngine.addSystem(new ClearScreenSystem(Color.BLACK));
-        pooledEngine.addSystem(new MapRenderSystem());
+        pooledEngine.addSystem(new MapRenderSystem(mapWidth, mapHeight));
         pooledEngine.addSystem(new UISystem());
 
         try {
