@@ -1,4 +1,4 @@
-package net.lapidist.colony.components;
+package net.lapidist.colony.components.assets;
 
 public class TextureRegionReferenceComponent extends ResourceReferenceComponent {
 }
