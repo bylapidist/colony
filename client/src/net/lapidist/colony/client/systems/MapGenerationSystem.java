@@ -23,7 +23,8 @@ public class MapGenerationSystem extends EntitySystem {
         for (int column = 0; column <= mapWidth; column++) {
             for (int row = 0; row <= mapHeight; row++) {
                 Entity tile = TileFactory.create(
-                        TileComponent.TileType.EMPTY,
+                        TileComponent.TileType.GRASS,
+                        "grass0",
                         new Vector2(0, 0),
                         true
                 );

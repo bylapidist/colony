@@ -5,7 +5,8 @@ import com.badlogic.ashley.core.Component;
 public class TileComponent implements Component {
 
     public enum TileType {
-        EMPTY("Empty");
+        EMPTY("empty"),
+        GRASS("grass");
 
         private final String type;
 
