@@ -3,12 +3,14 @@ package net.lapidist.colony.client.screens;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import net.lapidist.colony.client.core.Constants;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
 import net.lapidist.colony.client.core.events.EventType;
 import net.lapidist.colony.client.core.events.Events;
 import net.lapidist.colony.client.core.events.payloads.ResizePayload;
 import net.lapidist.colony.client.core.io.FileLocation;
 import net.lapidist.colony.client.core.io.ResourceLoader;
+import net.lapidist.colony.client.systems.MapGenerationSystem;
 import net.lapidist.colony.client.systems.MapRenderSystem;
 import net.lapidist.colony.client.systems.UISystem;
 
@@ -16,25 +18,23 @@ import java.io.IOException;
 
 public class MapScreen implements Screen {
 
-    private final int mapWidth = 100;
-
-    private final int mapHeight = 100;
     private final PooledEngine pooledEngine = new PooledEngine();
-    private final ResourceLoader resourceLoader = new ResourceLoader(
-            FileLocation.INTERNAL,
-            "resources.json"
-    );
+    private final ResourceLoader resourceLoader = new ResourceLoader();
 
     public MapScreen() {
-        pooledEngine.addSystem(new ClearScreenSystem(Color.BLACK));
-        pooledEngine.addSystem(new MapRenderSystem(mapWidth, mapHeight));
-        pooledEngine.addSystem(new UISystem());
-
         try {
-            resourceLoader.load();
+            resourceLoader.load(
+                    FileLocation.INTERNAL,
+                    "resources.json"
+            );
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        pooledEngine.addSystem(new ClearScreenSystem(Color.BLACK));
+        pooledEngine.addSystem(new MapGenerationSystem(Constants.MAP_WIDTH, Constants.MAP_HEIGHT));
+        pooledEngine.addSystem(new MapRenderSystem());
+        pooledEngine.addSystem(new UISystem());
     }
 
     @Override

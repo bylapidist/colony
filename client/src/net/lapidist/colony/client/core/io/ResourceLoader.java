@@ -25,29 +25,27 @@ public class ResourceLoader implements Disposable {
     private ResourceConfig resourceConfig;
 
     private final Json json = new Json();
-    private final FileLocation fileLocation;
-    private final String resourceConfigPath;
+    private FileLocation fileLocation;
     private final ObjectMap<String, TextureRegion> textureRegions;
     private final ObjectMap<String, Sound> sounds;
 
-    public ResourceLoader(
-            final FileLocation fileLocationToSet,
-            final String resourceConfigPathToSet
-    ) {
-        this.fileLocation = fileLocationToSet;
-        this.resourceConfigPath = resourceConfigPathToSet;
-
+    public ResourceLoader() {
         textureRegions = new ObjectMap<>();
         sounds = new ObjectMap<>();
     }
 
-    public final void load() throws IOException {
+    public final void load(
+            final FileLocation fileLocationToSet,
+            final String resourceConfigPathToSet
+    ) throws IOException {
+        fileLocation = fileLocationToSet;
+
         FileHandle resourceConfigHandle
-                = fileLocation.getFile(resourceConfigPath);
+                = fileLocation.getFile(resourceConfigPathToSet);
 
         if (resourceConfigHandle == null || !resourceConfigHandle.exists()) {
             throw new IOException(
-                    String.format("%s does not exist", resourceConfigPath)
+                    String.format("%s does not exist", resourceConfigPathToSet)
             );
         }
 
@@ -61,7 +59,7 @@ public class ResourceLoader implements Disposable {
             System.out.printf(
                     "[%s] ResourceConfig loaded from \"%s\"\n%s\n",
                     ResourceLoader.class.getSimpleName(),
-                    resourceConfigPath,
+                    resourceConfigPathToSet,
                     resourceConfigJson
             );
         }
