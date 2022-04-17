@@ -15,12 +15,12 @@ public class ResourceLoaderTest {
 
     @Test
     public final void testLoadsResources() throws IOException {
-        ResourceLoader resourceLoader = new ResourceLoader(
+        ResourceLoader resourceLoader = new ResourceLoader();
+
+        resourceLoader.load(
                 FileLocation.INTERNAL,
                 "resources.json"
         );
-
-        resourceLoader.load();
         assertTrue(resourceLoader.isLoaded());
     }
 }

@@ -11,6 +11,7 @@ public final class Constants {
     public static final int WIDTH = 1080;
     public static final int HEIGHT = 720;
     public static final int TARGET_FPS = 60;
-
     public static final int TILE_SIZE = 32;
+    public static final int MAP_WIDTH = 100;
+    public static final int MAP_HEIGHT = 100;
 }
