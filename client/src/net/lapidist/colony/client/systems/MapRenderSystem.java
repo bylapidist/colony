@@ -74,6 +74,7 @@ public class MapRenderSystem extends EntitySystem {
             if (cameraSystem.withinCameraView(worldCoords)) {
                 TextureRegionReferenceComponent textureRegionReferenceComponent =
                         entity.getComponent(TextureRegionReferenceComponent.class);
+
                 spriteBatch.draw(
                         resourceLoader.getTextureRegions().get(
                                 textureRegionReferenceComponent.getResourceRef()

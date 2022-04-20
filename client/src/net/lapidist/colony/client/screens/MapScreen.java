@@ -18,6 +18,7 @@ public class MapScreen implements Screen {
         pooledEngine.addSystem(new MapGenerationSystem(Constants.MAP_WIDTH, Constants.MAP_HEIGHT));
         pooledEngine.addSystem(new PlayerCameraSystem(1f));
         pooledEngine.addSystem(new MapRenderSystem());
+        pooledEngine.addSystem(new InputSystem());
         pooledEngine.addSystem(new UISystem());
     }
 
