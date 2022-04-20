@@ -150,4 +150,28 @@ public class ResourceLoader implements Disposable {
             sounds.clear();
         }
     }
+
+    public final boolean isDisposed() {
+        return disposed;
+    }
+
+    public final ResourceConfig getResourceConfig() {
+        return resourceConfig;
+    }
+
+    public final Json getJson() {
+        return json;
+    }
+
+    public final FileLocation getFileLocation() {
+        return fileLocation;
+    }
+
+    public final ObjectMap<String, TextureRegion> getTextureRegions() {
+        return textureRegions;
+    }
+
+    public final ObjectMap<String, Sound> getSounds() {
+        return sounds;
+    }
 }
