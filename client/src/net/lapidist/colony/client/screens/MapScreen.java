@@ -4,36 +4,21 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import net.lapidist.colony.client.core.Constants;
-import net.lapidist.colony.client.systems.ClearScreenSystem;
+import net.lapidist.colony.client.systems.*;
 import net.lapidist.colony.client.core.events.EventType;
 import net.lapidist.colony.client.core.events.Events;
 import net.lapidist.colony.client.core.events.payloads.ResizePayload;
-import net.lapidist.colony.client.core.io.FileLocation;
-import net.lapidist.colony.client.core.io.ResourceLoader;
-import net.lapidist.colony.client.systems.MapGenerationSystem;
-import net.lapidist.colony.client.systems.MapRenderSystem;
-import net.lapidist.colony.client.systems.UISystem;
-
-import java.io.IOException;
 
 public class MapScreen implements Screen {
 
     private final PooledEngine pooledEngine = new PooledEngine();
-    private final ResourceLoader resourceLoader = new ResourceLoader();
 
     public MapScreen() {
-        try {
-            resourceLoader.load(
-                    FileLocation.INTERNAL,
-                    "resources.json"
-            );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         pooledEngine.addSystem(new ClearScreenSystem(Color.BLACK));
         pooledEngine.addSystem(new MapGenerationSystem(Constants.MAP_WIDTH, Constants.MAP_HEIGHT));
+        pooledEngine.addSystem(new PlayerCameraSystem(1f));
         pooledEngine.addSystem(new MapRenderSystem());
+        pooledEngine.addSystem(new InputSystem());
         pooledEngine.addSystem(new UISystem());
     }
 
@@ -70,7 +55,6 @@ public class MapScreen implements Screen {
 
     @Override
     public final void dispose() {
-        resourceLoader.dispose();
         Events.dispatch(EventType.DISPOSE);
     }
 }
