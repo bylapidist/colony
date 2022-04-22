@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.client.core.io.FileLocation;
@@ -54,7 +53,6 @@ public class MapRenderSystem extends EntitySystem {
 
     @Override
     public final void update(final float deltaTime) {
-        cameraSystem.getCamera().setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         cameraSystem.update(deltaTime);
 
         spriteBatch.setProjectionMatrix(cameraSystem.getCamera().combined);
