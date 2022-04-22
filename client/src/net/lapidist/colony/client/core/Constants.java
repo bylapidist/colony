@@ -14,4 +14,6 @@ public final class Constants {
     public static final int TILE_SIZE = 32;
     public static final int MAP_WIDTH = 100;
     public static final int MAP_HEIGHT = 100;
+
+    public static final int MAP_GUTTER = 4;
 }

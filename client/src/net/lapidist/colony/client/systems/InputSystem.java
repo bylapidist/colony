@@ -10,6 +10,10 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.IntSet;
+import net.lapidist.colony.client.core.Constants;
+import net.lapidist.colony.client.core.events.EventType;
+import net.lapidist.colony.client.core.events.Events;
+import net.lapidist.colony.client.core.events.payloads.ResizePayload;
 
 public class InputSystem extends EntitySystem implements InputProcessor {
 
@@ -117,8 +121,35 @@ public class InputSystem extends EntitySystem implements InputProcessor {
         }
 
         limitVelocity();
+        limitToMapBounds();
 
         cameraSystem.getCamera().position.set(tmpPosition);
+    }
+
+    private void limitToMapBounds() {
+        int mapPixelGutter = Constants.TILE_SIZE * Constants.MAP_GUTTER;
+        int mapPixelWidth = Constants.MAP_WIDTH * Constants.TILE_SIZE;
+        int mapPixelHeight = Constants.MAP_HEIGHT * Constants.TILE_SIZE;
+
+        if (tmpPosition.x <= -mapPixelGutter) {
+            tmpPosition.x = -mapPixelGutter;
+            tmpVelocity.x = 0;
+        }
+
+        if (tmpPosition.x >= mapPixelWidth + mapPixelGutter) {
+            tmpPosition.x = mapPixelWidth + mapPixelGutter;
+            tmpVelocity.x = 0;
+        }
+
+        if (tmpPosition.y <= -mapPixelGutter) {
+            tmpPosition.y = -mapPixelGutter;
+            tmpVelocity.y = 0;
+        }
+
+        if (tmpPosition.y >= mapPixelHeight + mapPixelGutter) {
+            tmpPosition.y = mapPixelHeight + mapPixelGutter;
+            tmpVelocity.y = 0;
+        }
     }
 
     private void limitVelocity() {
@@ -170,6 +201,16 @@ public class InputSystem extends EntitySystem implements InputProcessor {
     @Override
     public final void addedToEngine(final Engine engine) {
         cameraSystem = engine.getSystem(PlayerCameraSystem.class);
+
+        Events.getInstance().addListener(event -> {
+            ResizePayload payload = (ResizePayload) event.extraInfo;
+            cameraSystem.getViewport().update(
+                    payload.getWidth(),
+                    payload.getHeight(),
+                    false
+            );
+            return false;
+        }, EventType.RESIZE.getOrdinal());
     }
 
     @Override
