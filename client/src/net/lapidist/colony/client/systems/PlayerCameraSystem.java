@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import net.lapidist.colony.client.core.Constants;
 
 public class PlayerCameraSystem extends EntitySystem {
@@ -16,13 +16,12 @@ public class PlayerCameraSystem extends EntitySystem {
 
     private OrthographicCamera camera;
 
-    private FitViewport viewport;
+    private ExtendViewport viewport;
 
     public PlayerCameraSystem() {
         camera = new OrthographicCamera();
-        viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
+        viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         viewport.apply();
-        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
     }
 
     public final boolean withinCameraView(final Vector2 screenCoords) {
@@ -89,11 +88,11 @@ public class PlayerCameraSystem extends EntitySystem {
         this.camera = cameraToSet;
     }
 
-    public final FitViewport getViewport() {
+    public final ExtendViewport getViewport() {
         return viewport;
     }
 
-    public final void setViewport(final FitViewport viewportToSet) {
+    public final void setViewport(final ExtendViewport viewportToSet) {
         this.viewport = viewportToSet;
     }
 }
