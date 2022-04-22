@@ -12,9 +12,10 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.IntSet;
 
 public class InputSystem extends EntitySystem implements InputProcessor {
+
     private static final float BASE_FRICTION = 1f;
 
-    private static final float BASE_ACCELERATION = 11f;
+    private static final float BASE_ACCELERATION = 10f;
 
     private static final float BASE_MAX_VELOCITY = 10f;
 
@@ -30,15 +31,16 @@ public class InputSystem extends EntitySystem implements InputProcessor {
 
     private final Vector2 tmpVelocity = new Vector2();
 
-    private final InputMultiplexer inputMultiplexer =
-            new InputMultiplexer();
     private final IntSet downKeys =
             new IntSet(20);
 
+    private final InputMultiplexer inputMultiplexer = new InputMultiplexer();
+
     private PlayerCameraSystem cameraSystem;
 
-    public final InputMultiplexer getInputMultiplexer() {
-        return inputMultiplexer;
+    public InputSystem() {
+        inputMultiplexer.addProcessor(this);
+        Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
     public final boolean singleKeyDown(final int keycode) {
@@ -58,7 +60,8 @@ public class InputSystem extends EntitySystem implements InputProcessor {
         return false;
     }
 
-    private void processInput() {
+    @Override
+    public final void update(final float deltaTime) {
         tmpPosition.set(cameraSystem.getCamera().position);
 
         if (singleKeyDown(Input.Keys.W)) {
@@ -165,15 +168,13 @@ public class InputSystem extends EntitySystem implements InputProcessor {
     }
 
     @Override
-    public final void update(final float deltaTime) {
-        processInput();
+    public final void addedToEngine(final Engine engine) {
+        cameraSystem = engine.getSystem(PlayerCameraSystem.class);
     }
 
     @Override
-    public final void addedToEngine(final Engine engine) {
-        cameraSystem = engine.getSystem(PlayerCameraSystem.class);
-        inputMultiplexer.addProcessor(this);
-        Gdx.input.setInputProcessor(inputMultiplexer);
+    public final void removedFromEngine(final Engine engine) {
+        inputMultiplexer.removeProcessor(this);
     }
 
     @Override
@@ -236,32 +237,25 @@ public class InputSystem extends EntitySystem implements InputProcessor {
 
     @Override
     public final boolean scrolled(final float amountX, final float amountY) {
-        if (amountY == 1) {
-            cameraSystem.getCamera().zoom += ZOOM_SPEED;
+        if (amountY >= 1) {
             cameraSystem.getCamera().zoom =
                     MathUtils.clamp(
-                            cameraSystem.getCamera().zoom,
+                            cameraSystem.getCamera().zoom + ZOOM_SPEED,
                             MIN_ZOOM,
                             MAX_ZOOM
                     );
         }
 
         // Zoom in
-        if (amountY == -1) {
-            cameraSystem.getCamera().zoom -= ZOOM_SPEED;
+        if (amountY <= -1) {
             cameraSystem.getCamera().zoom =
                     MathUtils.clamp(
-                            cameraSystem.getCamera().zoom,
+                            cameraSystem.getCamera().zoom - ZOOM_SPEED,
                             MIN_ZOOM,
                             MAX_ZOOM
                     );
         }
 
         return false;
-    }
-
-    @Override
-    public final void removedFromEngine(final Engine engine) {
-        getInputMultiplexer().removeProcessor(this);
     }
 }

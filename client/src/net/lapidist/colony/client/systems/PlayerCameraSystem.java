@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import net.lapidist.colony.client.core.Constants;
 
 public class PlayerCameraSystem extends EntitySystem {
@@ -13,24 +14,15 @@ public class PlayerCameraSystem extends EntitySystem {
 
     private final Vector2 tmpVec2 = new Vector2();
 
-    private final float zoom;
-
     private OrthographicCamera camera;
 
-    public PlayerCameraSystem(final float zoomToSet) {
-        this.zoom = 1;
-        float zoomFactorInverter = 1f / zoomToSet;
+    private FitViewport viewport;
 
-        setupViewport(
-                Gdx.graphics.getWidth() * zoomFactorInverter,
-                Gdx.graphics.getHeight() * zoomFactorInverter
-        );
-    }
-
-    private void setupViewport(final float width, final float height) {
-        camera = new OrthographicCamera(width, height);
-        camera.setToOrtho(false, width, height);
-        camera.update();
+    public PlayerCameraSystem() {
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
+        viewport.apply();
+        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
     }
 
     public final boolean withinCameraView(final Vector2 screenCoords) {
@@ -82,10 +74,11 @@ public class PlayerCameraSystem extends EntitySystem {
     @Override
     public final void update(final float deltaTime) {
         camera.update();
+        viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     public final float getZoom() {
-        return zoom;
+        return camera.zoom;
     }
 
     public final OrthographicCamera getCamera() {
@@ -94,5 +87,13 @@ public class PlayerCameraSystem extends EntitySystem {
 
     public final void setCamera(final OrthographicCamera cameraToSet) {
         this.camera = cameraToSet;
+    }
+
+    public final FitViewport getViewport() {
+        return viewport;
+    }
+
+    public final void setViewport(final FitViewport viewportToSet) {
+        this.viewport = viewportToSet;
     }
 }
