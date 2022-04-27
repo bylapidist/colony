@@ -21,6 +21,10 @@ public class PlayerCameraSystem extends EntitySystem {
     public PlayerCameraSystem() {
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
+
+        // Set camera to center of world
+        moveCameraToWorldCoords(getWorldCenter());
+
         viewport.apply();
     }
 
@@ -29,6 +33,17 @@ public class PlayerCameraSystem extends EntitySystem {
 
         return !(cameraCoords.x > Gdx.graphics.getWidth()
                 || cameraCoords.y > Gdx.graphics.getHeight()
+        );
+    }
+
+    public final void moveCameraToWorldCoords(final Vector2 worldCoords) {
+        viewport.getCamera().translate(worldCoords.x, worldCoords.y, 0);
+    }
+
+    public final Vector2 getWorldCenter() {
+        return new Vector2(
+                (Constants.TILE_SIZE * Constants.MAP_WIDTH + Constants.TILE_SIZE) / 2f,
+                (Constants.TILE_SIZE * Constants.MAP_HEIGHT + Constants.TILE_SIZE) / 2f
         );
     }
 
