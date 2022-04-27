@@ -3,6 +3,7 @@ package net.lapidist.colony.client.systems;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.client.entities.factories.TileFactory;
 import net.lapidist.colony.components.entities.TileComponent;
@@ -24,7 +25,7 @@ public class MapGenerationSystem extends EntitySystem {
             for (int row = 0; row <= mapHeight; row++) {
                 Entity tile = TileFactory.create(
                         TileComponent.TileType.GRASS,
-                        "grass0",
+                        getRandomTextureReference(),
                         new Vector2(column, row),
                         true
                 );
@@ -32,5 +33,10 @@ public class MapGenerationSystem extends EntitySystem {
                 engine.addEntity(tile);
             }
         }
+    }
+
+    private String getRandomTextureReference() {
+        String[] textures = new String[]{"grass0", "dirt0"};
+        return textures[MathUtils.random(0, textures.length - 1)];
     }
 }

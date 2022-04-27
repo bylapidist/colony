@@ -11,8 +11,9 @@ import net.lapidist.colony.client.core.io.FileLocation;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
 import net.lapidist.colony.components.entities.TileComponent;
-
 import java.io.IOException;
+
+import static net.lapidist.colony.client.entities.Mappers.TEXTURE_REGIONS;
 
 public class MapRenderSystem extends EntitySystem {
 
@@ -71,7 +72,7 @@ public class MapRenderSystem extends EntitySystem {
 
             if (cameraSystem.withinCameraView(worldCoords)) {
                 TextureRegionReferenceComponent textureRegionReferenceComponent =
-                        entity.getComponent(TextureRegionReferenceComponent.class);
+                        TEXTURE_REGIONS.get(entity);
 
                 spriteBatch.draw(
                         resourceLoader.getTextureRegions().get(
