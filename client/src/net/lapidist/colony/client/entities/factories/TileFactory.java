@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.client.core.Constants;
 import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
-import net.lapidist.colony.components.entities.TileComponent;
+import net.lapidist.colony.components.maps.TileComponent;
 
 public final class TileFactory {
 

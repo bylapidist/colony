@@ -4,15 +4,16 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.client.core.io.FileLocation;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
-import net.lapidist.colony.components.entities.TileComponent;
+import net.lapidist.colony.components.maps.MapComponent;
+import net.lapidist.colony.components.maps.TileComponent;
 import java.io.IOException;
 
+import static net.lapidist.colony.client.entities.Mappers.MAPS;
 import static net.lapidist.colony.client.entities.Mappers.TEXTURE_REGIONS;
 
 public class MapRenderSystem extends EntitySystem {
@@ -21,7 +22,7 @@ public class MapRenderSystem extends EntitySystem {
 
     private final SpriteBatch spriteBatch = new SpriteBatch();
 
-    private ImmutableArray<Entity> tiles;
+    private Entity map;
 
     private PlayerCameraSystem cameraSystem;
 
@@ -41,9 +42,9 @@ public class MapRenderSystem extends EntitySystem {
 
         cameraSystem = engine.getSystem(PlayerCameraSystem.class);
 
-        tiles = engine.getEntitiesFor(
-                Family.all(TileComponent.class).get()
-        );
+        map = engine.getEntitiesFor(
+                Family.one(MapComponent.class).get()
+        ).first();
     }
 
     @Override
@@ -65,8 +66,10 @@ public class MapRenderSystem extends EntitySystem {
     }
 
     private void drawTiles() {
-        for (int i = 0; i < tiles.size(); ++i) {
-            Entity entity = tiles.get(i);
+        MapComponent mapComponent = MAPS.get(map);
+
+        for (int i = 0; i < mapComponent.getTiles().size; ++i) {
+            Entity entity = mapComponent.getTiles().get(i);
             TileComponent tile = entity.getComponent(TileComponent.class);
             Vector2 worldCoords = cameraSystem.tileCoordsToWorldCoords(tile.getX(), tile.getY());
 
