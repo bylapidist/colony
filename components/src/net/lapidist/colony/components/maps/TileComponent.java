@@ -1,4 +1,4 @@
-package net.lapidist.colony.components.entities;
+package net.lapidist.colony.components.maps;
 
 import com.badlogic.ashley.core.Component;
 
