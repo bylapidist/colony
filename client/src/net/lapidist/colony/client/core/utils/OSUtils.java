@@ -2,11 +2,11 @@ package net.lapidist.colony.client.core.utils;
 
 import java.util.Locale;
 
-public final class OS {
+public final class OSUtils {
 
     private static final String OPERATING_SYSTEM = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
 
-    private OS() {
+    private OSUtils() {
     }
 
     public static Boolean isMac() {

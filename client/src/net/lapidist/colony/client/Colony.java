@@ -1,7 +1,7 @@
 package net.lapidist.colony.client;
 
 import com.badlogic.gdx.Game;
-import net.lapidist.colony.client.core.io.Paths;
+import net.lapidist.colony.client.core.utils.PathUtils;
 import net.lapidist.colony.client.screens.MapScreen;
 import net.lapidist.colony.client.core.events.EventType;
 import net.lapidist.colony.client.core.events.Events;
@@ -14,7 +14,7 @@ public final class Colony extends Game {
     public void create() {
         // Do global initialisation
         try {
-            Paths.createGameFoldersIfNotExists();
+            PathUtils.createGameFoldersIfNotExists();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

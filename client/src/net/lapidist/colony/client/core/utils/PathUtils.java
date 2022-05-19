@@ -1,13 +1,13 @@
-package net.lapidist.colony.client.core.io;
+package net.lapidist.colony.client.core.utils;
 
-import net.lapidist.colony.client.core.utils.OS;
+import net.lapidist.colony.client.core.io.FileLocation;
 
 import java.io.File;
 import java.io.IOException;
 
-public final class Paths {
+public final class PathUtils {
 
-    private Paths() {
+    private PathUtils() {
     }
 
     static final String GAME_FOLDER_MAC = System.getProperty("user.home") + "/.colony";
@@ -19,20 +19,20 @@ public final class Paths {
     static final String SAVE_FOLDER_WINDOWS = GAME_FOLDER_WINDOWS + "\\saves";
 
     public static String getGameFolder() {
-        if (OS.isMac()) {
+        if (OSUtils.isMac()) {
             return GAME_FOLDER_MAC;
         }
-        if (OS.isWindows()) {
+        if (OSUtils.isWindows()) {
             return GAME_FOLDER_WINDOWS;
         }
         throw new RuntimeException("Cannot get game folder - unknown operating system");
     }
 
     public static String getSaveFolder() {
-        if (OS.isMac()) {
+        if (OSUtils.isMac()) {
             return SAVE_FOLDER_MAC;
         }
-        if (OS.isWindows()) {
+        if (OSUtils.isWindows()) {
             return SAVE_FOLDER_WINDOWS;
         }
         throw new RuntimeException("Cannot get save folder - unknown operating system");
@@ -43,7 +43,7 @@ public final class Paths {
             if (new File(getGameFolder()).mkdirs()) {
                 System.out.printf(
                         "[%s] Created game folder: \"%s\"\n",
-                        Paths.class.getSimpleName(),
+                        PathUtils.class.getSimpleName(),
                         getGameFolder()
                 );
             }
@@ -53,7 +53,7 @@ public final class Paths {
             if (new File(getSaveFolder()).mkdirs()) {
                 System.out.printf(
                         "[%s] Created saves folder: \"%s\"\n",
-                        Paths.class.getSimpleName(),
+                        PathUtils.class.getSimpleName(),
                         getSaveFolder()
                 );
             }
