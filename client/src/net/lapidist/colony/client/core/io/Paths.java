@@ -1,8 +1,9 @@
 package net.lapidist.colony.client.core.io;
 
+import net.lapidist.colony.client.core.utils.OS;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
 
 public final class Paths {
 
@@ -17,37 +18,43 @@ public final class Paths {
 
     static final String SAVE_FOLDER_WINDOWS = GAME_FOLDER_WINDOWS + "\\saves";
 
-    public static void createGameFoldersIfNotExists() throws IOException {
-        String os = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
-        String gameFolderPath = "";
-        String saveFolderPath = "";
-
-        if (os.contains("windows")) {
-            gameFolderPath = GAME_FOLDER_WINDOWS;
-            saveFolderPath = SAVE_FOLDER_WINDOWS;
-        } else if (os.contains("mac") || os.contains("darwin")) {
-            gameFolderPath = GAME_FOLDER_MAC;
-            saveFolderPath = SAVE_FOLDER_MAC;
-        } else {
-            throw new IOException("Unknown OS when trying to create game directories, reported OS is: " + os);
+    public static String getGameFolder() {
+        if (OS.isMac()) {
+            return GAME_FOLDER_MAC;
         }
+        if (OS.isWindows()) {
+            return GAME_FOLDER_WINDOWS;
+        }
+        throw new RuntimeException("Cannot get game folder - unknown operating system");
+    }
 
-        if (!FileLocation.EXTERNAL.getFile(gameFolderPath).isDirectory()) {
-            if (new File(gameFolderPath).mkdirs()) {
+    public static String getSaveFolder() {
+        if (OS.isMac()) {
+            return SAVE_FOLDER_MAC;
+        }
+        if (OS.isWindows()) {
+            return SAVE_FOLDER_WINDOWS;
+        }
+        throw new RuntimeException("Cannot get save folder - unknown operating system");
+    }
+
+    public static void createGameFoldersIfNotExists() throws IOException {
+        if (!FileLocation.EXTERNAL.getFile(getGameFolder()).isDirectory()) {
+            if (new File(getGameFolder()).mkdirs()) {
                 System.out.printf(
                         "[%s] Created game folder: \"%s\"\n",
                         Paths.class.getSimpleName(),
-                        gameFolderPath
+                        getGameFolder()
                 );
             }
         }
 
-        if (!FileLocation.EXTERNAL.getFile(saveFolderPath).isDirectory()) {
-            if (new File(saveFolderPath).mkdirs()) {
+        if (!FileLocation.EXTERNAL.getFile(getSaveFolder()).isDirectory()) {
+            if (new File(getSaveFolder()).mkdirs()) {
                 System.out.printf(
                         "[%s] Created saves folder: \"%s\"\n",
                         Paths.class.getSimpleName(),
-                        saveFolderPath
+                        getSaveFolder()
                 );
             }
         }
