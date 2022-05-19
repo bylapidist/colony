@@ -1,7 +1,6 @@
 package net.lapidist.colony.client.systems;
 
-import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.EntitySystem;
+import com.artemis.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
@@ -15,7 +14,7 @@ import net.lapidist.colony.client.core.events.EventType;
 import net.lapidist.colony.client.core.events.Events;
 import net.lapidist.colony.client.core.events.payloads.ResizePayload;
 
-public class InputSystem extends EntitySystem implements InputProcessor {
+public class InputSystem extends IteratingSystem implements InputProcessor {
 
     private static final float BASE_FRICTION = 1f;
 
@@ -45,6 +44,11 @@ public class InputSystem extends EntitySystem implements InputProcessor {
     public InputSystem() {
         inputMultiplexer.addProcessor(this);
         Gdx.input.setInputProcessor(inputMultiplexer);
+    }
+
+    @Override
+    protected void process(int entityId) {
+
     }
 
     public final boolean singleKeyDown(final int keycode) {
