@@ -1,5 +1,6 @@
 package net.lapidist.colony.client.systems;
 
+import com.artemis.Aspect;
 import com.artemis.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -42,34 +43,13 @@ public class InputSystem extends IteratingSystem implements InputProcessor {
     private PlayerCameraSystem cameraSystem;
 
     public InputSystem() {
+        super(Aspect.all());
         inputMultiplexer.addProcessor(this);
         Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
     @Override
-    protected void process(int entityId) {
-
-    }
-
-    public final boolean singleKeyDown(final int keycode) {
-        return downKeys.contains(keycode) && downKeys.size == 1;
-    }
-
-    public final boolean twoKeysDown(
-            final int keycode1,
-            final int keycode2
-    ) {
-        return downKeys.contains(keycode1)
-                && downKeys.contains(keycode2)
-                && downKeys.size == 2;
-    }
-
-    public final boolean multipleKeysDown(final int lastKeycode) {
-        return false;
-    }
-
-    @Override
-    public final void update(final float deltaTime) {
+    protected void process(final int entityId) {
         tmpPosition.set(cameraSystem.getCamera().position);
 
         if (singleKeyDown(Input.Keys.W)) {
@@ -128,6 +108,41 @@ public class InputSystem extends IteratingSystem implements InputProcessor {
         limitToMapBounds();
 
         cameraSystem.getCamera().position.set(tmpPosition);
+    }
+
+    @Override
+    protected void initialize() {
+        Events.getInstance().addListener(event -> {
+            ResizePayload payload = (ResizePayload) event.extraInfo;
+            cameraSystem.getViewport().update(
+                    payload.getWidth(),
+                    payload.getHeight(),
+                    false
+            );
+            return false;
+        }, EventType.RESIZE.getOrdinal());
+    }
+
+    @Override
+    protected void dispose() {
+        inputMultiplexer.removeProcessor(this);
+    }
+
+    public final boolean singleKeyDown(final int keycode) {
+        return downKeys.contains(keycode) && downKeys.size == 1;
+    }
+
+    public final boolean twoKeysDown(
+            final int keycode1,
+            final int keycode2
+    ) {
+        return downKeys.contains(keycode1)
+                && downKeys.contains(keycode2)
+                && downKeys.size == 2;
+    }
+
+    public final boolean multipleKeysDown(final int lastKeycode) {
+        return false;
     }
 
     private void limitToMapBounds() {
@@ -200,26 +215,6 @@ public class InputSystem extends IteratingSystem implements InputProcessor {
     private void accelerateVertically(final float acceleration) {
         tmpVelocity.y += acceleration;
         tmpPosition.y -= tmpVelocity.y;
-    }
-
-    @Override
-    public final void addedToEngine(final Engine engine) {
-        cameraSystem = engine.getSystem(PlayerCameraSystem.class);
-
-        Events.getInstance().addListener(event -> {
-            ResizePayload payload = (ResizePayload) event.extraInfo;
-            cameraSystem.getViewport().update(
-                    payload.getWidth(),
-                    payload.getHeight(),
-                    false
-            );
-            return false;
-        }, EventType.RESIZE.getOrdinal());
-    }
-
-    @Override
-    public final void removedFromEngine(final Engine engine) {
-        inputMultiplexer.removeProcessor(this);
     }
 
     @Override

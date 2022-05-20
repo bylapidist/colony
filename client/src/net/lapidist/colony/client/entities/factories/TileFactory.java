@@ -1,6 +1,6 @@
 package net.lapidist.colony.client.entities.factories;
 
-import com.badlogic.ashley.core.Entity;
+import com.artemis.Entity;
 import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.client.core.Constants;
 import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
