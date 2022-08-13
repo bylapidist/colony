@@ -4,7 +4,7 @@ buildscript {
         gdxVersion = '1.11.0'
         gdxAiVersion = '1.8.2'
         jUnitVersion = '4.13.2'
-        mockitoVersion = '4.6.1'
+        mockitoVersion = '4.7.0'
         ashleyVersion = '1.7.4'
     }
     repositories {
