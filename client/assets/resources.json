@@ -13,6 +13,13 @@
       "name": "dirt0",
       "bounds": "0 0 32 32"
     }]
+  }, {
+    "name": "house",
+    "filePath": "textures/house.png",
+    "regions": [{
+      "name": "house0",
+      "bounds": "0 0 32 32"
+    }]
   }],
   "sounds": [{
     "name": "test sound",

@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.client.entities.factories.TileFactory;
+import net.lapidist.colony.client.entities.factories.BuildingFactory;
+import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 
@@ -24,6 +26,7 @@ public class MapGenerationSystem extends EntitySystem {
     @Override
     public final void addedToEngine(final Engine engine) {
         Array<Entity> tilesToSet = new Array<>();
+        Array<Entity> entitiesToSet = new Array<>();
         Entity map = new Entity();
         MapComponent mapComponent = new MapComponent();
 
@@ -38,7 +41,14 @@ public class MapGenerationSystem extends EntitySystem {
             }
         }
 
+        entitiesToSet.add(BuildingFactory.create(
+                BuildingComponent.BuildingType.HOUSE,
+                "house0",
+                new Vector2(1, 1)
+        ));
+
         mapComponent.setTiles(tilesToSet);
+        mapComponent.setEntities(entitiesToSet);
         map.add(mapComponent);
         engine.addEntity(map);
     }
