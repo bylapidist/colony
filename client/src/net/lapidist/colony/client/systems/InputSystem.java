@@ -263,6 +263,16 @@ public class InputSystem extends EntitySystem implements InputProcessor {
     }
 
     @Override
+    public final boolean touchCancelled(
+            final int screenX,
+            final int screenY,
+            final int pointer,
+            final int button
+    ) {
+        return false;
+    }
+
+    @Override
     public final boolean touchDragged(
             final int screenX,
             final int screenY,
