@@ -6,232 +6,141 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.IntSet;
 import net.lapidist.colony.client.core.Constants;
-import net.lapidist.colony.client.core.events.EventType;
-import net.lapidist.colony.client.core.events.Events;
-import net.lapidist.colony.client.core.events.payloads.ResizePayload;
 
-public class InputSystem extends EntitySystem implements InputProcessor {
+public class InputSystem extends EntitySystem implements InputProcessor, GestureListener {
 
-    private static final float BASE_FRICTION = 1f;
-
-    private static final float BASE_ACCELERATION = 10f;
-
-    private static final float BASE_MAX_VELOCITY = 10f;
-
-    private static final float MIN_VELOCITY = 3f;
-
-    private static final float MIN_ZOOM = 1f;
-
+    private static final float CAMERA_SPEED = 400f; // units per second
+    private static final float ZOOM_SPEED = 0.02f;
+    private static final float MIN_ZOOM = 0.5f;
     private static final float MAX_ZOOM = 2f;
-
-    private static final float ZOOM_SPEED = 0.06f;
-
-    private final Vector3 tmpPosition = new Vector3();
-
-    private final Vector2 tmpVelocity = new Vector2();
-
-    private final IntSet downKeys =
-            new IntSet(20);
-
-    private final InputMultiplexer inputMultiplexer = new InputMultiplexer();
 
     private PlayerCameraSystem cameraSystem;
 
     public InputSystem() {
+        final InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(new GestureDetector(this));
         inputMultiplexer.addProcessor(this);
         Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
-    public final boolean singleKeyDown(final int keycode) {
-        return downKeys.contains(keycode) && downKeys.size == 1;
-    }
-
-    public final boolean twoKeysDown(
-            final int keycode1,
-            final int keycode2
-    ) {
-        return downKeys.contains(keycode1)
-                && downKeys.contains(keycode2)
-                && downKeys.size == 2;
-    }
-
-    public final boolean multipleKeysDown(final int lastKeycode) {
-        return false;
+    @Override
+    public final void addedToEngine(final Engine engine) {
+        super.addedToEngine(engine);
+        cameraSystem = engine.getSystem(PlayerCameraSystem.class);
     }
 
     @Override
     public final void update(final float deltaTime) {
-        tmpPosition.set(cameraSystem.getCamera().position);
-
-        if (singleKeyDown(Input.Keys.W)) {
-            accelerateVertically(-BASE_ACCELERATION);
-        }
-
-        if (singleKeyDown(Input.Keys.A)) {
-            accelerateHorizontally(BASE_ACCELERATION);
-        }
-
-        if (singleKeyDown(Input.Keys.S)) {
-            accelerateVertically(BASE_ACCELERATION);
-        }
-
-        if (singleKeyDown(Input.Keys.D)) {
-            accelerateHorizontally(-BASE_ACCELERATION);
-        }
-
-        if (twoKeysDown(Input.Keys.W, Input.Keys.D)) {
-            accelerateVertically(-BASE_ACCELERATION);
-            accelerateHorizontally(-BASE_ACCELERATION);
-        }
-
-        if (twoKeysDown(Input.Keys.A, Input.Keys.W)) {
-            accelerateHorizontally(BASE_ACCELERATION);
-            accelerateVertically(-BASE_ACCELERATION);
-        }
-
-        if (twoKeysDown(Input.Keys.S, Input.Keys.D)) {
-            accelerateVertically(BASE_ACCELERATION);
-            accelerateHorizontally(-BASE_ACCELERATION);
-        }
-
-        if (twoKeysDown(Input.Keys.A, Input.Keys.S)) {
-            accelerateHorizontally(BASE_ACCELERATION);
-            accelerateVertically(BASE_ACCELERATION);
-        }
-
-        if (tmpVelocity.x > 0) {
-            applyHorizontalFriction(BASE_FRICTION);
-        }
-
-        if (tmpVelocity.x < 0) {
-            applyHorizontalFriction(-BASE_FRICTION);
-        }
-
-        if (tmpVelocity.y > 0) {
-            applyVerticalFriction(BASE_FRICTION);
-        }
-
-        if (tmpVelocity.y < 0) {
-            applyVerticalFriction(-BASE_FRICTION);
-        }
-
-        limitVelocity();
-        limitToMapBounds();
-
-        cameraSystem.getCamera().position.set(tmpPosition);
+        handleKeyboardInput(deltaTime);
+        clampCameraPosition();
+        cameraSystem.getCamera().update();
     }
 
-    private void limitToMapBounds() {
-        int mapPixelGutter = Constants.TILE_SIZE * Constants.MAP_GUTTER;
-        int mapPixelWidth = Constants.MAP_WIDTH * Constants.TILE_SIZE;
-        int mapPixelHeight = Constants.MAP_HEIGHT * Constants.TILE_SIZE;
+    private void handleKeyboardInput(final float deltaTime) {
+        final float moveAmount = CAMERA_SPEED * deltaTime;
+        final Vector3 position = cameraSystem.getCamera().position;
 
-        if (tmpPosition.x <= -mapPixelGutter) {
-            tmpPosition.x = -mapPixelGutter;
-            tmpVelocity.x = 0;
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            position.y += moveAmount;
         }
-
-        if (tmpPosition.x >= mapPixelWidth + mapPixelGutter) {
-            tmpPosition.x = mapPixelWidth + mapPixelGutter;
-            tmpVelocity.x = 0;
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            position.y -= moveAmount;
         }
-
-        if (tmpPosition.y <= -mapPixelGutter) {
-            tmpPosition.y = -mapPixelGutter;
-            tmpVelocity.y = 0;
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            position.x -= moveAmount;
         }
-
-        if (tmpPosition.y >= mapPixelHeight + mapPixelGutter) {
-            tmpPosition.y = mapPixelHeight + mapPixelGutter;
-            tmpVelocity.y = 0;
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            position.x += moveAmount;
         }
     }
 
-    private void limitVelocity() {
-        if (tmpVelocity.x < -BASE_MAX_VELOCITY) {
-            tmpVelocity.x = -BASE_MAX_VELOCITY;
-        }
+    private void clampCameraPosition() {
+        final Vector3 position = cameraSystem.getCamera().position;
+        final float mapWidth = Constants.MAP_WIDTH * Constants.TILE_SIZE;
+        final float mapHeight = Constants.MAP_HEIGHT * Constants.TILE_SIZE;
 
-        if (tmpVelocity.y < -BASE_MAX_VELOCITY) {
-            tmpVelocity.y = -BASE_MAX_VELOCITY;
-        }
-
-        if (tmpVelocity.x > BASE_MAX_VELOCITY) {
-            tmpVelocity.x = BASE_MAX_VELOCITY;
-        }
-
-        if (tmpVelocity.y > BASE_MAX_VELOCITY) {
-            tmpVelocity.y = BASE_MAX_VELOCITY;
-        }
-
-        if (tmpVelocity.x < MIN_VELOCITY && tmpVelocity.x > -MIN_VELOCITY) {
-            tmpVelocity.x = 0;
-        }
-
-        if (tmpVelocity.y < MIN_VELOCITY && tmpVelocity.y > -MIN_VELOCITY) {
-            tmpVelocity.y = 0;
-        }
-    }
-
-    private void applyVerticalFriction(final float friction) {
-        tmpVelocity.y -= friction;
-        tmpPosition.y -= tmpVelocity.y;
-    }
-
-    private void applyHorizontalFriction(final float friction) {
-        tmpVelocity.x -= friction;
-        tmpPosition.x -= tmpVelocity.x;
-    }
-
-    private void accelerateHorizontally(final float acceleration) {
-        tmpVelocity.x += acceleration;
-        tmpPosition.x -= tmpVelocity.x;
-    }
-
-    private void accelerateVertically(final float acceleration) {
-        tmpVelocity.y += acceleration;
-        tmpPosition.y -= tmpVelocity.y;
+        position.x = MathUtils.clamp(position.x, 0, mapWidth);
+        position.y = MathUtils.clamp(position.y, 0, mapHeight);
     }
 
     @Override
-    public final void addedToEngine(final Engine engine) {
-        cameraSystem = engine.getSystem(PlayerCameraSystem.class);
-
-        Events.getInstance().addListener(event -> {
-            ResizePayload payload = (ResizePayload) event.extraInfo;
-            cameraSystem.getViewport().update(
-                    payload.getWidth(),
-                    payload.getHeight(),
-                    false
-            );
-            return false;
-        }, EventType.RESIZE.getOrdinal());
+    public final boolean scrolled(final float amountX, final float amountY) {
+        final float zoom = cameraSystem.getCamera().zoom + amountY * ZOOM_SPEED;
+        cameraSystem.getCamera().zoom = MathUtils.clamp(zoom, MIN_ZOOM, MAX_ZOOM);
+        return true;
     }
 
     @Override
-    public final void removedFromEngine(final Engine engine) {
-        inputMultiplexer.removeProcessor(this);
+    public final boolean touchDown(final float x, final float y, final int pointer, final int button) {
+        return false;
+    }
+
+    @Override
+    public final boolean tap(final float x, final float y, final int count, final int button) {
+        return false;
+    }
+
+    @Override
+    public final boolean longPress(final float x, final float y) {
+        return false;
+    }
+
+    @Override
+    public final boolean fling(final float velocityX, final float velocityY, final int button) {
+        return false;
+    }
+
+    @Override
+    public final boolean pan(final float x, final float y, final float deltaX, final float deltaY) {
+        cameraSystem.getCamera().translate(
+                -deltaX * cameraSystem.getCamera().zoom,
+                deltaY * cameraSystem.getCamera().zoom,
+                0
+        );
+        clampCameraPosition();
+        return true;
+    }
+
+    @Override
+    public final boolean panStop(final float x, final float y, final int pointer, final int button) {
+        return false;
+    }
+
+    @Override
+    public final boolean zoom(final float initialDistance, final float distance) {
+        final float ratio = initialDistance / distance;
+        final float zoom = cameraSystem.getCamera().zoom * ratio;
+        cameraSystem.getCamera().zoom = MathUtils.clamp(zoom, MIN_ZOOM, MAX_ZOOM);
+        return true;
+    }
+
+    @Override
+    public final boolean pinch(
+            final Vector2 initialPointer1,
+            final Vector2 initialPointer2,
+            final Vector2 pointer1,
+            final Vector2 pointer2
+    ) {
+        return false;
+    }
+
+    @Override
+    public final void pinchStop() {
     }
 
     @Override
     public final boolean keyDown(final int keycode) {
-        downKeys.add(keycode);
-
-        if (downKeys.size >= 2) {
-            return multipleKeysDown(keycode);
-        }
-
         return false;
     }
 
     @Override
     public final boolean keyUp(final int keycode) {
-        downKeys.remove(keycode);
         return false;
     }
 
@@ -241,72 +150,27 @@ public class InputSystem extends EntitySystem implements InputProcessor {
     }
 
     @Override
-    public final boolean touchDown(
-            final int screenX,
-            final int screenY,
-            final int pointer,
-            final int button
-    ) {
-        downKeys.add(button);
+    public final boolean touchDown(final int screenX, final int screenY, final int pointer, final int button) {
         return false;
     }
 
     @Override
-    public final boolean touchUp(
-            final int screenX,
-            final int screenY,
-            final int pointer,
-            final int button
-    ) {
-        downKeys.remove(button);
+    public final boolean touchUp(final int screenX, final int screenY, final int pointer, final int button) {
         return false;
     }
 
     @Override
-    public final boolean touchCancelled(
-            final int screenX,
-            final int screenY,
-            final int pointer,
-            final int button
-    ) {
+    public final boolean touchCancelled(final int i, final int i1, final int i2, final int i3) {
         return false;
     }
 
     @Override
-    public final boolean touchDragged(
-            final int screenX,
-            final int screenY,
-            final int pointer
-    ) {
+    public final boolean touchDragged(final int screenX, final int screenY, final int pointer) {
         return false;
     }
 
     @Override
     public final boolean mouseMoved(final int screenX, final int screenY) {
-        return false;
-    }
-
-    @Override
-    public final boolean scrolled(final float amountX, final float amountY) {
-        if (amountY >= 1) {
-            cameraSystem.getCamera().zoom =
-                    MathUtils.clamp(
-                            cameraSystem.getCamera().zoom + ZOOM_SPEED,
-                            MIN_ZOOM,
-                            MAX_ZOOM
-                    );
-        }
-
-        // Zoom in
-        if (amountY <= -1) {
-            cameraSystem.getCamera().zoom =
-                    MathUtils.clamp(
-                            cameraSystem.getCamera().zoom - ZOOM_SPEED,
-                            MIN_ZOOM,
-                            MAX_ZOOM
-                    );
-        }
-
         return false;
     }
 }
