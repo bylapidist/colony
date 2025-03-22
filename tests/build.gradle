@@ -1,13 +1,20 @@
-apply plugin: "java"
+dependencies {
+    implementation project(":client")
+    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
 
-sourceCompatibility = 20
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+    implementation "junit:junit:$jUnitVersion"
+    implementation "org.mockito:mockito-core:$mockitoVersion"
 
-sourceSets.main.java.srcDirs = [ "src/" ]
+    testImplementation "junit:junit:$jUnitVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+}
 
-
-eclipse.project {
-    name = appName + "-tests"
+sourceSets {
+    main {
+        java.srcDirs = ["src/"]
+    }
 }
 
 test {
@@ -17,6 +24,8 @@ test {
 }
 
 tasks.register('copyAssets', Copy) {
-    from project(":client").file("assets");
+    from project(":client").file("assets")
     into file(".")
 }
+
+eclipse.project.name = "$appName-tests"
