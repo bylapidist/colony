@@ -1,11 +1,14 @@
-apply plugin: "java"
+apply plugin: 'java-library'
 
-sourceCompatibility = 20
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-
-sourceSets.main.java.srcDirs = [ "src/" ]
-
-
-eclipse.project {
-    name = appName + "-components"
+dependencies {
+    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+    implementation "com.badlogicgames.ashley:ashley:$ashleyVersion"
 }
+
+sourceSets {
+    main {
+        java.srcDirs = ["src/"]
+    }
+}
+
+eclipse.project.name = "$appName-components"
