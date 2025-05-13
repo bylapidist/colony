@@ -1,7 +1,7 @@
 buildscript {
     ext {
         appName = "colony"
-        gdxVersion = '1.13.1'
+        gdxVersion = '1.13.5'
         gdxAiVersion = '1.8.2'
         jUnitVersion = '4.13.2'
         mockitoVersion = '5.16.1'
