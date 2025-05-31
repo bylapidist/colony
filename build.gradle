@@ -6,7 +6,7 @@ buildscript {
         jUnitVersion = '4.13.2'
         mockitoVersion = '5.16.1'
         ashleyVersion = '1.7.4'
-        checkstyleVersion = '10.24.0'
+        checkstyleVersion = '10.25.0'
     }
 
     repositories {
