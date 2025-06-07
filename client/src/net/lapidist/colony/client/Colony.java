@@ -29,6 +29,7 @@ public final class Colony extends Game {
             GameClient client = new GameClient();
             client.start();
             state = client.getMapState();
+            client.stop();
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
