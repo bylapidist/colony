@@ -28,7 +28,17 @@ public final class GameStateIO {
         Kryo kryo = new Kryo();
         register(kryo);
         try (Input input = new Input(new FileInputStream(file.toFile()))) {
-            return kryo.readObject(input, MapState.class);
+            MapState state = kryo.readObject(input, MapState.class);
+            if (state.getVersion() > MapState.CURRENT_VERSION) {
+                throw new IOException(
+                        String.format(
+                                "Unsupported map version %d (current %d)",
+                                state.getVersion(),
+                                MapState.CURRENT_VERSION
+                        )
+                );
+            }
+            return state;
         }
     }
 
