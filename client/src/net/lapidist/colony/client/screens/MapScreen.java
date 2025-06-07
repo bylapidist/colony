@@ -4,8 +4,9 @@ import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import net.lapidist.colony.client.core.Constants;
 import net.lapidist.colony.client.systems.*;
+import net.lapidist.colony.client.systems.network.MapLoadSystem;
+import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.client.core.events.EventType;
 import net.lapidist.colony.client.core.events.Events;
 import net.lapidist.colony.client.core.events.payloads.ResizePayload;
@@ -14,11 +15,11 @@ public class MapScreen implements Screen {
 
     private final World world;
 
-    public MapScreen() {
+    public MapScreen(final MapState state) {
         world = new World(new WorldConfigurationBuilder()
                 .with(
                         new ClearScreenSystem(Color.BLACK),
-                        new MapGenerationSystem(Constants.MAP_WIDTH, Constants.MAP_HEIGHT),
+                        new MapLoadSystem(state),
                         new PlayerCameraSystem(),
                         new InputSystem(),
                         new MapRenderSystem(),
