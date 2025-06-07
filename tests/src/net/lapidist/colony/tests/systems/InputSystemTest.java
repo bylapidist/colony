@@ -5,7 +5,6 @@ import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
 import com.artemis.utils.IntBag;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.client.core.Constants;
 import net.lapidist.colony.client.network.GameClient;
@@ -50,7 +49,7 @@ public class InputSystemTest {
 
         Vector2 screenCoords = camera.cameraCoordsFromWorldCoords(0, 0);
         float tapX = screenCoords.x;
-        float tapY = Gdx.graphics.getHeight() - screenCoords.y;
+        float tapY = screenCoords.y;
 
         InputSystem input = world.getSystem(InputSystem.class);
         input.tap(tapX, tapY, 1, 0);
