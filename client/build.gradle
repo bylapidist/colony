@@ -12,6 +12,8 @@ dependencies {
     implementation "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
     implementation "net.mostlyoriginal.artemis-odb:contrib-eventbus:2.5.0"
     implementation 'com.esotericsoftware:kryonet:2.22.0-RC1'
+    implementation "org.slf4j:slf4j-api:$slf4jVersion"
+    runtimeOnly "ch.qos.logback:logback-classic:$logbackVersion"
 }
 
 sourceSets {

@@ -3,11 +3,14 @@ package net.lapidist.colony.client.core.io;
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class Paths {
 
-    private Paths() {
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(Paths.class);
+
+    private Paths() { }
 
     static final String GAME_FOLDER_MAC = System.getProperty("user.home") + "/.colony";
 
@@ -34,21 +37,13 @@ public final class Paths {
 
         if (!FileLocation.EXTERNAL.getFile(gameFolderPath).isDirectory()) {
             if (new File(gameFolderPath).mkdirs()) {
-                System.out.printf(
-                        "[%s] Created game folder: \"%s\"\n",
-                        Paths.class.getSimpleName(),
-                        gameFolderPath
-                );
+                LOGGER.info("Created game folder: \"{}\"", gameFolderPath);
             }
         }
 
         if (!FileLocation.EXTERNAL.getFile(saveFolderPath).isDirectory()) {
             if (new File(saveFolderPath).mkdirs()) {
-                System.out.printf(
-                        "[%s] Created saves folder: \"%s\"\n",
-                        Paths.class.getSimpleName(),
-                        saveFolderPath
-                );
+                LOGGER.info("Created saves folder: \"{}\"", saveFolderPath);
             }
         }
     }

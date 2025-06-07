@@ -8,12 +8,15 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.server.GameServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 public final class GameClient {
     // Increase buffers to handle large serialized map data
     private static final int BUFFER_SIZE = 65536;
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameClient.class);
     private final Client client = new Client(BUFFER_SIZE, BUFFER_SIZE);
     private MapState mapState;
     private static final int CONNECT_TIMEOUT = 5000;
@@ -22,27 +25,18 @@ public final class GameClient {
     public void start() throws IOException, InterruptedException {
         registerClasses();
         client.start();
-        System.out.printf(
-                "[%s] Connecting to server...%n",
-                GameClient.class.getSimpleName()
-        );
+        LOGGER.info("Connecting to server...");
         client.addListener(new Listener() {
             @Override
             public void connected(final Connection connection) {
-                System.out.printf(
-                        "[%s] Connected to server%n",
-                        GameClient.class.getSimpleName()
-                );
+                LOGGER.info("Connected to server");
             }
 
             @Override
             public void received(final Connection connection, final Object object) {
                 if (object instanceof MapState) {
                     mapState = (MapState) object;
-                    System.out.printf(
-                            "[%s] Received map state from server%n",
-                            GameClient.class.getSimpleName()
-                    );
+                    LOGGER.info("Received map state from server");
                 }
             }
         });
@@ -50,10 +44,7 @@ public final class GameClient {
         while (mapState == null) {
             Thread.sleep(WAIT_TIME_MS);
         }
-        System.out.printf(
-                "[%s] Map state received, client ready%n",
-                GameClient.class.getSimpleName()
-        );
+        LOGGER.info("Map state received, client ready");
     }
 
     private void registerClasses() {
@@ -75,9 +66,6 @@ public final class GameClient {
 
     public void stop() {
         client.stop();
-        System.out.printf(
-                "[%s] Client stopped%n",
-                GameClient.class.getSimpleName()
-        );
+        LOGGER.info("Client stopped");
     }
 }

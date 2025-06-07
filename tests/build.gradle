@@ -11,9 +11,12 @@ dependencies {
 
     implementation "junit:junit:$jUnitVersion"
     implementation "org.mockito:mockito-core:$mockitoVersion"
+    implementation "org.slf4j:slf4j-api:$slf4jVersion"
+    runtimeOnly "ch.qos.logback:logback-classic:$logbackVersion"
 
     testImplementation "junit:junit:$jUnitVersion"
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "ch.qos.logback:logback-classic:$logbackVersion"
 }
 
 sourceSets {
