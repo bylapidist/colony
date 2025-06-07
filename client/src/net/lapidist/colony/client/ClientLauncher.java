@@ -14,15 +14,18 @@ public final class ClientLauncher {
     }
 
     public static void main(final String[] args) {
+        GameServer server = new GameServer();
         Thread serverThread = new Thread(() -> {
             try {
-                new GameServer().start();
+                server.start();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
         serverThread.setDaemon(true);
         serverThread.start();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(server::stop));
 
         Lwjgl3ApplicationConfiguration config =
                 new Lwjgl3ApplicationConfiguration();
