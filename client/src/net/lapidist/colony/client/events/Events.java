@@ -23,7 +23,7 @@ public final class Events {
             System.out.printf(
                     "[%s] Dispatched event: %s%n",
                     Events.class.getSimpleName(),
-                    event.getClass().getSimpleName()
+                    event.toString()
             );
             instance.dispatch(event);
         }

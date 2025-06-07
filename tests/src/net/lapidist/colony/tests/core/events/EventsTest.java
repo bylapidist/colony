@@ -11,6 +11,9 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 @RunWith(GdxTestRunner.class)
 public class EventsTest {
 
@@ -49,5 +52,25 @@ public class EventsTest {
         Events.update();
         assertEquals(testWidth, resizeEvent.getWidth());
         assertEquals(testHeight, resizeEvent.getHeight());
+    }
+
+    @Test
+    public void testDispatchLogsEventString() {
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        final PrintStream original = System.out;
+        System.setOut(new PrintStream(out));
+        PauseEvent event = new PauseEvent();
+        try {
+            Events.dispatch(event);
+            Events.update();
+        } finally {
+            System.setOut(original);
+        }
+        String expected = String.format(
+                "[%s] Dispatched event: %s%n",
+                Events.class.getSimpleName(),
+                event.toString()
+        );
+        assertEquals(expected, out.toString());
     }
 }
