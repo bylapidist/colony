@@ -3,6 +3,7 @@ package net.lapidist.colony.tests.server;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.events.AutosaveEvent;
 import net.lapidist.colony.server.events.Events;
+import net.lapidist.colony.server.events.ShutdownSaveEvent;
 import net.lapidist.colony.server.io.GameStateIO;
 import net.lapidist.colony.server.io.Paths;
 import net.mostlyoriginal.api.event.common.Subscribe;
@@ -20,6 +21,7 @@ public class GameServerSaveTest {
     private static final int TEST_INTERVAL_MS = 100;
     private static final int WAIT_MS = 500;
     private AutosaveEvent lastEvent;
+    private ShutdownSaveEvent shutdownEvent;
 
     @Before
     public void setUp() throws IOException {
@@ -31,6 +33,11 @@ public class GameServerSaveTest {
     @Subscribe
     private void onAutosave(final AutosaveEvent event) {
         lastEvent = event;
+    }
+
+    @Subscribe
+    private void onShutdownSave(final ShutdownSaveEvent event) {
+        shutdownEvent = event;
     }
 
     @Test
@@ -49,6 +56,21 @@ public class GameServerSaveTest {
         assertTrue(lastEvent.getSize() > 0);
 
         server.stop();
+    }
+
+    @Test
+    public void stoppingSavesFileAndFiresEvent() throws Exception {
+        GameServer server = new GameServer(TEST_INTERVAL_MS);
+        server.start();
+        Events.getInstance().registerEvents(this);
+
+        server.stop();
+
+        Path saveFile = Paths.getSaveFile("autosave.dat");
+        assertTrue(Files.exists(saveFile));
+        assertTrue(shutdownEvent != null);
+        assertTrue(saveFile.equals(shutdownEvent.getLocation()));
+        assertTrue(shutdownEvent.getSize() > 0);
     }
 
     @Test
