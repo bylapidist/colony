@@ -7,7 +7,7 @@ import net.lapidist.colony.client.screens.MainMenuScreen;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.client.events.Events;
+import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.client.events.GameInitEvent;
 
 import java.io.IOException;
