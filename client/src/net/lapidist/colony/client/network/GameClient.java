@@ -46,4 +46,8 @@ public final class GameClient {
     public MapState getMapState() {
         return mapState;
     }
+
+    public void stop() {
+        client.stop();
+    }
 }

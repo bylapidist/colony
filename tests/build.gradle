@@ -1,5 +1,9 @@
 dependencies {
     implementation project(":client")
+    implementation project(":server")
+    implementation project(":components")
+    implementation "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
+    implementation 'com.esotericsoftware:kryonet:2.22.0-RC1'
     implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
@@ -12,7 +16,7 @@ dependencies {
 }
 
 sourceSets {
-    main {
+    test {
         java.srcDirs = ["src/"]
     }
 }

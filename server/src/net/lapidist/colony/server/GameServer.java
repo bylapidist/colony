@@ -63,4 +63,12 @@ public final class GameServer {
         building.setTextureRef("house0");
         mapState.getBuildings().add(building);
     }
+
+    public MapState getMapState() {
+        return mapState;
+    }
+
+    public void stop() {
+        server.stop();
+    }
 }
