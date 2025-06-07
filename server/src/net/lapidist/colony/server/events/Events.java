@@ -19,6 +19,11 @@ public final class Events {
 
     public static void dispatch(final Event event) {
         if (instance != null) {
+            System.out.printf(
+                    "[%s] Dispatched event: %s%n",
+                    Events.class.getSimpleName(),
+                    event.getClass().getSimpleName()
+            );
             instance.dispatch(event);
         }
     }
