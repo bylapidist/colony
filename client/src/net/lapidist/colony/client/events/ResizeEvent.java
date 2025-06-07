@@ -19,4 +19,14 @@ public final class ResizeEvent implements Event {
     public int getHeight() {
         return height;
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "%s(width=%d, height=%d)",
+                getClass().getSimpleName(),
+                width,
+                height
+        );
+    }
 }

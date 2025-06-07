@@ -2,6 +2,7 @@ package net.lapidist.colony.tests.server.events;
 
 import net.lapidist.colony.server.events.AutosaveEvent;
 import net.lapidist.colony.server.events.Events;
+import net.lapidist.colony.server.events.TileSelectionEvent;
 import net.mostlyoriginal.api.event.common.EventSystem;
 import net.mostlyoriginal.api.event.common.Subscribe;
 import org.junit.Before;
@@ -40,5 +41,28 @@ public class ServerEventsTest {
         assertTrue(handled);
         assertEquals(file, received.getLocation());
         assertEquals(TEST_SIZE, received.getSize());
+    }
+
+    @Test
+    public void testAutosaveEventToString() {
+        Path file = Paths.get("autosave.dat");
+        AutosaveEvent event = new AutosaveEvent(file, TEST_SIZE);
+        String expected = String.format(
+                "AutosaveEvent(location=%s, size=%d)",
+                file,
+                TEST_SIZE
+        );
+        assertEquals(expected, event.toString());
+    }
+
+    @Test
+    public void testTileSelectionEventToString() {
+        final int x = 1;
+        final int y = 2;
+        TileSelectionEvent event = new TileSelectionEvent(x, y, true);
+        assertEquals(
+                String.format("TileSelectionEvent(x=%d, y=%d, selected=true)", x, y),
+                event.toString()
+        );
     }
 }
