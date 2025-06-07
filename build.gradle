@@ -55,4 +55,9 @@ allprojects {
             endWithNewline()
         }
     }
+
+    tasks.register('spotless') {
+        group = 'verification'
+        dependsOn 'spotlessApply'
+    }
 }
