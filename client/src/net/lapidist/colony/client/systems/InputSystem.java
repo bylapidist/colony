@@ -32,16 +32,21 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
 
     private final GameClient client;
 
+    private final InputMultiplexer multiplexer = new InputMultiplexer();
+
     private Entity map;
     private ComponentMapper<MapComponent> mapMapper;
     private ComponentMapper<TileComponent> tileMapper;
 
     public InputSystem(final GameClient clientToSet) {
         this.client = clientToSet;
-        final InputMultiplexer inputMultiplexer = new InputMultiplexer();
-        inputMultiplexer.addProcessor(new GestureDetector(this));
-        inputMultiplexer.addProcessor(this);
-        Gdx.input.setInputProcessor(inputMultiplexer);
+        multiplexer.addProcessor(new GestureDetector(this));
+        multiplexer.addProcessor(this);
+        Gdx.input.setInputProcessor(multiplexer);
+    }
+
+    public void addProcessor(final InputProcessor processor) {
+        multiplexer.addProcessor(processor);
     }
 
     @Override
