@@ -36,5 +36,8 @@ public final class ClientLauncher {
         config.setHdpiMode(HdpiMode.Logical);
 
         new Lwjgl3Application(new Colony(), config);
+
+        server.stop();
+        System.exit(0);
     }
 }
