@@ -1,7 +1,7 @@
 package net.lapidist.colony.client;
 
 import com.badlogic.gdx.Game;
-import net.lapidist.colony.client.core.io.Paths;
+import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.client.screens.MapScreen;
 import net.lapidist.colony.client.screens.MainMenuScreen;
 import net.lapidist.colony.client.network.GameClient;

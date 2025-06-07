@@ -14,7 +14,7 @@ import net.lapidist.colony.server.events.AutosaveEvent;
 import net.lapidist.colony.server.events.ShutdownSaveEvent;
 import net.lapidist.colony.server.events.Events;
 import net.lapidist.colony.server.io.GameStateIO;
-import net.lapidist.colony.server.io.Paths;
+import net.lapidist.colony.io.Paths;
 import net.mostlyoriginal.api.event.common.EventSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
