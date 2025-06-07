@@ -1,11 +1,6 @@
 package net.lapidist.colony.client.events;
 
-import net.mostlyoriginal.api.event.common.Event;
+import net.lapidist.colony.core.events.SimpleEvent;
+public final class ShowEvent extends SimpleEvent {
 
-public final class ShowEvent implements Event {
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName();
-    }
 }
