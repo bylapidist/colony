@@ -1,6 +1,10 @@
 package net.lapidist.colony.client.systems;
 
-import com.badlogic.ashley.core.*;
+import com.artemis.Aspect;
+import com.artemis.BaseSystem;
+import com.artemis.ComponentMapper;
+import com.artemis.Entity;
+import com.artemis.utils.IntBag;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -12,7 +16,7 @@ import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import java.io.IOException;
 
-public class MapRenderSystem extends EntitySystem {
+public final class MapRenderSystem extends BaseSystem {
 
     private final ResourceLoader resourceLoader = new ResourceLoader();
 
@@ -22,35 +26,47 @@ public class MapRenderSystem extends EntitySystem {
 
     private PlayerCameraSystem cameraSystem;
 
+    private ComponentMapper<MapComponent> mapMapper;
+    private ComponentMapper<TileComponent> tileMapper;
+    private ComponentMapper<BuildingComponent> buildingMapper;
+
     public MapRenderSystem() {
     }
 
     @Override
-    public final void addedToEngine(final Engine engine) {
+    public void initialize() {
         try {
             resourceLoader.load(FileLocation.INTERNAL, "resources.json");
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        cameraSystem = engine.getSystem(PlayerCameraSystem.class);
-        map = engine.getEntitiesFor(Family.one(MapComponent.class).get()).first();
+        cameraSystem = world.getSystem(PlayerCameraSystem.class);
+        mapMapper = world.getMapper(MapComponent.class);
+        tileMapper = world.getMapper(TileComponent.class);
+        buildingMapper = world.getMapper(BuildingComponent.class);
+
+        IntBag maps = world.getAspectSubscriptionManager()
+                .get(Aspect.all(MapComponent.class))
+                .getEntities();
+        if (maps.size() > 0) {
+            map = world.getEntity(maps.get(0));
+        }
     }
 
     @Override
-    public final void removedFromEngine(final Engine engine) {
+    public void dispose() {
         resourceLoader.dispose();
         spriteBatch.dispose();
     }
 
     @Override
-    public final void update(final float deltaTime) {
-        cameraSystem.update(deltaTime);
+    protected void processSystem() {
         spriteBatch.setProjectionMatrix(cameraSystem.getCamera().combined);
         spriteBatch.begin();
 
-        drawEntities(map.getComponent(MapComponent.class).getTiles());
-        drawEntities(map.getComponent(MapComponent.class).getEntities());
+        drawEntities(mapMapper.get(map).getTiles());
+        drawEntities(mapMapper.get(map).getEntities());
 
         spriteBatch.end();
     }
@@ -58,10 +74,8 @@ public class MapRenderSystem extends EntitySystem {
     private void drawEntities(final Array<Entity> entities) {
         for (int i = 0; i < entities.size; i++) {
             final Entity entity = entities.get(i);
-            final ComponentMapper<TextureRegionReferenceComponent> textureRegionMapper =
-                    ComponentMapper.getFor(TextureRegionReferenceComponent.class);
             final TextureRegionReferenceComponent textureRegionReferenceComponent =
-                    textureRegionMapper.get(entity);
+                    world.getMapper(TextureRegionReferenceComponent.class).get(entity);
             final Vector2 worldCoords = getWorldCoords(entity);
 
             if (cameraSystem.withinCameraView(worldCoords)) {
@@ -77,8 +91,6 @@ public class MapRenderSystem extends EntitySystem {
     }
 
     private Vector2 getWorldCoords(final Entity entity) {
-        final ComponentMapper<TileComponent> tileMapper = ComponentMapper.getFor(TileComponent.class);
-        final ComponentMapper<BuildingComponent> buildingMapper = ComponentMapper.getFor(BuildingComponent.class);
 
         if (tileMapper.has(entity)) {
             final TileComponent tileComponent = tileMapper.get(entity);

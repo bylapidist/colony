@@ -1,8 +1,8 @@
 package net.lapidist.colony.components.maps;
 
-import com.badlogic.ashley.core.Component;
+import com.artemis.Component;
 
-public class TileComponent implements Component {
+public class TileComponent extends Component {
 
     public enum TileType {
         EMPTY("empty"),

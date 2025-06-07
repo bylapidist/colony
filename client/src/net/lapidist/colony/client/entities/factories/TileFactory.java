@@ -1,6 +1,7 @@
 package net.lapidist.colony.client.entities.factories;
 
-import com.badlogic.ashley.core.Entity;
+import com.artemis.Entity;
+import com.artemis.World;
 import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.client.core.Constants;
 import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
@@ -12,12 +13,13 @@ public final class TileFactory {
     }
 
     public static Entity create(
+            final World world,
             final TileComponent.TileType tileType,
             final String resourceRef,
             final Vector2 coords,
             final boolean passable
     ) {
-        Entity entity = new Entity();
+        Entity entity = world.createEntity();
         TileComponent tileComponent = new TileComponent();
         TextureRegionReferenceComponent textureRegionReferenceComponent = new TextureRegionReferenceComponent();
 
@@ -29,8 +31,8 @@ public final class TileFactory {
         tileComponent.setX((int) coords.x);
         tileComponent.setY((int) coords.y);
 
-        entity.add(tileComponent);
-        entity.add(textureRegionReferenceComponent);
+        entity.edit().add(tileComponent);
+        entity.edit().add(textureRegionReferenceComponent);
 
         return entity;
     }

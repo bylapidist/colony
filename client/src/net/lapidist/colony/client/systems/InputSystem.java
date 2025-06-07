@@ -1,7 +1,6 @@
 package net.lapidist.colony.client.systems;
 
-import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.EntitySystem;
+import com.artemis.BaseSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
@@ -13,7 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import net.lapidist.colony.client.core.Constants;
 
-public class InputSystem extends EntitySystem implements InputProcessor, GestureListener {
+public final class InputSystem extends BaseSystem implements InputProcessor, GestureListener {
 
     private static final float CAMERA_SPEED = 400f; // units per second
     private static final float ZOOM_SPEED = 0.02f;
@@ -30,14 +29,13 @@ public class InputSystem extends EntitySystem implements InputProcessor, Gesture
     }
 
     @Override
-    public final void addedToEngine(final Engine engine) {
-        super.addedToEngine(engine);
-        cameraSystem = engine.getSystem(PlayerCameraSystem.class);
+    public void initialize() {
+        cameraSystem = world.getSystem(PlayerCameraSystem.class);
     }
 
     @Override
-    public final void update(final float deltaTime) {
-        handleKeyboardInput(deltaTime);
+    protected void processSystem() {
+        handleKeyboardInput(world.getDelta());
         clampCameraPosition();
         cameraSystem.getCamera().update();
     }
@@ -70,34 +68,34 @@ public class InputSystem extends EntitySystem implements InputProcessor, Gesture
     }
 
     @Override
-    public final boolean scrolled(final float amountX, final float amountY) {
+    public boolean scrolled(final float amountX, final float amountY) {
         final float zoom = cameraSystem.getCamera().zoom + amountY * ZOOM_SPEED;
         cameraSystem.getCamera().zoom = MathUtils.clamp(zoom, MIN_ZOOM, MAX_ZOOM);
         return true;
     }
 
     @Override
-    public final boolean touchDown(final float x, final float y, final int pointer, final int button) {
+    public boolean touchDown(final float x, final float y, final int pointer, final int button) {
         return false;
     }
 
     @Override
-    public final boolean tap(final float x, final float y, final int count, final int button) {
+    public boolean tap(final float x, final float y, final int count, final int button) {
         return false;
     }
 
     @Override
-    public final boolean longPress(final float x, final float y) {
+    public boolean longPress(final float x, final float y) {
         return false;
     }
 
     @Override
-    public final boolean fling(final float velocityX, final float velocityY, final int button) {
+    public boolean fling(final float velocityX, final float velocityY, final int button) {
         return false;
     }
 
     @Override
-    public final boolean pan(final float x, final float y, final float deltaX, final float deltaY) {
+    public boolean pan(final float x, final float y, final float deltaX, final float deltaY) {
         cameraSystem.getCamera().translate(
                 -deltaX * cameraSystem.getCamera().zoom,
                 deltaY * cameraSystem.getCamera().zoom,
@@ -108,12 +106,12 @@ public class InputSystem extends EntitySystem implements InputProcessor, Gesture
     }
 
     @Override
-    public final boolean panStop(final float x, final float y, final int pointer, final int button) {
+    public boolean panStop(final float x, final float y, final int pointer, final int button) {
         return false;
     }
 
     @Override
-    public final boolean zoom(final float initialDistance, final float distance) {
+    public boolean zoom(final float initialDistance, final float distance) {
         final float ratio = initialDistance / distance;
         final float zoom = cameraSystem.getCamera().zoom * ratio;
         cameraSystem.getCamera().zoom = MathUtils.clamp(zoom, MIN_ZOOM, MAX_ZOOM);
@@ -121,7 +119,7 @@ public class InputSystem extends EntitySystem implements InputProcessor, Gesture
     }
 
     @Override
-    public final boolean pinch(
+    public boolean pinch(
             final Vector2 initialPointer1,
             final Vector2 initialPointer2,
             final Vector2 pointer1,
@@ -131,46 +129,46 @@ public class InputSystem extends EntitySystem implements InputProcessor, Gesture
     }
 
     @Override
-    public final void pinchStop() {
+    public void pinchStop() {
     }
 
     @Override
-    public final boolean keyDown(final int keycode) {
+    public boolean keyDown(final int keycode) {
         return false;
     }
 
     @Override
-    public final boolean keyUp(final int keycode) {
+    public boolean keyUp(final int keycode) {
         return false;
     }
 
     @Override
-    public final boolean keyTyped(final char character) {
+    public boolean keyTyped(final char character) {
         return false;
     }
 
     @Override
-    public final boolean touchDown(final int screenX, final int screenY, final int pointer, final int button) {
+    public boolean touchDown(final int screenX, final int screenY, final int pointer, final int button) {
         return false;
     }
 
     @Override
-    public final boolean touchUp(final int screenX, final int screenY, final int pointer, final int button) {
+    public boolean touchUp(final int screenX, final int screenY, final int pointer, final int button) {
         return false;
     }
 
     @Override
-    public final boolean touchCancelled(final int i, final int i1, final int i2, final int i3) {
+    public boolean touchCancelled(final int i, final int i1, final int i2, final int i3) {
         return false;
     }
 
     @Override
-    public final boolean touchDragged(final int screenX, final int screenY, final int pointer) {
+    public boolean touchDragged(final int screenX, final int screenY, final int pointer) {
         return false;
     }
 
     @Override
-    public final boolean mouseMoved(final int screenX, final int screenY) {
+    public boolean mouseMoved(final int screenX, final int screenY) {
         return false;
     }
 }
