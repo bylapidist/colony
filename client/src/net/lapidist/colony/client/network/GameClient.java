@@ -7,6 +7,7 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.core.serialization.KryoRegistry;
 import net.lapidist.colony.server.GameServer;
+import net.lapidist.colony.serialization.SerializationRegistrar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

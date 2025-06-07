@@ -9,6 +9,7 @@ import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TileSelectionData;
+import net.lapidist.colony.serialization.SerializationRegistrar;
 import net.lapidist.colony.server.events.TileSelectionEvent;
 import net.lapidist.colony.server.events.AutosaveEvent;
 import net.lapidist.colony.server.events.ShutdownSaveEvent;
@@ -115,7 +116,6 @@ public final class GameServer {
         });
         executor.scheduleAtFixedRate(this::autoSave, autosaveIntervalMs, autosaveIntervalMs, TimeUnit.MILLISECONDS);
     }
-
 
     private void generateMap() {
         mapState = new MapState();
