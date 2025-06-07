@@ -1,23 +1,12 @@
 package net.lapidist.colony.client.systems.network;
 
-import com.artemis.BaseSystem;
-import net.lapidist.colony.client.entities.factories.MapFactory;
+import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.map.ProvidedMapStateProvider;
 
-public final class MapLoadSystem extends BaseSystem {
-    private final MapState state;
+public final class MapLoadSystem extends MapInitSystem {
 
-    public MapLoadSystem(final MapState stateToSet) {
-        this.state = stateToSet;
-    }
-
-    @Override
-    public void initialize() {
-        MapFactory.create(world, state);
-    }
-
-    @Override
-    protected void processSystem() {
-        // loading occurs once in initialize
+    public MapLoadSystem(final MapState state) {
+        super(new ProvidedMapStateProvider(state));
     }
 }

@@ -1,11 +1,14 @@
 package net.lapidist.colony.client.systems;
 
-import com.artemis.BaseSystem;
-import net.lapidist.colony.client.entities.factories.MapFactory;
 import net.lapidist.colony.map.DefaultMapGenerator;
 import net.lapidist.colony.map.MapGenerator;
+import net.lapidist.colony.map.GeneratedMapStateProvider;
 
-public final class MapGenerationSystem extends BaseSystem {
+/**
+ * System that generates a map on initialization using a {@link MapGenerator}.
+ */
+
+public final class MapGenerationSystem extends MapInitSystem {
 
     private final int mapWidth;
 
@@ -22,20 +25,10 @@ public final class MapGenerationSystem extends BaseSystem {
             final int mapWidthToSet,
             final int mapHeightToSet
     ) {
+        super(new GeneratedMapStateProvider(mapGeneratorToSet, mapWidthToSet, mapHeightToSet));
         this.mapGenerator = mapGeneratorToSet;
         this.mapWidth = mapWidthToSet;
         this.mapHeight = mapHeightToSet;
-    }
-
-    @Override
-    public void initialize() {
-        var state = mapGenerator.generate(mapWidth, mapHeight);
-        MapFactory.create(world, state);
-    }
-
-    @Override
-    protected void processSystem() {
-        // map generation occurs once in initialize
     }
 
 }
