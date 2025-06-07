@@ -14,6 +14,10 @@ buildscript {
         mavenCentral()
         google()
     }
+} 
+
+plugins {
+    id 'com.diffplug.spotless' version '6.25.0' apply false
 }
 
 allprojects {
@@ -21,6 +25,7 @@ allprojects {
     apply plugin: 'eclipse'
     apply plugin: 'idea'
     apply plugin: 'checkstyle'
+    apply plugin: 'com.diffplug.spotless'
 
     repositories {
         mavenLocal()
@@ -40,5 +45,14 @@ allprojects {
 
     checkstyle {
         toolVersion = checkstyleVersion
+    }
+
+    spotless {
+        java {
+            target 'src/**/*.java'
+            indentWithSpaces(4)
+            trimTrailingWhitespace()
+            endWithNewline()
+        }
     }
 }

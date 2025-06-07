@@ -36,7 +36,7 @@ jobs:
         ./gradlew tests:copyAssets
         ./gradlew clean test
 
-    - name: Run checkstyle
+    - name: Run style checks
       run: ./gradlew check
 
   release:
