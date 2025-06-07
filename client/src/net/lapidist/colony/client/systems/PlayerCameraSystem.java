@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import net.lapidist.colony.client.core.Constants;
 
@@ -13,6 +14,7 @@ public final class PlayerCameraSystem extends BaseSystem {
     private final Vector3 tmpVec3 = new Vector3();
 
     private final Vector2 tmpVec2 = new Vector2();
+    private final Rectangle viewBounds = new Rectangle();
 
     private OrthographicCamera camera;
 
@@ -113,5 +115,22 @@ public final class PlayerCameraSystem extends BaseSystem {
 
     public void setViewport(final ExtendViewport viewportToSet) {
         this.viewport = viewportToSet;
+    }
+
+    /**
+     * Returns the current camera view bounds in world coordinates.
+     *
+     * @return rectangle representing the visible world area
+     */
+    public Rectangle getViewBounds() {
+        float halfWidth = viewport.getWorldWidth() * camera.zoom / 2f;
+        float halfHeight = viewport.getWorldHeight() * camera.zoom / 2f;
+        viewBounds.set(
+                camera.position.x - halfWidth,
+                camera.position.y - halfHeight,
+                halfWidth * 2f,
+                halfHeight * 2f
+        );
+        return viewBounds;
     }
 }
