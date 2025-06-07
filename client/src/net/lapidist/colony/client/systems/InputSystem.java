@@ -100,6 +100,7 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
     public boolean scrolled(final float amountX, final float amountY) {
         final float zoom = cameraSystem.getCamera().zoom + amountY * ZOOM_SPEED;
         cameraSystem.getCamera().zoom = MathUtils.clamp(zoom, MIN_ZOOM, MAX_ZOOM);
+        cameraSystem.getCamera().update();
         return true;
     }
 
@@ -113,6 +114,8 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
         if (map == null) {
             return false;
         }
+
+        cameraSystem.getCamera().update();
 
         Vector2 worldCoords = cameraSystem.screenCoordsToWorldCoords(x, y);
         Vector2 tileCoords = cameraSystem.worldCoordsToTileCoords(worldCoords);
@@ -155,6 +158,7 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
                 0
         );
         clampCameraPosition();
+        cameraSystem.getCamera().update();
         return true;
     }
 
@@ -168,6 +172,7 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
         final float ratio = initialDistance / distance;
         final float zoom = cameraSystem.getCamera().zoom * ratio;
         cameraSystem.getCamera().zoom = MathUtils.clamp(zoom, MIN_ZOOM, MAX_ZOOM);
+        cameraSystem.getCamera().update();
         return true;
     }
 
