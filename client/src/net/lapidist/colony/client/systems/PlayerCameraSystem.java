@@ -65,8 +65,7 @@ public final class PlayerCameraSystem extends BaseSystem {
     }
 
     public Vector2 screenCoordsToWorldCoords(final float screenX, final float screenY) {
-        float flippedY = Gdx.graphics.getHeight() - screenY;
-        return viewport.unproject(tmpVec2.set(screenX, flippedY));
+        return viewport.unproject(tmpVec2.set(screenX, screenY));
     }
 
     public Vector2 tileCoordsToWorldCoords(final int x, final int y) {
