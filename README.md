@@ -5,13 +5,11 @@ Colony is a small simulation/strategy game prototype built with LibGDX and the A
 entity component system. The code base is organised as a multi-module Gradle project so that
 engine components, game logic and tests can be developed independently.
 
-## Version
-The latest release is **v5.52.1**.
-
 ## Project structure
-The repository is split into four Gradle modules:
+The repository is split into five Gradle modules:
 
-- **components** – Shared code such as ECS components, configuration utilities and I/O helpers.
+- **components** – Shared code such as ECS components, constants and I/O helpers.
+- **core** – Cross-platform game logic, event helpers and Kryo serializers used by the other modules.
 - **client** – Desktop client using LibGDX. This module contains the game loop, rendering logic,
   UI classes and networking code to communicate with the server.
 - **server** – Headless game server. It exposes networking services using Kryonet and runs the
