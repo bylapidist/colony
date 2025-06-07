@@ -12,7 +12,8 @@ import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.server.events.TileSelectionEvent;
 import net.lapidist.colony.server.events.AutosaveEvent;
 import net.lapidist.colony.server.events.ShutdownSaveEvent;
-import net.lapidist.colony.server.events.Events;
+import net.lapidist.colony.core.events.Events;
+import net.lapidist.colony.core.serialization.KryoRegistry;
 import net.lapidist.colony.server.io.GameStateIO;
 import net.lapidist.colony.io.Paths;
 import net.mostlyoriginal.api.event.common.EventSystem;
@@ -67,7 +68,7 @@ public final class GameServer {
     }
 
     public void start() throws IOException {
-        registerClasses();
+        KryoRegistry.register(server.getKryo());
         Events.init(new EventSystem());
         Paths.createGameFoldersIfNotExists();
         Path saveFile = Paths.getAutosave(saveName);
@@ -115,14 +116,6 @@ public final class GameServer {
         executor.scheduleAtFixedRate(this::autoSave, autosaveIntervalMs, autosaveIntervalMs, TimeUnit.MILLISECONDS);
     }
 
-    private void registerClasses() {
-        server.getKryo().register(MapState.class);
-        server.getKryo().register(TileData.class);
-        server.getKryo().register(BuildingData.class);
-        server.getKryo().register(TileSelectionData.class);
-        server.getKryo().register(java.util.ArrayList.class);
-        server.getKryo().register(java.util.List.class);
-    }
 
     private void generateMap() {
         mapState = new MapState();

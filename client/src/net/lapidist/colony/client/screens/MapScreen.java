@@ -19,7 +19,7 @@ import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.components.state.MapState;
 import net.mostlyoriginal.api.event.common.EventSystem;
-import net.lapidist.colony.client.events.Events;
+import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.client.events.ResizeEvent;
 import net.lapidist.colony.client.events.PauseEvent;
 import net.lapidist.colony.client.events.ResumeEvent;

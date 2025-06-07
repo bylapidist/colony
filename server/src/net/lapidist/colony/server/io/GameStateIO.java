@@ -3,9 +3,8 @@ package net.lapidist.colony.server.io;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.core.serialization.KryoRegistry;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -18,7 +17,7 @@ public final class GameStateIO {
 
     public static void save(final MapState state, final Path file) throws IOException {
         Kryo kryo = new Kryo();
-        register(kryo);
+        KryoRegistry.register(kryo);
         try (Output output = new Output(new FileOutputStream(file.toFile()))) {
             kryo.writeObject(output, state);
         }
@@ -26,7 +25,7 @@ public final class GameStateIO {
 
     public static MapState load(final Path file) throws IOException {
         Kryo kryo = new Kryo();
-        register(kryo);
+        KryoRegistry.register(kryo);
         try (Input input = new Input(new FileInputStream(file.toFile()))) {
             MapState state = kryo.readObject(input, MapState.class);
             if (state.getVersion() > MapState.CURRENT_VERSION) {
@@ -42,11 +41,5 @@ public final class GameStateIO {
         }
     }
 
-    private static void register(final Kryo kryo) {
-        kryo.register(MapState.class);
-        kryo.register(TileData.class);
-        kryo.register(BuildingData.class);
-        kryo.register(java.util.ArrayList.class);
-        kryo.register(java.util.List.class);
-    }
+    // Class registration handled by KryoRegistry
 }

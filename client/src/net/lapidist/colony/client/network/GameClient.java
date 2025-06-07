@@ -3,10 +3,9 @@ package net.lapidist.colony.client.network;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TileSelectionData;
+import net.lapidist.colony.core.serialization.KryoRegistry;
 import net.lapidist.colony.server.GameServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ public final class GameClient {
     private static final int WAIT_TIME_MS = 10;
 
     public void start() throws IOException, InterruptedException {
-        registerClasses();
+        KryoRegistry.register(client.getKryo());
         client.start();
         LOGGER.info("Connecting to server...");
         client.addListener(new Listener() {
@@ -45,15 +44,6 @@ public final class GameClient {
             Thread.sleep(WAIT_TIME_MS);
         }
         LOGGER.info("Map state received, client ready");
-    }
-
-    private void registerClasses() {
-        client.getKryo().register(MapState.class);
-        client.getKryo().register(TileData.class);
-        client.getKryo().register(BuildingData.class);
-        client.getKryo().register(TileSelectionData.class);
-        client.getKryo().register(java.util.ArrayList.class);
-        client.getKryo().register(java.util.List.class);
     }
 
     public MapState getMapState() {
