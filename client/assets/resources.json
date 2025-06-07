@@ -20,9 +20,5 @@
       "name": "house0",
       "bounds": "0 0 32 32"
     }]
-  }],
-  "sounds": [{
-    "name": "test sound",
-    "filePath": "sound.mp3"
   }]
 }
