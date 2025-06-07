@@ -5,6 +5,9 @@ Colony is a small simulation/strategy game prototype built with LibGDX and the A
 entity component system. The code base is organised as a multi-module Gradle project so that
 engine components, game logic and tests can be developed independently.
 
+## Version
+The latest release is **v5.52.1**.
+
 ## Project structure
 The repository is split into four Gradle modules:
 
