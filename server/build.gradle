@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'application'
 
 dependencies {
     implementation project(":components")
@@ -13,6 +14,10 @@ sourceSets {
     main {
         java.srcDirs = ["src/"]
     }
+}
+
+application {
+    mainClass = 'net.lapidist.colony.server.ServerLauncher'
 }
 
 eclipse.project.name = "$appName-server"
