@@ -20,3 +20,5 @@ If any command fails, fix the issues before committing.
 
 ## Commit Messages
 All commit messages must follow the [Angular commit message guidelines](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit).
+
+When creating PRs make sure the PR title also follows this convention.
