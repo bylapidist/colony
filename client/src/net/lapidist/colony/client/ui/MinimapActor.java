@@ -11,6 +11,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -42,6 +46,10 @@ public final class MinimapActor extends Actor implements Disposable {
     private PlayerCameraSystem cameraSystem;
     private float mapWidthWorld;
     private float mapHeightWorld;
+    private FrameBuffer tileCache;
+    private TextureRegion minimap;
+    private SpriteBatch cacheBatch;
+    private boolean cacheInvalidated;
 
     private void calculateMapDimensions() {
         mapWidthWorld = 0;
@@ -85,6 +93,50 @@ public final class MinimapActor extends Actor implements Disposable {
         }
     }
 
+    private void updateCache(final float scaleX, final float scaleY) {
+        if (tileCache != null) {
+            tileCache.dispose();
+            tileCache = null;
+            minimap = null;
+        }
+
+        tileCache = new FrameBuffer(Pixmap.Format.RGBA8888, (int) getWidth(), (int) getHeight(), false);
+        if (cacheBatch == null) {
+            cacheBatch = new SpriteBatch();
+        }
+
+        Matrix4 oldMatrix = cacheBatch.getProjectionMatrix().cpy();
+        tileCache.begin();
+        Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        cacheBatch.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, getWidth(), getHeight()));
+        cacheBatch.begin();
+
+        Array<Entity> tiles = mapMapper.get(map).getTiles();
+        for (int i = 0; i < tiles.size; i++) {
+            Entity tile = tiles.get(i);
+            TileComponent tileComponent = tileMapper.get(tile);
+            TextureRegion region = resourceLoader.getTextureRegions()
+                    .get(textureMapper.get(tile).getResourceRef());
+            if (region != null) {
+                cacheBatch.draw(
+                        region,
+                        tileComponent.getX() * Constants.TILE_SIZE * scaleX,
+                        tileComponent.getY() * Constants.TILE_SIZE * scaleY,
+                        Constants.TILE_SIZE * scaleX,
+                        Constants.TILE_SIZE * scaleY
+                );
+            }
+        }
+
+        cacheBatch.end();
+        tileCache.end();
+        cacheBatch.setProjectionMatrix(oldMatrix);
+        minimap = new TextureRegion(tileCache.getColorBufferTexture());
+        minimap.flip(false, true);
+        cacheInvalidated = false;
+    }
+
     public MinimapActor(final World worldToSet) {
         this.world = worldToSet;
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
@@ -100,6 +152,7 @@ public final class MinimapActor extends Actor implements Disposable {
         }
         mapWidthWorld = -1;
         mapHeightWorld = -1;
+        cacheInvalidated = true;
     }
 
     @Override
@@ -127,21 +180,15 @@ public final class MinimapActor extends Actor implements Disposable {
         float scaleX = getWidth() / mapWidthWorld;
         float scaleY = getHeight() / mapHeightWorld;
 
-        Array<Entity> tiles = mapMapper.get(map).getTiles();
-        for (int i = 0; i < tiles.size; i++) {
-            Entity tile = tiles.get(i);
-            TileComponent tileComponent = tileMapper.get(tile);
-            TextureRegion region = resourceLoader.getTextureRegions()
-                    .get(textureMapper.get(tile).getResourceRef());
-            if (region != null) {
-                batch.draw(
-                        region,
-                        getX() + tileComponent.getX() * Constants.TILE_SIZE * scaleX,
-                        getY() + tileComponent.getY() * Constants.TILE_SIZE * scaleY,
-                        Constants.TILE_SIZE * scaleX,
-                        Constants.TILE_SIZE * scaleY
-                );
-            }
+        if (minimap == null || cacheInvalidated
+                || tileCache == null
+                || tileCache.getWidth() != (int) getWidth()
+                || tileCache.getHeight() != (int) getHeight()) {
+            updateCache(scaleX, scaleY);
+        }
+
+        if (minimap != null) {
+            batch.draw(minimap, getX(), getY(), getWidth(), getHeight());
         }
 
         if (cameraSystem != null) {
@@ -178,5 +225,11 @@ public final class MinimapActor extends Actor implements Disposable {
     public void dispose() {
         resourceLoader.dispose();
         viewportPixel.getTexture().dispose();
+        if (tileCache != null) {
+            tileCache.dispose();
+        }
+        if (cacheBatch != null) {
+            cacheBatch.dispose();
+        }
     }
 }
