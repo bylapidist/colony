@@ -25,4 +25,3 @@ public enum FileLocation {
         return this::getFile;
     }
 }
-

@@ -20,4 +20,3 @@ public final class ClearScreenSystem extends BaseSystem {
         Gdx.gl.glClear(GL20.GL_ALPHA_BITS);
     }
 }
-

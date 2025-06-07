@@ -4,7 +4,7 @@ This repository contains a multi-module Java project built with Gradle.
 - Always run `./gradlew tests:copyAssets` before running the normal test suite. This copies required assets for the test module.
 - Run `./gradlew spotlessApply` before committing to automatically format the code.
 - After copying the assets run `./gradlew clean test` to execute all tests.
-- To verify code style run `./gradlew check`, which includes Checkstyle and Spotless checks defined in `config/checkstyle/checkstyle.xml`.
+- Run `./gradlew check` to verify code style. Only commit if this task succeeds. It includes Checkstyle and Spotless checks defined in `config/checkstyle/checkstyle.xml`.
 
 ## Coding conventions
 - All Java source files use four space indentation and must not contain tab characters.
