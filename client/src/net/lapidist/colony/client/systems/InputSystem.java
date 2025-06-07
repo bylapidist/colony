@@ -46,7 +46,7 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
     }
 
     public void addProcessor(final InputProcessor processor) {
-        multiplexer.addProcessor(processor);
+        multiplexer.addProcessor(0, processor);
     }
 
     @Override
