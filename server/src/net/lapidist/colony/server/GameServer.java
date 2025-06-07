@@ -35,6 +35,7 @@ public final class GameServer {
     private static final int BUFFER_SIZE = 65536;
     private static final String SAVE_FILE_NAME = "autosave.dat";
     private static final long DEFAULT_INTERVAL_MS = 10 * 60 * 1000L;
+    private static final int NAME_RANGE = 100000;
 
     private final Server server = new Server(BUFFER_SIZE, BUFFER_SIZE);
     private final long autosaveIntervalMs;
@@ -126,6 +127,8 @@ public final class GameServer {
     private void generateMap() {
         mapState = new MapState();
         Random random = new Random();
+        mapState.setName("map-" + random.nextInt(NAME_RANGE));
+        mapState.setDescription("Generated map");
         String[] textures = new String[]{"grass0", "dirt0"};
         for (int x = 0; x <= GameConstants.MAP_WIDTH; x++) {
             for (int y = 0; y <= GameConstants.MAP_HEIGHT; y++) {
