@@ -1,5 +1,6 @@
 dependencies {
     implementation project(":components")
+    implementation project(":server")
 
     implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
@@ -9,6 +10,7 @@ dependencies {
     implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
     implementation "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
+    implementation 'com.esotericsoftware:kryonet:2.22.0-RC1'
 }
 
 sourceSets {

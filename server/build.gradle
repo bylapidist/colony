@@ -1,0 +1,14 @@
+apply plugin: 'java'
+
+dependencies {
+    implementation project(":components")
+    implementation 'com.esotericsoftware:kryonet:2.22.0-RC1'
+}
+
+sourceSets {
+    main {
+        java.srcDirs = ["src/"]
+    }
+}
+
+eclipse.project.name = "$appName-server"
