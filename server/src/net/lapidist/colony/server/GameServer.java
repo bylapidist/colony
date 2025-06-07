@@ -10,6 +10,7 @@ import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.server.events.TileSelectionEvent;
 import net.lapidist.colony.server.events.AutosaveEvent;
+import net.lapidist.colony.server.events.ShutdownSaveEvent;
 import net.lapidist.colony.server.events.Events;
 import net.lapidist.colony.server.io.GameStateIO;
 import net.lapidist.colony.server.io.Paths;
@@ -158,6 +159,7 @@ public final class GameServer {
         if (executor != null) {
             executor.shutdownNow();
         }
+        saveOnShutdown();
         server.stop();
         System.out.printf(
                 "[%s] Server stopped%n",
@@ -184,6 +186,24 @@ public final class GameServer {
             Events.update();
             System.out.printf(
                     "[%s] Autosaved game state to %s (%d bytes)%n",
+                    GameServer.class.getSimpleName(),
+                    file,
+                    size
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveOnShutdown() {
+        try {
+            Path file = Paths.getSaveFile(SAVE_FILE_NAME);
+            GameStateIO.save(mapState, file);
+            long size = Files.size(file);
+            Events.dispatch(new ShutdownSaveEvent(file, size));
+            Events.update();
+            System.out.printf(
+                    "[%s] Saved game state to %s (%d bytes) on shutdown%n",
                     GameServer.class.getSimpleName(),
                     file,
                     size
