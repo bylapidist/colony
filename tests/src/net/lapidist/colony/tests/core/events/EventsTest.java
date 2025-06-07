@@ -1,49 +1,53 @@
 package net.lapidist.colony.tests.core.events;
 
-import net.lapidist.colony.client.core.events.EventType;
-import net.lapidist.colony.client.core.events.Events;
-import net.lapidist.colony.client.core.events.payloads.ResizePayload;
+import net.lapidist.colony.client.events.*;
 import net.lapidist.colony.tests.GdxTestRunner;
+import net.mostlyoriginal.api.event.common.EventSystem;
+import net.mostlyoriginal.api.event.common.Subscribe;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(GdxTestRunner.class)
 public class EventsTest {
 
-    @Test
-    public final void testDispatch() {
-        Events.getInstance().addListener(event -> {
-            assertEquals(event.message, 1);
-            return false;
-        }, EventType.PAUSE.getOrdinal());
+    private boolean pauseHandled;
+    private ResizeEvent resizeEvent;
 
-        Events.dispatch(EventType.PAUSE);
-        Events.update();
+    @Before
+    public void setUp() {
+        Events.init(new EventSystem());
+        Events.getInstance().registerEvents(this);
+    }
+
+    @Subscribe
+    private void onPause(final PauseEvent event) {
+        pauseHandled = true;
+    }
+
+    @Subscribe
+    private void onResize(final ResizeEvent event) {
+        resizeEvent = event;
     }
 
     @Test
-    public final void testDispatchWithPayload() {
+    public void testDispatch() {
+        pauseHandled = false;
+        Events.dispatch(new PauseEvent());
+        Events.update();
+        assertTrue(pauseHandled);
+    }
+
+    @Test
+    public void testDispatchWithPayload() {
         final int testWidth = 1920;
         final int testHeight = 1080;
-
-        Events.getInstance().addListener(event -> {
-            assertEquals(
-                    ((ResizePayload) event.extraInfo).getWidth(),
-                    testWidth
-            );
-            assertEquals(
-                    ((ResizePayload) event.extraInfo).getHeight(),
-                    testHeight
-            );
-            return false;
-        }, EventType.RESIZE.getOrdinal());
-
-        Events.dispatch(
-                EventType.RESIZE,
-                new ResizePayload(testWidth, testHeight)
-        );
+        Events.dispatch(new ResizeEvent(testWidth, testHeight));
         Events.update();
+        assertEquals(testWidth, resizeEvent.getWidth());
+        assertEquals(testHeight, resizeEvent.getHeight());
     }
 }

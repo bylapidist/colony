@@ -5,8 +5,8 @@ import net.lapidist.colony.client.core.io.Paths;
 import net.lapidist.colony.client.screens.MapScreen;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.client.core.events.EventType;
-import net.lapidist.colony.client.core.events.Events;
+import net.lapidist.colony.client.events.Events;
+import net.lapidist.colony.client.events.GameInitEvent;
 
 import java.io.IOException;
 
@@ -22,7 +22,7 @@ public final class Colony extends Game {
         }
 
         // Dispatch events
-        Events.dispatch(EventType.GAME_INIT);
+        Events.dispatch(new GameInitEvent());
 
         MapState state;
         try {

@@ -3,6 +3,7 @@ dependencies {
     implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-ai:$gdxAiVersion"
+    implementation "net.mostlyoriginal.artemis-odb:contrib-eventbus:2.5.0"
 
     implementation "junit:junit:$jUnitVersion"
     implementation "org.mockito:mockito-core:$mockitoVersion"
