@@ -1,5 +1,6 @@
 package net.lapidist.colony.client.core.io;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
@@ -26,6 +27,7 @@ public class ResourceLoader implements Disposable {
 
     private final Json json = new Json();
     private FileLocation fileLocation;
+    private AssetManager assetManager;
     private final ObjectMap<String, TextureRegion> textureRegions;
     private final ObjectMap<String, Sound> sounds;
 
@@ -40,8 +42,8 @@ public class ResourceLoader implements Disposable {
     ) throws IOException {
         fileLocation = fileLocationToSet;
 
-        FileHandle resourceConfigHandle
-                = fileLocation.getFile(resourceConfigPathToSet);
+        FileHandle resourceConfigHandle =
+                fileLocation.getFile(resourceConfigPathToSet);
 
         if (resourceConfigHandle == null || !resourceConfigHandle.exists()) {
             throw new IOException(
@@ -52,7 +54,8 @@ public class ResourceLoader implements Disposable {
         String resourceConfigJson = resourceConfigHandle.readString();
 
         resourceConfig = json.fromJson(
-                ResourceConfig.class, resourceConfigJson
+                ResourceConfig.class,
+                resourceConfigJson
         );
 
         if (Constants.DEBUG) {
@@ -64,35 +67,45 @@ public class ResourceLoader implements Disposable {
             );
         }
 
+        assetManager = new AssetManager(fileLocation.getResolver());
+
+        loadAssets();
+        assetManager.finishLoading();
+
         loadTextureRegions();
 
         loaded = true;
     }
 
-    private void loadTextureRegions() throws IOException {
-        for (
-                ResourceConfig.ResourceTexture image
-                    : new Array.ArrayIterator<>(resourceConfig.getTextures())
-        ) {
-            FileHandle textureFileHandle
-                    = fileLocation.getFile(image.getFilePath());
-
-            if (textureFileHandle == null || !textureFileHandle.exists()) {
-                throw new IOException(
-                        String.format("%s does not exist", image.getFilePath())
-                );
+    private void loadAssets() {
+        if (resourceConfig.getTextures() != null) {
+            for (ResourceConfig.ResourceTexture texture : new Array.ArrayIterator<>(resourceConfig.getTextures())) {
+                assetManager.load(texture.getFilePath(), Texture.class);
             }
+        }
 
-            Texture texture = new Texture(textureFileHandle);
+        if (resourceConfig.getSounds() != null) {
+            for (ResourceConfig.ResourceSound sound : new Array.ArrayIterator<>(resourceConfig.getSounds())) {
+                assetManager.load(sound.getFilePath(), Sound.class);
+            }
+        }
+    }
+
+    private void loadTextureRegions() {
+        if (resourceConfig.getTextures() == null) {
+            return;
+        }
+
+        for (ResourceConfig.ResourceTexture image
+                : new Array.ArrayIterator<>(resourceConfig.getTextures())) {
+            Texture texture = assetManager.get(image.getFilePath(), Texture.class);
             texture.setFilter(
                     Texture.TextureFilter.Linear,
                     Texture.TextureFilter.Linear
             );
 
-            for (
-                    ResourceConfig.ResourceTextureRegion region
-                        : new Array.ArrayIterator<>(image.getTextureRegions())
-            ) {
+            for (ResourceConfig.ResourceTextureRegion region
+                    : new Array.ArrayIterator<>(image.getTextureRegions())) {
                 textureRegions.put(
                         region.getName(),
                         getTextureRegionFromBounds(texture, region.getBounds())
@@ -108,6 +121,14 @@ public class ResourceLoader implements Disposable {
                             image.getFilePath()
                     );
                 }
+            }
+        }
+
+        if (resourceConfig.getSounds() != null) {
+            for (ResourceConfig.ResourceSound sound
+                    : new Array.ArrayIterator<>(resourceConfig.getSounds())) {
+                Sound s = assetManager.get(sound.getFilePath(), Sound.class);
+                sounds.put(sound.getName(), s);
             }
         }
     }
@@ -139,15 +160,12 @@ public class ResourceLoader implements Disposable {
         if (!disposed) {
             disposed = true;
 
-            for (TextureRegion entry : new ObjectMap.Values<>(textureRegions)) {
-                entry.getTexture().dispose();
-            }
             textureRegions.clear();
-
-            for (Sound entry : new ObjectMap.Values<>(sounds)) {
-                entry.dispose();
-            }
             sounds.clear();
+
+            if (assetManager != null) {
+                assetManager.dispose();
+            }
         }
     }
 
