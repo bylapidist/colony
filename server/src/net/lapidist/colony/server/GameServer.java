@@ -7,9 +7,23 @@ import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.server.events.AutosaveEvent;
+import net.lapidist.colony.server.events.Events;
+import net.lapidist.colony.server.io.GameStateIO;
+import net.lapidist.colony.server.io.Paths;
+import net.mostlyoriginal.api.event.common.EventSystem;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+// Using java.nio here keeps the server independent from LibGDX's FileHandle API
+// because the server module runs headless without the Gdx runtime.
 import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+// Autosave scheduling relies on standard Java concurrency utilities rather than
+// any LibGDX specific scheduling.
 
 public final class GameServer {
     public static final int TCP_PORT = 54555;
@@ -17,20 +31,46 @@ public final class GameServer {
 
     // Increase buffers so the entire map can be serialized in one object
     private static final int BUFFER_SIZE = 65536;
+    private static final String SAVE_FILE_NAME = "autosave.dat";
+    private static final long DEFAULT_INTERVAL_MS = 10 * 60 * 1000L;
+
     private final Server server = new Server(BUFFER_SIZE, BUFFER_SIZE);
+    private final long autosaveIntervalMs;
+    private ScheduledExecutorService executor;
     private MapState mapState;
+
+    public GameServer() {
+        this(DEFAULT_INTERVAL_MS);
+    }
+
+    public GameServer(final long autosaveIntervalMsToSet) {
+        this.autosaveIntervalMs = autosaveIntervalMsToSet;
+    }
 
     public void start() throws IOException {
         registerClasses();
+        Events.init(new EventSystem());
+        Paths.createGameFoldersIfNotExists();
+        Path saveFile = Paths.getSaveFile(SAVE_FILE_NAME);
+
+        if (Files.exists(saveFile)) {
+            mapState = GameStateIO.load(saveFile);
+        } else {
+            generateMap();
+            GameStateIO.save(mapState, saveFile);
+        }
+
         server.start();
         server.bind(TCP_PORT, UDP_PORT);
-        generateMap();
         server.addListener(new Listener() {
             @Override
             public void connected(final Connection connection) {
                 connection.sendTCP(mapState);
             }
         });
+
+        executor = Executors.newSingleThreadScheduledExecutor();
+        executor.scheduleAtFixedRate(this::autoSave, autosaveIntervalMs, autosaveIntervalMs, TimeUnit.MILLISECONDS);
     }
 
     private void registerClasses() {
@@ -69,6 +109,22 @@ public final class GameServer {
     }
 
     public void stop() {
+        if (executor != null) {
+            executor.shutdownNow();
+        }
         server.stop();
+        Events.dispose();
+    }
+
+    private void autoSave() {
+        try {
+            Path file = Paths.getSaveFile(SAVE_FILE_NAME);
+            GameStateIO.save(mapState, file);
+            long size = Files.size(file);
+            Events.dispatch(new AutosaveEvent(file, size));
+            Events.update();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
