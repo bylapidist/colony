@@ -15,6 +15,7 @@ import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.serialization.KryoRegistry;
 import net.lapidist.colony.server.io.GameStateIO;
 import net.lapidist.colony.io.Paths;
+import net.lapidist.colony.map.DefaultMapGenerator;
 import net.lapidist.colony.map.MapGenerator;
 import net.mostlyoriginal.api.event.common.EventSystem;
 import org.slf4j.Logger;
@@ -45,24 +46,34 @@ public final class GameServer {
     private final Server server = new Server(BUFFER_SIZE, BUFFER_SIZE);
     private final long autosaveIntervalMs;
     private final String saveName;
+    private final MapGenerator mapGenerator;
     private ScheduledExecutorService executor;
     private MapState mapState;
 
     public GameServer() {
-        this(DEFAULT_SAVE_NAME, DEFAULT_INTERVAL_MS);
+        this(DEFAULT_SAVE_NAME, DEFAULT_INTERVAL_MS, new DefaultMapGenerator());
     }
 
     public GameServer(final long autosaveIntervalMsToSet) {
-        this(DEFAULT_SAVE_NAME, autosaveIntervalMsToSet);
+        this(DEFAULT_SAVE_NAME, autosaveIntervalMsToSet, new DefaultMapGenerator());
     }
 
     public GameServer(final String saveNameToSet) {
-        this(saveNameToSet, DEFAULT_INTERVAL_MS);
+        this(saveNameToSet, DEFAULT_INTERVAL_MS, new DefaultMapGenerator());
     }
 
     public GameServer(final String saveNameToSet, final long autosaveIntervalMsToSet) {
+        this(saveNameToSet, autosaveIntervalMsToSet, new DefaultMapGenerator());
+    }
+
+    public GameServer(
+            final String saveNameToSet,
+            final long autosaveIntervalMsToSet,
+            final MapGenerator mapGeneratorToSet
+    ) {
         this.saveName = saveNameToSet;
         this.autosaveIntervalMs = autosaveIntervalMsToSet;
+        this.mapGenerator = mapGeneratorToSet;
     }
 
     public void start() throws IOException {
@@ -115,7 +126,10 @@ public final class GameServer {
     }
 
     private void generateMap() {
-        mapState = MapGenerator.generate(GameConstants.MAP_WIDTH, GameConstants.MAP_HEIGHT);
+        mapState = mapGenerator.generate(
+                GameConstants.MAP_WIDTH,
+                GameConstants.MAP_HEIGHT
+        );
     }
 
     public MapState getMapState() {
