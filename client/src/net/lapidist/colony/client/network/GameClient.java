@@ -21,11 +21,27 @@ public final class GameClient {
     public void start() throws IOException, InterruptedException {
         registerClasses();
         client.start();
+        System.out.printf(
+                "[%s] Connecting to server...%n",
+                GameClient.class.getSimpleName()
+        );
         client.addListener(new Listener() {
+            @Override
+            public void connected(final Connection connection) {
+                System.out.printf(
+                        "[%s] Connected to server%n",
+                        GameClient.class.getSimpleName()
+                );
+            }
+
             @Override
             public void received(final Connection connection, final Object object) {
                 if (object instanceof MapState) {
                     mapState = (MapState) object;
+                    System.out.printf(
+                            "[%s] Received map state from server%n",
+                            GameClient.class.getSimpleName()
+                    );
                 }
             }
         });
@@ -33,6 +49,10 @@ public final class GameClient {
         while (mapState == null) {
             Thread.sleep(WAIT_TIME_MS);
         }
+        System.out.printf(
+                "[%s] Map state received, client ready%n",
+                GameClient.class.getSimpleName()
+        );
     }
 
     private void registerClasses() {
@@ -49,5 +69,9 @@ public final class GameClient {
 
     public void stop() {
         client.stop();
+        System.out.printf(
+                "[%s] Client stopped%n",
+                GameClient.class.getSimpleName()
+        );
     }
 }

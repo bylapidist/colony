@@ -55,17 +55,43 @@ public final class GameServer {
 
         if (Files.exists(saveFile)) {
             mapState = GameStateIO.load(saveFile);
+            System.out.printf(
+                    "[%s] Loaded save file: %s%n",
+                    GameServer.class.getSimpleName(),
+                    saveFile
+            );
         } else {
             generateMap();
             GameStateIO.save(mapState, saveFile);
+            System.out.printf(
+                    "[%s] Generated new map and saved to: %s%n",
+                    GameServer.class.getSimpleName(),
+                    saveFile
+            );
         }
 
         server.start();
+        System.out.printf(
+                "[%s] Server started on TCP %d UDP %d%n",
+                GameServer.class.getSimpleName(),
+                TCP_PORT,
+                UDP_PORT
+        );
         server.bind(TCP_PORT, UDP_PORT);
         server.addListener(new Listener() {
             @Override
             public void connected(final Connection connection) {
+                System.out.printf(
+                        "[%s] Connection established: %s%n",
+                        GameServer.class.getSimpleName(),
+                        connection.getID()
+                );
                 connection.sendTCP(mapState);
+                System.out.printf(
+                        "[%s] Sent map state to connection %s%n",
+                        GameServer.class.getSimpleName(),
+                        connection.getID()
+                );
             }
         });
 
@@ -117,6 +143,10 @@ public final class GameServer {
             executor.shutdownNow();
         }
         server.stop();
+        System.out.printf(
+                "[%s] Server stopped%n",
+                GameServer.class.getSimpleName()
+        );
         Events.dispose();
     }
 
@@ -127,6 +157,12 @@ public final class GameServer {
             long size = Files.size(file);
             Events.dispatch(new AutosaveEvent(file, size));
             Events.update();
+            System.out.printf(
+                    "[%s] Autosaved game state to %s (%d bytes)%n",
+                    GameServer.class.getSimpleName(),
+                    file,
+                    size
+            );
         } catch (IOException e) {
             e.printStackTrace();
         }
