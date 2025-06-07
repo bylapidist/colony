@@ -5,9 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import net.lapidist.colony.client.core.events.EventType;
-import net.lapidist.colony.client.core.events.Events;
-import net.lapidist.colony.client.core.events.payloads.ResizePayload;
+import net.lapidist.colony.client.events.ResizeEvent;
+import net.mostlyoriginal.api.event.common.Subscribe;
 
 public final class UISystem extends BaseSystem {
 
@@ -16,16 +15,9 @@ public final class UISystem extends BaseSystem {
     private final BitmapFont font = new BitmapFont();
     private final SpriteBatch batch = new SpriteBatch();
 
-    public UISystem() {
-        Events.getInstance().addListener(
-                event -> onResize((ResizePayload) event.extraInfo),
-                EventType.RESIZE.getOrdinal()
-        );
-    }
-
-    private boolean onResize(final ResizePayload payload) {
-        viewport.update(payload.getWidth(), payload.getHeight(), true);
-        return true;
+    @Subscribe
+    private void onResize(final ResizeEvent event) {
+        viewport.update(event.getWidth(), event.getHeight(), true);
     }
 
     @Override
