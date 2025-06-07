@@ -1,4 +1,10 @@
-This repository contains a multi-module Java project built with Gradle.
+This repository contains a multi-module Java project built with Gradle. It is
+split into four modules:
+
+- **core** – shared game logic, ECS components and serializers
+- **client** – the desktop LibGDX client
+- **server** – the headless game server
+- **tests** – JUnit test utilities and suites
 
 ## Running checks
 - Always run `./gradlew tests:copyAssets` before running the normal test suite. This copies required assets for the test module.
@@ -6,11 +12,16 @@ This repository contains a multi-module Java project built with Gradle.
 - After copying the assets run `./gradlew clean test` to execute all tests.
 - Run `./gradlew check` to verify code style. Only commit if this task succeeds. It includes Checkstyle and Spotless checks defined in `config/checkstyle/checkstyle.xml`.
 
+## Running the game
+- Use `./gradlew :client:run` to start the desktop client.
+- Use `./gradlew :server:run` to start the dedicated server.
+
 ## Coding conventions
 - All Java source files use four space indentation and must not contain tab characters.
 - Keep lines under 120 characters as configured in Checkstyle.
 - Ensure each file ends with a newline and avoid trailing whitespace.
-- New classes should be placed under the `net.lapidist.colony` package in the appropriate module (`components`, `client`, or `tests`).
+- New classes should be placed under the `net.lapidist.colony` package in the
+  module that matches their purpose (`core`, `client`, `server`, or `tests`).
 
 ## Notes
 The project uses Java 21 toolchains and standard Gradle tasks. No additional tools are required beyond what is defined in the Gradle build.
