@@ -4,6 +4,7 @@ dependencies {
     implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     implementation "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
+    api "com.typesafe:config:$typesafeConfigVersion"
 }
 
 sourceSets {

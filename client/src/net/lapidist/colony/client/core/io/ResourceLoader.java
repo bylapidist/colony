@@ -55,18 +55,17 @@ public class ResourceLoader implements Disposable {
             );
         }
 
-        String resourceConfigJson = resourceConfigHandle.readString();
+        String resourceConfigString = resourceConfigHandle.readString();
 
-        resourceConfig = json.fromJson(
-                ResourceConfig.class,
-                resourceConfigJson
-        );
+        com.typesafe.config.Config config =
+                com.typesafe.config.ConfigFactory.parseString(resourceConfigString);
+        resourceConfig = parseConfig(config);
 
         if (Constants.DEBUG) {
             LOGGER.debug(
                     "ResourceConfig loaded from \"{}\"\n{}",
                     resourceConfigPathToSet,
-                    resourceConfigJson
+                    resourceConfigString
             );
         }
 
@@ -193,5 +192,44 @@ public class ResourceLoader implements Disposable {
 
     public final ObjectMap<String, Sound> getSounds() {
         return sounds;
+    }
+
+    private ResourceConfig parseConfig(final com.typesafe.config.Config config) {
+        ResourceConfig rc = new ResourceConfig();
+
+        com.badlogic.gdx.utils.Array<ResourceConfig.ResourceTexture> textures =
+                new com.badlogic.gdx.utils.Array<>();
+        if (config.hasPath("textures")) {
+            for (com.typesafe.config.Config texConf : config.getConfigList("textures")) {
+                ResourceConfig.ResourceTexture texture = new ResourceConfig.ResourceTexture();
+                texture.setName(texConf.getString("name"));
+                texture.setFilePath(texConf.getString("filePath"));
+                com.badlogic.gdx.utils.Array<ResourceConfig.ResourceTextureRegion> regions =
+                        new com.badlogic.gdx.utils.Array<>();
+                if (texConf.hasPath("regions")) {
+                    for (com.typesafe.config.Config regionConf : texConf.getConfigList("regions")) {
+                        ResourceConfig.ResourceTextureRegion region = new ResourceConfig.ResourceTextureRegion();
+                        region.setName(regionConf.getString("name"));
+                        region.setBounds(regionConf.getString("bounds"));
+                        regions.add(region);
+                    }
+                }
+                texture.setTextureRegions(regions);
+                textures.add(texture);
+            }
+        }
+        rc.setTextures(textures);
+
+        com.badlogic.gdx.utils.Array<ResourceConfig.ResourceSound> soundsArray = new com.badlogic.gdx.utils.Array<>();
+        if (config.hasPath("sounds")) {
+            for (com.typesafe.config.Config soundConf : config.getConfigList("sounds")) {
+                ResourceConfig.ResourceSound sound = new ResourceConfig.ResourceSound();
+                sound.setName(soundConf.getString("name"));
+                sound.setFilePath(soundConf.getString("filePath"));
+                soundsArray.add(sound);
+            }
+        }
+        rc.setSounds(soundsArray);
+        return rc;
     }
 }

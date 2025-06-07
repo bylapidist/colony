@@ -2,81 +2,117 @@ package net.lapidist.colony.client.core.io;
 
 import com.badlogic.gdx.utils.Array;
 
-public class ResourceConfig {
+public final class ResourceConfig {
 
     private Array<ResourceTexture> textures;
     private Array<ResourceSound> sounds;
 
-    public static class ResourceTexture {
+    public static final class ResourceTexture {
         private String name;
         private String filePath;
         private Array<ResourceTextureRegion> regions;
 
-        public final String getName() {
+        public String getName() {
             return name;
         }
 
-        public final String getFilePath() {
+        public String getFilePath() {
             return filePath;
         }
 
-        public final Array<ResourceTextureRegion> getTextureRegions() {
+        public Array<ResourceTextureRegion> getTextureRegions() {
             return regions;
+        }
+
+        void setName(final String nameToSet) {
+            this.name = nameToSet;
+        }
+
+        void setFilePath(final String filePathToSet) {
+            this.filePath = filePathToSet;
+        }
+
+        void setTextureRegions(final Array<ResourceTextureRegion> regionsToSet) {
+            this.regions = regionsToSet;
         }
     }
 
-    public static class ResourceTextureRegion {
+    public static final class ResourceTextureRegion {
         private String name;
         private String bounds;
 
-        public final String getName() {
+        public String getName() {
             return name;
         }
 
-        public final String getBounds() {
+        public String getBounds() {
             return bounds;
+        }
+
+        void setName(final String nameToSet) {
+            this.name = nameToSet;
+        }
+
+        void setBounds(final String boundsToSet) {
+            this.bounds = boundsToSet;
         }
     }
 
-    public static class ResourceSound {
+    public static final class ResourceSound {
         private String name;
         private String filePath;
 
-        public final String getName() {
+        public String getName() {
             return name;
         }
 
-        public final String getFilePath() {
+        public String getFilePath() {
             return filePath;
+        }
+
+        void setName(final String nameToSet) {
+            this.name = nameToSet;
+        }
+
+        void setFilePath(final String filePathToSet) {
+            this.filePath = filePathToSet;
         }
     }
 
-    public final Array<ResourceTexture> getTextures() {
+    public Array<ResourceTexture> getTextures() {
         return textures;
     }
 
-    public final ResourceTexture getTexture(final int index) {
+    void setTextures(final Array<ResourceTexture> texturesToSet) {
+        this.textures = texturesToSet;
+    }
+
+    public ResourceTexture getTexture(final int index) {
         return textures.get(index);
     }
 
-    public final ResourceTextureRegion getTextureRegion(
+    public ResourceTextureRegion getTextureRegion(
             final int imageIndex,
             final int regionIndex
     ) {
         return textures.get(imageIndex).getTextureRegions().get(regionIndex);
     }
 
-    public final Array<ResourceTextureRegion> getTextureRegions(
+    public Array<ResourceTextureRegion> getTextureRegions(
             final int imageIndex
     ) {
         return textures.get(imageIndex).getTextureRegions();
     }
 
-    public final Array<ResourceSound> getSounds() {
+    public Array<ResourceSound> getSounds() {
         return sounds;
     }
 
-    public final ResourceSound getSound(final int index) {
+    void setSounds(final Array<ResourceSound> soundsToSet) {
+        this.sounds = soundsToSet;
+    }
+
+    public ResourceSound getSound(final int index) {
         return sounds.get(index);
     }
 }

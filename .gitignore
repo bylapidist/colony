@@ -146,4 +146,4 @@ tests/fonts
 tests/i18n
 tests/skin
 tests/textures
-tests/resources.json
+tests/resources.conf
