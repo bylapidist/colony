@@ -13,3 +13,10 @@ This repository contains a multi-module Java project built with Gradle.
 
 ## Notes
 The project uses Java 21 toolchains and standard Gradle tasks. No additional tools are required beyond what is defined in the Gradle build.
+
+Semantic Release automatically increments versions and generates GitHub release notes from commit messages. Provide a concise description of your changes in the PR body so release notes remain meaningful.
+
+If any command fails, fix the issues before committing.
+
+## Commit Messages
+All commit messages must follow the [Angular commit message guidelines](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit).
