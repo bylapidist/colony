@@ -9,6 +9,7 @@ buildscript {
         checkstyleVersion = '10.25.0'
         slf4jVersion = '2.0.17'
         logbackVersion = '1.5.18'
+        typesafeConfigVersion = '1.4.3'
     }
 
     repositories {

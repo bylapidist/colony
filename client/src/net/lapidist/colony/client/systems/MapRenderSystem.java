@@ -36,7 +36,7 @@ public final class MapRenderSystem extends BaseSystem {
     @Override
     public void initialize() {
         try {
-            resourceLoader.load(FileLocation.INTERNAL, "resources.json");
+            resourceLoader.load(FileLocation.INTERNAL, "resources.conf");
         } catch (IOException e) {
             e.printStackTrace();
         }

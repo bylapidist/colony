@@ -19,7 +19,7 @@ public class ResourceLoaderTest {
 
         resourceLoader.load(
                 FileLocation.INTERNAL,
-                "resources.json"
+                "resources.conf"
         );
         assertTrue(resourceLoader.isLoaded());
     }

@@ -4,6 +4,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import net.lapidist.colony.components.GameConstants;
+import net.lapidist.colony.config.ColonyConfig;
 import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
@@ -31,14 +32,14 @@ import java.util.concurrent.TimeUnit;
 // any LibGDX specific scheduling.
 
 public final class GameServer {
-    public static final int TCP_PORT = 54555;
-    public static final int UDP_PORT = 54777;
+    public static final int TCP_PORT = ColonyConfig.get().getInt("game.server.tcpPort");
+    public static final int UDP_PORT = ColonyConfig.get().getInt("game.server.udpPort");
 
     // Increase buffers so the entire map can be serialized in one object
     private static final int BUFFER_SIZE = 65536;
-    private static final String DEFAULT_SAVE_NAME = "autosave";
+    private static final String DEFAULT_SAVE_NAME = ColonyConfig.get().getString("game.defaultSaveName");
     private static final String AUTOSAVE_SUFFIX = Paths.AUTOSAVE_SUFFIX;
-    private static final long DEFAULT_INTERVAL_MS = 10 * 60 * 1000L;
+    private static final long DEFAULT_INTERVAL_MS = ColonyConfig.get().getLong("game.autosaveIntervalMs");
     private static final int NAME_RANGE = 100000;
     private static final Logger LOGGER = LoggerFactory.getLogger(GameServer.class);
 
