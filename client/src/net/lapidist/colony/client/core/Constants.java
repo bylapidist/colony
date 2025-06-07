@@ -6,7 +6,7 @@ public final class Constants {
     }
 
     public static final String NAME = "Colony";
-    public static final String VERSION = "${VERSION}";
+    public static final String VERSION = Version.get();
     public static final boolean DEBUG = true;
     public static final int WIDTH = 1080;
     public static final int HEIGHT = 720;
@@ -16,4 +16,11 @@ public final class Constants {
     public static final int MAP_HEIGHT = net.lapidist.colony.components.GameConstants.MAP_HEIGHT;
 
     public static final int MAP_GUTTER = 4;
+
+    private static final class Version {
+        private static String get() {
+            String v = Constants.class.getPackage().getImplementationVersion();
+            return v != null ? v : "dev";
+        }
+    }
 }
