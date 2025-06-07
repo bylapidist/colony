@@ -15,10 +15,8 @@ import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.state.TileSelectionData;
-import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.Array;
 
 public final class InputSystem extends BaseSystem implements InputProcessor, GestureListener {
@@ -54,12 +52,7 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
         cameraSystem = world.getSystem(PlayerCameraSystem.class);
         mapMapper = world.getMapper(MapComponent.class);
         tileMapper = world.getMapper(TileComponent.class);
-        IntBag maps = world.getAspectSubscriptionManager()
-                .get(Aspect.all(MapComponent.class))
-                .getEntities();
-        if (maps.size() > 0) {
-            map = world.getEntity(maps.get(0));
-        }
+        map = net.lapidist.colony.map.MapUtils.findMapEntity(world);
     }
 
     @Override

@@ -1,10 +1,8 @@
 package net.lapidist.colony.client.systems;
 
-import com.artemis.Aspect;
 import com.artemis.BaseSystem;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.utils.IntBag;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -46,12 +44,7 @@ public final class MapRenderSystem extends BaseSystem {
         tileMapper = world.getMapper(TileComponent.class);
         buildingMapper = world.getMapper(BuildingComponent.class);
 
-        IntBag maps = world.getAspectSubscriptionManager()
-                .get(Aspect.all(MapComponent.class))
-                .getEntities();
-        if (maps.size() > 0) {
-            map = world.getEntity(maps.get(0));
-        }
+        map = net.lapidist.colony.map.MapUtils.findMapEntity(world);
     }
 
     @Override
