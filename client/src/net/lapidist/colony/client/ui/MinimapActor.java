@@ -41,6 +41,29 @@ public final class MinimapActor extends Actor implements Disposable {
     private ComponentMapper<TextureRegionReferenceComponent> textureMapper;
     private Entity map;
     private PlayerCameraSystem cameraSystem;
+    private float mapWidthWorld;
+    private float mapHeightWorld;
+
+    private void calculateMapDimensions() {
+        mapWidthWorld = 0;
+        mapHeightWorld = 0;
+
+        Array<Entity> tiles = mapMapper.get(map).getTiles();
+        for (int i = 0; i < tiles.size; i++) {
+            TileComponent tileComponent = tileMapper.get(tiles.get(i));
+            mapWidthWorld = Math.max(mapWidthWorld,
+                    (tileComponent.getX() + 1) * Constants.TILE_SIZE);
+            mapHeightWorld = Math.max(mapHeightWorld,
+                    (tileComponent.getY() + 1) * Constants.TILE_SIZE);
+        }
+
+        if (mapWidthWorld == 0) {
+            mapWidthWorld = Constants.MAP_WIDTH * Constants.TILE_SIZE;
+        }
+        if (mapHeightWorld == 0) {
+            mapHeightWorld = Constants.MAP_HEIGHT * Constants.TILE_SIZE;
+        }
+    }
 
     private void initMappers() {
         if (mapMapper == null) {
@@ -76,6 +99,8 @@ public final class MinimapActor extends Actor implements Disposable {
         } catch (IOException e) {
             // ignore loading errors in headless tests
         }
+        mapWidthWorld = -1;
+        mapHeightWorld = -1;
     }
 
     @Override
@@ -97,8 +122,11 @@ public final class MinimapActor extends Actor implements Disposable {
             return;
         }
 
-        float scaleX = getWidth() / (Constants.MAP_WIDTH * Constants.TILE_SIZE);
-        float scaleY = getHeight() / (Constants.MAP_HEIGHT * Constants.TILE_SIZE);
+        if (mapWidthWorld < 0) {
+            calculateMapDimensions();
+        }
+        float scaleX = getWidth() / mapWidthWorld;
+        float scaleY = getHeight() / mapHeightWorld;
 
         Array<Entity> tiles = mapMapper.get(map).getTiles();
         for (int i = 0; i < tiles.size; i++) {
@@ -126,8 +154,8 @@ public final class MinimapActor extends Actor implements Disposable {
 
             float clampedLeft = Math.max(0, bottomLeft.x);
             float clampedBottom = Math.max(0, bottomLeft.y);
-            float clampedRight = Math.min(Constants.MAP_WIDTH * Constants.TILE_SIZE, topRight.x);
-            float clampedTop = Math.min(Constants.MAP_HEIGHT * Constants.TILE_SIZE, topRight.y);
+            float clampedRight = Math.min(mapWidthWorld, topRight.x);
+            float clampedTop = Math.min(mapHeightWorld, topRight.y);
 
             float rectX = getX() + clampedLeft * scaleX;
             float rectY = getY() + clampedBottom * scaleY;
