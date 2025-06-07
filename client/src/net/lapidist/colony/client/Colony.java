@@ -3,7 +3,9 @@ package net.lapidist.colony.client;
 import com.badlogic.gdx.Game;
 import net.lapidist.colony.client.core.io.Paths;
 import net.lapidist.colony.client.screens.MapScreen;
+import net.lapidist.colony.client.screens.MainMenuScreen;
 import net.lapidist.colony.client.network.GameClient;
+import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.client.events.Events;
 import net.lapidist.colony.client.events.GameInitEvent;
@@ -13,6 +15,28 @@ import java.io.IOException;
 public final class Colony extends Game {
 
     private GameClient client;
+    private GameServer server;
+
+    public void startGame(final String saveName) {
+        MapState state;
+        try {
+            if (server != null) {
+                server.stop();
+            }
+            server = new GameServer(saveName);
+            server.start();
+            client = new GameClient();
+            client.start();
+            state = client.getMapState();
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        setScreen(new MapScreen(state, client));
+    }
+
+    public void startGame() {
+        startGame("autosave");
+    }
 
     @Override
     public void create() {
@@ -26,23 +50,16 @@ public final class Colony extends Game {
         // Dispatch events
         Events.dispatch(new GameInitEvent());
 
-        MapState state;
-        try {
-            client = new GameClient();
-            client.start();
-            state = client.getMapState();
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        // Finally, transition to the first screen
-        setScreen(new MapScreen(state, client));
+        setScreen(new MainMenuScreen(this));
     }
 
     @Override
     public void dispose() {
         if (client != null) {
             client.stop();
+        }
+        if (server != null) {
+            server.stop();
         }
         Events.dispose();
     }
