@@ -7,6 +7,8 @@ import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.TileSelectionData;
+import net.lapidist.colony.server.events.TileSelectionEvent;
 import net.lapidist.colony.server.events.AutosaveEvent;
 import net.lapidist.colony.server.events.Events;
 import net.lapidist.colony.server.io.GameStateIO;
@@ -93,6 +95,15 @@ public final class GameServer {
                         connection.getID()
                 );
             }
+
+            @Override
+            public void received(final Connection connection, final Object object) {
+                if (object instanceof TileSelectionData) {
+                    TileSelectionData data = (TileSelectionData) object;
+                    handleTileSelection(data);
+                    Events.dispatch(new TileSelectionEvent(data.getX(), data.getY(), data.isSelected()));
+                }
+            }
         });
 
         executor = Executors.newSingleThreadScheduledExecutor(r -> {
@@ -107,6 +118,7 @@ public final class GameServer {
         server.getKryo().register(MapState.class);
         server.getKryo().register(TileData.class);
         server.getKryo().register(BuildingData.class);
+        server.getKryo().register(TileSelectionData.class);
         server.getKryo().register(java.util.ArrayList.class);
         server.getKryo().register(java.util.List.class);
     }
@@ -123,6 +135,7 @@ public final class GameServer {
                 tile.setTileType("GRASS");
                 tile.setTextureRef(textures[random.nextInt(textures.length)]);
                 tile.setPassable(true);
+                tile.setSelected(false);
                 mapState.getTiles().add(tile);
             }
         }
@@ -148,6 +161,15 @@ public final class GameServer {
                 GameServer.class.getSimpleName()
         );
         Events.dispose();
+    }
+
+    private void handleTileSelection(final TileSelectionData data) {
+        for (TileData tile : mapState.getTiles()) {
+            if (tile.getX() == data.getX() && tile.getY() == data.getY()) {
+                tile.setSelected(data.isSelected());
+                break;
+            }
+        }
     }
 
     private void autoSave() {

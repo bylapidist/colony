@@ -6,6 +6,7 @@ import com.esotericsoftware.kryonet.Listener;
 import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.server.GameServer;
 
 import java.io.IOException;
@@ -59,12 +60,17 @@ public final class GameClient {
         client.getKryo().register(MapState.class);
         client.getKryo().register(TileData.class);
         client.getKryo().register(BuildingData.class);
+        client.getKryo().register(TileSelectionData.class);
         client.getKryo().register(java.util.ArrayList.class);
         client.getKryo().register(java.util.List.class);
     }
 
     public MapState getMapState() {
         return mapState;
+    }
+
+    public void sendTileSelection(final TileSelectionData data) {
+        client.sendTCP(data);
     }
 
     public void stop() {
