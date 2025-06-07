@@ -1,6 +1,7 @@
 package net.lapidist.colony.client.screens;
 
-import com.badlogic.ashley.core.PooledEngine;
+import com.artemis.World;
+import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import net.lapidist.colony.client.core.Constants;
@@ -11,21 +12,26 @@ import net.lapidist.colony.client.core.events.payloads.ResizePayload;
 
 public class MapScreen implements Screen {
 
-    private final PooledEngine pooledEngine = new PooledEngine();
+    private final World world;
 
     public MapScreen() {
-        pooledEngine.addSystem(new ClearScreenSystem(Color.BLACK));
-        pooledEngine.addSystem(new MapGenerationSystem(Constants.MAP_WIDTH, Constants.MAP_HEIGHT));
-        pooledEngine.addSystem(new PlayerCameraSystem());
-        pooledEngine.addSystem(new InputSystem());
-        pooledEngine.addSystem(new MapRenderSystem());
-        pooledEngine.addSystem(new UISystem());
+        world = new World(new WorldConfigurationBuilder()
+                .with(
+                        new ClearScreenSystem(Color.BLACK),
+                        new MapGenerationSystem(Constants.MAP_WIDTH, Constants.MAP_HEIGHT),
+                        new PlayerCameraSystem(),
+                        new InputSystem(),
+                        new MapRenderSystem(),
+                        new UISystem()
+                )
+                .build());
     }
 
     @Override
     public final void render(final float deltaTime) {
         Events.update();
-        pooledEngine.update(deltaTime);
+        world.setDelta(deltaTime);
+        world.process();
     }
 
     @Override
@@ -56,5 +62,6 @@ public class MapScreen implements Screen {
     @Override
     public final void dispose() {
         Events.dispatch(EventType.DISPOSE);
+        world.dispose();
     }
 }

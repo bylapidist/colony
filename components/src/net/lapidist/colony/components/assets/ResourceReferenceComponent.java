@@ -1,8 +1,8 @@
 package net.lapidist.colony.components.assets;
 
-import com.badlogic.ashley.core.Component;
+import com.artemis.Component;
 
-public abstract class ResourceReferenceComponent implements Component {
+public abstract class ResourceReferenceComponent extends Component {
 
     private String resourceRef;
 

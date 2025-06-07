@@ -1,8 +1,7 @@
 package net.lapidist.colony.client.systems;
 
-import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntitySystem;
+import com.artemis.BaseSystem;
+import com.artemis.Entity;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -12,7 +11,7 @@ import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 
-public class MapGenerationSystem extends EntitySystem {
+public final class MapGenerationSystem extends BaseSystem {
 
     private final int mapWidth;
 
@@ -24,15 +23,16 @@ public class MapGenerationSystem extends EntitySystem {
     }
 
     @Override
-    public final void addedToEngine(final Engine engine) {
+    public void initialize() {
         Array<Entity> tilesToSet = new Array<>();
         Array<Entity> entitiesToSet = new Array<>();
-        Entity map = new Entity();
+        Entity map = world.createEntity();
         MapComponent mapComponent = new MapComponent();
 
         for (int column = 0; column <= mapWidth; column++) {
             for (int row = 0; row <= mapHeight; row++) {
                 tilesToSet.add(TileFactory.create(
+                        world,
                         TileComponent.TileType.GRASS,
                         getRandomTextureReference(),
                         new Vector2(column, row),
@@ -42,6 +42,7 @@ public class MapGenerationSystem extends EntitySystem {
         }
 
         entitiesToSet.add(BuildingFactory.create(
+                world,
                 BuildingComponent.BuildingType.HOUSE,
                 "house0",
                 new Vector2(1, 1)
@@ -49,8 +50,12 @@ public class MapGenerationSystem extends EntitySystem {
 
         mapComponent.setTiles(tilesToSet);
         mapComponent.setEntities(entitiesToSet);
-        map.add(mapComponent);
-        engine.addEntity(map);
+        map.edit().add(mapComponent);
+    }
+
+    @Override
+    protected void processSystem() {
+        // map generation occurs once in initialize
     }
 
     private String getRandomTextureReference() {

@@ -1,6 +1,6 @@
 package net.lapidist.colony.client.systems;
 
-import com.badlogic.ashley.core.EntitySystem;
+import com.artemis.BaseSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import net.lapidist.colony.client.core.Constants;
 
-public class PlayerCameraSystem extends EntitySystem {
+public final class PlayerCameraSystem extends BaseSystem {
 
     private final Vector3 tmpVec3 = new Vector3();
 
@@ -28,7 +28,7 @@ public class PlayerCameraSystem extends EntitySystem {
         viewport.apply();
     }
 
-    public final boolean withinCameraView(final Vector2 screenCoords) {
+    public boolean withinCameraView(final Vector2 screenCoords) {
         Vector2 cameraCoords = cameraCoordsFromWorldCoords(screenCoords.x, screenCoords.y);
 
         return !(cameraCoords.x > Gdx.graphics.getWidth()
@@ -36,18 +36,18 @@ public class PlayerCameraSystem extends EntitySystem {
         );
     }
 
-    public final void moveCameraToWorldCoords(final Vector2 worldCoords) {
+    public void moveCameraToWorldCoords(final Vector2 worldCoords) {
         viewport.getCamera().translate(worldCoords.x, worldCoords.y, 0);
     }
 
-    public final Vector2 getWorldCenter() {
+    public Vector2 getWorldCenter() {
         return new Vector2(
                 (Constants.TILE_SIZE * Constants.MAP_WIDTH + Constants.TILE_SIZE) / 2f,
                 (Constants.TILE_SIZE * Constants.MAP_HEIGHT + Constants.TILE_SIZE) / 2f
         );
     }
 
-    public final Vector2 cameraCoordsFromWorldCoords(
+    public Vector2 cameraCoordsFromWorldCoords(
             final float worldX,
             final float worldY
     ) {
@@ -55,7 +55,7 @@ public class PlayerCameraSystem extends EntitySystem {
         return tmpVec2.set(tmpVec3.x, tmpVec3.y);
     }
 
-    public final Vector2 worldCoordsFromCameraCoords(
+    public Vector2 worldCoordsFromCameraCoords(
             final float screenX,
             final float screenY
     ) {
@@ -63,51 +63,51 @@ public class PlayerCameraSystem extends EntitySystem {
         return tmpVec2.set(tmpVec3.x, tmpVec3.y);
     }
 
-    public final Vector2 tileCoordsToWorldCoords(final int x, final int y) {
+    public Vector2 tileCoordsToWorldCoords(final int x, final int y) {
         return new Vector2(
                 x * Constants.TILE_SIZE,
                 y * Constants.TILE_SIZE
         );
     }
 
-    public final Vector2 tileCoordsToWorldCoords(final Vector2 coords) {
+    public Vector2 tileCoordsToWorldCoords(final Vector2 coords) {
         return tileCoordsToWorldCoords((int) coords.x, (int) coords.y);
     }
 
-    public final Vector2 worldCoordsToTileCoords(final int x, final int y) {
+    public Vector2 worldCoordsToTileCoords(final int x, final int y) {
         return new Vector2(
                 Math.floorDiv(x, Constants.TILE_SIZE),
                 Math.floorDiv(y, Constants.TILE_SIZE)
         );
     }
 
-    public final Vector2 worldCoordsToTileCoords(final Vector2 coords) {
+    public Vector2 worldCoordsToTileCoords(final Vector2 coords) {
         return worldCoordsToTileCoords((int) coords.x, (int) coords.y);
     }
 
     @Override
-    public final void update(final float deltaTime) {
+    protected void processSystem() {
         camera.update();
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
-    public final float getZoom() {
+    public float getZoom() {
         return camera.zoom;
     }
 
-    public final OrthographicCamera getCamera() {
+    public OrthographicCamera getCamera() {
         return camera;
     }
 
-    public final void setCamera(final OrthographicCamera cameraToSet) {
+    public void setCamera(final OrthographicCamera cameraToSet) {
         this.camera = cameraToSet;
     }
 
-    public final ExtendViewport getViewport() {
+    public ExtendViewport getViewport() {
         return viewport;
     }
 
-    public final void setViewport(final ExtendViewport viewportToSet) {
+    public void setViewport(final ExtendViewport viewportToSet) {
         this.viewport = viewportToSet;
     }
 }

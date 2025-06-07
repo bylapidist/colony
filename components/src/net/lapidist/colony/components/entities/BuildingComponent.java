@@ -1,8 +1,8 @@
 package net.lapidist.colony.components.entities;
 
-import com.badlogic.ashley.core.Component;
+import com.artemis.Component;
 
-public class BuildingComponent implements Component {
+public class BuildingComponent extends Component {
 
     public enum BuildingType {
         HOUSE("House"),
