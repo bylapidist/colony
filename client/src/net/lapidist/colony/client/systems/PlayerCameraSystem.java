@@ -51,7 +51,7 @@ public final class PlayerCameraSystem extends BaseSystem {
             final float worldX,
             final float worldY
     ) {
-        camera.project(tmpVec3.set(worldX, worldY, 0));
+        viewport.project(tmpVec3.set(worldX, worldY, 0));
         return tmpVec2.set(tmpVec3.x, tmpVec3.y);
     }
 
@@ -59,12 +59,12 @@ public final class PlayerCameraSystem extends BaseSystem {
             final float screenX,
             final float screenY
     ) {
-        camera.unproject(tmpVec3.set(screenX, screenY, 0));
-        return tmpVec2.set(tmpVec3.x, tmpVec3.y);
+        return viewport.unproject(tmpVec2.set(screenX, screenY));
     }
 
     public Vector2 screenCoordsToWorldCoords(final float screenX, final float screenY) {
-        return viewport.unproject(tmpVec2.set(screenX, screenY));
+        float flippedY = viewport.getScreenHeight() - screenY;
+        return viewport.unproject(tmpVec2.set(screenX, flippedY));
     }
 
     public Vector2 tileCoordsToWorldCoords(final int x, final int y) {

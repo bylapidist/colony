@@ -5,7 +5,6 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.utils.IntBag;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -146,10 +145,13 @@ public final class MinimapActor extends Actor implements Disposable {
         }
 
         if (cameraSystem != null) {
-            Vector2 bottomLeft = cameraSystem.worldCoordsFromCameraCoords(0, 0);
+            Vector2 bottomLeft = cameraSystem.worldCoordsFromCameraCoords(
+                    0,
+                    0
+            );
             Vector2 topRight = cameraSystem.worldCoordsFromCameraCoords(
-                    Gdx.graphics.getWidth(),
-                    Gdx.graphics.getHeight()
+                    cameraSystem.getViewport().getScreenWidth(),
+                    cameraSystem.getViewport().getScreenHeight()
             );
 
             float clampedLeft = Math.max(0, bottomLeft.x);
