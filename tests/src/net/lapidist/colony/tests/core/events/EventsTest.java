@@ -73,4 +73,20 @@ public class EventsTest {
         );
         assertEquals(expected, out.toString());
     }
+
+    @Test
+    public void testPauseEventToString() {
+        assertEquals("PauseEvent", new PauseEvent().toString());
+    }
+
+    @Test
+    public void testResizeEventToString() {
+        final int width = 800;
+        final int height = 600;
+        ResizeEvent event = new ResizeEvent(width, height);
+        assertEquals(
+                String.format("ResizeEvent(width=%d, height=%d)", width, height),
+                event.toString()
+        );
+    }
 }

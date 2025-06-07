@@ -24,4 +24,15 @@ public final class TileSelectionEvent implements Event {
     public boolean isSelected() {
         return selected;
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "%s(x=%d, y=%d, selected=%s)",
+                getClass().getSimpleName(),
+                x,
+                y,
+                selected
+        );
+    }
 }

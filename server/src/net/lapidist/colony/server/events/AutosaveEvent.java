@@ -25,4 +25,14 @@ public final class AutosaveEvent implements Event {
     public long getSize() {
         return size;
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "%s(location=%s, size=%d)",
+                getClass().getSimpleName(),
+                location,
+                size
+        );
+    }
 }
