@@ -25,18 +25,22 @@ public final class Paths {
     private Paths() {
     }
 
-    public static void createGameFoldersIfNotExists() throws IOException {
+    private static boolean isWindows() {
         String os = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
-        String gameFolderPath;
-        String saveFolderPath;
+        return os.contains("windows");
+    }
 
-        if (os.contains("windows")) {
-            gameFolderPath = GAME_FOLDER_WINDOWS;
-            saveFolderPath = SAVE_FOLDER_WINDOWS;
-        } else {
-            gameFolderPath = GAME_FOLDER_MAC;
-            saveFolderPath = SAVE_FOLDER_MAC;
-        }
+    private static String getGameFolderPath() {
+        return isWindows() ? GAME_FOLDER_WINDOWS : GAME_FOLDER_MAC;
+    }
+
+    private static String getSaveFolderPath() {
+        return isWindows() ? SAVE_FOLDER_WINDOWS : SAVE_FOLDER_MAC;
+    }
+
+    public static void createGameFoldersIfNotExists() throws IOException {
+        String gameFolderPath = getGameFolderPath();
+        String saveFolderPath = getSaveFolderPath();
 
         Path gameFolder = java.nio.file.Paths.get(gameFolderPath);
         if (!Files.isDirectory(gameFolder)) {
@@ -50,14 +54,7 @@ public final class Paths {
     }
 
     public static Path getSaveFile(final String fileName) throws IOException {
-        String os = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
-        String saveFolder;
-        if (os.contains("windows")) {
-            saveFolder = SAVE_FOLDER_WINDOWS;
-        } else {
-            saveFolder = SAVE_FOLDER_MAC;
-        }
-        return java.nio.file.Paths.get(saveFolder, fileName);
+        return java.nio.file.Paths.get(getSaveFolderPath(), fileName);
     }
 
     public static Path getSave(final String saveName) throws IOException {
@@ -73,14 +70,7 @@ public final class Paths {
     }
 
     public static List<String> listAutosaves() throws IOException {
-        String os = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
-        String saveFolder;
-        if (os.contains("windows")) {
-            saveFolder = SAVE_FOLDER_WINDOWS;
-        } else {
-            saveFolder = SAVE_FOLDER_MAC;
-        }
-        Path folder = java.nio.file.Paths.get(saveFolder);
+        Path folder = java.nio.file.Paths.get(getSaveFolderPath());
         if (!Files.isDirectory(folder)) {
             return Collections.emptyList();
         }
