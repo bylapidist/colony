@@ -7,7 +7,7 @@ import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TileSelectionData;
-import net.lapidist.colony.server.GameServer;
+import net.lapidist.colony.server.ServerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +40,12 @@ public final class GameClient {
                 }
             }
         });
-        client.connect(CONNECT_TIMEOUT, "localhost", GameServer.TCP_PORT, GameServer.UDP_PORT);
+        client.connect(
+                CONNECT_TIMEOUT,
+                "localhost",
+                ServerConfig.DEFAULT_TCP_PORT,
+                ServerConfig.DEFAULT_UDP_PORT
+        );
         while (mapState == null) {
             Thread.sleep(WAIT_TIME_MS);
         }
