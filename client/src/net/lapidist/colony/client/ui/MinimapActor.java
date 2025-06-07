@@ -123,10 +123,16 @@ public final class MinimapActor extends Actor implements Disposable {
                     Gdx.graphics.getWidth(),
                     Gdx.graphics.getHeight()
             );
-            float rectX = getX() + bottomLeft.x * scaleX;
-            float rectY = getY() + bottomLeft.y * scaleY;
-            float rectWidth = (topRight.x - bottomLeft.x) * scaleX;
-            float rectHeight = (topRight.y - bottomLeft.y) * scaleY;
+
+            float clampedLeft = Math.max(0, bottomLeft.x);
+            float clampedBottom = Math.max(0, bottomLeft.y);
+            float clampedRight = Math.min(Constants.MAP_WIDTH * Constants.TILE_SIZE, topRight.x);
+            float clampedTop = Math.min(Constants.MAP_HEIGHT * Constants.TILE_SIZE, topRight.y);
+
+            float rectX = getX() + clampedLeft * scaleX;
+            float rectY = getY() + clampedBottom * scaleY;
+            float rectWidth = (clampedRight - clampedLeft) * scaleX;
+            float rectHeight = (clampedTop - clampedBottom) * scaleY;
             float lineWidth = 2f;
             Color old = new Color(batch.getColor());
             batch.setColor(Color.WHITE);
