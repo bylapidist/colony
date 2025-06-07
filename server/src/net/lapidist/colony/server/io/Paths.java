@@ -55,4 +55,16 @@ public final class Paths {
         // Path resolves directly to the OS specific location
         return java.nio.file.Paths.get(saveFolder, fileName);
     }
+
+    public static Path getSave(final String saveName) throws IOException {
+        return getSaveFile(saveName + ".dat");
+    }
+
+    public static Path getAutosave(final String saveName) throws IOException {
+        return getSaveFile(saveName + "-autosave.dat");
+    }
+
+    public static Path getLastAutosaveMarker() throws IOException {
+        return getSaveFile("lastautosave.txt");
+    }
 }

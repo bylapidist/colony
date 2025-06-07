@@ -3,6 +3,7 @@ package net.lapidist.colony.client;
 import com.badlogic.gdx.Game;
 import net.lapidist.colony.client.core.io.Paths;
 import net.lapidist.colony.client.screens.MapScreen;
+import net.lapidist.colony.client.screens.MainMenuScreen;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.client.events.Events;
@@ -13,6 +14,18 @@ import java.io.IOException;
 public final class Colony extends Game {
 
     private GameClient client;
+
+    public void startGame() {
+        MapState state;
+        try {
+            client = new GameClient();
+            client.start();
+            state = client.getMapState();
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        setScreen(new MapScreen(state, client));
+    }
 
     @Override
     public void create() {
@@ -26,17 +39,7 @@ public final class Colony extends Game {
         // Dispatch events
         Events.dispatch(new GameInitEvent());
 
-        MapState state;
-        try {
-            client = new GameClient();
-            client.start();
-            state = client.getMapState();
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        // Finally, transition to the first screen
-        setScreen(new MapScreen(state, client));
+        setScreen(new MainMenuScreen(this));
     }
 
     @Override

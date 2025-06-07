@@ -36,21 +36,32 @@ public final class GameServer {
 
     // Increase buffers so the entire map can be serialized in one object
     private static final int BUFFER_SIZE = 65536;
-    private static final String SAVE_FILE_NAME = "autosave.dat";
+    private static final String DEFAULT_SAVE_NAME = "autosave";
+    private static final String AUTOSAVE_SUFFIX = "-autosave.dat";
     private static final long DEFAULT_INTERVAL_MS = 10 * 60 * 1000L;
     private static final int NAME_RANGE = 100000;
     private static final Logger LOGGER = LoggerFactory.getLogger(GameServer.class);
 
     private final Server server = new Server(BUFFER_SIZE, BUFFER_SIZE);
     private final long autosaveIntervalMs;
+    private final String saveName;
     private ScheduledExecutorService executor;
     private MapState mapState;
 
     public GameServer() {
-        this(DEFAULT_INTERVAL_MS);
+        this(DEFAULT_SAVE_NAME, DEFAULT_INTERVAL_MS);
     }
 
     public GameServer(final long autosaveIntervalMsToSet) {
+        this(DEFAULT_SAVE_NAME, autosaveIntervalMsToSet);
+    }
+
+    public GameServer(final String saveNameToSet) {
+        this(saveNameToSet, DEFAULT_INTERVAL_MS);
+    }
+
+    public GameServer(final String saveNameToSet, final long autosaveIntervalMsToSet) {
+        this.saveName = saveNameToSet;
         this.autosaveIntervalMs = autosaveIntervalMsToSet;
     }
 
@@ -58,13 +69,17 @@ public final class GameServer {
         registerClasses();
         Events.init(new EventSystem());
         Paths.createGameFoldersIfNotExists();
-        Path saveFile = Paths.getSaveFile(SAVE_FILE_NAME);
+        Path saveFile = Paths.getAutosave(saveName);
 
         if (Files.exists(saveFile)) {
             mapState = GameStateIO.load(saveFile);
             LOGGER.info("Loaded save file: {}", saveFile);
+            mapState.setSaveName(saveName);
+            mapState.setAutosaveName(saveName + AUTOSAVE_SUFFIX);
         } else {
             generateMap();
+            mapState.setSaveName(saveName);
+            mapState.setAutosaveName(saveName + AUTOSAVE_SUFFIX);
             GameStateIO.save(mapState, saveFile);
             LOGGER.info("Generated new map and saved to: {}", saveFile);
         }
@@ -158,7 +173,7 @@ public final class GameServer {
 
     private void autoSave() {
         try {
-            Path file = Paths.getSaveFile(SAVE_FILE_NAME);
+            Path file = Paths.getAutosave(saveName);
             GameStateIO.save(mapState, file);
             long size = Files.size(file);
             Events.dispatch(new AutosaveEvent(file, size));
@@ -171,7 +186,7 @@ public final class GameServer {
 
     private void saveOnShutdown() {
         try {
-            Path file = Paths.getSaveFile(SAVE_FILE_NAME);
+            Path file = Paths.getAutosave(saveName);
             GameStateIO.save(mapState, file);
             long size = Files.size(file);
             Events.dispatch(new ShutdownSaveEvent(file, size));

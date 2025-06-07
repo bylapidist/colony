@@ -25,7 +25,7 @@ public class GameServerSaveTest {
 
     @Before
     public void setUp() throws IOException {
-        Path saveFile = Paths.getSaveFile("autosave.dat");
+        Path saveFile = Paths.getAutosave("autosave");
         Files.deleteIfExists(saveFile);
         Paths.createGameFoldersIfNotExists();
     }
@@ -49,7 +49,7 @@ public class GameServerSaveTest {
         Thread.sleep(WAIT_MS);
         Events.update();
 
-        Path saveFile = Paths.getSaveFile("autosave.dat");
+        Path saveFile = Paths.getAutosave("autosave");
         assertTrue(Files.exists(saveFile));
         assertTrue(lastEvent != null);
         assertTrue(saveFile.equals(lastEvent.getLocation()));
@@ -66,7 +66,7 @@ public class GameServerSaveTest {
 
         server.stop();
 
-        Path saveFile = Paths.getSaveFile("autosave.dat");
+        Path saveFile = Paths.getAutosave("autosave");
         assertTrue(Files.exists(saveFile));
         assertTrue(shutdownEvent != null);
         assertTrue(saveFile.equals(shutdownEvent.getLocation()));
@@ -78,7 +78,7 @@ public class GameServerSaveTest {
         GameServer first = new GameServer(TEST_INTERVAL_MS);
         first.start();
         first.getMapState().getTiles().get(0).setTextureRef("changed");
-        GameStateIO.save(first.getMapState(), Paths.getSaveFile("autosave.dat"));
+        GameStateIO.save(first.getMapState(), Paths.getAutosave("autosave"));
         first.stop();
 
         GameServer second = new GameServer(TEST_INTERVAL_MS);
