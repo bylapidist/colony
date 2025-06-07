@@ -2,7 +2,6 @@ package net.lapidist.colony.client.systems;
 
 import com.artemis.BaseSystem;
 import com.artemis.Entity;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.client.entities.factories.TileFactory;
@@ -10,6 +9,7 @@ import net.lapidist.colony.client.entities.factories.BuildingFactory;
 import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
+import net.lapidist.colony.map.MapGenerator;
 
 public final class MapGenerationSystem extends BaseSystem {
 
@@ -29,25 +29,27 @@ public final class MapGenerationSystem extends BaseSystem {
         Entity map = world.createEntity();
         MapComponent mapComponent = new MapComponent();
 
-        for (int column = 0; column <= mapWidth; column++) {
-            for (int row = 0; row <= mapHeight; row++) {
-                tilesToSet.add(TileFactory.create(
-                        world,
-                        TileComponent.TileType.GRASS,
-                        getRandomTextureReference(),
-                        new Vector2(column, row),
-                        true,
-                        false
-                ));
-            }
+        var state = MapGenerator.generate(mapWidth, mapHeight);
+
+        for (var td : state.getTiles()) {
+            tilesToSet.add(TileFactory.create(
+                    world,
+                    TileComponent.TileType.valueOf(td.getTileType()),
+                    td.getTextureRef(),
+                    new Vector2(td.getX(), td.getY()),
+                    td.isPassable(),
+                    td.isSelected()
+            ));
         }
 
-        entitiesToSet.add(BuildingFactory.create(
-                world,
-                BuildingComponent.BuildingType.HOUSE,
-                "house0",
-                new Vector2(1, 1)
-        ));
+        for (var bd : state.getBuildings()) {
+            entitiesToSet.add(BuildingFactory.create(
+                    world,
+                    BuildingComponent.BuildingType.valueOf(bd.getBuildingType()),
+                    bd.getTextureRef(),
+                    new Vector2(bd.getX(), bd.getY())
+            ));
+        }
 
         mapComponent.setTiles(tilesToSet);
         mapComponent.setEntities(entitiesToSet);
@@ -59,8 +61,4 @@ public final class MapGenerationSystem extends BaseSystem {
         // map generation occurs once in initialize
     }
 
-    private String getRandomTextureReference() {
-        String[] textures = new String[]{"grass0", "dirt0"};
-        return textures[MathUtils.random(0, textures.length - 1)];
-    }
 }
