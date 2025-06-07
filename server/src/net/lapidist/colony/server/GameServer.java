@@ -15,7 +15,9 @@ public final class GameServer {
     public static final int TCP_PORT = 54555;
     public static final int UDP_PORT = 54777;
 
-    private final Server server = new Server();
+    // Increase buffers so the entire map can be serialized in one object
+    private static final int BUFFER_SIZE = 65536;
+    private final Server server = new Server(BUFFER_SIZE, BUFFER_SIZE);
     private MapState mapState;
 
     public void start() throws IOException {

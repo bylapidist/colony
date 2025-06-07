@@ -11,7 +11,9 @@ import net.lapidist.colony.server.GameServer;
 import java.io.IOException;
 
 public final class GameClient {
-    private final Client client = new Client();
+    // Increase buffers to handle large serialized map data
+    private static final int BUFFER_SIZE = 65536;
+    private final Client client = new Client(BUFFER_SIZE, BUFFER_SIZE);
     private MapState mapState;
     private static final int CONNECT_TIMEOUT = 5000;
     private static final int WAIT_TIME_MS = 10;
