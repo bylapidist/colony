@@ -199,14 +199,9 @@ public final class MinimapActor extends Actor implements Disposable {
         }
 
         if (cameraSystem != null) {
-            Vector2 bottomLeft = cameraSystem.worldCoordsFromCameraCoords(
-                    0,
-                    0
-            );
-            Vector2 topRight = cameraSystem.worldCoordsFromCameraCoords(
-                    cameraSystem.getViewport().getScreenWidth(),
-                    cameraSystem.getViewport().getScreenHeight()
-            );
+            com.badlogic.gdx.math.Rectangle view = cameraSystem.getViewBounds();
+            Vector2 bottomLeft = new Vector2(view.x, view.y);
+            Vector2 topRight = new Vector2(view.x + view.width, view.y + view.height);
 
             float clampedLeft = Math.max(0, bottomLeft.x);
             float clampedBottom = Math.max(0, bottomLeft.y);
