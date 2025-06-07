@@ -17,6 +17,18 @@ public final class Colony extends Game {
     private GameClient client;
     private GameServer server;
 
+    public void returnToMainMenu() {
+        if (client != null) {
+            client.stop();
+            client = null;
+        }
+        if (server != null) {
+            server.stop();
+            server = null;
+        }
+        setScreen(new MainMenuScreen(this));
+    }
+
     public void startGame(final String saveName) {
         MapState state;
         try {
@@ -31,7 +43,7 @@ public final class Colony extends Game {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-        setScreen(new MapScreen(state, client));
+        setScreen(new MapScreen(this, state, client));
     }
 
     public void startGame() {

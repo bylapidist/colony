@@ -38,7 +38,7 @@ public final class UISystem extends BaseSystem {
                 batch,
                 Gdx.graphics.getFramesPerSecond() + " FPS",
                 FPS_MARGIN,
-                Gdx.graphics.getHeight() - FPS_MARGIN
+                FPS_MARGIN
         );
         batch.end();
     }
