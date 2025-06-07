@@ -1,10 +1,8 @@
 package net.lapidist.colony.client.ui;
 
-import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.World;
-import com.artemis.utils.IntBag;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -91,12 +89,7 @@ public final class MinimapActor extends Actor implements Disposable {
         }
 
         if (map == null) {
-            IntBag maps = world.getAspectSubscriptionManager()
-                    .get(Aspect.all(MapComponent.class))
-                    .getEntities();
-            if (maps.size() > 0) {
-                map = world.getEntity(maps.get(0));
-            }
+            map = net.lapidist.colony.map.MapUtils.findMapEntity(world);
         }
     }
 
