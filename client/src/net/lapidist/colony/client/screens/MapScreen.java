@@ -9,10 +9,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import net.lapidist.colony.client.systems.*;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.client.network.GameClient;
+import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.components.state.MapState;
 import net.mostlyoriginal.api.event.common.EventSystem;
 import net.lapidist.colony.client.events.Events;
@@ -26,12 +30,15 @@ import net.lapidist.colony.client.ui.MinimapActor;
 
 public class MapScreen implements Screen {
 
+    private final Colony colony;
+
     private final World world;
     private final Stage stage;
     private final MinimapActor minimapActor;
     private static final float PADDING = 10f;
 
-    public MapScreen(final MapState state, final GameClient client) {
+    public MapScreen(final Colony colonyToSet, final MapState state, final GameClient client) {
+        this.colony = colonyToSet;
         stage = new Stage(new ScreenViewport());
         Skin skin = new Skin(Gdx.files.internal("skin/default.json"));
 
@@ -58,6 +65,13 @@ public class MapScreen implements Screen {
 
         TextButton menuButton = new TextButton("Menu", skin);
         minimapActor = new MinimapActor(world);
+
+        menuButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                colony.returnToMainMenu();
+            }
+        });
 
         table.add(menuButton).pad(PADDING).left().top();
         table.add(minimapActor).pad(PADDING).expandX().right().top();
