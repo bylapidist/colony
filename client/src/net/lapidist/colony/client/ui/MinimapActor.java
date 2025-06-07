@@ -47,7 +47,13 @@ public final class MinimapActor extends Actor implements Disposable {
             mapMapper = world.getMapper(MapComponent.class);
             tileMapper = world.getMapper(TileComponent.class);
             textureMapper = world.getMapper(TextureRegionReferenceComponent.class);
+        }
+
+        if (cameraSystem == null) {
             cameraSystem = world.getSystem(PlayerCameraSystem.class);
+        }
+
+        if (map == null) {
             IntBag maps = world.getAspectSubscriptionManager()
                     .get(Aspect.all(MapComponent.class))
                     .getEntities();
@@ -122,8 +128,8 @@ public final class MinimapActor extends Actor implements Disposable {
             float rectWidth = (topRight.x - bottomLeft.x) * scaleX;
             float rectHeight = (topRight.y - bottomLeft.y) * scaleY;
             float lineWidth = 2f;
-            Color old = batch.getColor();
-            batch.setColor(Color.RED);
+            Color old = new Color(batch.getColor());
+            batch.setColor(Color.WHITE);
             batch.draw(viewportPixel, rectX, rectY, rectWidth, lineWidth);
             batch.draw(viewportPixel, rectX, rectY + rectHeight - lineWidth, rectWidth, lineWidth);
             batch.draw(viewportPixel, rectX, rectY, lineWidth, rectHeight);
