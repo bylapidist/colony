@@ -109,7 +109,7 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
             return false;
         }
 
-        Vector2 worldCoords = cameraSystem.worldCoordsFromCameraCoords(x, Gdx.graphics.getHeight() - y);
+        Vector2 worldCoords = cameraSystem.screenCoordsToWorldCoords(x, y);
         Vector2 tileCoords = cameraSystem.worldCoordsToTileCoords(worldCoords);
 
         Array<Entity> tiles = mapMapper.get(map).getTiles();

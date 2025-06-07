@@ -63,6 +63,10 @@ public final class PlayerCameraSystem extends BaseSystem {
         return tmpVec2.set(tmpVec3.x, tmpVec3.y);
     }
 
+    public Vector2 screenCoordsToWorldCoords(final float screenX, final float screenY) {
+        return viewport.unproject(tmpVec2.set(screenX, screenY));
+    }
+
     public Vector2 tileCoordsToWorldCoords(final int x, final int y) {
         return new Vector2(
                 x * Constants.TILE_SIZE,
