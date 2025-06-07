@@ -22,22 +22,18 @@ import net.lapidist.colony.client.events.ResumeEvent;
 import net.lapidist.colony.client.events.HideEvent;
 import net.lapidist.colony.client.events.ShowEvent;
 import net.lapidist.colony.client.events.DisposeEvent;
+import net.lapidist.colony.client.ui.MinimapActor;
 
 public class MapScreen implements Screen {
 
     private final World world;
     private final Stage stage;
+    private final MinimapActor minimapActor;
     private static final float PADDING = 10f;
 
     public MapScreen(final MapState state, final GameClient client) {
         stage = new Stage(new ScreenViewport());
         Skin skin = new Skin(Gdx.files.internal("skin/default.json"));
-        Table table = new Table();
-        table.setFillParent(true);
-        table.top().left();
-        stage.addActor(table);
-        TextButton menuButton = new TextButton("Menu", skin);
-        table.add(menuButton).pad(PADDING);
 
         InputSystem inputSystem = new InputSystem(client);
         inputSystem.addProcessor(stage);
@@ -54,6 +50,17 @@ public class MapScreen implements Screen {
                 )
                 .build());
         Events.init(world.getSystem(EventSystem.class));
+
+        Table table = new Table();
+        table.setFillParent(true);
+        table.top();
+        stage.addActor(table);
+
+        TextButton menuButton = new TextButton("Menu", skin);
+        minimapActor = new MinimapActor(world);
+
+        table.add(menuButton).pad(PADDING).left().top();
+        table.add(minimapActor).pad(PADDING).expandX().right().top();
     }
 
     @Override
@@ -92,6 +99,7 @@ public class MapScreen implements Screen {
     public final void dispose() {
         Events.dispatch(new DisposeEvent());
         world.dispose();
+        minimapActor.dispose();
         stage.dispose();
     }
 }
