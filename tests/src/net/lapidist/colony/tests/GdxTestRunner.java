@@ -30,6 +30,7 @@ public class GdxTestRunner
                 new HeadlessApplicationConfiguration();
         new HeadlessApplication(this, config);
         Gdx.gl = mock(GL20.class);
+        Gdx.gl20 = Gdx.gl;
     }
 
     private void waitUntilInvokedInRenderMethod() {
