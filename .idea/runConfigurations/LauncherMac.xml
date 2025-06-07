@@ -3,9 +3,6 @@
     <option name="MAIN_CLASS_NAME" value="net.lapidist.colony.client.ClientLauncher" />
     <module name="colony.client.main" />
     <option name="VM_PARAMETERS" value="-XstartOnFirstThread" />
-    <envs>
-      <env name="OS_ACTIVITY_MODE" value="disable" />
-    </envs>
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/client/assets" />
     <method v="2">
       <option name="Make" enabled="true" />
