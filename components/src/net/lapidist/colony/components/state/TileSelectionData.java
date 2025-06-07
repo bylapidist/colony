@@ -1,5 +1,8 @@
 package net.lapidist.colony.components.state;
 
+import net.lapidist.colony.serialization.KryoType;
+
+@KryoType
 public final class TileSelectionData {
     private int x;
     private int y;

@@ -3,11 +3,10 @@ package net.lapidist.colony.client.network;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.server.GameServer;
+import net.lapidist.colony.serialization.SerializationRegistrar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,12 +47,7 @@ public final class GameClient {
     }
 
     private void registerClasses() {
-        client.getKryo().register(MapState.class);
-        client.getKryo().register(TileData.class);
-        client.getKryo().register(BuildingData.class);
-        client.getKryo().register(TileSelectionData.class);
-        client.getKryo().register(java.util.ArrayList.class);
-        client.getKryo().register(java.util.List.class);
+        SerializationRegistrar.register(client.getKryo());
     }
 
     public MapState getMapState() {
