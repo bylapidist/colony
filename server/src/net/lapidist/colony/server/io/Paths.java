@@ -12,6 +12,8 @@ import java.util.Locale;
 
 public final class Paths {
 
+    public static final String AUTOSAVE_SUFFIX = "-autosave.dat";
+
     private Paths() { }
 
     static final String GAME_FOLDER_MAC = System.getProperty("user.home") + "/.colony";
@@ -61,10 +63,32 @@ public final class Paths {
     }
 
     public static Path getAutosave(final String saveName) throws IOException {
-        return getSaveFile(saveName + "-autosave.dat");
+        return getSaveFile(saveName + AUTOSAVE_SUFFIX);
     }
 
     public static Path getLastAutosaveMarker() throws IOException {
         return getSaveFile("lastautosave.txt");
+    }
+
+    public static java.util.List<String> listAutosaves() throws IOException {
+        String os = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
+        String saveFolder;
+        if (os.contains("windows")) {
+            saveFolder = SAVE_FOLDER_WINDOWS;
+        } else {
+            saveFolder = SAVE_FOLDER_MAC;
+        }
+        java.nio.file.Path folder = java.nio.file.Paths.get(saveFolder);
+        if (!Files.isDirectory(folder)) {
+            return java.util.Collections.emptyList();
+        }
+        try (java.util.stream.Stream<Path> stream = Files.list(folder)) {
+            int suffixLength = AUTOSAVE_SUFFIX.length();
+            return stream
+                    .filter(p -> p.getFileName().toString().endsWith(AUTOSAVE_SUFFIX))
+                    .map(p -> p.getFileName().toString())
+                    .map(name -> name.substring(0, name.length() - suffixLength))
+                    .toList();
+        }
     }
 }

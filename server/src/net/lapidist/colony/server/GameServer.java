@@ -37,7 +37,7 @@ public final class GameServer {
     // Increase buffers so the entire map can be serialized in one object
     private static final int BUFFER_SIZE = 65536;
     private static final String DEFAULT_SAVE_NAME = "autosave";
-    private static final String AUTOSAVE_SUFFIX = "-autosave.dat";
+    private static final String AUTOSAVE_SUFFIX = Paths.AUTOSAVE_SUFFIX;
     private static final long DEFAULT_INTERVAL_MS = 10 * 60 * 1000L;
     private static final int NAME_RANGE = 100000;
     private static final Logger LOGGER = LoggerFactory.getLogger(GameServer.class);
@@ -83,6 +83,7 @@ public final class GameServer {
             GameStateIO.save(mapState, saveFile);
             LOGGER.info("Generated new map and saved to: {}", saveFile);
         }
+        Files.writeString(Paths.getLastAutosaveMarker(), saveName);
 
         server.start();
         LOGGER.info("Server started on TCP {} UDP {}", TCP_PORT, UDP_PORT);

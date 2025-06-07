@@ -10,6 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import net.lapidist.colony.client.Colony;
+import net.lapidist.colony.server.io.Paths;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public final class MainMenuScreen extends ScreenAdapter {
 
@@ -30,6 +35,20 @@ public final class MainMenuScreen extends ScreenAdapter {
         TextButton loadGameButton = new TextButton("Load Game", skin);
         TextButton exitButton = new TextButton("Exit", skin);
 
+        String lastSave = null;
+        boolean canContinue = false;
+        try {
+            Path marker = Paths.getLastAutosaveMarker();
+            if (Files.exists(marker)) {
+                lastSave = Files.readString(marker).trim();
+                canContinue = Files.exists(Paths.getAutosave(lastSave));
+            }
+        } catch (IOException e) {
+            // ignore missing last autosave marker
+        }
+
+        continueButton.setDisabled(!canContinue);
+
         table.add(continueButton).row();
         table.add(newGameButton).row();
         table.add(loadGameButton).row();
@@ -37,10 +56,27 @@ public final class MainMenuScreen extends ScreenAdapter {
 
         Gdx.input.setInputProcessor(stage);
 
+        final String last = lastSave;
         continueButton.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                colony.startGame();
+                if (!continueButton.isDisabled()) {
+                    colony.startGame(last);
+                }
+            }
+        });
+
+        newGameButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                colony.setScreen(new NewGameScreen(colony));
+            }
+        });
+
+        loadGameButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                colony.setScreen(new LoadGameScreen(colony));
             }
         });
 
@@ -50,7 +86,6 @@ public final class MainMenuScreen extends ScreenAdapter {
                 Gdx.app.exit();
             }
         });
-        // Additional button functionality can be implemented here
     }
 
     @Override
