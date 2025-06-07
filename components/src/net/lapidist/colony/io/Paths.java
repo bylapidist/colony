@@ -1,25 +1,29 @@
-package net.lapidist.colony.server.io;
+package net.lapidist.colony.io;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Stream;
 
 /**
- * Utility methods for resolving save locations. Java NIO is used instead of
- * LibGDX because the server runs without an initialized Gdx environment.
+ * Shared utility methods for resolving save locations.
+ * Uses Java NIO so that both the client and server can access
+ * the same directories without relying on LibGDX specific APIs.
  */
-
 public final class Paths {
 
     public static final String AUTOSAVE_SUFFIX = "-autosave.dat";
 
-    private Paths() { }
+    private static final String GAME_FOLDER_MAC = System.getProperty("user.home") + "/.colony";
+    private static final String GAME_FOLDER_WINDOWS = System.getenv("APPDATA") + "\\.colony";
+    private static final String SAVE_FOLDER_MAC = GAME_FOLDER_MAC + "/saves";
+    private static final String SAVE_FOLDER_WINDOWS = GAME_FOLDER_WINDOWS + "\\saves";
 
-    static final String GAME_FOLDER_MAC = System.getProperty("user.home") + "/.colony";
-    static final String GAME_FOLDER_WINDOWS = System.getenv("APPDATA") + "\\.colony";
-    static final String SAVE_FOLDER_MAC = GAME_FOLDER_MAC + "/saves";
-    static final String SAVE_FOLDER_WINDOWS = GAME_FOLDER_WINDOWS + "\\saves";
+    private Paths() {
+    }
 
     public static void createGameFoldersIfNotExists() throws IOException {
         String os = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
@@ -34,13 +38,12 @@ public final class Paths {
             saveFolderPath = SAVE_FOLDER_MAC;
         }
 
-        // Using java.nio.Paths for cross-platform path resolution
-        java.nio.file.Path gameFolder = java.nio.file.Paths.get(gameFolderPath);
+        Path gameFolder = java.nio.file.Paths.get(gameFolderPath);
         if (!Files.isDirectory(gameFolder)) {
             Files.createDirectories(gameFolder);
         }
 
-        java.nio.file.Path saveFolder = java.nio.file.Paths.get(saveFolderPath);
+        Path saveFolder = java.nio.file.Paths.get(saveFolderPath);
         if (!Files.isDirectory(saveFolder)) {
             Files.createDirectories(saveFolder);
         }
@@ -54,7 +57,6 @@ public final class Paths {
         } else {
             saveFolder = SAVE_FOLDER_MAC;
         }
-        // Path resolves directly to the OS specific location
         return java.nio.file.Paths.get(saveFolder, fileName);
     }
 
@@ -70,7 +72,7 @@ public final class Paths {
         return getSaveFile("lastautosave.txt");
     }
 
-    public static java.util.List<String> listAutosaves() throws IOException {
+    public static List<String> listAutosaves() throws IOException {
         String os = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
         String saveFolder;
         if (os.contains("windows")) {
@@ -78,11 +80,11 @@ public final class Paths {
         } else {
             saveFolder = SAVE_FOLDER_MAC;
         }
-        java.nio.file.Path folder = java.nio.file.Paths.get(saveFolder);
+        Path folder = java.nio.file.Paths.get(saveFolder);
         if (!Files.isDirectory(folder)) {
-            return java.util.Collections.emptyList();
+            return Collections.emptyList();
         }
-        try (java.util.stream.Stream<Path> stream = Files.list(folder)) {
+        try (Stream<Path> stream = Files.list(folder)) {
             int suffixLength = AUTOSAVE_SUFFIX.length();
             return stream
                     .filter(p -> p.getFileName().toString().endsWith(AUTOSAVE_SUFFIX))
