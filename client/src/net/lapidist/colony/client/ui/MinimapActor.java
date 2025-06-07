@@ -51,6 +51,13 @@ public final class MinimapActor extends Actor implements Disposable {
     private SpriteBatch cacheBatch;
     private boolean cacheInvalidated;
 
+    /**
+     * Forces the minimap tiles to be redrawn the next time this actor is drawn.
+     */
+    public void invalidateCache() {
+        cacheInvalidated = true;
+    }
+
     private void calculateMapDimensions() {
         mapWidthWorld = 0;
         mapHeightWorld = 0;
