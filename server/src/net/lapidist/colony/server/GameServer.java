@@ -5,7 +5,6 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.config.ColonyConfig;
-import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TileSelectionData;
@@ -16,6 +15,7 @@ import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.serialization.KryoRegistry;
 import net.lapidist.colony.server.io.GameStateIO;
 import net.lapidist.colony.io.Paths;
+import net.lapidist.colony.map.MapGenerator;
 import net.mostlyoriginal.api.event.common.EventSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 // Using java.nio here keeps the server independent from LibGDX's FileHandle API
 // because the server module runs headless without the Gdx runtime.
-import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -41,7 +40,6 @@ public final class GameServer {
     private static final String DEFAULT_SAVE_NAME = ColonyConfig.get().getString("game.defaultSaveName");
     private static final String AUTOSAVE_SUFFIX = Paths.AUTOSAVE_SUFFIX;
     private static final long DEFAULT_INTERVAL_MS = ColonyConfig.get().getLong("game.autosaveIntervalMs");
-    private static final int NAME_RANGE = 100000;
     private static final Logger LOGGER = LoggerFactory.getLogger(GameServer.class);
 
     private final Server server = new Server(BUFFER_SIZE, BUFFER_SIZE);
@@ -117,29 +115,7 @@ public final class GameServer {
     }
 
     private void generateMap() {
-        mapState = new MapState();
-        Random random = new Random();
-        mapState.setName("map-" + random.nextInt(NAME_RANGE));
-        mapState.setDescription("Generated map");
-        String[] textures = new String[]{"grass0", "dirt0"};
-        for (int x = 0; x <= GameConstants.MAP_WIDTH; x++) {
-            for (int y = 0; y <= GameConstants.MAP_HEIGHT; y++) {
-                TileData tile = new TileData();
-                tile.setX(x);
-                tile.setY(y);
-                tile.setTileType("GRASS");
-                tile.setTextureRef(textures[random.nextInt(textures.length)]);
-                tile.setPassable(true);
-                tile.setSelected(false);
-                mapState.getTiles().add(tile);
-            }
-        }
-        BuildingData building = new BuildingData();
-        building.setX(1);
-        building.setY(1);
-        building.setBuildingType("HOUSE");
-        building.setTextureRef("house0");
-        mapState.getBuildings().add(building);
+        mapState = MapGenerator.generate(GameConstants.MAP_WIDTH, GameConstants.MAP_HEIGHT);
     }
 
     public MapState getMapState() {
