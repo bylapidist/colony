@@ -11,6 +11,15 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import net.lapidist.colony.client.core.Constants;
+import net.lapidist.colony.client.network.GameClient;
+import net.lapidist.colony.components.maps.MapComponent;
+import net.lapidist.colony.components.maps.TileComponent;
+import net.lapidist.colony.components.state.TileSelectionData;
+import com.artemis.Aspect;
+import com.artemis.ComponentMapper;
+import com.artemis.Entity;
+import com.artemis.utils.IntBag;
+import com.badlogic.gdx.utils.Array;
 
 public final class InputSystem extends BaseSystem implements InputProcessor, GestureListener {
 
@@ -21,7 +30,14 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
 
     private PlayerCameraSystem cameraSystem;
 
-    public InputSystem() {
+    private final GameClient client;
+
+    private Entity map;
+    private ComponentMapper<MapComponent> mapMapper;
+    private ComponentMapper<TileComponent> tileMapper;
+
+    public InputSystem(final GameClient clientToSet) {
+        this.client = clientToSet;
         final InputMultiplexer inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(new GestureDetector(this));
         inputMultiplexer.addProcessor(this);
@@ -31,6 +47,14 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
     @Override
     public void initialize() {
         cameraSystem = world.getSystem(PlayerCameraSystem.class);
+        mapMapper = world.getMapper(MapComponent.class);
+        tileMapper = world.getMapper(TileComponent.class);
+        IntBag maps = world.getAspectSubscriptionManager()
+                .get(Aspect.all(MapComponent.class))
+                .getEntities();
+        if (maps.size() > 0) {
+            map = world.getEntity(maps.get(0));
+        }
     }
 
     @Override
@@ -81,6 +105,30 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
 
     @Override
     public boolean tap(final float x, final float y, final int count, final int button) {
+        if (map == null) {
+            return false;
+        }
+
+        Vector2 worldCoords = cameraSystem.worldCoordsFromCameraCoords(x, Gdx.graphics.getHeight() - y);
+        Vector2 tileCoords = cameraSystem.worldCoordsToTileCoords(worldCoords);
+
+        Array<Entity> tiles = mapMapper.get(map).getTiles();
+        for (int i = 0; i < tiles.size; i++) {
+            Entity tile = tiles.get(i);
+            TileComponent tileComponent = tileMapper.get(tile);
+            if (tileComponent.getX() == (int) tileCoords.x && tileComponent.getY() == (int) tileCoords.y) {
+                boolean newState = !tileComponent.isSelected();
+                tileComponent.setSelected(newState);
+
+                TileSelectionData msg = new TileSelectionData();
+                msg.setX(tileComponent.getX());
+                msg.setY(tileComponent.getY());
+                msg.setSelected(newState);
+                client.sendTileSelection(msg);
+                return true;
+            }
+        }
+
         return false;
     }
 

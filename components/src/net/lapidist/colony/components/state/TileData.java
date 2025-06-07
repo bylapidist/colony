@@ -6,6 +6,7 @@ public final class TileData {
     private String tileType;
     private String textureRef;
     private boolean passable;
+    private boolean selected;
 
     public int getX() {
         return x;
@@ -43,7 +44,15 @@ public final class TileData {
         return passable;
     }
 
+    public boolean isSelected() {
+        return selected;
+    }
+
     public void setPassable(final boolean passableToSet) {
         this.passable = passableToSet;
+    }
+
+    public void setSelected(final boolean selectedToSet) {
+        this.selected = selectedToSet;
     }
 }

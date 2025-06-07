@@ -30,6 +30,8 @@ public class TileComponent extends Component {
 
     private boolean passable;
 
+    private boolean selected;
+
     private TileType tileType;
 
     public final int getX() {
@@ -50,6 +52,10 @@ public class TileComponent extends Component {
 
     public final boolean isPassable() {
         return passable;
+    }
+
+    public final boolean isSelected() {
+        return selected;
     }
 
     public final TileType getTileType() {
@@ -74,6 +80,10 @@ public class TileComponent extends Component {
 
     public final void setPassable(final boolean passableToSet) {
         this.passable = passableToSet;
+    }
+
+    public final void setSelected(final boolean selectedToSet) {
+        this.selected = selectedToSet;
     }
 
     public final void setTileType(final TileType tileTypeToSet) {

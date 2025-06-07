@@ -17,7 +17,8 @@ public final class TileFactory {
             final TileComponent.TileType tileType,
             final String resourceRef,
             final Vector2 coords,
-            final boolean passable
+            final boolean passable,
+            final boolean selected
     ) {
         Entity entity = world.createEntity();
         TileComponent tileComponent = new TileComponent();
@@ -28,6 +29,7 @@ public final class TileFactory {
         tileComponent.setHeight(Constants.TILE_SIZE);
         tileComponent.setWidth(Constants.TILE_SIZE);
         tileComponent.setPassable(passable);
+        tileComponent.setSelected(selected);
         tileComponent.setX((int) coords.x);
         tileComponent.setY((int) coords.y);
 

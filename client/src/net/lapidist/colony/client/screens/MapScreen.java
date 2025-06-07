@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import net.lapidist.colony.client.systems.*;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
+import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.state.MapState;
 import net.mostlyoriginal.api.event.common.EventSystem;
 import net.lapidist.colony.client.events.Events;
@@ -20,14 +21,14 @@ public class MapScreen implements Screen {
 
     private final World world;
 
-    public MapScreen(final MapState state) {
+    public MapScreen(final MapState state, final GameClient client) {
         world = new World(new WorldConfigurationBuilder()
                 .with(
                         new EventSystem(),
                         new ClearScreenSystem(Color.BLACK),
                         new MapLoadSystem(state),
                         new PlayerCameraSystem(),
-                        new InputSystem(),
+                        new InputSystem(client),
                         new MapRenderSystem(),
                         new UISystem()
                 )

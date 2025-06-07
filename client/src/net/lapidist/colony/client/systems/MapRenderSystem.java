@@ -86,6 +86,16 @@ public final class MapRenderSystem extends BaseSystem {
                         worldCoords.x,
                         worldCoords.y
                 );
+                if (tileMapper.has(entity)) {
+                    TileComponent tile = tileMapper.get(entity);
+                    if (tile.isSelected()) {
+                        spriteBatch.draw(
+                                resourceLoader.getTextureRegions().get("hoveredTile0"),
+                                worldCoords.x,
+                                worldCoords.y
+                        );
+                    }
+                }
             }
         }
     }

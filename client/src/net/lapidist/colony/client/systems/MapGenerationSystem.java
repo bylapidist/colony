@@ -36,7 +36,8 @@ public final class MapGenerationSystem extends BaseSystem {
                         TileComponent.TileType.GRASS,
                         getRandomTextureReference(),
                         new Vector2(column, row),
-                        true
+                        true,
+                        false
                 ));
             }
         }

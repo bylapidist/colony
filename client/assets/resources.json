@@ -20,5 +20,12 @@
       "name": "house0",
       "bounds": "0 0 32 32"
     }]
+  }, {
+    "name": "hoveredTile",
+    "filePath": "textures/hoveredTile.png",
+    "regions": [{
+      "name": "hoveredTile0",
+      "bounds": "0 0 32 32"
+    }]
   }]
 }

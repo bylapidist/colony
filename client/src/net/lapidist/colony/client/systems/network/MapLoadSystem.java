@@ -33,7 +33,8 @@ public final class MapLoadSystem extends BaseSystem {
                     TileComponent.TileType.valueOf(td.getTileType()),
                     td.getTextureRef(),
                     new Vector2(td.getX(), td.getY()),
-                    td.isPassable()
+                    td.isPassable(),
+                    td.isSelected()
             ));
         }
 
