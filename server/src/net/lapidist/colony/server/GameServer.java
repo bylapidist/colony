@@ -15,6 +15,8 @@ import net.lapidist.colony.server.events.Events;
 import net.lapidist.colony.server.io.GameStateIO;
 import net.lapidist.colony.server.io.Paths;
 import net.mostlyoriginal.api.event.common.EventSystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -37,6 +39,7 @@ public final class GameServer {
     private static final String SAVE_FILE_NAME = "autosave.dat";
     private static final long DEFAULT_INTERVAL_MS = 10 * 60 * 1000L;
     private static final int NAME_RANGE = 100000;
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameServer.class);
 
     private final Server server = new Server(BUFFER_SIZE, BUFFER_SIZE);
     private final long autosaveIntervalMs;
@@ -59,43 +62,22 @@ public final class GameServer {
 
         if (Files.exists(saveFile)) {
             mapState = GameStateIO.load(saveFile);
-            System.out.printf(
-                    "[%s] Loaded save file: %s%n",
-                    GameServer.class.getSimpleName(),
-                    saveFile
-            );
+            LOGGER.info("Loaded save file: {}", saveFile);
         } else {
             generateMap();
             GameStateIO.save(mapState, saveFile);
-            System.out.printf(
-                    "[%s] Generated new map and saved to: %s%n",
-                    GameServer.class.getSimpleName(),
-                    saveFile
-            );
+            LOGGER.info("Generated new map and saved to: {}", saveFile);
         }
 
         server.start();
-        System.out.printf(
-                "[%s] Server started on TCP %d UDP %d%n",
-                GameServer.class.getSimpleName(),
-                TCP_PORT,
-                UDP_PORT
-        );
+        LOGGER.info("Server started on TCP {} UDP {}", TCP_PORT, UDP_PORT);
         server.bind(TCP_PORT, UDP_PORT);
         server.addListener(new Listener() {
             @Override
             public void connected(final Connection connection) {
-                System.out.printf(
-                        "[%s] Connection established: %s%n",
-                        GameServer.class.getSimpleName(),
-                        connection.getID()
-                );
+                LOGGER.info("Connection established: {}", connection.getID());
                 connection.sendTCP(mapState);
-                System.out.printf(
-                        "[%s] Sent map state to connection %s%n",
-                        GameServer.class.getSimpleName(),
-                        connection.getID()
-                );
+                LOGGER.info("Sent map state to connection {}", connection.getID());
             }
 
             @Override
@@ -161,10 +143,7 @@ public final class GameServer {
         }
         saveOnShutdown();
         server.stop();
-        System.out.printf(
-                "[%s] Server stopped%n",
-                GameServer.class.getSimpleName()
-        );
+        LOGGER.info("Server stopped");
         Events.dispose();
     }
 
@@ -184,12 +163,7 @@ public final class GameServer {
             long size = Files.size(file);
             Events.dispatch(new AutosaveEvent(file, size));
             Events.update();
-            System.out.printf(
-                    "[%s] Autosaved game state to %s (%d bytes)%n",
-                    GameServer.class.getSimpleName(),
-                    file,
-                    size
-            );
+            LOGGER.info("Autosaved game state to {} ({} bytes)", file, size);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -202,12 +176,7 @@ public final class GameServer {
             long size = Files.size(file);
             Events.dispatch(new ShutdownSaveEvent(file, size));
             Events.update();
-            System.out.printf(
-                    "[%s] Saved game state to %s (%d bytes) on shutdown%n",
-                    GameServer.class.getSimpleName(),
-                    file,
-                    size
-            );
+            LOGGER.info("Saved game state to {} ({} bytes) on shutdown", file, size);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -10,10 +10,14 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import net.lapidist.colony.client.core.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 public class ResourceLoader implements Disposable {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ResourceLoader.class);
 
     private static final int NUM_BOUNDS = 4;
     private static final int BOUND_X = 0;
@@ -59,9 +63,8 @@ public class ResourceLoader implements Disposable {
         );
 
         if (Constants.DEBUG) {
-            System.out.printf(
-                    "[%s] ResourceConfig loaded from \"%s\"\n%s\n",
-                    ResourceLoader.class.getSimpleName(),
+            LOGGER.debug(
+                    "ResourceConfig loaded from \"{}\"\n{}",
                     resourceConfigPathToSet,
                     resourceConfigJson
             );
@@ -112,9 +115,8 @@ public class ResourceLoader implements Disposable {
                 );
 
                 if (Constants.DEBUG) {
-                    System.out.printf(
-                            "[%s] (%s:%s:%s) TextureRegion loaded from \"%s\"\n",
-                            ResourceLoader.class.getSimpleName(),
+                    LOGGER.debug(
+                            "({}:{}:{}) TextureRegion loaded from \"{}\"",
                             image.getName(),
                             region.getName(),
                             region.getBounds(),

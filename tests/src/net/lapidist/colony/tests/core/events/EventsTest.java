@@ -11,8 +11,11 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
+import java.util.List;
+import org.slf4j.LoggerFactory;
 
 @RunWith(GdxTestRunner.class)
 public class EventsTest {
@@ -56,22 +59,19 @@ public class EventsTest {
 
     @Test
     public void testDispatchLogsEventString() {
-        final ByteArrayOutputStream out = new ByteArrayOutputStream();
-        final PrintStream original = System.out;
-        System.setOut(new PrintStream(out));
+        Logger logger = (Logger) LoggerFactory.getLogger(Events.class);
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
+
         PauseEvent event = new PauseEvent();
-        try {
-            Events.dispatch(event);
-            Events.update();
-        } finally {
-            System.setOut(original);
-        }
-        String expected = String.format(
-                "[%s] Dispatched event: %s%n",
-                Events.class.getSimpleName(),
-                event.toString()
-        );
-        assertEquals(expected, out.toString());
+        Events.dispatch(event);
+        Events.update();
+
+        logger.detachAppender(appender);
+        List<ILoggingEvent> logs = appender.list;
+        assertEquals(1, logs.size());
+        assertEquals("Dispatched event: " + event.toString(), logs.get(0).getFormattedMessage());
     }
 
     @Test
