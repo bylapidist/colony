@@ -9,6 +9,7 @@ import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TileSelectionData;
+import net.lapidist.colony.serialization.SerializationRegistrar;
 import net.lapidist.colony.server.events.TileSelectionEvent;
 import net.lapidist.colony.server.events.AutosaveEvent;
 import net.lapidist.colony.server.events.ShutdownSaveEvent;
@@ -116,12 +117,7 @@ public final class GameServer {
     }
 
     private void registerClasses() {
-        server.getKryo().register(MapState.class);
-        server.getKryo().register(TileData.class);
-        server.getKryo().register(BuildingData.class);
-        server.getKryo().register(TileSelectionData.class);
-        server.getKryo().register(java.util.ArrayList.class);
-        server.getKryo().register(java.util.List.class);
+        SerializationRegistrar.register(server.getKryo());
     }
 
     private void generateMap() {

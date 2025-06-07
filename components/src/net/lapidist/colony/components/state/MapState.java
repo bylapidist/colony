@@ -1,9 +1,12 @@
 package net.lapidist.colony.components.state;
 
+import net.lapidist.colony.serialization.KryoType;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@KryoType
 public final class MapState {
     public static final int CURRENT_VERSION = 2;
 
