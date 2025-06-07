@@ -1,3 +1,5 @@
+apply plugin: 'application'
+
 dependencies {
     implementation project(":components")
     implementation project(":server")
@@ -20,6 +22,10 @@ sourceSets {
     main {
         java.srcDirs = ["src/"]
     }
+}
+
+application {
+    mainClass = 'net.lapidist.colony.client.ClientLauncher'
 }
 
 eclipse.project.name = "$appName-client"
