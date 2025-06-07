@@ -1,6 +1,11 @@
 package net.lapidist.colony.components.state;
 
-public final class TileData {
+import java.io.Serial;
+import java.io.Serializable;
+
+public final class TileData implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private int x;
     private int y;
     private String tileType;

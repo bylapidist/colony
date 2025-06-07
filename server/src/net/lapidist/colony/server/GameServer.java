@@ -3,13 +3,14 @@ package net.lapidist.colony.server;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import net.lapidist.colony.components.GameConstants;
-import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.BuildingData;
+import net.lapidist.colony.server.persistence.JavaGameStateSerializer;
+import net.lapidist.colony.server.persistence.MapStateManager;
+import net.lapidist.colony.server.persistence.SavePaths;
 
 import java.io.IOException;
-import java.util.Random;
 
 public final class GameServer {
     public static final int TCP_PORT = 54555;
@@ -24,7 +25,12 @@ public final class GameServer {
         registerClasses();
         server.start();
         server.bind(TCP_PORT, UDP_PORT);
-        generateMap();
+        SavePaths.ensureDirectories();
+        MapStateManager manager = new MapStateManager(
+                new JavaGameStateSerializer<>(),
+                SavePaths.getSaveFile()
+        );
+        mapState = manager.loadOrCreate();
         server.addListener(new Listener() {
             @Override
             public void connected(final Connection connection) {
@@ -41,26 +47,4 @@ public final class GameServer {
         server.getKryo().register(java.util.List.class);
     }
 
-    private void generateMap() {
-        mapState = new MapState();
-        Random random = new Random();
-        String[] textures = new String[]{"grass0", "dirt0"};
-        for (int x = 0; x <= GameConstants.MAP_WIDTH; x++) {
-            for (int y = 0; y <= GameConstants.MAP_HEIGHT; y++) {
-                TileData tile = new TileData();
-                tile.setX(x);
-                tile.setY(y);
-                tile.setTileType("GRASS");
-                tile.setTextureRef(textures[random.nextInt(textures.length)]);
-                tile.setPassable(true);
-                mapState.getTiles().add(tile);
-            }
-        }
-        BuildingData building = new BuildingData();
-        building.setX(1);
-        building.setY(1);
-        building.setBuildingType("HOUSE");
-        building.setTextureRef("house0");
-        mapState.getBuildings().add(building);
-    }
 }
