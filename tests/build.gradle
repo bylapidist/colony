@@ -1,7 +1,6 @@
 dependencies {
     implementation project(":client")
     implementation project(":server")
-    implementation project(":components")
     implementation project(":core")
     implementation "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
     implementation 'com.esotericsoftware:kryonet:2.22.0-RC1'

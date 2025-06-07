@@ -6,20 +6,19 @@ entity component system. The code base is organised as a multi-module Gradle pro
 engine components, game logic and tests can be developed independently.
 
 ## Project structure
-The repository is split into five Gradle modules:
+The repository is split into four Gradle modules:
 
-- **components** – Shared code such as ECS components, constants and I/O helpers.
-- **core** – Cross-platform game logic, event helpers and Kryo serializers used by the other modules.
-- **client** – Desktop client using LibGDX. This module contains the game loop, rendering logic,
+ - **core** – Shared ECS components, constants, cross-platform game logic and Kryo serializers.
+ - **client** – Desktop client using LibGDX. This module contains the game loop, rendering logic,
   UI classes and networking code to communicate with the server.
-- **server** – Headless game server. It exposes networking services using Kryonet and runs the
+ - **server** – Headless game server. It exposes networking services using Kryonet and runs the
   same ECS logic as the client to keep game state in sync.
-- **tests** – JUnit tests and a custom `GdxTestRunner` that boots a headless LibGDX environment
+ - **tests** – JUnit tests and a custom `GdxTestRunner` that boots a headless LibGDX environment
   so game systems can be tested without a graphical context.
 
 Each module keeps its source under `src/` with all packages rooted at
-`net.lapidist.colony`. Shared constants and configuration files live in the
-`components` module and are imported by both the client and server.
+`net.lapidist.colony`. Shared constants and configuration files now live in the
+`core` module and are imported by both the client and server.
 
 ## Building and testing
 Java 21 toolchains are configured via the Gradle wrapper. To work on the project run the
@@ -45,7 +44,7 @@ Both the client and dedicated server can be started directly from Gradle:
 ```
 
 Configuration files and save data are written to a platform specific directory under the
-user's home folder. See `components/src/net/lapidist/colony/io/Paths.java` for the
+user's home folder. See `core/src/net/lapidist/colony/io/Paths.java` for the
 exact locations.
 
 ## Coding style
