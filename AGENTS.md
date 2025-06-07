@@ -17,6 +17,8 @@ The project uses Java 21 toolchains and standard Gradle tasks. No additional too
 
 Semantic Release automatically increments versions and generates GitHub release notes from commit messages. Provide a concise description of your changes in the PR body so release notes remain meaningful.
 
+When changing or adding new functionality, ensure it has adequate test coverage.
+
 If any command fails, fix the issues before committing.
 
 ## Commit Messages
