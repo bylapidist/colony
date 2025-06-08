@@ -1,0 +1,49 @@
+package net.lapidist.colony.tests.server;
+
+import net.lapidist.colony.chat.ChatMessage;
+import net.lapidist.colony.client.network.GameClient;
+import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.server.GameServer;
+import net.lapidist.colony.server.GameServerConfig;
+import net.lapidist.colony.server.events.TileSelectionEvent;
+import net.lapidist.colony.core.events.Events;
+import net.mostlyoriginal.api.event.common.Subscribe;
+import org.junit.Test;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.Assert.assertTrue;
+
+public class GameServerChatCommandTest {
+
+    private boolean handled;
+    private static final int WAIT_MS = 100;
+
+    @Subscribe
+    private void onTileSelection(final TileSelectionEvent event) {
+        handled = true;
+    }
+
+    @Test
+    public void chatCommandSelectsTile() throws Exception {
+        GameServer server = new GameServer(GameServerConfig.builder().build());
+        server.start();
+        Events.getInstance().registerEvents(this);
+
+        GameClient client = new GameClient();
+        CountDownLatch latch = new CountDownLatch(1);
+        client.start(state -> latch.countDown());
+        latch.await(1, TimeUnit.SECONDS);
+
+        client.sendChatMessage(new ChatMessage("/select 0 0 true"));
+        Thread.sleep(WAIT_MS);
+        Events.update();
+
+        assertTrue(server.getMapState().tiles().get(new TilePos(0, 0)).selected());
+        assertTrue(handled);
+
+        client.stop();
+        server.stop();
+    }
+}
