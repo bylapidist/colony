@@ -5,10 +5,9 @@ package net.lapidist.colony.io;
  */
 public final class UnixPathService extends AbstractPathService {
 
-    private static final String GAME_FOLDER_UNIX = System.getProperty("user.home") + "/.colony";
-
     @Override
     protected String getGameFolderPath() {
-        return GAME_FOLDER_UNIX;
+        String home = System.getProperty("user.home");
+        return java.nio.file.Paths.get(home, ".colony").toString();
     }
 }
