@@ -10,6 +10,9 @@ import net.lapidist.colony.network.MessageHandler;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.map.MapGenerator;
 import net.lapidist.colony.server.handlers.TileSelectionMessageHandler;
+import net.lapidist.colony.server.commands.CommandBus;
+import net.lapidist.colony.server.commands.CommandHandler;
+import net.lapidist.colony.server.commands.TileSelectionCommandHandler;
 import net.lapidist.colony.server.services.AutosaveService;
 import net.lapidist.colony.server.services.MapService;
 import net.lapidist.colony.server.services.NetworkService;
@@ -36,21 +39,32 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     private AutosaveService autosaveService;
     private MapService mapService;
     private NetworkService networkService;
+    private CommandBus commandBus;
     private MapState mapState;
     private Iterable<MessageHandler<?>> handlers;
+    private Iterable<CommandHandler<?>> commandHandlers;
 
     public GameServer(final GameServerConfig config) {
-        this(config, null);
+        this(config, null, null);
     }
 
-    public GameServer(final GameServerConfig config, final Iterable<MessageHandler<?>> handlersToUse) {
+    public GameServer(final GameServerConfig config,
+                      final Iterable<MessageHandler<?>> handlersToUse) {
+        this(config, handlersToUse, null);
+    }
+
+    public GameServer(final GameServerConfig config,
+                      final Iterable<MessageHandler<?>> handlersToUse,
+                      final Iterable<CommandHandler<?>> commandHandlersToUse) {
         this.saveName = config.getSaveName();
         this.autosaveInterval = config.getAutosaveInterval();
         this.mapGenerator = config.getMapGenerator();
         this.handlers = handlersToUse;
+        this.commandHandlers = commandHandlersToUse;
         this.mapService = new MapService(mapGenerator, saveName);
         this.networkService = new NetworkService(server, TCP_PORT, UDP_PORT);
         this.autosaveService = new AutosaveService(autosaveInterval, saveName, () -> mapState);
+        this.commandBus = new CommandBus();
     }
 
     @Override
@@ -61,9 +75,17 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
 
         mapState = mapService.load();
         networkService.start(mapState, this::dispatch);
+
+        if (commandHandlers == null) {
+            commandHandlers = java.util.List.of(
+                    new TileSelectionCommandHandler(() -> mapState, networkService)
+            );
+        }
+        commandBus.registerHandlers(commandHandlers);
+
         if (handlers == null) {
             handlers = java.util.List.of(
-                    new TileSelectionMessageHandler(() -> mapState, server)
+                    new TileSelectionMessageHandler(commandBus)
             );
         }
         registerHandlers(handlers);
@@ -76,7 +98,7 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
 
     @Override
     public void send(final Object message) {
-        server.sendToAllTCP(message);
+        networkService.send(message);
     }
 
 
