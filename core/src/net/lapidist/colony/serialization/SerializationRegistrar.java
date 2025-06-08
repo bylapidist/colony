@@ -1,6 +1,7 @@
 package net.lapidist.colony.serialization;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.serializers.RecordSerializer;
 import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
@@ -21,7 +22,11 @@ public final class SerializationRegistrar {
      */
     public static void register(final Kryo kryo) {
         for (Class<?> type : REGISTERED_TYPES) {
-            kryo.register(type);
+            if (type.isRecord()) {
+                kryo.register(type, new RecordSerializer(type));
+            } else {
+                kryo.register(type);
+            }
         }
         kryo.register(java.util.ArrayList.class);
         kryo.register(java.util.List.class);
