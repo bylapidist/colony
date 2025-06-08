@@ -3,26 +3,20 @@ package net.lapidist.colony.client.ui;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.World;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.SpriteCache;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.client.core.Constants;
 import net.lapidist.colony.client.core.io.FileLocation;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
-import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+// Helper classes to reduce branching
 
 import java.io.IOException;
 
@@ -35,7 +29,7 @@ public final class MinimapActor extends Actor implements Disposable {
 
     private final World world;
     private final ResourceLoader resourceLoader = new ResourceLoader();
-    private ShapeRenderer shapeRenderer;
+    private ViewportOverlayRenderer overlayRenderer;
     private ComponentMapper<MapComponent> mapMapper;
     private ComponentMapper<TileComponent> tileMapper;
     private ComponentMapper<TextureRegionReferenceComponent> textureMapper;
@@ -43,10 +37,7 @@ public final class MinimapActor extends Actor implements Disposable {
     private PlayerCameraSystem cameraSystem;
     private float mapWidthWorld;
     private float mapHeightWorld;
-    private SpriteCache spriteCache;
-    private int cacheId;
-    private int cacheWidth;
-    private int cacheHeight;
+    private final MinimapCache cache = new MinimapCache();
     private boolean cacheInvalidated;
 
     /**
@@ -54,6 +45,7 @@ public final class MinimapActor extends Actor implements Disposable {
      */
     public void invalidateCache() {
         cacheInvalidated = true;
+        cache.invalidate();
     }
 
     private void calculateMapDimensions() {
@@ -88,54 +80,24 @@ public final class MinimapActor extends Actor implements Disposable {
             cameraSystem = world.getSystem(PlayerCameraSystem.class);
         }
 
+        if (overlayRenderer == null && cameraSystem != null) {
+            overlayRenderer = new ViewportOverlayRenderer(cameraSystem);
+        }
+
         if (map == null) {
             map = net.lapidist.colony.map.MapUtils.findMapEntity(world).orElse(null);
         }
     }
 
-    private void updateCache(final float scaleX, final float scaleY) {
-        if (spriteCache != null) {
-            spriteCache.dispose();
-        }
-
-        spriteCache = new SpriteCache();
-        spriteCache.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, getWidth(), getHeight()));
-        spriteCache.beginCache();
-
-        Array<Entity> tiles = mapMapper.get(map).getTiles();
-        for (int i = 0; i < tiles.size; i++) {
-            Entity tile = tiles.get(i);
-            TileComponent tileComponent = tileMapper.get(tile);
-            TextureRegion region = resourceLoader.findRegion(
-                    textureMapper.get(tile).getResourceRef());
-            if (region != null) {
-                spriteCache.add(
-                        region,
-                        tileComponent.getX() * Constants.TILE_SIZE * scaleX,
-                        tileComponent.getY() * Constants.TILE_SIZE * scaleY,
-                        Constants.TILE_SIZE * scaleX,
-                        Constants.TILE_SIZE * scaleY
-                );
-            }
-        }
-
-        cacheId = spriteCache.endCache();
-        cacheWidth = (int) getWidth();
-        cacheHeight = (int) getHeight();
-        cacheInvalidated = false;
-    }
 
     public MinimapActor(final World worldToSet) {
         this.world = worldToSet;
-        // ShapeRenderer will be used to draw the viewport rectangle when GL is available
+        // Overlay renderer will draw the viewport rectangle when GL is available
         setSize(DEFAULT_SIZE, DEFAULT_SIZE);
         try {
             resourceLoader.load(FileLocation.INTERNAL, "textures/textures.atlas");
         } catch (IOException e) {
             // ignore loading errors in headless tests
-        }
-        if (Gdx.app != null && Gdx.app.getType() != com.badlogic.gdx.Application.ApplicationType.HeadlessDesktop) {
-            shapeRenderer = new ShapeRenderer();
         }
         mapWidthWorld = -1;
         mapHeightWorld = -1;
@@ -167,65 +129,22 @@ public final class MinimapActor extends Actor implements Disposable {
         float scaleX = getWidth() / mapWidthWorld;
         float scaleY = getHeight() / mapHeightWorld;
 
-        if (spriteCache == null || cacheInvalidated
-                || cacheWidth != (int) getWidth()
-                || cacheHeight != (int) getHeight()) {
-            updateCache(scaleX, scaleY);
-        }
+        cache.setViewport(getWidth(), getHeight());
+        cache.ensureCache(resourceLoader, map, mapMapper, tileMapper, textureMapper,
+                scaleX, scaleY);
+        cache.draw((SpriteBatch) batch, getX(), getY());
 
-        if (spriteCache != null) {
-            SpriteBatch sb = (SpriteBatch) batch;
-            Matrix4 oldProj = spriteCache.getProjectionMatrix().cpy();
-            Matrix4 oldTrans = spriteCache.getTransformMatrix().cpy();
-            batch.end();
-            spriteCache.setProjectionMatrix(sb.getProjectionMatrix());
-            spriteCache.setTransformMatrix(new Matrix4().setToTranslation(getX(), getY(), 0));
-            spriteCache.begin();
-            spriteCache.draw(cacheId);
-            spriteCache.end();
-            batch.begin();
-            spriteCache.setProjectionMatrix(oldProj);
-            spriteCache.setTransformMatrix(oldTrans);
-        }
-
-        if (cameraSystem != null) {
-            com.badlogic.gdx.math.Rectangle view = CameraUtils.getViewBounds(
-                    cameraSystem.getCamera(),
-                    cameraSystem.getViewport(),
-                    new com.badlogic.gdx.math.Rectangle()
-            );
-            Vector2 bottomLeft = new Vector2(view.x, view.y);
-            Vector2 topRight = new Vector2(view.x + view.width, view.y + view.height);
-
-            float clampedLeft = Math.max(0, bottomLeft.x);
-            float clampedBottom = Math.max(0, bottomLeft.y);
-            float clampedRight = Math.min(mapWidthWorld, topRight.x);
-            float clampedTop = Math.min(mapHeightWorld, topRight.y);
-
-            float rectX = getX() + clampedLeft * scaleX;
-            float rectY = getY() + clampedBottom * scaleY;
-            float rectWidth = (clampedRight - clampedLeft) * scaleX;
-            float rectHeight = (clampedTop - clampedBottom) * scaleY;
-            if (shapeRenderer != null) {
-                batch.end();
-                shapeRenderer.setProjectionMatrix(((SpriteBatch) batch).getProjectionMatrix());
-                shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-                shapeRenderer.setColor(Color.WHITE);
-                shapeRenderer.rect(rectX, rectY, rectWidth, rectHeight);
-                shapeRenderer.end();
-                batch.begin();
-            }
+        if (cameraSystem != null && overlayRenderer != null) {
+            overlayRenderer.render(batch, mapWidthWorld, mapHeightWorld, scaleX, scaleY, getX(), getY());
         }
     }
 
     @Override
     public void dispose() {
         resourceLoader.dispose();
-        if (shapeRenderer != null) {
-            shapeRenderer.dispose();
+        if (overlayRenderer != null) {
+            overlayRenderer.dispose();
         }
-        if (spriteCache != null) {
-            spriteCache.dispose();
-        }
+        cache.dispose();
     }
 }

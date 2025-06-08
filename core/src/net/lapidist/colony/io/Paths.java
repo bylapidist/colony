@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
+// OS specific path services
+
 /**
  * Shared utility methods for resolving save locations.
  * Uses Java NIO so that both the client and server can access
@@ -13,9 +15,20 @@ public final class Paths {
 
     public static final String AUTOSAVE_SUFFIX = "-autosave.dat";
 
-    private static PathService service = new DefaultPathService();
+    private static PathService service = createDefaultService();
 
     private Paths() { }
+
+    /**
+     * Creates the default {@link PathService} for the current operating system.
+     */
+    public static PathService createDefaultService() {
+        String os = System.getProperty("os.name").toLowerCase(java.util.Locale.ENGLISH);
+        if (os.contains("windows")) {
+            return new WindowsPathService();
+        }
+        return new UnixPathService();
+    }
 
     /**
      * Replace the underlying {@link PathService} implementation.
