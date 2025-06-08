@@ -10,18 +10,18 @@ import net.lapidist.colony.map.MapGenerator;
 public final class GameServerConfig {
 
     static final String DEFAULT_SAVE_NAME = ColonyConfig.get().getString("game.defaultSaveName");
-    static final long DEFAULT_INTERVAL_MS = ColonyConfig.get().getLong("game.autosaveIntervalMs");
+    static final long DEFAULT_INTERVAL = ColonyConfig.get().getLong("game.autosaveInterval");
 
     private String saveName = DEFAULT_SAVE_NAME;
-    private long autosaveIntervalMs = DEFAULT_INTERVAL_MS;
+    private long autosaveInterval = DEFAULT_INTERVAL;
     private MapGenerator mapGenerator = new DefaultMapGenerator();
 
     public String getSaveName() {
         return saveName;
     }
 
-    public long getAutosaveIntervalMs() {
-        return autosaveIntervalMs;
+    public long getAutosaveInterval() {
+        return autosaveInterval;
     }
 
     public MapGenerator getMapGenerator() {
@@ -40,8 +40,8 @@ public final class GameServerConfig {
             return this;
         }
 
-        public Builder autosaveIntervalMs(final long interval) {
-            config.autosaveIntervalMs = interval;
+        public Builder autosaveInterval(final long interval) {
+            config.autosaveInterval = interval;
             return this;
         }
 
