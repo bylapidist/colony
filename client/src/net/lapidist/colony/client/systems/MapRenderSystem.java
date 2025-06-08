@@ -32,7 +32,6 @@ public final class MapRenderSystem extends BaseSystem {
         tileRenderer = renderers.getTileRenderer();
         buildingRenderer = renderers.getBuildingRenderer();
 
-        map = net.lapidist.colony.map.MapUtils.findMap(world).orElse(null);
     }
 
     @Override
@@ -44,14 +43,19 @@ public final class MapRenderSystem extends BaseSystem {
 
     @Override
     protected void processSystem() {
+        if (map == null) {
+            map = net.lapidist.colony.map.MapUtils.findMap(world).orElse(null);
+            if (map == null) {
+                return;
+            }
+        }
+
         SpriteBatch batch = renderers.getSpriteBatch();
         batch.setProjectionMatrix(cameraSystem.getCamera().combined);
         batch.begin();
 
-        if (map != null) {
-            tileRenderer.render(map.getTiles());
-            buildingRenderer.render(map.getEntities());
-        }
+        tileRenderer.render(map.getTiles());
+        buildingRenderer.render(map.getEntities());
 
         batch.end();
     }
