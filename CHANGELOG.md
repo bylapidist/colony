@@ -1,3 +1,22 @@
+# [6.0.0](https://github.com/bylapidist/colony/compare/v5.67.0...v6.0.0) (2025-06-08)
+
+
+### Bug Fixes
+
+* **ci:** configure semantic-release repository ([#356](https://github.com/bylapidist/colony/issues/356)) ([dc7dac8](https://github.com/bylapidist/colony/commit/dc7dac81700de5b6874ecd6e61b4dece46568097))
+
+
+### Features
+
+* **core:** provide map component helper ([#351](https://github.com/bylapidist/colony/issues/351)) ([21d15d3](https://github.com/bylapidist/colony/commit/21d15d34fabaa7f40187c7eb6f520d5726856d55))
+* rename autosaveInterval config ([#354](https://github.com/bylapidist/colony/issues/354)) ([71b0389](https://github.com/bylapidist/colony/commit/71b03895d2a557dc9bc6120f1d2a17f2f4c238e5))
+* **save:** add versioned migrations ([#353](https://github.com/bylapidist/colony/issues/353)) ([f42fe46](https://github.com/bylapidist/colony/commit/f42fe463a5f69f527c3edcaeac24765fbbd38435))
+
+
+### BREAKING CHANGES
+
+* property game.autosaveIntervalMs renamed to game.autosaveInterval
+
 ## 1.0.0
 - 2018-10-18 - v1.0.0
 
@@ -387,4 +406,3 @@
 
 ## v5.67.0
 - feat(network): add handler architecture (#345)
-
