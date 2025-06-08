@@ -5,18 +5,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.input.GestureInputHandler;
 import net.lapidist.colony.client.systems.input.KeyboardInputHandler;
 import net.lapidist.colony.client.systems.input.TileSelectionHandler;
+import net.lapidist.colony.client.systems.input.InputGestureListener;
+import net.lapidist.colony.client.systems.input.ScrollInputProcessor;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.badlogic.gdx.math.Vector2;
 
-public final class InputSystem extends BaseSystem implements InputProcessor, GestureListener {
+public final class InputSystem extends BaseSystem {
 
     private PlayerCameraSystem cameraSystem;
 
@@ -34,9 +34,6 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
 
     public InputSystem(final GameClient clientToSet) {
         this.client = clientToSet;
-        multiplexer.addProcessor(new GestureDetector(this));
-        multiplexer.addProcessor(this);
-        Gdx.input.setInputProcessor(multiplexer);
     }
 
     public void addProcessor(final InputProcessor processor) {
@@ -52,6 +49,18 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
         keyboardHandler = new KeyboardInputHandler(cameraSystem);
         gestureHandler = new GestureInputHandler(cameraSystem);
         tileSelectionHandler = new TileSelectionHandler(client, cameraSystem);
+        InputGestureListener gestureListener = new InputGestureListener(
+                gestureHandler,
+                keyboardHandler,
+                tileSelectionHandler,
+                map,
+                mapMapper,
+                tileMapper
+        );
+        InputProcessor scrollProcessor = new ScrollInputProcessor(gestureHandler);
+        multiplexer.addProcessor(new GestureDetector(gestureListener));
+        multiplexer.addProcessor(scrollProcessor);
+        Gdx.input.setInputProcessor(multiplexer);
     }
 
     @Override
@@ -62,99 +71,21 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
     }
 
 
-    @Override
     public boolean scrolled(final float amountX, final float amountY) {
         return gestureHandler.scrolled(amountX, amountY);
     }
 
-    @Override
-    public boolean touchDown(final float x, final float y, final int pointer, final int button) {
-        return false;
-    }
-
-    @Override
     public boolean tap(final float x, final float y, final int count, final int button) {
         return tileSelectionHandler.handleTap(x, y, map, mapMapper, tileMapper);
     }
 
-    @Override
-    public boolean longPress(final float x, final float y) {
-        return false;
-    }
-
-    @Override
-    public boolean fling(final float velocityX, final float velocityY, final int button) {
-        return false;
-    }
-
-    @Override
     public boolean pan(final float x, final float y, final float deltaX, final float deltaY) {
         boolean result = gestureHandler.pan(deltaX, deltaY);
         keyboardHandler.clampCameraPosition();
         return result;
     }
 
-    @Override
-    public boolean panStop(final float x, final float y, final int pointer, final int button) {
-        return false;
-    }
-
-    @Override
     public boolean zoom(final float initialDistance, final float distance) {
         return gestureHandler.zoom(initialDistance, distance);
-    }
-
-    @Override
-    public boolean pinch(
-            final Vector2 initialPointer1,
-            final Vector2 initialPointer2,
-            final Vector2 pointer1,
-            final Vector2 pointer2
-    ) {
-        return false;
-    }
-
-    @Override
-    public void pinchStop() {
-    }
-
-    @Override
-    public boolean keyDown(final int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(final int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(final char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(final int screenX, final int screenY, final int pointer, final int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(final int screenX, final int screenY, final int pointer, final int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchCancelled(final int i, final int i1, final int i2, final int i3) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(final int screenX, final int screenY, final int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(final int screenX, final int screenY) {
-        return false;
     }
 }
