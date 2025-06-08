@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public final class GameClient {
     // Increase buffers to handle large serialized map data
@@ -18,6 +20,7 @@ public final class GameClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(GameClient.class);
     private final Client client = new Client(BUFFER_SIZE, BUFFER_SIZE);
     private MapState mapState;
+    private final Queue<TileSelectionData> tileUpdates = new ConcurrentLinkedQueue<>();
     private static final int CONNECT_TIMEOUT = 5000;
     private static final int WAIT_TIME_MS = 10;
 
@@ -36,6 +39,8 @@ public final class GameClient {
                 if (object instanceof MapState) {
                     mapState = (MapState) object;
                     LOGGER.info("Received map state from server");
+                } else if (object instanceof TileSelectionData) {
+                    tileUpdates.add((TileSelectionData) object);
                 }
             }
         });
@@ -48,6 +53,14 @@ public final class GameClient {
 
     public MapState getMapState() {
         return mapState;
+    }
+
+    public TileSelectionData pollTileSelection() {
+        return tileUpdates.poll();
+    }
+
+    public void injectTileSelection(final TileSelectionData data) {
+        tileUpdates.add(data);
     }
 
     public void sendTileSelection(final TileSelectionData data) {

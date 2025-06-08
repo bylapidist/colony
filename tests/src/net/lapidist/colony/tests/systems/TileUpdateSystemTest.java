@@ -5,28 +5,25 @@ import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
 import com.artemis.utils.IntBag;
-import com.badlogic.gdx.math.Vector2;
-import net.lapidist.colony.client.core.Constants;
 import net.lapidist.colony.client.network.GameClient;
-import net.lapidist.colony.client.systems.PlayerCameraSystem;
-import net.lapidist.colony.client.systems.InputSystem;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
+import net.lapidist.colony.client.systems.network.TileUpdateSystem;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(GdxTestRunner.class)
-public class InputSystemTest {
+public class TileUpdateSystemTest {
 
     @Test
-    public void tapSelectsTileUnderCursor() {
+    public void appliesServerTileSelection() {
         MapState state = new MapState();
         TileData tile = new TileData();
         tile.setX(0);
@@ -36,23 +33,20 @@ public class InputSystemTest {
         tile.setPassable(true);
         state.getTiles().add(tile);
 
-        GameClient client = mock(GameClient.class);
+        GameClient client = new GameClient();
         World world = new World(new WorldConfigurationBuilder()
-                .with(new MapLoadSystem(state), new PlayerCameraSystem(), new InputSystem(client))
+                .with(new MapLoadSystem(state), new TileUpdateSystem(client))
                 .build());
 
         world.process();
 
-        PlayerCameraSystem camera = world.getSystem(PlayerCameraSystem.class);
-        camera.getCamera().position.set(Constants.TILE_SIZE / 2f, Constants.TILE_SIZE / 2f, 0);
-        camera.getCamera().update();
+        TileSelectionData data = new TileSelectionData();
+        data.setX(0);
+        data.setY(0);
+        data.setSelected(true);
+        client.injectTileSelection(data);
 
-        Vector2 screenCoords = camera.cameraCoordsFromWorldCoords(0, 0);
-        float tapX = screenCoords.x;
-        float tapY = screenCoords.y;
-
-        InputSystem input = world.getSystem(InputSystem.class);
-        input.tap(tapX, tapY, 1, 0);
+        world.process();
 
         IntBag maps = world.getAspectSubscriptionManager()
                 .get(Aspect.all(MapComponent.class))
@@ -62,7 +56,6 @@ public class InputSystemTest {
         TileComponent tileComponent = world.getMapper(TileComponent.class)
                 .get(mapComponent.getTiles().get(0));
 
-        assertFalse(tileComponent.isSelected());
-        verify(client).sendTileSelection(any());
+        assertTrue(tileComponent.isSelected());
     }
 }

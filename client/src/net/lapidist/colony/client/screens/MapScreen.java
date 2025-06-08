@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import net.lapidist.colony.client.systems.*;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
+import net.lapidist.colony.client.systems.network.TileUpdateSystem;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.components.state.MapState;
@@ -53,6 +54,7 @@ public class MapScreen implements Screen {
                         new MapLoadSystem(state),
                         new PlayerCameraSystem(),
                         inputSystem,
+                        new TileUpdateSystem(client),
                         new MapRenderSystem(),
                         new UISystem(stage)
                 )
