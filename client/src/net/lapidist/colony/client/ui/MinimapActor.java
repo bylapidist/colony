@@ -89,7 +89,7 @@ public final class MinimapActor extends Actor implements Disposable {
         }
 
         if (map == null) {
-            map = net.lapidist.colony.map.MapUtils.findMapEntity(world);
+            map = net.lapidist.colony.map.MapUtils.findMapEntity(world).orElse(null);
         }
     }
 
