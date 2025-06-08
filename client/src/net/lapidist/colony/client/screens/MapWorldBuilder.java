@@ -11,9 +11,11 @@ import net.lapidist.colony.client.systems.MapRenderSystem;
 import net.lapidist.colony.client.renderers.MapRendererFactory;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.UISystem;
-import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.client.systems.network.TileUpdateSystem;
+import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.map.MapStateProvider;
+import net.lapidist.colony.map.ProvidedMapStateProvider;
 import net.lapidist.colony.core.events.Events;
 import net.mostlyoriginal.api.event.common.EventSystem;
 
@@ -26,17 +28,15 @@ public final class MapWorldBuilder {
     }
 
     /**
-     * Create a {@link WorldConfigurationBuilder} containing the default systems
-     * for the map screen. Tests can customise the returned builder before
-     * calling {@link #build(WorldConfigurationBuilder)}.
+     * Create a base {@link WorldConfigurationBuilder} containing the default
+     * systems for the map screen except the map initialization system. Tests can
+     * customise the returned builder before calling {@link #build(WorldConfigurationBuilder)}.
      *
-     * @param state  map state to load
      * @param client game client for network updates
      * @param stage  stage used by the UI system
      * @return configured builder instance
      */
-    public static WorldConfigurationBuilder builder(
-            final MapState state,
+    public static WorldConfigurationBuilder baseBuilder(
             final GameClient client,
             final Stage stage
     ) {
@@ -47,13 +47,43 @@ public final class MapWorldBuilder {
                 .with(
                         new EventSystem(),
                         new ClearScreenSystem(Color.BLACK),
-                        new MapLoadSystem(state),
-                        new PlayerCameraSystem(),
                         inputSystem,
                         new TileUpdateSystem(client),
                         new MapRenderSystem(new MapRendererFactory()),
                         new UISystem(stage)
                 );
+    }
+
+    /**
+     * Create a {@link WorldConfigurationBuilder} with the default systems and a
+     * map state provider.
+     *
+     * @param provider map state provider to load
+     * @param client   game client for network updates
+     * @param stage    stage used by the UI system
+     * @return configured builder instance
+     */
+    public static WorldConfigurationBuilder builder(
+            final MapStateProvider provider,
+            final GameClient client,
+            final Stage stage
+    ) {
+        return baseBuilder(client, stage)
+                .with(
+                        new MapInitSystem(provider),
+                        new PlayerCameraSystem()
+                );
+    }
+
+    /**
+     * Convenience overload using a pre-built {@link MapState}.
+     */
+    public static WorldConfigurationBuilder builder(
+            final MapState state,
+            final GameClient client,
+            final Stage stage
+    ) {
+        return builder(new ProvidedMapStateProvider(state), client, stage);
     }
 
     /**
