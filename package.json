@@ -1,6 +1,10 @@
 {
   "name": "@lapidist/colony",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bylapidist/colony.git"
+  },
   "devDependencies": {
     "@semantic-release/changelog": "^6",
     "@semantic-release/git": "^10",
