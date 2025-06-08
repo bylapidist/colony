@@ -89,8 +89,10 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
             GameStateIO.save(mapState, saveFile);
             LOGGER.info("Generated new map and saved to: {}", saveFile);
         }
-        mapState = mapState.withSaveName(saveName);
-        mapState = mapState.withAutosaveName(saveName + AUTOSAVE_SUFFIX);
+        mapState = mapState.toBuilder()
+                .saveName(saveName)
+                .autosaveName(saveName + AUTOSAVE_SUFFIX)
+                .build();
         Files.writeString(Paths.getLastAutosaveMarker(), saveName);
     }
 
