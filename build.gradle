@@ -23,12 +23,17 @@ plugins {
     id 'com.diffplug.spotless' version '7.0.4' apply false
 }
 
+
+import org.gradle.process.ExecOperations
+import org.gradle.process.ExecSpec
+
 def getGitVersion() {
     def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'describe', '--tags', '--abbrev=0'
-        standardOutput = stdout
-        ignoreExitValue = true
+    def execOps = services.get(ExecOperations)
+    execOps.exec { ExecSpec spec ->
+        spec.commandLine 'git', 'describe', '--tags', '--abbrev=0'
+        spec.standardOutput = stdout
+        spec.ignoreExitValue = true
     }
     def ver = stdout.toString().trim()
     if (ver.isEmpty()) {
@@ -69,7 +74,7 @@ allprojects {
     spotless {
         java {
             target 'src/**/*.java'
-            indentWithSpaces(4)
+            leadingTabsToSpaces(4)
             trimTrailingWhitespace()
             endWithNewline()
         }
