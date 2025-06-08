@@ -1,6 +1,7 @@
 package net.lapidist.colony.tests.server;
 
 import net.lapidist.colony.server.GameServer;
+import net.lapidist.colony.server.GameServerConfig;
 import net.lapidist.colony.server.events.AutosaveEvent;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.server.events.ShutdownSaveEvent;
@@ -42,7 +43,9 @@ public class GameServerSaveTest {
 
     @Test
     public void autosaveCreatesSaveFileAndFiresEvent() throws Exception {
-        GameServer server = new GameServer(TEST_INTERVAL_MS);
+        GameServer server = new GameServer(
+                GameServerConfig.builder().autosaveIntervalMs(TEST_INTERVAL_MS).build()
+        );
         server.start();
         Events.getInstance().registerEvents(this);
 
@@ -60,7 +63,9 @@ public class GameServerSaveTest {
 
     @Test
     public void stoppingSavesFileAndFiresEvent() throws Exception {
-        GameServer server = new GameServer(TEST_INTERVAL_MS);
+        GameServer server = new GameServer(
+                GameServerConfig.builder().autosaveIntervalMs(TEST_INTERVAL_MS).build()
+        );
         server.start();
         Events.getInstance().registerEvents(this);
 
@@ -75,13 +80,17 @@ public class GameServerSaveTest {
 
     @Test
     public void loadsExistingSave() throws Exception {
-        GameServer first = new GameServer(TEST_INTERVAL_MS);
+        GameServer first = new GameServer(
+                GameServerConfig.builder().autosaveIntervalMs(TEST_INTERVAL_MS).build()
+        );
         first.start();
         first.getMapState().getTiles().get(0).setTextureRef("changed");
         GameStateIO.save(first.getMapState(), Paths.getAutosave("autosave"));
         first.stop();
 
-        GameServer second = new GameServer(TEST_INTERVAL_MS);
+        GameServer second = new GameServer(
+                GameServerConfig.builder().autosaveIntervalMs(TEST_INTERVAL_MS).build()
+        );
         second.start();
         String loaded = second.getMapState().getTiles().get(0).getTextureRef();
         second.stop();

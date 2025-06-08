@@ -16,7 +16,6 @@ import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.serialization.KryoRegistry;
 import net.lapidist.colony.server.io.GameStateIO;
 import net.lapidist.colony.io.Paths;
-import net.lapidist.colony.map.DefaultMapGenerator;
 import net.lapidist.colony.map.MapGenerator;
 import net.mostlyoriginal.api.event.common.EventSystem;
 import org.slf4j.Logger;
@@ -39,9 +38,7 @@ public final class GameServer implements AutoCloseable {
 
     // Increase buffers so the entire map can be serialized in one object
     private static final int BUFFER_SIZE = 65536;
-    private static final String DEFAULT_SAVE_NAME = ColonyConfig.get().getString("game.defaultSaveName");
     private static final String AUTOSAVE_SUFFIX = Paths.AUTOSAVE_SUFFIX;
-    private static final long DEFAULT_INTERVAL_MS = ColonyConfig.get().getLong("game.autosaveIntervalMs");
     private static final Logger LOGGER = LoggerFactory.getLogger(GameServer.class);
 
     private final Server server = new Server(BUFFER_SIZE, BUFFER_SIZE);
@@ -51,30 +48,10 @@ public final class GameServer implements AutoCloseable {
     private ScheduledExecutorService executor;
     private MapState mapState;
 
-    public GameServer() {
-        this(DEFAULT_SAVE_NAME, DEFAULT_INTERVAL_MS, new DefaultMapGenerator());
-    }
-
-    public GameServer(final long autosaveIntervalMsToSet) {
-        this(DEFAULT_SAVE_NAME, autosaveIntervalMsToSet, new DefaultMapGenerator());
-    }
-
-    public GameServer(final String saveNameToSet) {
-        this(saveNameToSet, DEFAULT_INTERVAL_MS, new DefaultMapGenerator());
-    }
-
-    public GameServer(final String saveNameToSet, final long autosaveIntervalMsToSet) {
-        this(saveNameToSet, autosaveIntervalMsToSet, new DefaultMapGenerator());
-    }
-
-    public GameServer(
-            final String saveNameToSet,
-            final long autosaveIntervalMsToSet,
-            final MapGenerator mapGeneratorToSet
-    ) {
-        this.saveName = saveNameToSet;
-        this.autosaveIntervalMs = autosaveIntervalMsToSet;
-        this.mapGenerator = mapGeneratorToSet;
+    public GameServer(final GameServerConfig config) {
+        this.saveName = config.getSaveName();
+        this.autosaveIntervalMs = config.getAutosaveIntervalMs();
+        this.mapGenerator = config.getMapGenerator();
     }
 
     public void start() throws IOException {
