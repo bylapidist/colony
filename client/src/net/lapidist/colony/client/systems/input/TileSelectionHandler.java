@@ -1,9 +1,9 @@
 package net.lapidist.colony.client.systems.input;
 
-import com.artemis.ComponentMapper;
-import com.artemis.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.artemis.ComponentMapper;
+import com.artemis.Entity;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.util.CameraUtils;
@@ -30,8 +30,7 @@ public final class TileSelectionHandler {
     public boolean handleTap(
             final float x,
             final float y,
-            final Entity map,
-            final ComponentMapper<MapComponent> mapMapper,
+            final MapComponent map,
             final ComponentMapper<TileComponent> tileMapper
     ) {
         if (map == null) {
@@ -43,7 +42,7 @@ public final class TileSelectionHandler {
         Vector2 worldCoords = CameraUtils.screenToWorldCoords(cameraSystem.getViewport(), x, y);
         Vector2 tileCoords = CameraUtils.worldCoordsToTileCoords(worldCoords);
 
-        Array<Entity> tiles = mapMapper.get(map).getTiles();
+        Array<Entity> tiles = map.getTiles();
         for (int i = 0; i < tiles.size; i++) {
             Entity tile = tiles.get(i);
             TileComponent tileComponent = tileMapper.get(tile);

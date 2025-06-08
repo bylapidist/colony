@@ -4,6 +4,7 @@ import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.utils.IntBag;
+import java.util.Optional;
 import net.lapidist.colony.components.maps.MapComponent;
 
 /**
@@ -33,13 +34,13 @@ public final class MapUtils {
      * Returns the {@link MapComponent} from the first map entity in the world.
      *
      * @param world the Artemis world to search
-     * @return the map component or {@code null} if no map is present
+     * @return an {@link Optional} containing the map component or empty if none exists
      */
-    public static MapComponent findMap(final World world) {
+    public static Optional<MapComponent> findMap(final World world) {
         Entity entity = findMapEntity(world);
-        if (entity != null) {
-            return world.getMapper(MapComponent.class).get(entity);
+        if (entity == null) {
+            return Optional.empty();
         }
-        return null;
+        return Optional.of(world.getMapper(MapComponent.class).get(entity));
     }
 }

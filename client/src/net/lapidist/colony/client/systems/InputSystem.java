@@ -7,14 +7,13 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.input.GestureDetector;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.input.GestureInputHandler;
-import net.lapidist.colony.client.systems.input.KeyboardInputHandler;
-import net.lapidist.colony.client.systems.input.TileSelectionHandler;
 import net.lapidist.colony.client.systems.input.InputGestureListener;
+import net.lapidist.colony.client.systems.input.KeyboardInputHandler;
 import net.lapidist.colony.client.systems.input.ScrollInputProcessor;
+import net.lapidist.colony.client.systems.input.TileSelectionHandler;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import com.artemis.ComponentMapper;
-import com.artemis.Entity;
 
 public final class InputSystem extends BaseSystem {
 
@@ -24,8 +23,7 @@ public final class InputSystem extends BaseSystem {
 
     private final InputMultiplexer multiplexer = new InputMultiplexer();
 
-    private Entity map;
-    private ComponentMapper<MapComponent> mapMapper;
+    private MapComponent map;
     private ComponentMapper<TileComponent> tileMapper;
 
     private KeyboardInputHandler keyboardHandler;
@@ -43,9 +41,8 @@ public final class InputSystem extends BaseSystem {
     @Override
     public void initialize() {
         cameraSystem = world.getSystem(PlayerCameraSystem.class);
-        mapMapper = world.getMapper(MapComponent.class);
         tileMapper = world.getMapper(TileComponent.class);
-        map = net.lapidist.colony.map.MapUtils.findMapEntity(world);
+        map = net.lapidist.colony.map.MapUtils.findMap(world).orElse(null);
         keyboardHandler = new KeyboardInputHandler(cameraSystem);
         gestureHandler = new GestureInputHandler(cameraSystem);
         tileSelectionHandler = new TileSelectionHandler(client, cameraSystem);
@@ -54,7 +51,6 @@ public final class InputSystem extends BaseSystem {
                 keyboardHandler,
                 tileSelectionHandler,
                 map,
-                mapMapper,
                 tileMapper
         );
         InputProcessor scrollProcessor = new ScrollInputProcessor(gestureHandler);
@@ -76,7 +72,7 @@ public final class InputSystem extends BaseSystem {
     }
 
     public boolean tap(final float x, final float y, final int count, final int button) {
-        return tileSelectionHandler.handleTap(x, y, map, mapMapper, tileMapper);
+        return tileSelectionHandler.handleTap(x, y, map, tileMapper);
     }
 
     public boolean pan(final float x, final float y, final float deltaX, final float deltaY) {

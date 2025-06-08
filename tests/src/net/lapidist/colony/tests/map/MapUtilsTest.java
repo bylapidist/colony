@@ -15,10 +15,10 @@ import static org.junit.Assert.*;
 public class MapUtilsTest {
 
     @Test
-    public void returnsNullWhenNoMapPresent() {
+    public void returnsEmptyWhenNoMapPresent() {
         World world = new World(new WorldConfigurationBuilder().build());
         assertNull(MapUtils.findMapEntity(world));
-        assertNull(MapUtils.findMap(world));
+        assertFalse(MapUtils.findMap(world).isPresent());
     }
 
     @Test
@@ -38,7 +38,7 @@ public class MapUtilsTest {
         world.process();
 
         assertNotNull(MapUtils.findMapEntity(world));
-        MapComponent map = MapUtils.findMap(world);
+        MapComponent map = MapUtils.findMap(world).orElse(null);
         assertNotNull(map);
         assertEquals(1, map.getTiles().size);
     }
