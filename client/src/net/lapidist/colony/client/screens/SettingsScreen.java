@@ -18,10 +18,10 @@ public final class SettingsScreen extends BaseScreen {
     public SettingsScreen(final Colony game) {
         this.colony = game;
 
-        TextButton en = new TextButton("English", getSkin());
-        TextButton fr = new TextButton("Français", getSkin());
-        TextButton es = new TextButton("Español", getSkin());
-        TextButton de = new TextButton("Deutsch", getSkin());
+        TextButton en = new TextButton(I18n.get("language.en"), getSkin());
+        TextButton fr = new TextButton(I18n.get("language.fr"), getSkin());
+        TextButton es = new TextButton(I18n.get("language.es"), getSkin());
+        TextButton de = new TextButton(I18n.get("language.de"), getSkin());
         TextButton back = new TextButton(I18n.get("common.back"), getSkin());
 
         getRoot().add(en).row();

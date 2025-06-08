@@ -9,6 +9,7 @@ import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
+import net.lapidist.colony.config.ColonyConfig;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.client.events.GameInitEvent;
@@ -53,7 +54,7 @@ public final class Colony extends Game {
     }
 
     public void startGame() {
-        startGame("autosave");
+        startGame(ColonyConfig.get().getString("game.defaultSaveName"));
     }
 
     public Settings getSettings() {

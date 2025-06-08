@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import net.lapidist.colony.client.events.ResizeEvent;
+import net.lapidist.colony.i18n.I18n;
 import net.mostlyoriginal.api.event.common.Subscribe;
 
 public final class UISystem extends BaseSystem {
@@ -36,7 +37,7 @@ public final class UISystem extends BaseSystem {
         batch.begin();
         font.draw(
                 batch,
-                Gdx.graphics.getFramesPerSecond() + " FPS",
+                Gdx.graphics.getFramesPerSecond() + I18n.get("ui.fpsSuffix"),
                 FPS_MARGIN,
                 FPS_MARGIN
         );
