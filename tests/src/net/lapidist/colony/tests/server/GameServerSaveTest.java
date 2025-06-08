@@ -84,7 +84,7 @@ public class GameServerSaveTest {
                 GameServerConfig.builder().autosaveIntervalMs(TEST_INTERVAL_MS).build()
         );
         first.start();
-        first.getMapState().getTiles().get(0).setTextureRef("changed");
+        first.getMapState().tiles().get(0).setTextureRef("changed");
         GameStateIO.save(first.getMapState(), Paths.getAutosave("autosave"));
         first.stop();
 
@@ -92,7 +92,7 @@ public class GameServerSaveTest {
                 GameServerConfig.builder().autosaveIntervalMs(TEST_INTERVAL_MS).build()
         );
         second.start();
-        String loaded = second.getMapState().getTiles().get(0).getTextureRef();
+        String loaded = second.getMapState().tiles().get(0).getTextureRef();
         second.stop();
 
         assertTrue("changed".equals(loaded));

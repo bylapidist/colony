@@ -26,10 +26,10 @@ public class MapLoadSystemTest {
         tile.setTileType("GRASS");
         tile.setTextureRef("grass0");
         tile.setPassable(true);
-        state.getTiles().add(tile);
+        state.tiles().add(tile);
 
         BuildingData building = new BuildingData(1, 1, "HOUSE", "house0");
-        state.getBuildings().add(building);
+        state.buildings().add(building);
 
         World world = new World(new WorldConfigurationBuilder()
                 .with(new MapLoadSystem(state))

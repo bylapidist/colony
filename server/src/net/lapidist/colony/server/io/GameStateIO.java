@@ -28,11 +28,11 @@ public final class GameStateIO {
         KryoRegistry.register(kryo);
         try (Input input = new Input(new FileInputStream(file.toFile()))) {
             MapState state = kryo.readObject(input, MapState.class);
-            if (state.getVersion() > MapState.CURRENT_VERSION) {
+            if (state.version() > MapState.CURRENT_VERSION) {
                 throw new IOException(
                         String.format(
                                 "Unsupported map version %d (current %d)",
-                                state.getVersion(),
+                                state.version(),
                                 MapState.CURRENT_VERSION
                         )
                 );

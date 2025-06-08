@@ -65,12 +65,12 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         if (Files.exists(saveFile)) {
             mapState = GameStateIO.load(saveFile);
             LOGGER.info("Loaded save file: {}", saveFile);
-            mapState.setSaveName(saveName);
-            mapState.setAutosaveName(saveName + AUTOSAVE_SUFFIX);
+            mapState = mapState.withSaveName(saveName);
+            mapState = mapState.withAutosaveName(saveName + AUTOSAVE_SUFFIX);
         } else {
             generateMap();
-            mapState.setSaveName(saveName);
-            mapState.setAutosaveName(saveName + AUTOSAVE_SUFFIX);
+            mapState = mapState.withSaveName(saveName);
+            mapState = mapState.withAutosaveName(saveName + AUTOSAVE_SUFFIX);
             GameStateIO.save(mapState, saveFile);
             LOGGER.info("Generated new map and saved to: {}", saveFile);
         }
@@ -137,7 +137,7 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     }
 
     private void handleTileSelection(final TileSelectionData data) {
-        for (TileData tile : mapState.getTiles()) {
+        for (TileData tile : mapState.tiles()) {
             if (tile.getX() == data.x() && tile.getY() == data.y()) {
                 tile.setSelected(data.selected());
                 break;

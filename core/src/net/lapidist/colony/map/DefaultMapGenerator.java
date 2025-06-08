@@ -19,8 +19,8 @@ public final class DefaultMapGenerator implements MapGenerator {
     public MapState generate(final int width, final int height) {
         MapState state = new MapState();
         Random random = new Random();
-        state.setName("map-" + random.nextInt(NAME_RANGE));
-        state.setDescription(I18n.get("generator.generatedMap"));
+        state = state.withName("map-" + random.nextInt(NAME_RANGE));
+        state = state.withDescription(I18n.get("generator.generatedMap"));
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -31,12 +31,12 @@ public final class DefaultMapGenerator implements MapGenerator {
                 tile.setTextureRef(TEXTURES[random.nextInt(TEXTURES.length)]);
                 tile.setPassable(true);
                 tile.setSelected(false);
-                state.getTiles().add(tile);
+                state.tiles().add(tile);
             }
         }
 
         BuildingData building = new BuildingData(width / 2, height / 2, "HOUSE", "house0");
-        state.getBuildings().add(building);
+        state.buildings().add(building);
 
         return state;
     }

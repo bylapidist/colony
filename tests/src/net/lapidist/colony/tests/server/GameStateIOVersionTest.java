@@ -16,7 +16,7 @@ public class GameStateIOVersionTest {
     public void throwsWhenVersionIsNewer() throws Exception {
         Path file = Files.createTempFile("state", ".dat");
         MapState state = new MapState();
-        state.setVersion(MapState.CURRENT_VERSION + 1);
+        state = state.withVersion(MapState.CURRENT_VERSION + 1);
         GameStateIO.save(state, file);
 
         boolean thrown = false;
