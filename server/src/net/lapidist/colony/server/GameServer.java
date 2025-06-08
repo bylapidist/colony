@@ -14,8 +14,7 @@ import net.lapidist.colony.server.events.ShutdownSaveEvent;
 import net.lapidist.colony.server.events.SaveEvent;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.serialization.KryoRegistry;
-import net.lapidist.colony.network.MessageDispatcher;
-import net.lapidist.colony.network.MessageEndpoint;
+import net.lapidist.colony.network.AbstractMessageEndpoint;
 import net.lapidist.colony.server.io.GameStateIO;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.map.MapGenerator;
@@ -24,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.function.Consumer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 // Using java.nio here keeps the server independent from LibGDX's FileHandle API
@@ -35,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 // Autosave scheduling relies on standard Java concurrency utilities rather than
 // any LibGDX specific scheduling.
 
-public final class GameServer implements AutoCloseable, MessageEndpoint {
+public final class GameServer extends AbstractMessageEndpoint implements AutoCloseable {
     public static final int TCP_PORT = ColonyConfig.get().getInt("game.server.tcpPort");
     public static final int UDP_PORT = ColonyConfig.get().getInt("game.server.udpPort");
 
@@ -48,7 +46,6 @@ public final class GameServer implements AutoCloseable, MessageEndpoint {
     private final long autosaveIntervalMs;
     private final String saveName;
     private final MapGenerator mapGenerator;
-    private final MessageDispatcher dispatcher = new MessageDispatcher();
     private ScheduledExecutorService executor;
     private MapState mapState;
 
@@ -99,7 +96,7 @@ public final class GameServer implements AutoCloseable, MessageEndpoint {
 
             @Override
             public void received(final Connection connection, final Object object) {
-                dispatcher.dispatch(object);
+                dispatch(object);
             }
         });
 
@@ -127,10 +124,6 @@ public final class GameServer implements AutoCloseable, MessageEndpoint {
         server.sendToAllTCP(message);
     }
 
-    @Override
-    public <T> void onMessage(final Class<T> type, final Consumer<T> handler) {
-        dispatcher.register(type, handler);
-    }
 
     @Override
     public void stop() {
