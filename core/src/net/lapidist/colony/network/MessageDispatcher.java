@@ -9,14 +9,15 @@ import java.util.function.Consumer;
  */
 public final class MessageDispatcher {
 
-    private final Map<Class<?>, Consumer<Object>> handlers = new ConcurrentHashMap<>();
+    private final Map<Class<?>, Consumer<?>> handlers = new ConcurrentHashMap<>();
 
-    public <T> void register(final Class<T> type, final Consumer<T> handler) {
-        handlers.put(type, (Consumer<Object>) handler);
+    public <T> void register(final Class<T> type, final Consumer<? super T> handler) {
+        handlers.put(type, handler);
     }
 
-    public void dispatch(final Object message) {
-        Consumer<Object> handler = handlers.get(message.getClass());
+    @SuppressWarnings("unchecked")
+    public <T> void dispatch(final T message) {
+        Consumer<T> handler = (Consumer<T>) handlers.get(message.getClass());
         if (handler != null) {
             handler.accept(message);
         }
