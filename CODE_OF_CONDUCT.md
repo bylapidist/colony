@@ -60,7 +60,7 @@ offline event.
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
 reported to the project maintainers at
-[maintainers@colony.dev](mailto:maintainers@colony.dev).
+[hello@lapidist.net](mailto:hello@lapidist.net).
 All complaints will be reviewed and investigated promptly and fairly.
 
 All community leaders are obligated to respect the privacy and security of the
