@@ -1,3 +1,10 @@
+# [6.2.0](https://github.com/bylapidist/colony/compare/v6.1.2...v6.2.0) (2025-06-08)
+
+
+### Features
+
+* **server:** introduce command bus for message dispatch ([#380](https://github.com/bylapidist/colony/issues/380)) ([71811e8](https://github.com/bylapidist/colony/commit/71811e893aee5b0494e465d9c87f4fa71c0f01ea))
+
 ## [6.1.2](https://github.com/bylapidist/colony/compare/v6.1.1...v6.1.2) (2025-06-08)
 
 
