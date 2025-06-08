@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import net.lapidist.colony.i18n.I18n;
 import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.io.Paths;
 
@@ -17,10 +18,10 @@ public final class MainMenuScreen extends BaseScreen {
     public MainMenuScreen(final Colony game) {
         this.colony = game;
 
-        TextButton continueButton = new TextButton("Continue", getSkin());
-        TextButton newGameButton = new TextButton("New Game", getSkin());
-        TextButton loadGameButton = new TextButton("Load Game", getSkin());
-        TextButton exitButton = new TextButton("Exit", getSkin());
+        TextButton continueButton = new TextButton(I18n.get("main.continue"), getSkin());
+        TextButton newGameButton = new TextButton(I18n.get("main.newGame"), getSkin());
+        TextButton loadGameButton = new TextButton(I18n.get("main.loadGame"), getSkin());
+        TextButton exitButton = new TextButton(I18n.get("main.exit"), getSkin());
 
         String lastSave = null;
         boolean canContinue = false;

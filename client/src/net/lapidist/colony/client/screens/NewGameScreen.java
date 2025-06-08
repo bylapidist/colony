@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import net.lapidist.colony.client.Colony;
+import net.lapidist.colony.i18n.I18n;
 
 import java.util.UUID;
 
@@ -16,10 +17,10 @@ public final class NewGameScreen extends BaseScreen {
     public NewGameScreen(final Colony game) {
         this.colony = game;
 
-        Label label = new Label("Save name", getSkin());
+        Label label = new Label(I18n.get("newGame.saveName"), getSkin());
         TextField nameField = new TextField("", getSkin());
-        TextButton startButton = new TextButton("Start", getSkin());
-        TextButton backButton = new TextButton("Back", getSkin());
+        TextButton startButton = new TextButton(I18n.get("newGame.start"), getSkin());
+        TextButton backButton = new TextButton(I18n.get("common.back"), getSkin());
 
         getRoot().add(label).row();
         getRoot().add(nameField).width(FIELD_WIDTH).row();
