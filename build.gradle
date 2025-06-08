@@ -10,11 +10,13 @@ buildscript {
         slf4jVersion = '2.0.17'
         logbackVersion = '1.5.18'
         typesafeConfigVersion = '1.4.3'
+        brigadierVersion = '1.0.18'
     }
 
     repositories {
         mavenLocal()
         mavenCentral()
+        maven { url 'https://libraries.minecraft.net' }
         google()
     }
 } 
@@ -55,6 +57,7 @@ allprojects {
     repositories {
         mavenLocal()
         mavenCentral()
+        maven { url 'https://libraries.minecraft.net' }
         google()
     }
 
@@ -71,6 +74,7 @@ allprojects {
     checkstyle {
         toolVersion = checkstyleVersion
     }
+
 
     spotless {
         java {

@@ -10,6 +10,7 @@ import net.lapidist.colony.network.MessageHandler;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.map.MapGenerator;
 import net.lapidist.colony.server.handlers.TileSelectionRequestHandler;
+import net.lapidist.colony.server.handlers.ChatMessageRequestHandler;
 import net.lapidist.colony.server.commands.CommandBus;
 import net.lapidist.colony.server.commands.CommandHandler;
 import net.lapidist.colony.server.commands.TileSelectionCommandHandler;
@@ -85,7 +86,8 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
 
         if (handlers == null) {
             handlers = java.util.List.of(
-                    new TileSelectionRequestHandler(commandBus)
+                    new TileSelectionRequestHandler(commandBus),
+                    new ChatMessageRequestHandler(this::broadcast)
             );
         }
         registerHandlers(handlers);

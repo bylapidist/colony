@@ -11,6 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.artemis.World;
 import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.client.ui.MinimapActor;
+import net.lapidist.colony.client.ui.ChatLogActor;
+import net.lapidist.colony.client.network.GameClient;
+import com.mojang.brigadier.CommandDispatcher;
 import net.lapidist.colony.i18n.I18n;
 
 /**
@@ -34,7 +37,8 @@ public final class MapUiBuilder {
     public static MapUi build(
             final Stage stage,
             final World world,
-            final Colony colony
+            final Colony colony,
+            final GameClient client
     ) {
         Skin skin = new Skin(Gdx.files.internal("skin/default.json"));
 
@@ -45,6 +49,8 @@ public final class MapUiBuilder {
 
         TextButton menuButton = new TextButton(I18n.get("map.menu"), skin);
         MinimapActor minimapActor = new MinimapActor(world);
+        CommandDispatcher<Object> dispatcher = new CommandDispatcher<>();
+        ChatLogActor chatLogActor = new ChatLogActor(client, skin, dispatcher);
 
         menuButton.addListener(new ChangeListener() {
             @Override
@@ -55,7 +61,9 @@ public final class MapUiBuilder {
 
         table.add(menuButton).pad(PADDING).left().top();
         table.add(minimapActor).pad(PADDING).expandX().right().top();
+        table.row();
+        table.add(chatLogActor).pad(PADDING).colspan(2).left().bottom().growX();
 
-        return new MapUi(stage, minimapActor);
+        return new MapUi(stage, minimapActor, chatLogActor);
     }
 }
