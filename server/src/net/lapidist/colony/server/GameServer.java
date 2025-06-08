@@ -14,6 +14,8 @@ import net.lapidist.colony.server.events.ShutdownSaveEvent;
 import net.lapidist.colony.server.events.SaveEvent;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.serialization.KryoRegistry;
+import net.lapidist.colony.network.MessageDispatcher;
+import net.lapidist.colony.network.MessageEndpoint;
 import net.lapidist.colony.server.io.GameStateIO;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.map.MapGenerator;
@@ -22,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.function.Consumer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 // Using java.nio here keeps the server independent from LibGDX's FileHandle API
@@ -32,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 // Autosave scheduling relies on standard Java concurrency utilities rather than
 // any LibGDX specific scheduling.
 
-public final class GameServer implements AutoCloseable {
+public final class GameServer implements AutoCloseable, MessageEndpoint {
     public static final int TCP_PORT = ColonyConfig.get().getInt("game.server.tcpPort");
     public static final int UDP_PORT = ColonyConfig.get().getInt("game.server.udpPort");
 
@@ -45,6 +48,7 @@ public final class GameServer implements AutoCloseable {
     private final long autosaveIntervalMs;
     private final String saveName;
     private final MapGenerator mapGenerator;
+    private final MessageDispatcher dispatcher = new MessageDispatcher();
     private ScheduledExecutorService executor;
     private MapState mapState;
 
@@ -54,7 +58,8 @@ public final class GameServer implements AutoCloseable {
         this.mapGenerator = config.getMapGenerator();
     }
 
-    public void start() throws IOException {
+    @Override
+    public void start() throws IOException, InterruptedException {
         KryoRegistry.register(server.getKryo());
         Events.init(new EventSystem());
         Paths.createGameFoldersIfNotExists();
@@ -77,6 +82,13 @@ public final class GameServer implements AutoCloseable {
         server.start();
         LOGGER.info("Server started on TCP {} UDP {}", TCP_PORT, UDP_PORT);
         server.bind(TCP_PORT, UDP_PORT);
+
+        onMessage(TileSelectionData.class, data -> {
+            handleTileSelection(data);
+            Events.dispatch(new TileSelectionEvent(data.x(), data.y(), data.selected()));
+            server.sendToAllTCP(data);
+        });
+
         server.addListener(new Listener() {
             @Override
             public void connected(final Connection connection) {
@@ -87,12 +99,7 @@ public final class GameServer implements AutoCloseable {
 
             @Override
             public void received(final Connection connection, final Object object) {
-                if (object instanceof TileSelectionData) {
-                    TileSelectionData data = (TileSelectionData) object;
-                    handleTileSelection(data);
-                    Events.dispatch(new TileSelectionEvent(data.x(), data.y(), data.selected()));
-                    server.sendToAllTCP(data);
-                }
+                dispatcher.dispatch(object);
             }
         });
 
@@ -115,6 +122,17 @@ public final class GameServer implements AutoCloseable {
         return mapState;
     }
 
+    @Override
+    public void send(final Object message) {
+        server.sendToAllTCP(message);
+    }
+
+    @Override
+    public <T> void onMessage(final Class<T> type, final Consumer<T> handler) {
+        dispatcher.register(type, handler);
+    }
+
+    @Override
     public void stop() {
         if (executor != null) {
             executor.shutdownNow();

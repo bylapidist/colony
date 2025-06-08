@@ -6,6 +6,8 @@ import com.esotericsoftware.kryonet.Listener;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.core.serialization.KryoRegistry;
+import net.lapidist.colony.network.MessageDispatcher;
+import net.lapidist.colony.network.MessageEndpoint;
 import net.lapidist.colony.server.GameServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,20 +16,31 @@ import java.io.IOException;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public final class GameClient {
+import java.util.function.Consumer;
+
+public final class GameClient implements MessageEndpoint {
     // Increase buffers to handle large serialized map data
     private static final int BUFFER_SIZE = 65536;
     private static final Logger LOGGER = LoggerFactory.getLogger(GameClient.class);
     private final Client client = new Client(BUFFER_SIZE, BUFFER_SIZE);
+    private final MessageDispatcher dispatcher = new MessageDispatcher();
     private MapState mapState;
     private final Queue<TileSelectionData> tileUpdates = new ConcurrentLinkedQueue<>();
     private static final int CONNECT_TIMEOUT = 5000;
     private static final int WAIT_TIME_MS = 10;
 
+    @Override
     public void start() throws IOException, InterruptedException {
         KryoRegistry.register(client.getKryo());
         client.start();
         LOGGER.info("Connecting to server...");
+
+        onMessage(MapState.class, state -> {
+            mapState = state;
+            LOGGER.info("Received map state from server");
+        });
+        onMessage(TileSelectionData.class, tileUpdates::add);
+
         client.addListener(new Listener() {
             @Override
             public void connected(final Connection connection) {
@@ -36,12 +49,7 @@ public final class GameClient {
 
             @Override
             public void received(final Connection connection, final Object object) {
-                if (object instanceof MapState) {
-                    mapState = (MapState) object;
-                    LOGGER.info("Received map state from server");
-                } else if (object instanceof TileSelectionData) {
-                    tileUpdates.add((TileSelectionData) object);
-                }
+                dispatcher.dispatch(object);
             }
         });
         client.connect(CONNECT_TIMEOUT, "localhost", GameServer.TCP_PORT, GameServer.UDP_PORT);
@@ -63,10 +71,22 @@ public final class GameClient {
         tileUpdates.add(data);
     }
 
+
     public void sendTileSelection(final TileSelectionData data) {
-        client.sendTCP(data);
+        send(data);
     }
 
+    @Override
+    public void send(final Object message) {
+        client.sendTCP(message);
+    }
+
+    @Override
+    public <T> void onMessage(final Class<T> type, final Consumer<T> handler) {
+        dispatcher.register(type, handler);
+    }
+
+    @Override
     public void stop() {
         client.stop();
         LOGGER.info("Client stopped");
