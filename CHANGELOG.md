@@ -1,3 +1,10 @@
+## [6.0.1](https://github.com/bylapidist/colony/compare/v6.0.0...v6.0.1) (2025-06-08)
+
+
+### Bug Fixes
+
+* **deps:** update dependency jacoco to v0.8.13 ([#367](https://github.com/bylapidist/colony/issues/367)) ([2cfd4a6](https://github.com/bylapidist/colony/commit/2cfd4a6a4bcd3441c59896225a09fe84572fc6a1))
+
 # [6.0.0](https://github.com/bylapidist/colony/compare/v5.67.0...v6.0.0) (2025-06-08)
 
 
