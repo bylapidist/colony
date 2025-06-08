@@ -48,6 +48,16 @@ All commit messages must follow the [Angular commit message guidelines](https://
 
 When creating PRs make sure the PR title also follows this convention.
 
+## Release Versioning
+Carefully consider how your changes affect the next version of the game. We
+strictly follow the Angular commit guidelines which control semantic release.
+- Use a `feat:` commit to introduce new features. This triggers a minor version
+  bump.
+- Use a `fix:` commit for bug fixes. This triggers a patch version bump.
+- If the change is breaking for users (for example modifying configuration or
+  save file formats) include `BREAKING CHANGE:` in the commit footer. This will
+  release a new major version.
+
 ## Networking workflow
 Client driven actions that modify the game world must follow this sequence:
 
