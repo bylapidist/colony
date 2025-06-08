@@ -9,7 +9,8 @@
         "minor",
         "patch"
       ],
-      "automerge": true
+      "automerge": true,
+      "semanticCommitType": "fix"
     }
   ]
 }

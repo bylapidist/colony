@@ -2,7 +2,13 @@
   "branches": ["master"],
   "repositoryUrl": "file:///workspace/colony",
   "plugins": [
-    "@semantic-release/commit-analyzer",
+    ["@semantic-release/commit-analyzer", {
+      "preset": "angular",
+      "releaseRules": [
+        {"type": "chore", "scope": "deps", "release": "patch"},
+        {"type": "chore", "scope": "deps-dev", "release": "patch"}
+      ]
+    }],
     "@semantic-release/release-notes-generator",
     ["@semantic-release/changelog", {
       "changelogFile": "CHANGELOG.md"
