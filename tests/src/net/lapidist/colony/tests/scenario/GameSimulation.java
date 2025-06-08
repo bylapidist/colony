@@ -6,6 +6,7 @@ import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.InputSystem;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
+import net.lapidist.colony.client.systems.network.TileUpdateSystem;
 import net.lapidist.colony.components.state.MapState;
 
 import static org.mockito.Mockito.mock;
@@ -28,7 +29,12 @@ public final class GameSimulation {
     public GameSimulation(final MapState state) {
         GameClient client = mock(GameClient.class);
         world = new World(new WorldConfigurationBuilder()
-                .with(new MapLoadSystem(state), new PlayerCameraSystem(), new InputSystem(client))
+                .with(
+                        new MapLoadSystem(state),
+                        new PlayerCameraSystem(),
+                        new InputSystem(client),
+                        new TileUpdateSystem(client)
+                )
                 .build());
         // run once so systems initialise
         world.process();

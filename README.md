@@ -58,3 +58,12 @@ appropriate module. Commit messages and pull request titles follow the
 [Angular commit message guidelines](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit).
 Ensure new functionality is covered by tests whenever possible.
 
+## Networking workflow
+Multiplayer features follow a strict request/response pattern:
+
+1. When a user action should modify the world, the client sends a message describing the action to the server.
+2. The server validates and applies the change, then broadcasts the resulting state update to all clients.
+3. Clients queue incoming updates and apply them during their next update step.
+
+Local changes must not be applied before the server's confirmation is processed. This keeps all connected clients in sync.
+

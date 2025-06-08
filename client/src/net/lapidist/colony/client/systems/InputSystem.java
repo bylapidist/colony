@@ -119,7 +119,6 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
             TileComponent tileComponent = tileMapper.get(tile);
             if (tileComponent.getX() == (int) tileCoords.x && tileComponent.getY() == (int) tileCoords.y) {
                 boolean newState = !tileComponent.isSelected();
-                tileComponent.setSelected(newState);
 
                 TileSelectionData msg = new TileSelectionData();
                 msg.setX(tileComponent.getX());
