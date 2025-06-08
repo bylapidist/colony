@@ -20,6 +20,7 @@ buildscript {
 } 
 
 plugins {
+    id 'jacoco'
     id 'com.diffplug.spotless' version '7.0.4' apply false
 }
 
@@ -87,5 +88,34 @@ allprojects {
 
     tasks.withType(Jar).configureEach {
         manifest.attributes('Implementation-Version': rootProject.applicationVersion)
+    }
+}
+
+def coverageModules = ['core', 'client', 'server', 'tests']
+
+subprojects { subproj ->
+    if (coverageModules.contains(subproj.name)) {
+        apply plugin: 'jacoco'
+
+        jacoco {
+            toolVersion = '0.8.11'
+        }
+
+        tasks.withType(Test).configureEach {
+            finalizedBy 'jacocoTestReport'
+        }
+
+        tasks.withType(JacocoReport).configureEach {
+            dependsOn 'test'
+            reports {
+                xml.required.set(true)
+                html.required.set(true)
+            }
+            classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, exclude: ['**/generated/**', '**/*Launcher*'])
+                })
+            )
+        }
     }
 }
