@@ -21,11 +21,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+// Using java.nio here keeps the server independent from LibGDX's FileHandle API
+// because the server module runs headless without the Gdx runtime.
 
 public final class GameServer extends AbstractMessageEndpoint implements AutoCloseable {
     public static final int TCP_PORT = ColonyConfig.get().getInt("game.server.tcpPort");
     public static final int UDP_PORT = ColonyConfig.get().getInt("game.server.udpPort");
 
+    // Increase buffers so the entire map can be serialized in one object
     private static final int BUFFER_SIZE = 65536;
     private static final Logger LOGGER = LoggerFactory.getLogger(GameServer.class);
 
@@ -33,13 +36,13 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     private final long autosaveInterval;
     private final String saveName;
     private final MapGenerator mapGenerator;
-    private final MapService mapService;
-    private final NetworkService networkService;
-    private final AutosaveService autosaveService;
-    private final CommandBus commandBus;
+    private AutosaveService autosaveService;
+    private MapService mapService;
+    private NetworkService networkService;
+    private CommandBus commandBus;
+    private MapState mapState;
     private Iterable<MessageHandler<?>> handlers;
     private Iterable<CommandHandler<?>> commandHandlers;
-    private MapState mapState;
 
     public GameServer(final GameServerConfig config) {
         this(config, null, null);
@@ -97,6 +100,7 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     public void send(final Object message) {
         networkService.send(message);
     }
+
 
     @Override
     public void stop() {
