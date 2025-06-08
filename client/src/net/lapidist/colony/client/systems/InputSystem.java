@@ -7,7 +7,8 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import net.lapidist.colony.client.network.GameClient;
-import net.lapidist.colony.client.systems.input.CameraInputHandler;
+import net.lapidist.colony.client.systems.input.GestureInputHandler;
+import net.lapidist.colony.client.systems.input.KeyboardInputHandler;
 import net.lapidist.colony.client.systems.input.TileSelectionHandler;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
@@ -27,7 +28,8 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
     private ComponentMapper<MapComponent> mapMapper;
     private ComponentMapper<TileComponent> tileMapper;
 
-    private CameraInputHandler cameraHandler;
+    private KeyboardInputHandler keyboardHandler;
+    private GestureInputHandler gestureHandler;
     private TileSelectionHandler tileSelectionHandler;
 
     public InputSystem(final GameClient clientToSet) {
@@ -47,21 +49,22 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
         mapMapper = world.getMapper(MapComponent.class);
         tileMapper = world.getMapper(TileComponent.class);
         map = net.lapidist.colony.map.MapUtils.findMapEntity(world);
-        cameraHandler = new CameraInputHandler(cameraSystem);
+        keyboardHandler = new KeyboardInputHandler(cameraSystem);
+        gestureHandler = new GestureInputHandler(cameraSystem);
         tileSelectionHandler = new TileSelectionHandler(client, cameraSystem);
     }
 
     @Override
     protected void processSystem() {
-        cameraHandler.handleKeyboardInput(world.getDelta());
-        cameraHandler.clampCameraPosition();
+        keyboardHandler.handleKeyboardInput(world.getDelta());
+        keyboardHandler.clampCameraPosition();
         cameraSystem.getCamera().update();
     }
 
 
     @Override
     public boolean scrolled(final float amountX, final float amountY) {
-        return cameraHandler.scrolled(amountX, amountY);
+        return gestureHandler.scrolled(amountX, amountY);
     }
 
     @Override
@@ -86,7 +89,9 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
 
     @Override
     public boolean pan(final float x, final float y, final float deltaX, final float deltaY) {
-        return cameraHandler.pan(deltaX, deltaY);
+        boolean result = gestureHandler.pan(deltaX, deltaY);
+        keyboardHandler.clampCameraPosition();
+        return result;
     }
 
     @Override
@@ -96,7 +101,7 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
 
     @Override
     public boolean zoom(final float initialDistance, final float distance) {
-        return cameraHandler.zoom(initialDistance, distance);
+        return gestureHandler.zoom(initialDistance, distance);
     }
 
     @Override
