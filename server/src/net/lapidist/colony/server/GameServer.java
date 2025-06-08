@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 // Autosave scheduling relies on standard Java concurrency utilities rather than
 // any LibGDX specific scheduling.
 
-public final class GameServer {
+public final class GameServer implements AutoCloseable {
     public static final int TCP_PORT = ColonyConfig.get().getInt("game.server.tcpPort");
     public static final int UDP_PORT = ColonyConfig.get().getInt("game.server.udpPort");
 
@@ -176,5 +176,10 @@ public final class GameServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void close() {
+        stop();
     }
 }
