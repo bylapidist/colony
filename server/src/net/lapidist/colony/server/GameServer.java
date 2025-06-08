@@ -1,36 +1,25 @@
 package net.lapidist.colony.server;
 
-import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import net.lapidist.colony.components.GameConstants;
-import net.lapidist.colony.config.ColonyConfig;
 import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.server.events.AutosaveEvent;
-import net.lapidist.colony.server.events.ShutdownSaveEvent;
-import net.lapidist.colony.server.events.SaveEvent;
+import net.lapidist.colony.config.ColonyConfig;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.serialization.KryoRegistry;
 import net.lapidist.colony.network.AbstractMessageEndpoint;
 import net.lapidist.colony.network.MessageHandler;
-import net.lapidist.colony.server.io.GameStateIO;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.map.MapGenerator;
 import net.lapidist.colony.server.handlers.TileSelectionMessageHandler;
+import net.lapidist.colony.server.services.AutosaveService;
+import net.lapidist.colony.server.services.MapService;
+import net.lapidist.colony.server.services.NetworkService;
 import net.mostlyoriginal.api.event.common.EventSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 // Using java.nio here keeps the server independent from LibGDX's FileHandle API
 // because the server module runs headless without the Gdx runtime.
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-// Autosave scheduling relies on standard Java concurrency utilities rather than
-// any LibGDX specific scheduling.
 
 public final class GameServer extends AbstractMessageEndpoint implements AutoCloseable {
     public static final int TCP_PORT = ColonyConfig.get().getInt("game.server.tcpPort");
@@ -38,14 +27,15 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
 
     // Increase buffers so the entire map can be serialized in one object
     private static final int BUFFER_SIZE = 65536;
-    private static final String AUTOSAVE_SUFFIX = Paths.AUTOSAVE_SUFFIX;
     private static final Logger LOGGER = LoggerFactory.getLogger(GameServer.class);
 
     private final Server server = new Server(BUFFER_SIZE, BUFFER_SIZE);
     private final long autosaveInterval;
     private final String saveName;
     private final MapGenerator mapGenerator;
-    private ScheduledExecutorService executor;
+    private AutosaveService autosaveService;
+    private MapService mapService;
+    private NetworkService networkService;
     private MapState mapState;
     private Iterable<MessageHandler<?>> handlers;
 
@@ -58,6 +48,9 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         this.autosaveInterval = config.getAutosaveInterval();
         this.mapGenerator = config.getMapGenerator();
         this.handlers = handlersToUse;
+        this.mapService = new MapService(mapGenerator, saveName);
+        this.networkService = new NetworkService(server, TCP_PORT, UDP_PORT);
+        this.autosaveService = new AutosaveService(autosaveInterval, saveName, () -> mapState);
     }
 
     @Override
@@ -66,8 +59,8 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         Events.init(new EventSystem());
         Paths.createGameFoldersIfNotExists();
 
-        loadOrGenerateMap();
-        setupConnections();
+        mapState = mapService.load();
+        networkService.start(mapState, this::dispatch);
         if (handlers == null) {
             handlers = java.util.List.of(
                     new TileSelectionMessageHandler(() -> mapState, server)
@@ -76,60 +69,7 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         for (MessageHandler<?> handler : handlers) {
             handler.register(this);
         }
-        scheduleAutosave();
-    }
-
-    private void loadOrGenerateMap() throws IOException {
-        Path saveFile = Paths.getAutosave(saveName);
-        if (Files.exists(saveFile)) {
-            mapState = GameStateIO.load(saveFile);
-            LOGGER.info("Loaded save file: {}", saveFile);
-        } else {
-            generateMap();
-            GameStateIO.save(mapState, saveFile);
-            LOGGER.info("Generated new map and saved to: {}", saveFile);
-        }
-        mapState = mapState.toBuilder()
-                .saveName(saveName)
-                .autosaveName(saveName + AUTOSAVE_SUFFIX)
-                .build();
-        Files.writeString(Paths.getLastAutosaveMarker(), saveName);
-    }
-
-    private void setupConnections() throws IOException {
-        server.start();
-        LOGGER.info("Server started on TCP {} UDP {}", TCP_PORT, UDP_PORT);
-        server.bind(TCP_PORT, UDP_PORT);
-
-        server.addListener(new Listener() {
-            @Override
-            public void connected(final Connection connection) {
-                LOGGER.info("Connection established: {}", connection.getID());
-                connection.sendTCP(mapState);
-                LOGGER.info("Sent map state to connection {}", connection.getID());
-            }
-
-            @Override
-            public void received(final Connection connection, final Object object) {
-                dispatch(object);
-            }
-        });
-    }
-
-    private void scheduleAutosave() {
-        executor = Executors.newSingleThreadScheduledExecutor(r -> {
-            Thread thread = new Thread(r);
-            thread.setDaemon(true);
-            return thread;
-        });
-        executor.scheduleAtFixedRate(this::autoSave, autosaveInterval, autosaveInterval, TimeUnit.MILLISECONDS);
-    }
-
-    private void generateMap() {
-        mapState = mapGenerator.generate(
-                GameConstants.MAP_WIDTH,
-                GameConstants.MAP_HEIGHT
-        );
+        autosaveService.start();
     }
 
     public MapState getMapState() {
@@ -144,34 +84,10 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
 
     @Override
     public void stop() {
-        if (executor != null) {
-            executor.shutdownNow();
-        }
-        saveOnShutdown();
-        server.stop();
+        autosaveService.stop();
+        networkService.stop();
         LOGGER.info("Server stopped");
         Events.dispose();
-    }
-
-    private void autoSave() {
-        saveGameState(AutosaveEvent::new, "Autosaved game state to {} ({} bytes)");
-    }
-
-    private void saveOnShutdown() {
-        saveGameState(ShutdownSaveEvent::new, "Saved game state to {} ({} bytes) on shutdown");
-    }
-
-    private void saveGameState(final java.util.function.BiFunction<Path, Long, SaveEvent> creator, final String log) {
-        try {
-            Path file = Paths.getAutosave(saveName);
-            GameStateIO.save(mapState, file);
-            long size = Files.size(file);
-            Events.dispatch(creator.apply(file, size));
-            Events.update();
-            LOGGER.info(log, file, size);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
