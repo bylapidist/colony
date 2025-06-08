@@ -1,28 +1,32 @@
 # Colony
 [![Java CI](https://github.com/bylapidist/colony/actions/workflows/gradle.yml/badge.svg)](https://github.com/bylapidist/colony/actions/workflows/gradle.yml)
 
-Colony is a small simulation/strategy game prototype built with LibGDX and the Artemis-ODB
-entity component system. The code base is organised as a multi-module Gradle project so that
-engine components, game logic and tests can be developed independently.
+Colony is a small simulation/strategy prototype built with LibGDX and the Artemis-ODB entity component system. The code base is organised as a multi-module Gradle project so engine components, game logic and tests can be developed independently.
 
-## Project structure
+## Table of Contents
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+  - [Building and Testing](#building-and-testing)
+  - [Running the Game](#running-the-game)
+- [Configuration](#configuration)
+- [Development Guidelines](#development-guidelines)
+  - [Code Style](#code-style)
+  - [Contributing](#contributing)
+- [Networking Workflow](#networking-workflow)
+
+## Project Structure
 The repository is split into four Gradle modules:
 
- - **core** – Shared ECS components, constants, cross-platform game logic and Kryo serializers.
- - **client** – Desktop client using LibGDX. This module contains the game loop, rendering logic,
-  UI classes and networking code to communicate with the server.
- - **server** – Headless game server. It exposes networking services using Kryonet and runs the
-  same ECS logic as the client to keep game state in sync.
- - **tests** – JUnit tests and a custom `GdxTestRunner` that boots a headless LibGDX environment
-  so game systems can be tested without a graphical context.
+- **core** – shared ECS components, constants, cross-platform game logic and Kryo serializers.
+- **client** – desktop client using LibGDX. This module contains the game loop, rendering logic, UI classes and networking code to communicate with the server.
+- **server** – headless game server. It exposes networking services using Kryonet and runs the same ECS logic as the client to keep game state in sync.
+- **tests** – JUnit tests and a custom `GdxTestRunner` that boots a headless LibGDX environment so game systems can be tested without a graphical context.
 
-Each module keeps its source under `src/` with all packages rooted at
-`net.lapidist.colony`. Shared constants and configuration files now live in the
-`core` module and are imported by both the client and server.
+Each module keeps its source under `src/` with all packages rooted at `net.lapidist.colony`. Shared constants and configuration files live in the `core` module and are imported by both the client and server.
 
-## Building and testing
-Java 21 toolchains are configured via the Gradle wrapper. To work on the project run the
-following commands whenever you pull new changes or before committing:
+## Getting Started
+### Building and Testing
+Java 21 toolchains are configured via the Gradle wrapper. Run the following commands whenever you pull new changes or before committing:
 
 ```bash
 ./gradlew tests:copyAssets   # copy client assets into the test module
@@ -31,11 +35,9 @@ following commands whenever you pull new changes or before committing:
 ./gradlew check              # run Checkstyle and Spotless verification
 ```
 
-The `tests:copyAssets` task is required so that resources used by the test suite are
-available. `spotlessApply` will automatically format all Java sources and must be executed
-before committing.
+The `tests:copyAssets` task is required so that resources used by the test suite are available. `spotlessApply` will automatically format all Java sources and must be executed before committing.
 
-## Running the game
+### Running the Game
 Both the client and dedicated server can be started directly from Gradle:
 
 ```bash
@@ -43,28 +45,19 @@ Both the client and dedicated server can be started directly from Gradle:
 ./gradlew :server:run   # start the dedicated server
 ```
 
-Configuration defaults such as map size, autosave interval and network ports are
-defined in `core/src/main/resources/game.conf` and loaded at runtime.
-Per-user saves and settings are written to a platform specific directory under
-the user's home folder. `core/src/net/lapidist/colony/io/Paths.java` resolves the
-exact locations.
+## Configuration
+Configuration defaults such as map size, autosave interval and network ports are defined in `core/src/main/resources/game.conf` and loaded at runtime. Per-user saves and settings are written to a platform specific directory under the user's home folder. `core/src/net/lapidist/colony/io/Paths.java` resolves the exact locations.
 
-All visible text is provided through resource bundles found in
-`core/src/main/resources/i18n`. The current locale can be changed in the
-in‑game settings screen and is persisted alongside the user's other settings.
+All visible text is provided through resource bundles found in `core/src/main/resources/i18n`. The current locale can be changed in the in‑game settings screen and is persisted alongside the user's other settings.
 
-## Coding style
-Checkstyle rules are defined in `config/checkstyle/checkstyle.xml`. All Java files use
-four spaces for indentation and lines are limited to 120 characters. The Gradle
-`check` task enforces these conventions and should pass before committing.
+## Development Guidelines
+### Code Style
+Checkstyle rules are defined in `config/checkstyle/checkstyle.xml`. All Java files use four spaces for indentation and lines are limited to 120 characters. The Gradle `check` task enforces these conventions and should pass before committing.
 
-## Contributing guidelines
-New classes should be placed under the `net.lapidist.colony` package in the
-appropriate module. Commit messages and pull request titles follow the
-[Angular commit message guidelines](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit).
-Ensure new functionality is covered by tests whenever possible.
+### Contributing
+New classes should be placed under the `net.lapidist.colony` package in the appropriate module. Commit messages and pull request titles follow the [Angular commit message guidelines](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit). Ensure new functionality is covered by tests whenever possible.
 
-## Networking workflow
+## Networking Workflow
 Multiplayer features follow a strict request/response pattern:
 
 1. When a user action should modify the world, the client sends a message describing the action to the server.
@@ -72,4 +65,3 @@ Multiplayer features follow a strict request/response pattern:
 3. Clients queue incoming updates and apply them during their next update step.
 
 Local changes must not be applied before the server's confirmation is processed. This keeps all connected clients in sync.
-
