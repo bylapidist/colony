@@ -23,19 +23,16 @@ public class GameServerBroadcastTest {
         GameClient clientB = new GameClient();
         clientB.start();
 
-        TileSelectionData data = new TileSelectionData();
-        data.setX(0);
-        data.setY(0);
-        data.setSelected(true);
+        TileSelectionData data = new TileSelectionData(0, 0, true);
         clientA.sendTileSelection(data);
 
         Thread.sleep(WAIT_MS);
 
         TileSelectionData update = clientB.pollTileSelection();
         assertNotNull(update);
-        assertEquals(data.isSelected(), update.isSelected());
-        assertEquals(data.getX(), update.getX());
-        assertEquals(data.getY(), update.getY());
+        assertEquals(data.selected(), update.selected());
+        assertEquals(data.x(), update.x());
+        assertEquals(data.y(), update.y());
 
         clientA.stop();
         clientB.stop();

@@ -40,10 +40,7 @@ public class TileUpdateSystemTest {
 
         world.process();
 
-        TileSelectionData data = new TileSelectionData();
-        data.setX(0);
-        data.setY(0);
-        data.setSelected(true);
+        TileSelectionData data = new TileSelectionData(0, 0, true);
         client.injectTileSelection(data);
 
         world.process();

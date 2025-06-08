@@ -49,10 +49,11 @@ public final class TileSelectionHandler {
             if (tileComponent.getX() == (int) tileCoords.x && tileComponent.getY() == (int) tileCoords.y) {
                 boolean newState = !tileComponent.isSelected();
 
-                TileSelectionData msg = new TileSelectionData();
-                msg.setX(tileComponent.getX());
-                msg.setY(tileComponent.getY());
-                msg.setSelected(newState);
+                TileSelectionData msg = new TileSelectionData(
+                        tileComponent.getX(),
+                        tileComponent.getY(),
+                        newState
+                );
                 client.sendTileSelection(msg);
                 return true;
             }

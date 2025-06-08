@@ -30,10 +30,7 @@ public class GameServerSelectionTest {
         GameClient client = new GameClient();
         client.start();
 
-        TileSelectionData data = new TileSelectionData();
-        data.setX(0);
-        data.setY(0);
-        data.setSelected(true);
+        TileSelectionData data = new TileSelectionData(0, 0, true);
 
         client.sendTileSelection(data);
         Thread.sleep(WAIT_MS);
