@@ -22,6 +22,8 @@ split into four modules:
 - Ensure each file ends with a newline and avoid trailing whitespace.
 - New classes should be placed under the `net.lapidist.colony` package in the
   module that matches their purpose (`core`, `client`, `server`, or `tests`).
+- Use the i18n translation system for all user-facing text. Never hardcode
+  strings directly in the code.
 
 ## Notes
 The project uses Java 21 toolchains and standard Gradle tasks. No additional tools are required beyond what is defined in the Gradle build.
