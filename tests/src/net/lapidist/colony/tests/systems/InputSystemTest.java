@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.client.core.Constants;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
+import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.client.systems.InputSystem;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.components.maps.MapComponent;
@@ -47,7 +48,7 @@ public class InputSystemTest {
         camera.getCamera().position.set(Constants.TILE_SIZE / 2f, Constants.TILE_SIZE / 2f, 0);
         camera.getCamera().update();
 
-        Vector2 screenCoords = camera.cameraCoordsFromWorldCoords(0, 0);
+        Vector2 screenCoords = CameraUtils.worldToScreenCoords(camera.getViewport(), 0, 0);
         float tapX = screenCoords.x;
         float tapY = screenCoords.y;
 
