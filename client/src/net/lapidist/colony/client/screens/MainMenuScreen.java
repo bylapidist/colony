@@ -21,6 +21,7 @@ public final class MainMenuScreen extends BaseScreen {
         TextButton continueButton = new TextButton(I18n.get("main.continue"), getSkin());
         TextButton newGameButton = new TextButton(I18n.get("main.newGame"), getSkin());
         TextButton loadGameButton = new TextButton(I18n.get("main.loadGame"), getSkin());
+        TextButton settingsButton = new TextButton(I18n.get("main.settings"), getSkin());
         TextButton exitButton = new TextButton(I18n.get("main.exit"), getSkin());
 
         String lastSave = null;
@@ -40,6 +41,7 @@ public final class MainMenuScreen extends BaseScreen {
         getRoot().add(continueButton).row();
         getRoot().add(newGameButton).row();
         getRoot().add(loadGameButton).row();
+        getRoot().add(settingsButton).row();
         getRoot().add(exitButton).row();
 
         final String last = lastSave;
@@ -63,6 +65,13 @@ public final class MainMenuScreen extends BaseScreen {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 colony.setScreen(new LoadGameScreen(colony));
+            }
+        });
+
+        settingsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                colony.setScreen(new SettingsScreen(colony));
             }
         });
 

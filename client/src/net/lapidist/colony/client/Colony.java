@@ -4,6 +4,8 @@ import com.badlogic.gdx.Game;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.client.screens.MapScreen;
 import net.lapidist.colony.client.screens.MainMenuScreen;
+import net.lapidist.colony.i18n.I18n;
+import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.components.state.MapState;
@@ -16,6 +18,7 @@ public final class Colony extends Game {
 
     private GameClient client;
     private GameServer server;
+    private Settings settings;
 
     public void returnToMainMenu() {
         if (client != null) {
@@ -50,11 +53,17 @@ public final class Colony extends Game {
         startGame("autosave");
     }
 
+    public Settings getSettings() {
+        return settings;
+    }
+
     @Override
     public void create() {
         // Do global initialisation
         try {
             Paths.createGameFoldersIfNotExists();
+            settings = Settings.load();
+            I18n.setLocale(settings.getLocale());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -21,6 +21,7 @@ public final class Paths {
     private static final String GAME_FOLDER_WINDOWS = System.getenv("APPDATA") + "\\.colony";
     private static final String SAVE_FOLDER_MAC = GAME_FOLDER_MAC + "/saves";
     private static final String SAVE_FOLDER_WINDOWS = GAME_FOLDER_WINDOWS + "\\saves";
+    private static final String SETTINGS_FILE = "settings.properties";
 
     private Paths() {
     }
@@ -38,6 +39,10 @@ public final class Paths {
         return isWindows() ? SAVE_FOLDER_WINDOWS : SAVE_FOLDER_MAC;
     }
 
+    private static Path getSettingsPath() {
+        return java.nio.file.Paths.get(getGameFolderPath(), SETTINGS_FILE);
+    }
+
     public static void createGameFoldersIfNotExists() throws IOException {
         String gameFolderPath = getGameFolderPath();
         String saveFolderPath = getSaveFolderPath();
@@ -51,6 +56,11 @@ public final class Paths {
         if (!Files.isDirectory(saveFolder)) {
             Files.createDirectories(saveFolder);
         }
+    }
+
+    public static Path getSettingsFile() throws IOException {
+        createGameFoldersIfNotExists();
+        return getSettingsPath();
     }
 
     public static Path getSaveFile(final String fileName) throws IOException {
