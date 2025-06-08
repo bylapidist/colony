@@ -20,4 +20,16 @@ public class I18nTest {
         I18n.setLocale(Locale.GERMAN);
         assertEquals("Fortsetzen", I18n.get("main.continue"));
     }
+
+    @Test
+    public void returnsPlaceholderForMissingKey() {
+        I18n.setLocale(Locale.ENGLISH);
+        assertEquals("!missing!", I18n.get("missing"));
+    }
+
+    @Test
+    public void getLocaleReflectsCurrentLocale() {
+        I18n.setLocale(Locale.FRENCH);
+        assertEquals(Locale.FRENCH.getLanguage(), I18n.getLocale().getLanguage());
+    }
 }
