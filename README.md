@@ -1,5 +1,6 @@
 # Colony
 [![Java CI](https://github.com/bylapidist/colony/actions/workflows/gradle.yml/badge.svg)](https://github.com/bylapidist/colony/actions/workflows/gradle.yml)
+[![codecov](https://codecov.io/gh/bylapidist/colony/graph/badge.svg?token=mCn1MJTldf)](https://codecov.io/gh/bylapidist/colony)
 
 Colony is a small simulation/strategy prototype built with LibGDX and the Artemis-ODB entity component system. The project is structured as a multi-module Gradle build so the client, server and shared logic can evolve independently.
 
