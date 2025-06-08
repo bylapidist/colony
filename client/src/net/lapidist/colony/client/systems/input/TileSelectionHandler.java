@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
+import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.state.TileSelectionData;
@@ -39,8 +40,8 @@ public final class TileSelectionHandler {
 
         cameraSystem.getCamera().update();
 
-        Vector2 worldCoords = cameraSystem.screenCoordsToWorldCoords(x, y);
-        Vector2 tileCoords = cameraSystem.worldCoordsToTileCoords(worldCoords);
+        Vector2 worldCoords = CameraUtils.screenToWorldCoords(cameraSystem.getViewport(), x, y);
+        Vector2 tileCoords = CameraUtils.worldCoordsToTileCoords(worldCoords);
 
         Array<Entity> tiles = mapMapper.get(map).getTiles();
         for (int i = 0; i < tiles.size; i++) {

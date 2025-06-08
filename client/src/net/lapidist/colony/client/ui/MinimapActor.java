@@ -18,6 +18,7 @@ import net.lapidist.colony.client.core.Constants;
 import net.lapidist.colony.client.core.io.FileLocation;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
+import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
@@ -188,7 +189,11 @@ public final class MinimapActor extends Actor implements Disposable {
         }
 
         if (cameraSystem != null) {
-            com.badlogic.gdx.math.Rectangle view = cameraSystem.getViewBounds();
+            com.badlogic.gdx.math.Rectangle view = CameraUtils.getViewBounds(
+                    cameraSystem.getCamera(),
+                    cameraSystem.getViewport(),
+                    new com.badlogic.gdx.math.Rectangle()
+            );
             Vector2 bottomLeft = new Vector2(view.x, view.y);
             Vector2 topRight = new Vector2(view.x + view.width, view.y + view.height);
 

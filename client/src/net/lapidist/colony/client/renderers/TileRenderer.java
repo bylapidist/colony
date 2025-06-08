@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
+import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 
@@ -41,12 +42,12 @@ public final class TileRenderer implements EntityRenderer {
         for (int i = 0; i < entities.size; i++) {
             Entity entity = entities.get(i);
             TileComponent tile = tileMapper.get(entity);
-            Vector2 worldCoords = cameraSystem.tileCoordsToWorldCoords(
+            Vector2 worldCoords = CameraUtils.tileCoordsToWorldCoords(
                     tile.getX(),
                     tile.getY()
             );
 
-            if (!cameraSystem.withinCameraView(worldCoords)) {
+            if (!CameraUtils.withinCameraView(cameraSystem.getViewport(), worldCoords)) {
                 continue;
             }
 

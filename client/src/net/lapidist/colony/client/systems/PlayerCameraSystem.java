@@ -4,16 +4,12 @@ import com.artemis.BaseSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import net.lapidist.colony.client.core.Constants;
+import net.lapidist.colony.client.util.CameraUtils;
 
 public final class PlayerCameraSystem extends BaseSystem {
 
-    private final Vector3 tmpVec3 = new Vector3();
-
-    private final Vector2 tmpVec2 = new Vector2();
     private final Rectangle viewBounds = new Rectangle();
 
     private OrthographicCamera camera;
@@ -30,12 +26,8 @@ public final class PlayerCameraSystem extends BaseSystem {
         viewport.apply();
     }
 
-    public boolean withinCameraView(final Vector2 screenCoords) {
-        Vector2 cameraCoords = cameraCoordsFromWorldCoords(screenCoords.x, screenCoords.y);
-
-        return !(cameraCoords.x > Gdx.graphics.getWidth()
-                || cameraCoords.y > Gdx.graphics.getHeight()
-        );
+    public boolean withinCameraView(final Vector2 worldCoords) {
+        return CameraUtils.withinCameraView(viewport, worldCoords);
     }
 
     public void moveCameraToWorldCoords(final Vector2 worldCoords) {
@@ -43,51 +35,41 @@ public final class PlayerCameraSystem extends BaseSystem {
     }
 
     public Vector2 getWorldCenter() {
-        return new Vector2(
-                (Constants.TILE_SIZE * Constants.MAP_WIDTH + Constants.TILE_SIZE) / 2f,
-                (Constants.TILE_SIZE * Constants.MAP_HEIGHT + Constants.TILE_SIZE) / 2f
-        );
+        return CameraUtils.getWorldCenter();
     }
 
     public Vector2 cameraCoordsFromWorldCoords(
             final float worldX,
             final float worldY
     ) {
-        viewport.project(tmpVec3.set(worldX, worldY, 0));
-        return tmpVec2.set(tmpVec3.x, tmpVec3.y);
+        return CameraUtils.worldToScreenCoords(viewport, worldX, worldY);
     }
 
     public Vector2 worldCoordsFromCameraCoords(
             final float screenX,
             final float screenY
     ) {
-        return viewport.unproject(tmpVec2.set(screenX, screenY));
+        return CameraUtils.screenToWorldCoords(viewport, screenX, screenY);
     }
 
     public Vector2 screenCoordsToWorldCoords(final float screenX, final float screenY) {
-        return viewport.unproject(tmpVec2.set(screenX, screenY));
+        return CameraUtils.screenToWorldCoords(viewport, screenX, screenY);
     }
 
     public Vector2 tileCoordsToWorldCoords(final int x, final int y) {
-        return new Vector2(
-                x * Constants.TILE_SIZE,
-                y * Constants.TILE_SIZE
-        );
+        return CameraUtils.tileCoordsToWorldCoords(x, y);
     }
 
     public Vector2 tileCoordsToWorldCoords(final Vector2 coords) {
-        return tileCoordsToWorldCoords((int) coords.x, (int) coords.y);
+        return CameraUtils.tileCoordsToWorldCoords(coords);
     }
 
     public Vector2 worldCoordsToTileCoords(final int x, final int y) {
-        return new Vector2(
-                Math.floorDiv(x, Constants.TILE_SIZE),
-                Math.floorDiv(y, Constants.TILE_SIZE)
-        );
+        return CameraUtils.worldCoordsToTileCoords(x, y);
     }
 
     public Vector2 worldCoordsToTileCoords(final Vector2 coords) {
-        return worldCoordsToTileCoords((int) coords.x, (int) coords.y);
+        return CameraUtils.worldCoordsToTileCoords(coords);
     }
 
     @Override
@@ -122,14 +104,6 @@ public final class PlayerCameraSystem extends BaseSystem {
      * @return rectangle representing the visible world area
      */
     public Rectangle getViewBounds() {
-        float halfWidth = viewport.getWorldWidth() * camera.zoom / 2f;
-        float halfHeight = viewport.getWorldHeight() * camera.zoom / 2f;
-        viewBounds.set(
-                camera.position.x - halfWidth,
-                camera.position.y - halfHeight,
-                halfWidth * 2f,
-                halfHeight * 2f
-        );
-        return viewBounds;
+        return CameraUtils.getViewBounds(camera, viewport, viewBounds);
     }
 }
