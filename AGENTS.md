@@ -41,3 +41,12 @@ If any command fails, fix the issues before committing.
 All commit messages must follow the [Angular commit message guidelines](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit).
 
 When creating PRs make sure the PR title also follows this convention.
+
+## Networking workflow
+Client driven actions that modify the game world must follow this sequence:
+
+1. The client sends a request message to the server describing the action.
+2. The server processes the request and broadcasts the resulting state change to all clients.
+3. Clients queue incoming updates and apply them in a system during their normal update loop.
+
+Do not apply world state changes locally until the server response is received and processed. This ensures all clients stay in sync.
