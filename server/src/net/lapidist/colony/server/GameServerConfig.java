@@ -7,7 +7,7 @@ import net.lapidist.colony.map.MapGenerator;
 /**
  * Configuration object for {@link GameServer} instances.
  */
-public final class GameServerConfig implements ServerConfig {
+public final class GameServerConfig {
 
     static final String DEFAULT_SAVE_NAME = ColonyConfig.get().getString("game.defaultSaveName");
     static final long DEFAULT_INTERVAL = ColonyConfig.get().getLong("game.autosaveInterval");
