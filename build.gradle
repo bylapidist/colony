@@ -26,6 +26,7 @@ plugins {
 
 import org.gradle.process.ExecOperations
 import org.gradle.process.ExecSpec
+import org.gradle.api.tasks.javadoc.Javadoc
 
 def getGitVersion() {
     def stdout = new ByteArrayOutputStream()
@@ -88,4 +89,17 @@ allprojects {
     tasks.withType(Jar).configureEach {
         manifest.attributes('Implementation-Version': rootProject.applicationVersion)
     }
+}
+
+tasks.register('aggregateJavadoc', Javadoc) {
+    group = 'documentation'
+    description = 'Generates aggregated Javadoc for all modules.'
+    destinationDir = file("$buildDir/docs/javadoc")
+    subprojects.each { proj ->
+        dependsOn proj.tasks.named('javadoc')
+        source proj.sourceSets.main.allJava
+        classpath += proj.sourceSets.main.compileClasspath
+    }
+    options.encoding = 'UTF-8'
+    failOnError = false
 }

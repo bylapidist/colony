@@ -35,6 +35,15 @@ The `tests:copyAssets` task is required so that resources used by the test suite
 available. `spotlessApply` will automatically format all Java sources and must be executed
 before committing.
 
+## Documentation
+Javadoc for all modules can be generated locally with:
+
+```bash
+./gradlew aggregateJavadoc
+```
+
+The generated site is published automatically to GitHub Pages when changes are pushed to `master`.
+
 ## Running the game
 Both the client and dedicated server can be started directly from Gradle:
 

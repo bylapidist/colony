@@ -54,3 +54,38 @@ jobs:
         run: |
           npm i -g semantic-release @semantic-release/changelog @semantic-release/git
           semantic-release
+
+  pages:
+    runs-on: ubuntu-latest
+    needs: [test]
+    if: github.ref == 'refs/heads/master'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    name: Deploy Javadoc
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-disabled: true
+
+      - name: Generate Javadoc
+        run: ./gradlew aggregateJavadoc
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/docs/javadoc
+
+      - uses: actions/deploy-pages@v4
+        id: deployment
