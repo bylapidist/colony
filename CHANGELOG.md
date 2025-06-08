@@ -1,3 +1,10 @@
+# [6.1.0](https://github.com/bylapidist/colony/compare/v6.0.1...v6.1.0) (2025-06-08)
+
+
+### Features
+
+* **core:** add path service abstraction and make TileData immutable ([#368](https://github.com/bylapidist/colony/issues/368)) ([376a0f1](https://github.com/bylapidist/colony/commit/376a0f134fa3859099d2aa9f1fa98c56d24523fb))
+
 ## [6.0.1](https://github.com/bylapidist/colony/compare/v6.0.0...v6.0.1) (2025-06-08)
 
 
