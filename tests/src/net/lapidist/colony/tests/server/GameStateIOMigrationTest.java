@@ -20,7 +20,10 @@ public class GameStateIOMigrationTest {
     @Test
     public void migratesOldVersionToCurrent() throws Exception {
         Path file = Files.createTempFile("state", ".dat");
-        MapState state = new MapState().withVersion(SaveVersion.V1.number());
+        MapState state = new MapState()
+                .toBuilder()
+                .version(SaveVersion.V1.number())
+                .build();
         Kryo kryo = new Kryo();
         KryoRegistry.register(kryo);
         try (Output output = new Output(Files.newOutputStream(file))) {

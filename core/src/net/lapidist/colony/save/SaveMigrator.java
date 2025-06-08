@@ -22,7 +22,9 @@ public final class SaveMigrator {
 
     private static MapState v1ToV2(final MapState state) {
         // No structural changes between v1 and v2, just bump the version.
-        return state.withVersion(SaveVersion.V2.number());
+        return state.toBuilder()
+                .version(SaveVersion.V2.number())
+                .build();
     }
 
     /**
@@ -37,6 +39,8 @@ public final class SaveMigrator {
             }
             result = op.apply(result);
         }
-        return result.withVersion(toVersion);
+        return result.toBuilder()
+                .version(toVersion)
+                .build();
     }
 }

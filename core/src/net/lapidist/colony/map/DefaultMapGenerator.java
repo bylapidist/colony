@@ -20,8 +20,10 @@ public final class DefaultMapGenerator implements MapGenerator {
     public MapState generate(final int width, final int height) {
         MapState state = new MapState();
         Random random = new Random();
-        state = state.withName("map-" + random.nextInt(NAME_RANGE));
-        state = state.withDescription(I18n.get("generator.generatedMap"));
+        state = state.toBuilder()
+                .name("map-" + random.nextInt(NAME_RANGE))
+                .description(I18n.get("generator.generatedMap"))
+                .build();
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {

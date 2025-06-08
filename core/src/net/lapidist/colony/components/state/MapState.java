@@ -33,31 +33,80 @@ public record MapState(
         );
     }
 
-    public MapState withVersion(final int newVersion) {
-        return new MapState(newVersion, name, saveName, autosaveName, description, tiles, buildings);
+    public Builder toBuilder() {
+        return new Builder(this);
     }
 
-    public MapState withName(final String newName) {
-        return new MapState(version, newName, saveName, autosaveName, description, tiles, buildings);
+    public static Builder builder() {
+        return new Builder();
     }
 
-    public MapState withSaveName(final String newSaveName) {
-        return new MapState(version, name, newSaveName, autosaveName, description, tiles, buildings);
-    }
+    public static final class Builder {
+        private int version;
+        private String name;
+        private String saveName;
+        private String autosaveName;
+        private String description;
+        private Map<TilePos, TileData> tiles;
+        private List<BuildingData> buildings;
 
-    public MapState withAutosaveName(final String newAutosaveName) {
-        return new MapState(version, name, saveName, newAutosaveName, description, tiles, buildings);
-    }
+        private Builder() {
+            this.version = CURRENT_VERSION;
+            this.name = "map-" + UUID.randomUUID();
+            this.saveName = "save-" + UUID.randomUUID();
+            this.autosaveName = null;
+            this.description = null;
+            this.tiles = new HashMap<>();
+            this.buildings = new ArrayList<>();
+        }
 
-    public MapState withDescription(final String newDescription) {
-        return new MapState(version, name, saveName, autosaveName, newDescription, tiles, buildings);
-    }
+        private Builder(final MapState state) {
+            this.version = state.version;
+            this.name = state.name;
+            this.saveName = state.saveName;
+            this.autosaveName = state.autosaveName;
+            this.description = state.description;
+            this.tiles = state.tiles;
+            this.buildings = state.buildings;
+        }
 
-    public MapState withTiles(final Map<TilePos, TileData> newTiles) {
-        return new MapState(version, name, saveName, autosaveName, description, newTiles, buildings);
-    }
+        public Builder version(final int newVersion) {
+            this.version = newVersion;
+            return this;
+        }
 
-    public MapState withBuildings(final List<BuildingData> newBuildings) {
-        return new MapState(version, name, saveName, autosaveName, description, tiles, newBuildings);
+        public Builder name(final String newName) {
+            this.name = newName;
+            return this;
+        }
+
+        public Builder saveName(final String newSaveName) {
+            this.saveName = newSaveName;
+            return this;
+        }
+
+        public Builder autosaveName(final String newAutosaveName) {
+            this.autosaveName = newAutosaveName;
+            return this;
+        }
+
+        public Builder description(final String newDescription) {
+            this.description = newDescription;
+            return this;
+        }
+
+        public Builder tiles(final Map<TilePos, TileData> newTiles) {
+            this.tiles = newTiles;
+            return this;
+        }
+
+        public Builder buildings(final List<BuildingData> newBuildings) {
+            this.buildings = newBuildings;
+            return this;
+        }
+
+        public MapState build() {
+            return new MapState(version, name, saveName, autosaveName, description, tiles, buildings);
+        }
     }
 }

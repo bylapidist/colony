@@ -21,7 +21,10 @@ public class GameStateIOVersionTest {
     @Test
     public void throwsWhenVersionIsNewer() throws Exception {
         Path file = Files.createTempFile("state", ".dat");
-        MapState state = new MapState().withVersion(SaveVersion.CURRENT.number() + 1);
+        MapState state = new MapState()
+                .toBuilder()
+                .version(SaveVersion.CURRENT.number() + 1)
+                .build();
         Kryo kryo = new Kryo();
         KryoRegistry.register(kryo);
         try (Output output = new Output(Files.newOutputStream(file))) {
