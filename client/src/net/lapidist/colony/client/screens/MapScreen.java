@@ -27,6 +27,7 @@ import net.lapidist.colony.client.events.HideEvent;
 import net.lapidist.colony.client.events.ShowEvent;
 import net.lapidist.colony.client.events.DisposeEvent;
 import net.lapidist.colony.client.ui.MinimapActor;
+import net.lapidist.colony.i18n.I18n;
 
 public class MapScreen implements Screen {
 
@@ -63,7 +64,7 @@ public class MapScreen implements Screen {
         table.top();
         stage.addActor(table);
 
-        TextButton menuButton = new TextButton("Menu", skin);
+        TextButton menuButton = new TextButton(I18n.get("map.menu"), skin);
         minimapActor = new MinimapActor(world);
 
         menuButton.addListener(new ChangeListener() {
