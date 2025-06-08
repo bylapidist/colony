@@ -2,29 +2,20 @@ package net.lapidist.colony.client.systems;
 
 import com.artemis.BaseSystem;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import net.lapidist.colony.client.core.Constants;
 import net.lapidist.colony.client.network.GameClient;
+import net.lapidist.colony.client.systems.input.CameraInputHandler;
+import net.lapidist.colony.client.systems.input.TileSelectionHandler;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
-import net.lapidist.colony.components.state.TileSelectionData;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.math.Vector2;
 
 public final class InputSystem extends BaseSystem implements InputProcessor, GestureListener {
-
-    private static final float CAMERA_SPEED = 400f; // units per second
-    private static final float ZOOM_SPEED = 0.02f;
-    private static final float MIN_ZOOM = 0.5f;
-    private static final float MAX_ZOOM = 2f;
 
     private PlayerCameraSystem cameraSystem;
 
@@ -35,6 +26,9 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
     private Entity map;
     private ComponentMapper<MapComponent> mapMapper;
     private ComponentMapper<TileComponent> tileMapper;
+
+    private CameraInputHandler cameraHandler;
+    private TileSelectionHandler tileSelectionHandler;
 
     public InputSystem(final GameClient clientToSet) {
         this.client = clientToSet;
@@ -53,48 +47,21 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
         mapMapper = world.getMapper(MapComponent.class);
         tileMapper = world.getMapper(TileComponent.class);
         map = net.lapidist.colony.map.MapUtils.findMapEntity(world);
+        cameraHandler = new CameraInputHandler(cameraSystem);
+        tileSelectionHandler = new TileSelectionHandler(client, cameraSystem);
     }
 
     @Override
     protected void processSystem() {
-        handleKeyboardInput(world.getDelta());
-        clampCameraPosition();
+        cameraHandler.handleKeyboardInput(world.getDelta());
+        cameraHandler.clampCameraPosition();
         cameraSystem.getCamera().update();
     }
 
-    private void handleKeyboardInput(final float deltaTime) {
-        final float moveAmount = CAMERA_SPEED * deltaTime;
-        final Vector3 position = cameraSystem.getCamera().position;
-
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            position.y += moveAmount;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            position.y -= moveAmount;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            position.x -= moveAmount;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            position.x += moveAmount;
-        }
-    }
-
-    private void clampCameraPosition() {
-        final Vector3 position = cameraSystem.getCamera().position;
-        final float mapWidth = Constants.MAP_WIDTH * Constants.TILE_SIZE;
-        final float mapHeight = Constants.MAP_HEIGHT * Constants.TILE_SIZE;
-
-        position.x = MathUtils.clamp(position.x, 0, mapWidth);
-        position.y = MathUtils.clamp(position.y, 0, mapHeight);
-    }
 
     @Override
     public boolean scrolled(final float amountX, final float amountY) {
-        final float zoom = cameraSystem.getCamera().zoom + amountY * ZOOM_SPEED;
-        cameraSystem.getCamera().zoom = MathUtils.clamp(zoom, MIN_ZOOM, MAX_ZOOM);
-        cameraSystem.getCamera().update();
-        return true;
+        return cameraHandler.scrolled(amountX, amountY);
     }
 
     @Override
@@ -104,32 +71,7 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
 
     @Override
     public boolean tap(final float x, final float y, final int count, final int button) {
-        if (map == null) {
-            return false;
-        }
-
-        cameraSystem.getCamera().update();
-
-        Vector2 worldCoords = cameraSystem.screenCoordsToWorldCoords(x, y);
-        Vector2 tileCoords = cameraSystem.worldCoordsToTileCoords(worldCoords);
-
-        Array<Entity> tiles = mapMapper.get(map).getTiles();
-        for (int i = 0; i < tiles.size; i++) {
-            Entity tile = tiles.get(i);
-            TileComponent tileComponent = tileMapper.get(tile);
-            if (tileComponent.getX() == (int) tileCoords.x && tileComponent.getY() == (int) tileCoords.y) {
-                boolean newState = !tileComponent.isSelected();
-
-                TileSelectionData msg = new TileSelectionData();
-                msg.setX(tileComponent.getX());
-                msg.setY(tileComponent.getY());
-                msg.setSelected(newState);
-                client.sendTileSelection(msg);
-                return true;
-            }
-        }
-
-        return false;
+        return tileSelectionHandler.handleTap(x, y, map, mapMapper, tileMapper);
     }
 
     @Override
@@ -144,14 +86,7 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
 
     @Override
     public boolean pan(final float x, final float y, final float deltaX, final float deltaY) {
-        cameraSystem.getCamera().translate(
-                -deltaX * cameraSystem.getCamera().zoom,
-                deltaY * cameraSystem.getCamera().zoom,
-                0
-        );
-        clampCameraPosition();
-        cameraSystem.getCamera().update();
-        return true;
+        return cameraHandler.pan(deltaX, deltaY);
     }
 
     @Override
@@ -161,11 +96,7 @@ public final class InputSystem extends BaseSystem implements InputProcessor, Ges
 
     @Override
     public boolean zoom(final float initialDistance, final float distance) {
-        final float ratio = initialDistance / distance;
-        final float zoom = cameraSystem.getCamera().zoom * ratio;
-        cameraSystem.getCamera().zoom = MathUtils.clamp(zoom, MIN_ZOOM, MAX_ZOOM);
-        cameraSystem.getCamera().update();
-        return true;
+        return cameraHandler.zoom(initialDistance, distance);
     }
 
     @Override
