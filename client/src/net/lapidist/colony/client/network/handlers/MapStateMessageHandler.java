@@ -1,23 +1,19 @@
 package net.lapidist.colony.client.network.handlers;
 
 import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.network.MessageHandler;
+import net.lapidist.colony.network.AbstractMessageHandler;
 
 import java.util.function.Consumer;
 
 /**
  * Applies the received {@link MapState} to the client.
  */
-public final class MapStateMessageHandler implements MessageHandler<MapState> {
+public final class MapStateMessageHandler extends AbstractMessageHandler<MapState> {
     private final Consumer<MapState> consumer;
 
     public MapStateMessageHandler(final Consumer<MapState> consumerToUse) {
+        super(MapState.class);
         this.consumer = consumerToUse;
-    }
-
-    @Override
-    public Class<MapState> type() {
-        return MapState.class;
     }
 
     @Override

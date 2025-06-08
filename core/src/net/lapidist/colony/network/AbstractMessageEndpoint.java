@@ -19,6 +19,17 @@ public abstract class AbstractMessageEndpoint implements MessageEndpoint {
         dispatcher.dispatch(message);
     }
 
+    /**
+     * Registers all handlers with this endpoint.
+     *
+     * @param handlers handlers to register
+     */
+    protected final void registerHandlers(final Iterable<? extends MessageHandler<?>> handlers) {
+        for (MessageHandler<?> handler : handlers) {
+            handler.register(this);
+        }
+    }
+
     @Override
     public final <T> void onMessage(final Class<T> type, final Consumer<T> handler) {
         dispatcher.register(type, handler);

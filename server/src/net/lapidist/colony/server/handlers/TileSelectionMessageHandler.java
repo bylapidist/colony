@@ -6,7 +6,7 @@ import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.core.events.Events;
-import net.lapidist.colony.network.MessageHandler;
+import net.lapidist.colony.network.AbstractMessageHandler;
 import net.lapidist.colony.server.events.TileSelectionEvent;
 
 import java.util.function.Supplier;
@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 /**
  * Updates server state when a client selects a tile and broadcasts the result.
  */
-public final class TileSelectionMessageHandler implements MessageHandler<TileSelectionData> {
+public final class TileSelectionMessageHandler extends AbstractMessageHandler<TileSelectionData> {
     private final Supplier<MapState> stateSupplier;
     private final Server server;
 
@@ -22,13 +22,9 @@ public final class TileSelectionMessageHandler implements MessageHandler<TileSel
             final Supplier<MapState> stateSupplierToUse,
             final Server serverToUse
     ) {
+        super(TileSelectionData.class);
         this.stateSupplier = stateSupplierToUse;
         this.server = serverToUse;
-    }
-
-    @Override
-    public Class<TileSelectionData> type() {
-        return TileSelectionData.class;
     }
 
     @Override

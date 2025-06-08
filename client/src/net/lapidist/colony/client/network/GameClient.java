@@ -2,11 +2,11 @@ package net.lapidist.colony.client.network;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.core.serialization.KryoRegistry;
 import net.lapidist.colony.network.AbstractMessageEndpoint;
+import net.lapidist.colony.network.DispatchListener;
 import net.lapidist.colony.network.MessageHandler;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.client.network.handlers.MapStateMessageHandler;
@@ -50,19 +50,12 @@ public final class GameClient extends AbstractMessageEndpoint {
         client.start();
         LOGGER.info("Connecting to server...");
 
-        for (MessageHandler<?> handler : handlers) {
-            handler.register(this);
-        }
+        registerHandlers(handlers);
 
-        client.addListener(new Listener() {
+        client.addListener(new DispatchListener(this::dispatch) {
             @Override
             public void connected(final Connection connection) {
                 LOGGER.info("Connected to server");
-            }
-
-            @Override
-            public void received(final Connection connection, final Object object) {
-                dispatch(object);
             }
         });
         client.connect(CONNECT_TIMEOUT, "localhost", GameServer.TCP_PORT, GameServer.UDP_PORT);
