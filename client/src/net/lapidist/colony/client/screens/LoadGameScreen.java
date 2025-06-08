@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import net.lapidist.colony.i18n.I18n;
 import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.io.Paths;
 
@@ -22,7 +23,7 @@ public final class LoadGameScreen extends BaseScreen {
         List<String> saves = listSaves();
         for (String save : saves) {
             TextButton loadButton = new TextButton(save, getSkin());
-            TextButton deleteButton = new TextButton("Delete", getSkin());
+            TextButton deleteButton = new TextButton(I18n.get("loadGame.delete"), getSkin());
             Table row = new Table();
             row.add(loadButton).padRight(PADDING);
             row.add(deleteButton);
@@ -38,7 +39,7 @@ public final class LoadGameScreen extends BaseScreen {
             deleteButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(final ChangeEvent event, final Actor actor) {
-                    Dialog confirm = new Dialog("Delete Save", getSkin(), "dialog") {
+                    Dialog confirm = new Dialog(I18n.get("loadGame.dialogTitle"), getSkin(), "dialog") {
                         @Override
                         protected void result(final Object obj) {
                             if (Boolean.TRUE.equals(obj)) {
@@ -51,15 +52,15 @@ public final class LoadGameScreen extends BaseScreen {
                             }
                         }
                     };
-                    confirm.text("Are you sure?");
-                    confirm.button("Yes", true);
-                    confirm.button("No", false);
+                    confirm.text(I18n.get("loadGame.confirm"));
+                    confirm.button(I18n.get("common.yes"), true);
+                    confirm.button(I18n.get("common.no"), false);
                     confirm.show(getStage());
                 }
             });
         }
 
-        TextButton backButton = new TextButton("Back", getSkin());
+        TextButton backButton = new TextButton(I18n.get("common.back"), getSkin());
         getRoot().add(backButton).row();
         backButton.addListener(new ChangeListener() {
             @Override
