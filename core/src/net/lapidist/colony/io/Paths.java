@@ -83,4 +83,9 @@ public final class Paths {
                     .toList();
         }
     }
+
+    public static void deleteAutosave(final String saveName) throws IOException {
+        Path file = getAutosave(saveName);
+        Files.deleteIfExists(file);
+    }
 }
