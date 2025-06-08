@@ -25,14 +25,16 @@ public final class MapWorldBuilder {
     }
 
     /**
-     * Configure a world for the map screen.
+     * Create a {@link WorldConfigurationBuilder} containing the default systems
+     * for the map screen. Tests can customise the returned builder before
+     * calling {@link #build(WorldConfigurationBuilder)}.
      *
      * @param state  map state to load
      * @param client game client for network updates
      * @param stage  stage used by the UI system
-     * @return configured world instance
+     * @return configured builder instance
      */
-    public static World build(
+    public static WorldConfigurationBuilder builder(
             final MapState state,
             final GameClient client,
             final Stage stage
@@ -40,7 +42,7 @@ public final class MapWorldBuilder {
         InputSystem inputSystem = new InputSystem(client);
         inputSystem.addProcessor(stage);
 
-        World world = new World(new WorldConfigurationBuilder()
+        return new WorldConfigurationBuilder()
                 .with(
                         new EventSystem(),
                         new ClearScreenSystem(Color.BLACK),
@@ -50,8 +52,17 @@ public final class MapWorldBuilder {
                         new TileUpdateSystem(client),
                         new MapRenderSystem(),
                         new UISystem(stage)
-                )
-                .build());
+                );
+    }
+
+    /**
+     * Build a world using the supplied configuration.
+     *
+     * @param builder preconfigured world builder with all desired systems
+     * @return configured world instance
+     */
+    public static World build(final WorldConfigurationBuilder builder) {
+        World world = new World(builder.build());
         Events.init(world.getSystem(EventSystem.class));
         return world;
     }
