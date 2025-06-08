@@ -1,3 +1,10 @@
+## [6.1.1](https://github.com/bylapidist/colony/compare/v6.1.0...v6.1.1) (2025-06-08)
+
+
+### Bug Fixes
+
+* aggregate jacoco results across modules ([#369](https://github.com/bylapidist/colony/issues/369)) ([074176e](https://github.com/bylapidist/colony/commit/074176ea71418765cf8ac1505273df3d9217748d))
+
 # [6.1.0](https://github.com/bylapidist/colony/compare/v6.0.1...v6.1.0) (2025-06-08)
 
 
