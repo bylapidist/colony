@@ -14,6 +14,7 @@ Colony is a small simulation/strategy prototype built with LibGDX and the Artemi
 - [Development Guidelines](#development-guidelines)
   - [Code Style](#code-style)
   - [Contributing](#contributing)
+  - [Documentation](#documentation)
 
 ## Quick Start
 ### Building and Testing
@@ -75,6 +76,9 @@ New classes should be placed under the `net.lapidist.colony` package in the appr
 
 
 For more details see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Documentation
+The latest Java API reference is published to [GitHub Pages](https://bylapidist.github.io/colony/) on every release.
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
