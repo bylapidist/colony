@@ -1,6 +1,6 @@
 {
   "branches": ["master"],
-  "repositoryUrl": "file:///workspace/colony",
+  "repositoryUrl": "https://github.com/bylapidist/colony.git",
   "plugins": [
     ["@semantic-release/commit-analyzer", {
       "preset": "angular",
