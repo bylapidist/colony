@@ -4,12 +4,10 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.World;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.SpriteCache;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -44,9 +42,10 @@ public final class MinimapActor extends Actor implements Disposable {
     private PlayerCameraSystem cameraSystem;
     private float mapWidthWorld;
     private float mapHeightWorld;
-    private FrameBuffer tileCache;
-    private TextureRegion minimap;
-    private SpriteBatch cacheBatch;
+    private SpriteCache spriteCache;
+    private int cacheId;
+    private int cacheWidth;
+    private int cacheHeight;
     private boolean cacheInvalidated;
 
     /**
@@ -94,23 +93,13 @@ public final class MinimapActor extends Actor implements Disposable {
     }
 
     private void updateCache(final float scaleX, final float scaleY) {
-        if (tileCache != null) {
-            tileCache.dispose();
-            tileCache = null;
-            minimap = null;
+        if (spriteCache != null) {
+            spriteCache.dispose();
         }
 
-        tileCache = new FrameBuffer(Pixmap.Format.RGBA8888, (int) getWidth(), (int) getHeight(), false);
-        if (cacheBatch == null) {
-            cacheBatch = new SpriteBatch();
-        }
-
-        Matrix4 oldMatrix = cacheBatch.getProjectionMatrix().cpy();
-        tileCache.begin();
-        Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        cacheBatch.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, getWidth(), getHeight()));
-        cacheBatch.begin();
+        spriteCache = new SpriteCache();
+        spriteCache.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, getWidth(), getHeight()));
+        spriteCache.beginCache();
 
         Array<Entity> tiles = mapMapper.get(map).getTiles();
         for (int i = 0; i < tiles.size; i++) {
@@ -119,7 +108,7 @@ public final class MinimapActor extends Actor implements Disposable {
             TextureRegion region = resourceLoader.findRegion(
                     textureMapper.get(tile).getResourceRef());
             if (region != null) {
-                cacheBatch.draw(
+                spriteCache.add(
                         region,
                         tileComponent.getX() * Constants.TILE_SIZE * scaleX,
                         tileComponent.getY() * Constants.TILE_SIZE * scaleY,
@@ -129,11 +118,9 @@ public final class MinimapActor extends Actor implements Disposable {
             }
         }
 
-        cacheBatch.end();
-        tileCache.end();
-        cacheBatch.setProjectionMatrix(oldMatrix);
-        minimap = new TextureRegion(tileCache.getColorBufferTexture());
-        minimap.flip(false, true);
+        cacheId = spriteCache.endCache();
+        cacheWidth = (int) getWidth();
+        cacheHeight = (int) getHeight();
         cacheInvalidated = false;
     }
 
@@ -179,15 +166,25 @@ public final class MinimapActor extends Actor implements Disposable {
         float scaleX = getWidth() / mapWidthWorld;
         float scaleY = getHeight() / mapHeightWorld;
 
-        if (minimap == null || cacheInvalidated
-                || tileCache == null
-                || tileCache.getWidth() != (int) getWidth()
-                || tileCache.getHeight() != (int) getHeight()) {
+        if (spriteCache == null || cacheInvalidated
+                || cacheWidth != (int) getWidth()
+                || cacheHeight != (int) getHeight()) {
             updateCache(scaleX, scaleY);
         }
 
-        if (minimap != null) {
-            batch.draw(minimap, getX(), getY(), getWidth(), getHeight());
+        if (spriteCache != null) {
+            SpriteBatch sb = (SpriteBatch) batch;
+            Matrix4 oldProj = spriteCache.getProjectionMatrix().cpy();
+            Matrix4 oldTrans = spriteCache.getTransformMatrix().cpy();
+            batch.end();
+            spriteCache.setProjectionMatrix(sb.getProjectionMatrix());
+            spriteCache.setTransformMatrix(new Matrix4().setToTranslation(getX(), getY(), 0));
+            spriteCache.begin();
+            spriteCache.draw(cacheId);
+            spriteCache.end();
+            batch.begin();
+            spriteCache.setProjectionMatrix(oldProj);
+            spriteCache.setTransformMatrix(oldTrans);
         }
 
         if (cameraSystem != null) {
@@ -222,11 +219,8 @@ public final class MinimapActor extends Actor implements Disposable {
         if (shapeRenderer != null) {
             shapeRenderer.dispose();
         }
-        if (tileCache != null) {
-            tileCache.dispose();
-        }
-        if (cacheBatch != null) {
-            cacheBatch.dispose();
+        if (spriteCache != null) {
+            spriteCache.dispose();
         }
     }
 }
