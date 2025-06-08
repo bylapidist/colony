@@ -52,7 +52,7 @@ public final class NetworkService {
         server.stop();
     }
 
-    public void send(final Object message) {
+    public void broadcast(final Object message) {
         server.sendToAllTCP(message);
     }
 }

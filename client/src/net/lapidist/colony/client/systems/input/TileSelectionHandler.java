@@ -54,7 +54,7 @@ public final class TileSelectionHandler {
                         tileComponent.getY(),
                         newState
                 );
-                client.sendTileSelection(msg);
+                client.sendTileSelectionRequest(msg);
                 return true;
             }
         }

@@ -33,7 +33,7 @@ public class GameServerSelectionTest {
 
         TileSelectionData data = new TileSelectionData(0, 0, true);
 
-        client.sendTileSelection(data);
+        client.sendTileSelectionRequest(data);
         Thread.sleep(WAIT_MS);
         Events.update();
 

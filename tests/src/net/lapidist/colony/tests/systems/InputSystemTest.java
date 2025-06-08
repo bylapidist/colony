@@ -66,6 +66,6 @@ public class InputSystemTest {
                 .get(mapComponent.getTiles().get(0));
 
         assertFalse(tileComponent.isSelected());
-        verify(client).sendTileSelection(any());
+        verify(client).sendTileSelectionRequest(any());
     }
 }

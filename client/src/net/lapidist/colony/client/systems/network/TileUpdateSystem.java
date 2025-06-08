@@ -33,7 +33,7 @@ public final class TileUpdateSystem extends BaseSystem {
 
         MapComponent mapComponent = mapMapper.get(map);
         TileSelectionData update;
-        while ((update = client.pollTileSelection()) != null) {
+        while ((update = client.pollTileSelectionUpdate()) != null) {
             for (int i = 0; i < mapComponent.getTiles().size; i++) {
                 Entity tile = mapComponent.getTiles().get(i);
                 TileComponent tc = tileMapper.get(tile);
