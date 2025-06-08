@@ -1,3 +1,12 @@
+## [6.1.2](https://github.com/bylapidist/colony/compare/v6.1.1...v6.1.2) (2025-06-08)
+
+
+### Bug Fixes
+
+* **ci:** correct coverage step indentation ([#372](https://github.com/bylapidist/colony/issues/372)) ([3fc2d13](https://github.com/bylapidist/colony/commit/3fc2d13ec2d0c50760bb7fb62a5b034d1da3bf31))
+* **ci:** specify coverage report for codecov ([#371](https://github.com/bylapidist/colony/issues/371)) ([2e997fe](https://github.com/bylapidist/colony/commit/2e997fe245d8425466cf213a574ae999b622aedb))
+* register record serializers ([#370](https://github.com/bylapidist/colony/issues/370)) ([718adb3](https://github.com/bylapidist/colony/commit/718adb384e5bbcd473ac80e3837cbaacba5f158c))
+
 ## [6.1.1](https://github.com/bylapidist/colony/compare/v6.1.0...v6.1.1) (2025-06-08)
 
 
