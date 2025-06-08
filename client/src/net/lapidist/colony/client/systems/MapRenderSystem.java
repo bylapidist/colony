@@ -4,11 +4,10 @@ import com.artemis.BaseSystem;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.client.core.io.FileLocation;
 import net.lapidist.colony.client.core.io.ResourceLoader;
+import net.lapidist.colony.client.renderers.BuildingRenderer;
+import net.lapidist.colony.client.renderers.TileRenderer;
 import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
 import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.components.maps.MapComponent;
@@ -28,6 +27,10 @@ public final class MapRenderSystem extends BaseSystem {
     private ComponentMapper<MapComponent> mapMapper;
     private ComponentMapper<TileComponent> tileMapper;
     private ComponentMapper<BuildingComponent> buildingMapper;
+    private ComponentMapper<TextureRegionReferenceComponent> textureMapper;
+
+    private TileRenderer tileRenderer;
+    private BuildingRenderer buildingRenderer;
 
     public MapRenderSystem() {
     }
@@ -44,6 +47,23 @@ public final class MapRenderSystem extends BaseSystem {
         mapMapper = world.getMapper(MapComponent.class);
         tileMapper = world.getMapper(TileComponent.class);
         buildingMapper = world.getMapper(BuildingComponent.class);
+        textureMapper = world.getMapper(TextureRegionReferenceComponent.class);
+
+        tileRenderer = new TileRenderer(
+                spriteBatch,
+                resourceLoader,
+                cameraSystem,
+                tileMapper,
+                textureMapper
+        );
+
+        buildingRenderer = new BuildingRenderer(
+                spriteBatch,
+                resourceLoader,
+                cameraSystem,
+                buildingMapper,
+                textureMapper
+        );
 
         map = net.lapidist.colony.map.MapUtils.findMapEntity(world);
     }
@@ -59,49 +79,10 @@ public final class MapRenderSystem extends BaseSystem {
         spriteBatch.setProjectionMatrix(cameraSystem.getCamera().combined);
         spriteBatch.begin();
 
-        drawEntities(mapMapper.get(map).getTiles());
-        drawEntities(mapMapper.get(map).getEntities());
+        MapComponent mapComponent = mapMapper.get(map);
+        tileRenderer.render(mapComponent.getTiles());
+        buildingRenderer.render(mapComponent.getEntities());
 
         spriteBatch.end();
-    }
-
-    private void drawEntities(final Array<Entity> entities) {
-        for (int i = 0; i < entities.size; i++) {
-            final Entity entity = entities.get(i);
-            final TextureRegionReferenceComponent textureRegionReferenceComponent =
-                    world.getMapper(TextureRegionReferenceComponent.class).get(entity);
-            final Vector2 worldCoords = getWorldCoords(entity);
-
-            if (cameraSystem.withinCameraView(worldCoords)) {
-                TextureRegion region = resourceLoader.findRegion(
-                        textureRegionReferenceComponent.getResourceRef()
-                );
-                if (region != null) {
-                    spriteBatch.draw(region, worldCoords.x, worldCoords.y);
-                }
-                if (tileMapper.has(entity)) {
-                    TileComponent tile = tileMapper.get(entity);
-                    if (tile.isSelected()) {
-                        TextureRegion overlay = resourceLoader.findRegion("hoveredTile0");
-                        if (overlay != null) {
-                            spriteBatch.draw(overlay, worldCoords.x, worldCoords.y);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private Vector2 getWorldCoords(final Entity entity) {
-
-        if (tileMapper.has(entity)) {
-            final TileComponent tileComponent = tileMapper.get(entity);
-            return cameraSystem.tileCoordsToWorldCoords(tileComponent.getX(), tileComponent.getY());
-        } else if (buildingMapper.has(entity)) {
-            final BuildingComponent buildingComponent = buildingMapper.get(entity);
-            return cameraSystem.tileCoordsToWorldCoords(buildingComponent.getX(), buildingComponent.getY());
-        }
-
-        return Vector2.Zero;
     }
 }
