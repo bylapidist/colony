@@ -7,7 +7,10 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.core.serialization.KryoRegistry;
 import net.lapidist.colony.network.AbstractMessageEndpoint;
+import net.lapidist.colony.network.MessageHandler;
 import net.lapidist.colony.server.GameServer;
+import net.lapidist.colony.client.network.handlers.MapStateMessageHandler;
+import net.lapidist.colony.client.network.handlers.TileSelectionMessageHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +26,23 @@ public final class GameClient extends AbstractMessageEndpoint {
     private final Client client = new Client(BUFFER_SIZE, BUFFER_SIZE);
     private MapState mapState;
     private final Queue<TileSelectionData> tileUpdates = new ConcurrentLinkedQueue<>();
+    private Iterable<MessageHandler<?>> handlers;
     private static final int CONNECT_TIMEOUT = 5000;
     private static final int WAIT_TIME_MS = 10;
+
+    public GameClient() {
+        this.handlers = java.util.List.of(
+                new MapStateMessageHandler(state -> {
+                    mapState = state;
+                    LOGGER.info("Received map state from server");
+                }),
+                new TileSelectionMessageHandler(tileUpdates)
+        );
+    }
+
+    public GameClient(final Iterable<MessageHandler<?>> handlersToUse) {
+        this.handlers = handlersToUse;
+    }
 
     @Override
     public void start() throws IOException, InterruptedException {
@@ -32,11 +50,9 @@ public final class GameClient extends AbstractMessageEndpoint {
         client.start();
         LOGGER.info("Connecting to server...");
 
-        onMessage(MapState.class, state -> {
-            mapState = state;
-            LOGGER.info("Received map state from server");
-        });
-        onMessage(TileSelectionData.class, tileUpdates::add);
+        for (MessageHandler<?> handler : handlers) {
+            handler.register(this);
+        }
 
         client.addListener(new Listener() {
             @Override
