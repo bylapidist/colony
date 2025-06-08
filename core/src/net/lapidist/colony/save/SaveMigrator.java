@@ -2,37 +2,26 @@ package net.lapidist.colony.save;
 
 import net.lapidist.colony.components.state.MapState;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
-import java.util.function.UnaryOperator;
 
 /**
  * Applies deterministic migrations between different save versions.
  */
 public final class SaveMigrator {
 
-    private static final Map<Integer, UnaryOperator<MapState>> MIGRATIONS = new HashMap<>();
+    private static final Map<SaveVersion, MapStateMigration> MIGRATIONS = new EnumMap<>(SaveVersion.class);
 
     static {
-        MIGRATIONS.put(SaveVersion.V1.number(), SaveMigrator::v1ToV2);
-        MIGRATIONS.put(SaveVersion.V2.number(), SaveMigrator::v2ToV3);
+        register(new V1ToV2Migration());
+        register(new V2ToV3Migration());
     }
 
     private SaveMigrator() {
     }
 
-    private static MapState v1ToV2(final MapState state) {
-        // No structural changes between v1 and v2, just bump the version.
-        return state.toBuilder()
-                .version(SaveVersion.V2.number())
-                .build();
-    }
-
-    private static MapState v2ToV3(final MapState state) {
-        // No structural changes between v2 and v3, just bump the version.
-        return state.toBuilder()
-                .version(SaveVersion.V3.number())
-                .build();
+    private static void register(final MapStateMigration migration) {
+        MIGRATIONS.put(SaveVersion.fromNumber(migration.fromVersion()), migration);
     }
 
     /**
@@ -41,11 +30,11 @@ public final class SaveMigrator {
     public static MapState migrate(final MapState data, final int fromVersion, final int toVersion) {
         MapState result = data;
         for (int v = fromVersion; v < toVersion; v++) {
-            UnaryOperator<MapState> op = MIGRATIONS.get(v);
-            if (op == null) {
+            MapStateMigration migration = MIGRATIONS.get(SaveVersion.fromNumber(v));
+            if (migration == null) {
                 throw new IllegalStateException("Missing migration step for version " + v);
             }
-            result = op.apply(result);
+            result = migration.apply(result);
         }
         return result.toBuilder()
                 .version(toVersion)
