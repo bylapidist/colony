@@ -43,9 +43,15 @@ Both the client and dedicated server can be started directly from Gradle:
 ./gradlew :server:run   # start the dedicated server
 ```
 
-Configuration files and save data are written to a platform specific directory under the
-user's home folder. See `core/src/net/lapidist/colony/io/Paths.java` for the
+Configuration defaults such as map size, autosave interval and network ports are
+defined in `core/src/main/resources/game.conf` and loaded at runtime.
+Per-user saves and settings are written to a platform specific directory under
+the user's home folder. `core/src/net/lapidist/colony/io/Paths.java` resolves the
 exact locations.
+
+All visible text is provided through resource bundles found in
+`core/src/main/resources/i18n`. The current locale can be changed in the
+in‑game settings screen and is persisted alongside the user's other settings.
 
 ## Coding style
 Checkstyle rules are defined in `config/checkstyle/checkstyle.xml`. All Java files use
