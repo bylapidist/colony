@@ -31,6 +31,7 @@ The project uses Java 21 toolchains and standard Gradle tasks. No additional too
 Semantic Release automatically increments versions and generates GitHub release notes from commit messages. Provide a concise description of your changes in the PR body so release notes remain meaningful.
 
 When changing or adding new functionality, ensure it has adequate test coverage.
+We aspire to achieve at least 80% coverage on all new pull requests.
 When modifying or introducing new gameplay mechanisms, write a scenario test
 using the `GameSimulation` utility found under the `tests` module to verify the
 behaviour.
