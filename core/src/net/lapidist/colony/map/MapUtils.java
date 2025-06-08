@@ -37,7 +37,14 @@ public final class MapUtils {
      * @return an {@link Optional} containing the map component if present
      */
     public static Optional<MapComponent> findMap(final World world) {
-        return findMapEntity(world)
-                .map(e -> world.getMapper(MapComponent.class).get(e));
+        IntBag maps = world.getAspectSubscriptionManager()
+                .get(Aspect.all(MapComponent.class))
+                .getEntities();
+        if (maps.size() > 0) {
+            return Optional.of(
+                    world.getMapper(MapComponent.class).get(maps.get(0))
+            );
+        }
+        return Optional.empty();
     }
 }

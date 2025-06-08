@@ -30,8 +30,7 @@ public final class TileSelectionHandler {
     public boolean handleTap(
             final float x,
             final float y,
-            final Entity map,
-            final ComponentMapper<MapComponent> mapMapper,
+            final MapComponent map,
             final ComponentMapper<TileComponent> tileMapper
     ) {
         if (map == null) {
@@ -43,7 +42,7 @@ public final class TileSelectionHandler {
         Vector2 worldCoords = CameraUtils.screenToWorldCoords(cameraSystem.getViewport(), x, y);
         Vector2 tileCoords = CameraUtils.worldCoordsToTileCoords(worldCoords);
 
-        Array<Entity> tiles = mapMapper.get(map).getTiles();
+        Array<Entity> tiles = map.getTiles();
         for (int i = 0; i < tiles.size; i++) {
             Entity tile = tiles.get(i);
             TileComponent tileComponent = tileMapper.get(tile);
