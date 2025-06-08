@@ -42,7 +42,7 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     private static final Logger LOGGER = LoggerFactory.getLogger(GameServer.class);
 
     private final Server server = new Server(BUFFER_SIZE, BUFFER_SIZE);
-    private final long autosaveIntervalMs;
+    private final long autosaveInterval;
     private final String saveName;
     private final MapGenerator mapGenerator;
     private ScheduledExecutorService executor;
@@ -55,7 +55,7 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
 
     public GameServer(final GameServerConfig config, final Iterable<MessageHandler<?>> handlersToUse) {
         this.saveName = config.getSaveName();
-        this.autosaveIntervalMs = config.getAutosaveIntervalMs();
+        this.autosaveInterval = config.getAutosaveInterval();
         this.mapGenerator = config.getMapGenerator();
         this.handlers = handlersToUse;
     }
@@ -120,7 +120,7 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
             thread.setDaemon(true);
             return thread;
         });
-        executor.scheduleAtFixedRate(this::autoSave, autosaveIntervalMs, autosaveIntervalMs, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(this::autoSave, autosaveInterval, autosaveInterval, TimeUnit.MILLISECONDS);
     }
 
     private void generateMap() {

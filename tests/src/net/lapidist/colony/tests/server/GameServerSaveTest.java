@@ -45,7 +45,7 @@ public class GameServerSaveTest {
     @Test
     public void autosaveCreatesSaveFileAndFiresEvent() throws Exception {
         GameServer server = new GameServer(
-                GameServerConfig.builder().autosaveIntervalMs(TEST_INTERVAL_MS).build()
+                GameServerConfig.builder().autosaveInterval(TEST_INTERVAL_MS).build()
         );
         server.start();
         Events.getInstance().registerEvents(this);
@@ -65,7 +65,7 @@ public class GameServerSaveTest {
     @Test
     public void stoppingSavesFileAndFiresEvent() throws Exception {
         GameServer server = new GameServer(
-                GameServerConfig.builder().autosaveIntervalMs(TEST_INTERVAL_MS).build()
+                GameServerConfig.builder().autosaveInterval(TEST_INTERVAL_MS).build()
         );
         server.start();
         Events.getInstance().registerEvents(this);
@@ -82,7 +82,7 @@ public class GameServerSaveTest {
     @Test
     public void loadsExistingSave() throws Exception {
         GameServer first = new GameServer(
-                GameServerConfig.builder().autosaveIntervalMs(TEST_INTERVAL_MS).build()
+                GameServerConfig.builder().autosaveInterval(TEST_INTERVAL_MS).build()
         );
         first.start();
         first.getMapState().tiles().get(new TilePos(0, 0)).setTextureRef("changed");
@@ -90,7 +90,7 @@ public class GameServerSaveTest {
         first.stop();
 
         GameServer second = new GameServer(
-                GameServerConfig.builder().autosaveIntervalMs(TEST_INTERVAL_MS).build()
+                GameServerConfig.builder().autosaveInterval(TEST_INTERVAL_MS).build()
         );
         second.start();
         String loaded = second.getMapState().tiles().get(new TilePos(0, 0)).getTextureRef();
