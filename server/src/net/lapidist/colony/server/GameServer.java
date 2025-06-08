@@ -113,6 +113,7 @@ public final class GameServer {
                     TileSelectionData data = (TileSelectionData) object;
                     handleTileSelection(data);
                     Events.dispatch(new TileSelectionEvent(data.getX(), data.getY(), data.isSelected()));
+                    server.sendToAllTCP(data);
                 }
             }
         });
