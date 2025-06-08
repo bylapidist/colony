@@ -29,7 +29,7 @@ jobs:
     - name: Run Tests with coverage
       run: |
         ./gradlew tests:copyAssets
-        ./gradlew clean jacocoTestReport
+        ./gradlew clean codeCoverageReport
 
     - name: Run style checks
       run: ./gradlew check
