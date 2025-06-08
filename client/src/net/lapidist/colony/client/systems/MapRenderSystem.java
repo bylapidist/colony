@@ -4,6 +4,7 @@ import com.artemis.BaseSystem;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.client.core.io.FileLocation;
@@ -72,21 +73,19 @@ public final class MapRenderSystem extends BaseSystem {
             final Vector2 worldCoords = getWorldCoords(entity);
 
             if (cameraSystem.withinCameraView(worldCoords)) {
-                spriteBatch.draw(
-                        resourceLoader.getTextureRegions().get(
-                                textureRegionReferenceComponent.getResourceRef()
-                        ),
-                        worldCoords.x,
-                        worldCoords.y
+                TextureRegion region = resourceLoader.findRegion(
+                        textureRegionReferenceComponent.getResourceRef()
                 );
+                if (region != null) {
+                    spriteBatch.draw(region, worldCoords.x, worldCoords.y);
+                }
                 if (tileMapper.has(entity)) {
                     TileComponent tile = tileMapper.get(entity);
                     if (tile.isSelected()) {
-                        spriteBatch.draw(
-                                resourceLoader.getTextureRegions().get("hoveredTile0"),
-                                worldCoords.x,
-                                worldCoords.y
-                        );
+                        TextureRegion overlay = resourceLoader.findRegion("hoveredTile0");
+                        if (overlay != null) {
+                            spriteBatch.draw(overlay, worldCoords.x, worldCoords.y);
+                        }
                     }
                 }
             }
