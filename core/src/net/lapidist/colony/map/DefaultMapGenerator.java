@@ -3,6 +3,7 @@ package net.lapidist.colony.map;
 import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.i18n.I18n;
 
 import java.util.Random;
@@ -24,7 +25,7 @@ public final class DefaultMapGenerator implements MapGenerator {
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                state.tiles().add(createTile(x, y, random));
+                state.tiles().put(new TilePos(x, y), createTile(x, y, random));
             }
         }
 

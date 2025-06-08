@@ -2,6 +2,7 @@ package net.lapidist.colony.tests.server;
 
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.state.TileSelectionData;
+import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
 import net.lapidist.colony.core.events.Events;
@@ -36,7 +37,7 @@ public class GameServerSelectionTest {
         Thread.sleep(WAIT_MS);
         Events.update();
 
-        assertTrue(server.getMapState().tiles().get(0).isSelected());
+        assertTrue(server.getMapState().tiles().get(new TilePos(0, 0)).isSelected());
         assertTrue(handled);
 
         client.stop();

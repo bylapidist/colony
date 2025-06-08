@@ -10,6 +10,7 @@ import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.TilePos;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -26,7 +27,7 @@ public class MapLoadSystemTest {
         tile.setTileType("GRASS");
         tile.setTextureRef("grass0");
         tile.setPassable(true);
-        state.tiles().add(tile);
+        state.tiles().put(new TilePos(0, 0), tile);
 
         BuildingData building = new BuildingData(1, 1, "HOUSE", "house0");
         state.buildings().add(building);

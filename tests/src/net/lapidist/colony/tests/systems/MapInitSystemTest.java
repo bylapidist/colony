@@ -8,6 +8,7 @@ import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.map.GeneratedMapStateProvider;
 import net.lapidist.colony.map.ProvidedMapStateProvider;
 import net.lapidist.colony.map.DefaultMapGenerator;
@@ -26,7 +27,7 @@ public class MapInitSystemTest {
         tile.setTileType("GRASS");
         tile.setTextureRef("grass0");
         tile.setPassable(true);
-        state.tiles().add(tile);
+        state.tiles().put(new TilePos(0, 0), tile);
 
         World world = new World(new WorldConfigurationBuilder()
                 .with(new MapInitSystem(new ProvidedMapStateProvider(state)))

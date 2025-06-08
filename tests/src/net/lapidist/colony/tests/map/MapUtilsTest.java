@@ -6,6 +6,7 @@ import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.map.MapUtils;
 import org.junit.Test;
 
@@ -29,7 +30,7 @@ public class MapUtilsTest {
         tile.setTileType("GRASS");
         tile.setTextureRef("grass0");
         tile.setPassable(true);
-        state.tiles().add(tile);
+        state.tiles().put(new TilePos(0, 0), tile);
 
         World world = new World(new WorldConfigurationBuilder()
                 .with(new MapLoadSystem(state))

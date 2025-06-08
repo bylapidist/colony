@@ -3,7 +3,9 @@ package net.lapidist.colony.components.state;
 import net.lapidist.colony.serialization.KryoType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @KryoType
@@ -13,7 +15,7 @@ public record MapState(
         String saveName,
         String autosaveName,
         String description,
-        List<TileData> tiles,
+        Map<TilePos, TileData> tiles,
         List<BuildingData> buildings
 ) {
     public static final int CURRENT_VERSION = 2;
@@ -25,7 +27,7 @@ public record MapState(
                 "save-" + UUID.randomUUID(),
                 null,
                 null,
-                new ArrayList<>(),
+                new HashMap<>(),
                 new ArrayList<>()
         );
     }
@@ -50,7 +52,7 @@ public record MapState(
         return new MapState(version, name, saveName, autosaveName, newDescription, tiles, buildings);
     }
 
-    public MapState withTiles(final List<TileData> newTiles) {
+    public MapState withTiles(final Map<TilePos, TileData> newTiles) {
         return new MapState(version, name, saveName, autosaveName, description, newTiles, buildings);
     }
 

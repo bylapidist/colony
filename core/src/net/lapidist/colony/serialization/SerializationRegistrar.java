@@ -5,6 +5,7 @@ import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TileSelectionData;
+import net.lapidist.colony.components.state.TilePos;
 
 /**
  * Registers all serializable classes with a given Kryo instance.
@@ -23,12 +24,15 @@ public final class SerializationRegistrar {
         }
         kryo.register(java.util.ArrayList.class);
         kryo.register(java.util.List.class);
+        kryo.register(java.util.HashMap.class);
+        kryo.register(java.util.Map.class);
     }
 
     private static final Class<?>[] REGISTERED_TYPES = {
             TileData.class,
             TileSelectionData.class,
             MapState.class,
-            BuildingData.class
+            BuildingData.class,
+            TilePos.class
     };
 }
