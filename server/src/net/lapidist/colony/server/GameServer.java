@@ -66,9 +66,7 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
                     new TileSelectionMessageHandler(() -> mapState, server)
             );
         }
-        for (MessageHandler<?> handler : handlers) {
-            handler.register(this);
-        }
+        registerHandlers(handlers);
         autosaveService.start();
     }
 

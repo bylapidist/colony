@@ -1,8 +1,8 @@
 package net.lapidist.colony.client.events;
 
-import net.mostlyoriginal.api.event.common.Event;
+import net.lapidist.colony.core.events.AbstractDataEvent;
 
-public final class ResizeEvent implements Event {
+public final class ResizeEvent extends AbstractDataEvent {
 
     private final int width;
     private final int height;
@@ -22,11 +22,6 @@ public final class ResizeEvent implements Event {
 
     @Override
     public String toString() {
-        return String.format(
-                "%s(width=%d, height=%d)",
-                getClass().getSimpleName(),
-                width,
-                height
-        );
+        return format("width", width, "height", height);
     }
 }

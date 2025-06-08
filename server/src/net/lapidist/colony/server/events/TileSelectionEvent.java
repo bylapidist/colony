@@ -1,8 +1,8 @@
 package net.lapidist.colony.server.events;
 
-import net.mostlyoriginal.api.event.common.Event;
+import net.lapidist.colony.core.events.AbstractDataEvent;
 
-public final class TileSelectionEvent implements Event {
+public final class TileSelectionEvent extends AbstractDataEvent {
     private final int x;
     private final int y;
     private final boolean selected;
@@ -27,12 +27,6 @@ public final class TileSelectionEvent implements Event {
 
     @Override
     public String toString() {
-        return String.format(
-                "%s(x=%d, y=%d, selected=%s)",
-                getClass().getSimpleName(),
-                x,
-                y,
-                selected
-        );
+        return format("x", x, "y", y, "selected", selected);
     }
 }

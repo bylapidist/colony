@@ -1,9 +1,9 @@
 package net.lapidist.colony.server.services;
 
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.network.DispatchListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,17 +38,12 @@ public final class NetworkService {
         LOGGER.info("Server started on TCP {} UDP {}", tcpPort, udpPort);
         server.bind(tcpPort, udpPort);
 
-        server.addListener(new Listener() {
+        server.addListener(new DispatchListener(dispatcher) {
             @Override
             public void connected(final Connection connection) {
                 LOGGER.info("Connection established: {}", connection.getID());
                 connection.sendTCP(mapState);
                 LOGGER.info("Sent map state to connection {}", connection.getID());
-            }
-
-            @Override
-            public void received(final Connection connection, final Object object) {
-                dispatcher.accept(object);
             }
         });
     }
