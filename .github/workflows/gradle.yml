@@ -26,13 +26,19 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Run Tests
+    - name: Run Tests with coverage
       run: |
         ./gradlew tests:copyAssets
-        ./gradlew clean test
+        ./gradlew clean jacocoTestReport
 
     - name: Run style checks
       run: ./gradlew check
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        slug: bylapidist/colony
 
   release:
     runs-on: ubuntu-latest
