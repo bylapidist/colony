@@ -19,7 +19,7 @@ public class ResourceLoaderTest {
 
         resourceLoader.load(
                 FileLocation.INTERNAL,
-                "resources.conf"
+                "textures/textures.atlas"
         );
         assertTrue(resourceLoader.isLoaded());
     }

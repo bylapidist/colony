@@ -146,7 +146,7 @@ public final class MinimapActor extends Actor implements Disposable {
         pixmap.dispose();
         setSize(DEFAULT_SIZE, DEFAULT_SIZE);
         try {
-            resourceLoader.load(FileLocation.INTERNAL, "resources.conf");
+            resourceLoader.load(FileLocation.INTERNAL, "textures/textures.atlas");
         } catch (IOException e) {
             // ignore loading errors in headless tests
         }

@@ -34,7 +34,7 @@ public final class MapRenderSystem extends BaseSystem {
     @Override
     public void initialize() {
         try {
-            resourceLoader.load(FileLocation.INTERNAL, "resources.conf");
+            resourceLoader.load(FileLocation.INTERNAL, "textures/textures.atlas");
         } catch (IOException e) {
             e.printStackTrace();
         }
