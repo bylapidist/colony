@@ -5,8 +5,8 @@
     ["@semantic-release/commit-analyzer", {
       "preset": "angular",
       "releaseRules": [
-        {"type": "chore", "scope": "deps", "release": "patch"},
-        {"type": "chore", "scope": "deps-dev", "release": "patch"}
+        {"type": "chore", "scope": "deps", "release": false},
+        {"type": "chore", "scope": "deps-dev", "release": false}
       ]
     }],
     "@semantic-release/release-notes-generator",
