@@ -51,4 +51,6 @@ jobs:
           node-version: 20
 
       - name: Semantic release
-        run: npm i -g semantic-release && semantic-release
+        run: |
+          npm i -g semantic-release @semantic-release/changelog @semantic-release/git
+          semantic-release
