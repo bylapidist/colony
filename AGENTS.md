@@ -35,6 +35,12 @@ When modifying or introducing new gameplay mechanisms, write a scenario test
 using the `GameSimulation` utility found under the `tests` module to verify the
 behaviour.
 
+When introducing a new save format or modifying Kryo serialization, you must:
+1. Define the next constant in `SaveVersion`.
+2. Implement a migration from the previous version in `SaveMigrator`.
+3. Add tests covering the migration.
+4. Update the Kryo registration hash so version mismatches are detected.
+
 If any command fails, fix the issues before committing.
 
 ## Commit Messages

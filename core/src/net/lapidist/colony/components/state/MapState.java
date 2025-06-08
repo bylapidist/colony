@@ -1,6 +1,7 @@
 package net.lapidist.colony.components.state;
 
 import net.lapidist.colony.serialization.KryoType;
+import net.lapidist.colony.save.SaveVersion;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +19,7 @@ public record MapState(
         Map<TilePos, TileData> tiles,
         List<BuildingData> buildings
 ) {
-    public static final int CURRENT_VERSION = 2;
+    public static final int CURRENT_VERSION = SaveVersion.CURRENT.number();
 
     public MapState() {
         this(

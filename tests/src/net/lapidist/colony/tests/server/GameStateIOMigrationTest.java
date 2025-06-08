@@ -10,36 +10,30 @@ import net.lapidist.colony.serialization.SerializationRegistrar;
 import net.lapidist.colony.server.io.GameStateIO;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
-public class GameStateIOVersionTest {
+public class GameStateIOMigrationTest {
 
     @Test
-    public void throwsWhenVersionIsNewer() throws Exception {
+    public void migratesOldVersionToCurrent() throws Exception {
         Path file = Files.createTempFile("state", ".dat");
-        MapState state = new MapState().withVersion(SaveVersion.CURRENT.number() + 1);
+        MapState state = new MapState().withVersion(SaveVersion.V1.number());
         Kryo kryo = new Kryo();
         KryoRegistry.register(kryo);
         try (Output output = new Output(Files.newOutputStream(file))) {
             SaveData data = new SaveData(
-                    SaveVersion.CURRENT.number() + 1,
+                    SaveVersion.V1.number(),
                     SerializationRegistrar.registrationHash(),
                     state
             );
             kryo.writeObject(output, data);
         }
 
-        boolean thrown = false;
-        try {
-            GameStateIO.load(file);
-        } catch (IOException e) {
-            thrown = true;
-        }
+        MapState loaded = GameStateIO.load(file);
         Files.deleteIfExists(file);
-        assertTrue(thrown);
+        assertEquals(SaveVersion.CURRENT.number(), loaded.version());
     }
 }
