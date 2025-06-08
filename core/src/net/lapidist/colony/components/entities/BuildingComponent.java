@@ -1,8 +1,9 @@
 package net.lapidist.colony.components.entities;
 
 import com.artemis.Component;
+import net.lapidist.colony.components.BoundedComponent;
 
-public class BuildingComponent extends Component {
+public class BuildingComponent extends Component implements BoundedComponent {
 
     public enum BuildingType {
         HOUSE("House"),
