@@ -22,8 +22,8 @@ public final class DefaultMapGenerator implements MapGenerator {
         state.setName("map-" + random.nextInt(NAME_RANGE));
         state.setDescription(I18n.get("generator.generatedMap"));
 
-        for (int x = 0; x <= width; x++) {
-            for (int y = 0; y <= height; y++) {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
                 TileData tile = new TileData();
                 tile.setX(x);
                 tile.setY(y);
@@ -36,8 +36,8 @@ public final class DefaultMapGenerator implements MapGenerator {
         }
 
         BuildingData building = new BuildingData();
-        building.setX(1);
-        building.setY(1);
+        building.setX(width / 2);
+        building.setY(height / 2);
         building.setBuildingType("HOUSE");
         building.setTextureRef("house0");
         state.getBuildings().add(building);

@@ -11,6 +11,7 @@ import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.server.events.TileSelectionEvent;
 import net.lapidist.colony.server.events.AutosaveEvent;
 import net.lapidist.colony.server.events.ShutdownSaveEvent;
+import net.lapidist.colony.server.events.SaveEvent;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.serialization.KryoRegistry;
 import net.lapidist.colony.server.io.GameStateIO;
@@ -157,26 +158,21 @@ public final class GameServer {
     }
 
     private void autoSave() {
-        try {
-            Path file = Paths.getAutosave(saveName);
-            GameStateIO.save(mapState, file);
-            long size = Files.size(file);
-            Events.dispatch(new AutosaveEvent(file, size));
-            Events.update();
-            LOGGER.info("Autosaved game state to {} ({} bytes)", file, size);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        saveGameState(AutosaveEvent::new, "Autosaved game state to {} ({} bytes)");
     }
 
     private void saveOnShutdown() {
+        saveGameState(ShutdownSaveEvent::new, "Saved game state to {} ({} bytes) on shutdown");
+    }
+
+    private void saveGameState(final java.util.function.BiFunction<Path, Long, SaveEvent> creator, final String log) {
         try {
             Path file = Paths.getAutosave(saveName);
             GameStateIO.save(mapState, file);
             long size = Files.size(file);
-            Events.dispatch(new ShutdownSaveEvent(file, size));
+            Events.dispatch(creator.apply(file, size));
             Events.update();
-            LOGGER.info("Saved game state to {} ({} bytes) on shutdown", file, size);
+            LOGGER.info(log, file, size);
         } catch (IOException e) {
             e.printStackTrace();
         }
