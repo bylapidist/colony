@@ -9,6 +9,8 @@ import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.server.events.TileSelectionEvent;
 import net.mostlyoriginal.api.event.common.Subscribe;
 import org.junit.Test;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertTrue;
 
@@ -29,7 +31,9 @@ public class GameServerSelectionTest {
         Events.getInstance().registerEvents(this);
 
         GameClient client = new GameClient();
-        client.start();
+        CountDownLatch latch = new CountDownLatch(1);
+        client.start(state -> latch.countDown());
+        latch.await(1, TimeUnit.SECONDS);
 
         TileSelectionData data = new TileSelectionData(0, 0, true);
 

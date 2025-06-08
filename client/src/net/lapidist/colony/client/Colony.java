@@ -10,7 +10,6 @@ import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
 import net.lapidist.colony.config.ColonyConfig;
-import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.client.events.GameInitEvent;
 
@@ -35,7 +34,6 @@ public final class Colony extends Game {
     }
 
     public void startGame(final String saveName) {
-        MapState state;
         try {
             if (server != null) {
                 server.stop();
@@ -45,12 +43,10 @@ public final class Colony extends Game {
             );
             server.start();
             client = new GameClient();
-            client.start();
-            state = client.getMapState();
+            client.start(state -> setScreen(new MapScreen(this, state, client)));
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-        setScreen(new MapScreen(this, state, client));
     }
 
     public void startGame() {

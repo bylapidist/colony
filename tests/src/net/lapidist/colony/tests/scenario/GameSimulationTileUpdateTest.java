@@ -8,6 +8,8 @@ import net.lapidist.colony.server.GameServerConfig;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertTrue;
 
@@ -22,9 +24,13 @@ public class GameSimulationTileUpdateTest {
         server.start();
 
         GameClient sender = new GameClient();
-        sender.start();
+        CountDownLatch latchSender = new CountDownLatch(1);
+        sender.start(state -> latchSender.countDown());
         GameClient receiver = new GameClient();
-        receiver.start();
+        CountDownLatch latchReceiver = new CountDownLatch(1);
+        receiver.start(state -> latchReceiver.countDown());
+        latchSender.await(1, TimeUnit.SECONDS);
+        latchReceiver.await(1, TimeUnit.SECONDS);
 
         MapState state = receiver.getMapState();
         GameSimulation sim = new GameSimulation(state, receiver);

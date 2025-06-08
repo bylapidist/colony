@@ -15,6 +15,8 @@ import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -37,7 +39,9 @@ public class GameSimulationDelayedTileUpdateTest {
         server.start();
 
         GameClient client = new GameClient();
-        client.start();
+        CountDownLatch latch = new CountDownLatch(1);
+        client.start(state -> latch.countDown());
+        latch.await(1, TimeUnit.SECONDS);
 
         try {
             MapState state = client.getMapState();
