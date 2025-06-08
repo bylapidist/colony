@@ -19,6 +19,7 @@ public final class GameSimulation {
     private final World world;
     private final InputSystem inputSystem;
     private final PlayerCameraSystem cameraSystem;
+    private final GameClient client;
 
     private static final float STEP_TIME = 1f / 60f;
     /**
@@ -27,7 +28,14 @@ public final class GameSimulation {
      * @param state initial map state to load
      */
     public GameSimulation(final MapState state) {
-        GameClient client = mock(GameClient.class);
+        this(state, mock(GameClient.class));
+    }
+
+    /**
+     * Create a new simulation world using the provided {@link GameClient}.
+     */
+    public GameSimulation(final MapState state, final GameClient clientToUse) {
+        client = clientToUse;
         world = new World(new WorldConfigurationBuilder()
                 .with(
                         new MapLoadSystem(state),
@@ -58,5 +66,9 @@ public final class GameSimulation {
 
     public PlayerCameraSystem getCamera() {
         return cameraSystem;
+    }
+
+    public GameClient getClient() {
+        return client;
     }
 }
