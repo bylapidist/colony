@@ -39,16 +39,16 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     private MapState mapState;
     private Iterable<MessageHandler<?>> handlers;
 
-    public GameServer(final GameServerConfig config) {
+    public GameServer(final ServerConfig config) {
         this(config, null);
     }
 
-    public GameServer(final GameServerConfig config, final Iterable<MessageHandler<?>> handlersToUse) {
+    public GameServer(final ServerConfig config, final Iterable<MessageHandler<?>> handlersToUse) {
         this.saveName = config.getSaveName();
         this.autosaveInterval = config.getAutosaveInterval();
         this.mapGenerator = config.getMapGenerator();
         this.handlers = handlersToUse;
-        this.mapService = new MapService(mapGenerator, saveName);
+        this.mapService = new MapService(config);
         this.networkService = new NetworkService(server, TCP_PORT, UDP_PORT);
         this.autosaveService = new AutosaveService(autosaveInterval, saveName, () -> mapState);
     }
