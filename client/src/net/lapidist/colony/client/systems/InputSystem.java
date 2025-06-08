@@ -45,7 +45,7 @@ public final class InputSystem extends BaseSystem {
         cameraSystem = world.getSystem(PlayerCameraSystem.class);
         mapMapper = world.getMapper(MapComponent.class);
         tileMapper = world.getMapper(TileComponent.class);
-        map = net.lapidist.colony.map.MapUtils.findMapEntity(world);
+        map = net.lapidist.colony.map.MapUtils.findMapEntity(world).orElse(null);
         keyboardHandler = new KeyboardInputHandler(cameraSystem);
         gestureHandler = new GestureInputHandler(cameraSystem);
         tileSelectionHandler = new TileSelectionHandler(client, cameraSystem);
