@@ -119,3 +119,27 @@ subprojects { subproj ->
         }
     }
 }
+
+tasks.register('codeCoverageReport', JacocoReport) {
+    dependsOn subprojects.collect { it.tasks.withType(Test) }
+
+    def coverageFiles = subprojects.collect { proj ->
+        proj.tasks.withType(Test).collect {
+            it.extensions.getByType(JacocoTaskExtension).destinationFile
+        }
+    }
+    executionData.setFrom(files(coverageFiles))
+
+    def sources = subprojects.collect { it.sourceSets.main.allSource.srcDirs }
+    sourceDirectories.setFrom(files(sources))
+
+    def classes = subprojects.collect { it.sourceSets.main.output }
+    classDirectories.setFrom(files(classes).collect {
+        fileTree(dir: it, exclude: ['**/generated/**', '**/*Launcher*'])
+    })
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+}
