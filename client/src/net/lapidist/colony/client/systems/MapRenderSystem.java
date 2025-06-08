@@ -1,8 +1,6 @@
 package net.lapidist.colony.client.systems;
 
 import com.artemis.BaseSystem;
-import com.artemis.ComponentMapper;
-import com.artemis.Entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.lapidist.colony.client.renderers.BuildingRenderer;
 import net.lapidist.colony.client.renderers.MapRendererFactory;
@@ -15,11 +13,10 @@ public final class MapRenderSystem extends BaseSystem {
     private final MapRendererFactory factory;
     private MapRenderers renderers;
 
-    private Entity map;
+    private MapComponent map;
 
     private PlayerCameraSystem cameraSystem;
 
-    private ComponentMapper<MapComponent> mapMapper;
 
     private TileRenderer tileRenderer;
     private BuildingRenderer buildingRenderer;
@@ -31,13 +28,11 @@ public final class MapRenderSystem extends BaseSystem {
     @Override
     public void initialize() {
         cameraSystem = world.getSystem(PlayerCameraSystem.class);
-        mapMapper = world.getMapper(MapComponent.class);
-
         renderers = factory.create(world);
         tileRenderer = renderers.getTileRenderer();
         buildingRenderer = renderers.getBuildingRenderer();
 
-        map = net.lapidist.colony.map.MapUtils.findMapEntity(world).orElse(null);
+        map = net.lapidist.colony.map.MapUtils.findMap(world).orElse(null);
     }
 
     @Override
@@ -53,9 +48,10 @@ public final class MapRenderSystem extends BaseSystem {
         batch.setProjectionMatrix(cameraSystem.getCamera().combined);
         batch.begin();
 
-        MapComponent mapComponent = mapMapper.get(map);
-        tileRenderer.render(mapComponent.getTiles());
-        buildingRenderer.render(mapComponent.getEntities());
+        if (map != null) {
+            tileRenderer.render(map.getTiles());
+            buildingRenderer.render(map.getEntities());
+        }
 
         batch.end();
     }
