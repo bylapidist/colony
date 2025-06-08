@@ -29,6 +29,7 @@ public final class InputSystem extends BaseSystem {
     private KeyboardInputHandler keyboardHandler;
     private GestureInputHandler gestureHandler;
     private TileSelectionHandler tileSelectionHandler;
+    private InputGestureListener gestureListener;
 
     public InputSystem(final GameClient clientToSet) {
         this.client = clientToSet;
@@ -46,7 +47,7 @@ public final class InputSystem extends BaseSystem {
         keyboardHandler = new KeyboardInputHandler(cameraSystem);
         gestureHandler = new GestureInputHandler(cameraSystem);
         tileSelectionHandler = new TileSelectionHandler(client, cameraSystem);
-        InputGestureListener gestureListener = new InputGestureListener(
+        gestureListener = new InputGestureListener(
                 gestureHandler,
                 keyboardHandler,
                 tileSelectionHandler,
@@ -61,6 +62,12 @@ public final class InputSystem extends BaseSystem {
 
     @Override
     protected void processSystem() {
+        if (map == null) {
+            map = net.lapidist.colony.map.MapUtils.findMap(world).orElse(null);
+            if (map != null) {
+                gestureListener.setMap(map);
+            }
+        }
         keyboardHandler.handleKeyboardInput(world.getDelta());
         keyboardHandler.clampCameraPosition();
         cameraSystem.getCamera().update();

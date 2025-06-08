@@ -13,7 +13,7 @@ public final class InputGestureListener extends GestureAdapter {
     private final GestureInputHandler gestureHandler;
     private final KeyboardInputHandler keyboardHandler;
     private final TileSelectionHandler tileSelectionHandler;
-    private final MapComponent map;
+    private MapComponent map;
     private final ComponentMapper<TileComponent> tileMapper;
 
     public InputGestureListener(
@@ -28,6 +28,10 @@ public final class InputGestureListener extends GestureAdapter {
         this.tileSelectionHandler = tileSelectionHandlerToSet;
         this.map = mapToSet;
         this.tileMapper = tileMapperToSet;
+    }
+
+    public void setMap(final MapComponent mapToSet) {
+        this.map = mapToSet;
     }
 
     @Override
