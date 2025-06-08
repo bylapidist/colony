@@ -36,7 +36,7 @@ public class GameServerSelectionTest {
         Thread.sleep(WAIT_MS);
         Events.update();
 
-        assertTrue(server.getMapState().getTiles().get(0).isSelected());
+        assertTrue(server.getMapState().tiles().get(0).isSelected());
         assertTrue(handled);
 
         client.stop();

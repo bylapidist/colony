@@ -31,7 +31,7 @@ public class TileUpdateSystemTest {
         tile.setTileType("GRASS");
         tile.setTextureRef("grass0");
         tile.setPassable(true);
-        state.getTiles().add(tile);
+        state.tiles().add(tile);
 
         GameClient client = new GameClient();
         World world = new World(new WorldConfigurationBuilder()

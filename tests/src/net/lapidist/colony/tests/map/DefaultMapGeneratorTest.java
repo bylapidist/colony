@@ -14,6 +14,6 @@ public class DefaultMapGeneratorTest {
         final int width = 4;
         final int height = 3;
         MapState state = generator.generate(width, height);
-        assertEquals(width * height, state.getTiles().size());
+        assertEquals(width * height, state.tiles().size());
     }
 }

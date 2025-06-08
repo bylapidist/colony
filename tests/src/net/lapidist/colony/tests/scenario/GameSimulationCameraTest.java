@@ -26,7 +26,7 @@ public class GameSimulationCameraTest {
         tile.setTileType("GRASS");
         tile.setTextureRef("grass0");
         tile.setPassable(true);
-        state.getTiles().add(tile);
+        state.tiles().add(tile);
 
         GameSimulation sim = new GameSimulation(state);
         float startX = sim.getCamera().getCamera().position.x;

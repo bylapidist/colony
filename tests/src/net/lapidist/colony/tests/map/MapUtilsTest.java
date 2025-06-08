@@ -29,7 +29,7 @@ public class MapUtilsTest {
         tile.setTileType("GRASS");
         tile.setTextureRef("grass0");
         tile.setPassable(true);
-        state.getTiles().add(tile);
+        state.tiles().add(tile);
 
         World world = new World(new WorldConfigurationBuilder()
                 .with(new MapLoadSystem(state))
