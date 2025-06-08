@@ -1,8 +1,9 @@
 package net.lapidist.colony.components.maps;
 
 import com.artemis.Component;
+import net.lapidist.colony.components.BoundedComponent;
 
-public class TileComponent extends Component {
+public class TileComponent extends Component implements BoundedComponent {
 
     public enum TileType {
         EMPTY("empty"),
