@@ -1,6 +1,5 @@
 package net.lapidist.colony.tests.core.io;
 
-import net.lapidist.colony.io.DefaultPathService;
 import net.lapidist.colony.io.PathService;
 import net.lapidist.colony.io.Paths;
 import org.junit.After;
@@ -17,7 +16,7 @@ public class PathsTest {
 
     @After
     public void tearDown() {
-        Paths.setService(new DefaultPathService());
+        Paths.setService(Paths.createDefaultService());
     }
 
     @Test

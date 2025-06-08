@@ -6,7 +6,6 @@ import com.esotericsoftware.kryo.io.Output;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.core.serialization.KryoRegistry;
 import net.lapidist.colony.save.SaveData;
-import net.lapidist.colony.save.SaveMigrator;
 import net.lapidist.colony.save.SaveVersion;
 import net.lapidist.colony.serialization.SerializationRegistrar;
 
@@ -37,23 +36,10 @@ public final class GameStateIO {
         KryoRegistry.register(kryo);
         try (Input input = new Input(new FileInputStream(file.toFile()))) {
             SaveData data = kryo.readObject(input, SaveData.class);
-            if (data.version() > SaveVersion.CURRENT.number()) {
-                throw new IOException(
-                        String.format(
-                                "Unsupported map version %d (current %d)",
-                                data.version(),
-                                SaveVersion.CURRENT.number()
-                        )
-                );
-            }
-            if (data.kryoHash() != SerializationRegistrar.registrationHash()) {
-                throw new IOException("Save file format mismatch with current Kryo registration");
-            }
-            MapState state = data.mapState();
-            if (data.version() < SaveVersion.CURRENT.number()) {
-                state = SaveMigrator.migrate(state, data.version(), SaveVersion.CURRENT.number());
-            }
-            return state;
+            SaveFormatValidator validator = new DefaultSaveFormatValidator();
+            validator.validate(data);
+            SaveMigrationStrategy migrator = new DefaultSaveMigrationStrategy();
+            return migrator.migrate(data);
         }
     }
 
