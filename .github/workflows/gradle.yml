@@ -34,11 +34,13 @@ jobs:
     - name: Run style checks
       run: ./gradlew check
 
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v5
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        slug: bylapidist/colony
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: bylapidist/colony
+          files: build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml
+          fail_ci_if_error: true
 
   release:
     runs-on: ubuntu-latest
