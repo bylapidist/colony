@@ -52,6 +52,7 @@ public final class SerializationRegistrar {
             MapState.class,
             BuildingData.class,
             TilePos.class,
+            net.lapidist.colony.chat.ChatMessage.class,
             SaveData.class
     };
 }
