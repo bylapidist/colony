@@ -5,13 +5,12 @@ import com.artemis.Entity;
 import com.artemis.World;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
@@ -24,6 +23,7 @@ import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.io.IOException;
 
@@ -36,7 +36,7 @@ public final class MinimapActor extends Actor implements Disposable {
 
     private final World world;
     private final ResourceLoader resourceLoader = new ResourceLoader();
-    private final TextureRegion viewportPixel;
+    private ShapeRenderer shapeRenderer;
     private ComponentMapper<MapComponent> mapMapper;
     private ComponentMapper<TileComponent> tileMapper;
     private ComponentMapper<TextureRegionReferenceComponent> textureMapper;
@@ -139,16 +139,15 @@ public final class MinimapActor extends Actor implements Disposable {
 
     public MinimapActor(final World worldToSet) {
         this.world = worldToSet;
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.WHITE);
-        pixmap.fill();
-        viewportPixel = new TextureRegion(new Texture(pixmap));
-        pixmap.dispose();
+        // ShapeRenderer will be used to draw the viewport rectangle when GL is available
         setSize(DEFAULT_SIZE, DEFAULT_SIZE);
         try {
             resourceLoader.load(FileLocation.INTERNAL, "textures/textures.atlas");
         } catch (IOException e) {
             // ignore loading errors in headless tests
+        }
+        if (Gdx.app != null && Gdx.app.getType() != com.badlogic.gdx.Application.ApplicationType.HeadlessDesktop) {
+            shapeRenderer = new ShapeRenderer();
         }
         mapWidthWorld = -1;
         mapHeightWorld = -1;
@@ -205,21 +204,24 @@ public final class MinimapActor extends Actor implements Disposable {
             float rectY = getY() + clampedBottom * scaleY;
             float rectWidth = (clampedRight - clampedLeft) * scaleX;
             float rectHeight = (clampedTop - clampedBottom) * scaleY;
-            float lineWidth = 2f;
-            Color old = new Color(batch.getColor());
-            batch.setColor(Color.WHITE);
-            batch.draw(viewportPixel, rectX, rectY, rectWidth, lineWidth);
-            batch.draw(viewportPixel, rectX, rectY + rectHeight - lineWidth, rectWidth, lineWidth);
-            batch.draw(viewportPixel, rectX, rectY, lineWidth, rectHeight);
-            batch.draw(viewportPixel, rectX + rectWidth - lineWidth, rectY, lineWidth, rectHeight);
-            batch.setColor(old);
+            if (shapeRenderer != null) {
+                batch.end();
+                shapeRenderer.setProjectionMatrix(((SpriteBatch) batch).getProjectionMatrix());
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                shapeRenderer.setColor(Color.WHITE);
+                shapeRenderer.rect(rectX, rectY, rectWidth, rectHeight);
+                shapeRenderer.end();
+                batch.begin();
+            }
         }
     }
 
     @Override
     public void dispose() {
         resourceLoader.dispose();
-        viewportPixel.getTexture().dispose();
+        if (shapeRenderer != null) {
+            shapeRenderer.dispose();
+        }
         if (tileCache != null) {
             tileCache.dispose();
         }
