@@ -1,14 +1,10 @@
 package net.lapidist.colony.settings;
 
-import net.lapidist.colony.io.Paths;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Locale;
-import java.util.Properties;
 
 /**
  * Simple POJO for user settings persisted to the game folder.
@@ -27,37 +23,30 @@ public final class Settings {
     }
 
     /**
-     * Load settings from disk. If the file does not exist default settings are returned.
+     * Load settings from LibGDX preferences. If no preferences are present
+     * defaults are returned.
      */
     public static Settings load() {
         Settings settings = new Settings();
-        try {
-            Path file = Paths.getSettingsFile();
-            if (Files.exists(file)) {
-                Properties props = new Properties();
-                try (InputStream in = Files.newInputStream(file)) {
-                    props.load(in);
-                }
-                String lang = props.getProperty(LANGUAGE_KEY);
-                if (lang != null && !lang.isEmpty()) {
-                    settings.setLocale(Locale.forLanguageTag(lang));
-                }
+        if (Gdx.app != null) {
+            Preferences prefs = Gdx.app.getPreferences("settings");
+            String lang = prefs.getString(LANGUAGE_KEY, "");
+            if (!lang.isEmpty()) {
+                settings.setLocale(Locale.forLanguageTag(lang));
             }
-        } catch (IOException e) {
-            // ignore and use defaults
         }
         return settings;
     }
 
     /**
-     * Save settings to disk.
+     * Persist settings using LibGDX preferences.
      */
     public void save() throws IOException {
-        Properties props = new Properties();
-        props.setProperty(LANGUAGE_KEY, locale.toLanguageTag());
-        Path file = Paths.getSettingsFile();
-        try (OutputStream out = Files.newOutputStream(file)) {
-            props.store(out, null);
+        if (Gdx.app == null) {
+            throw new IOException("Preferences unavailable");
         }
+        Preferences prefs = Gdx.app.getPreferences("settings");
+        prefs.putString(LANGUAGE_KEY, locale.toLanguageTag());
+        prefs.flush();
     }
 }
