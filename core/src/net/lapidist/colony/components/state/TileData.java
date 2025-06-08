@@ -2,60 +2,96 @@ package net.lapidist.colony.components.state;
 
 import net.lapidist.colony.serialization.KryoType;
 
+/**
+ * Immutable tile representation used in {@link MapState}.
+ */
 @KryoType
-public final class TileData {
-    private int x;
-    private int y;
-    private String tileType;
-    private String textureRef;
-    private boolean passable;
-    private boolean selected;
+public record TileData(
+        int x,
+        int y,
+        String tileType,
+        String textureRef,
+        boolean passable,
+        boolean selected
+) {
 
-    public int getX() {
-        return x;
+    public TileData() {
+        this(0, 0, null, null, false, false);
     }
 
-    public void setX(final int xToSet) {
-        this.x = xToSet;
+    /**
+     * Create a builder prepopulated with this tile's values.
+     *
+     * @return builder instance
+     */
+    public Builder toBuilder() {
+        return new Builder(this);
     }
 
-    public int getY() {
-        return y;
+    /**
+     * @return a new builder instance
+     */
+    public static Builder builder() {
+        return new Builder();
     }
 
-    public void setY(final int yToSet) {
-        this.y = yToSet;
-    }
+    /**
+     * Builder for {@link TileData} allowing mutation before construction.
+     */
+    public static final class Builder {
+        private int x;
+        private int y;
+        private String tileType;
+        private String textureRef;
+        private boolean passable;
+        private boolean selected;
 
-    public String getTileType() {
-        return tileType;
-    }
+        private Builder() { }
 
-    public void setTileType(final String tileTypeToSet) {
-        this.tileType = tileTypeToSet;
-    }
+        private Builder(final TileData data) {
+            this.x = data.x;
+            this.y = data.y;
+            this.tileType = data.tileType;
+            this.textureRef = data.textureRef;
+            this.passable = data.passable;
+            this.selected = data.selected;
+        }
 
-    public String getTextureRef() {
-        return textureRef;
-    }
+        public Builder x(final int newX) {
+            this.x = newX;
+            return this;
+        }
 
-    public void setTextureRef(final String textureRefToSet) {
-        this.textureRef = textureRefToSet;
-    }
+        public Builder y(final int newY) {
+            this.y = newY;
+            return this;
+        }
 
-    public boolean isPassable() {
-        return passable;
-    }
+        public Builder tileType(final String newTileType) {
+            this.tileType = newTileType;
+            return this;
+        }
 
-    public boolean isSelected() {
-        return selected;
-    }
+        public Builder textureRef(final String newTextureRef) {
+            this.textureRef = newTextureRef;
+            return this;
+        }
 
-    public void setPassable(final boolean passableToSet) {
-        this.passable = passableToSet;
-    }
+        public Builder passable(final boolean newPassable) {
+            this.passable = newPassable;
+            return this;
+        }
 
-    public void setSelected(final boolean selectedToSet) {
-        this.selected = selectedToSet;
+        public Builder selected(final boolean newSelected) {
+            this.selected = newSelected;
+            return this;
+        }
+
+        /**
+         * Construct a new immutable {@link TileData} instance.
+         */
+        public TileData build() {
+            return new TileData(x, y, tileType, textureRef, passable, selected);
+        }
     }
 }

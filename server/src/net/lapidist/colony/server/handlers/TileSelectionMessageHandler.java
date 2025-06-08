@@ -34,9 +34,11 @@ public final class TileSelectionMessageHandler implements MessageHandler<TileSel
     @Override
     public void handle(final TileSelectionData data) {
         MapState state = stateSupplier.get();
-        TileData tile = state.tiles().get(new TilePos(data.x(), data.y()));
+        TilePos pos = new TilePos(data.x(), data.y());
+        TileData tile = state.tiles().get(pos);
         if (tile != null) {
-            tile.setSelected(data.selected());
+            TileData updated = tile.toBuilder().selected(data.selected()).build();
+            state.tiles().put(pos, updated);
         }
         Events.dispatch(new TileSelectionEvent(data.x(), data.y(), data.selected()));
         server.sendToAllTCP(data);
