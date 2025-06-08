@@ -15,6 +15,7 @@ public final class SaveMigrator {
 
     static {
         MIGRATIONS.put(SaveVersion.V1.number(), SaveMigrator::v1ToV2);
+        MIGRATIONS.put(SaveVersion.V2.number(), SaveMigrator::v2ToV3);
     }
 
     private SaveMigrator() {
@@ -24,6 +25,13 @@ public final class SaveMigrator {
         // No structural changes between v1 and v2, just bump the version.
         return state.toBuilder()
                 .version(SaveVersion.V2.number())
+                .build();
+    }
+
+    private static MapState v2ToV3(final MapState state) {
+        // No structural changes between v2 and v3, just bump the version.
+        return state.toBuilder()
+                .version(SaveVersion.V3.number())
                 .build();
     }
 
