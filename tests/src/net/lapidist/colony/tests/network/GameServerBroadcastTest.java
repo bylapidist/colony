@@ -5,6 +5,8 @@ import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
 import org.junit.Test;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -19,9 +21,13 @@ public class GameServerBroadcastTest {
         server.start();
 
         GameClient clientA = new GameClient();
-        clientA.start();
+        CountDownLatch latchA = new CountDownLatch(1);
+        clientA.start(state -> latchA.countDown());
         GameClient clientB = new GameClient();
-        clientB.start();
+        CountDownLatch latchB = new CountDownLatch(1);
+        clientB.start(state -> latchB.countDown());
+        latchA.await(1, TimeUnit.SECONDS);
+        latchB.await(1, TimeUnit.SECONDS);
 
         TileSelectionData data = new TileSelectionData(0, 0, true);
         clientA.sendTileSelectionRequest(data);
