@@ -24,12 +24,13 @@ public class MapUtilsTest {
     @Test
     public void findsMapEntityAndComponent() {
         MapState state = new MapState();
-        TileData tile = new TileData();
-        tile.setX(0);
-        tile.setY(0);
-        tile.setTileType("GRASS");
-        tile.setTextureRef("grass0");
-        tile.setPassable(true);
+        TileData tile = TileData.builder()
+                .x(0)
+                .y(0)
+                .tileType("GRASS")
+                .textureRef("grass0")
+                .passable(true)
+                .build();
         state.tiles().put(new TilePos(0, 0), tile);
 
         World world = new World(new WorldConfigurationBuilder()

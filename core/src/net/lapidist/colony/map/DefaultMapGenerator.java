@@ -38,13 +38,13 @@ public final class DefaultMapGenerator implements MapGenerator {
     }
 
     private static TileData createTile(final int x, final int y, final Random random) {
-        TileData tile = new TileData();
-        tile.setX(x);
-        tile.setY(y);
-        tile.setTileType("GRASS");
-        tile.setTextureRef(TEXTURES[random.nextInt(TEXTURES.length)]);
-        tile.setPassable(true);
-        tile.setSelected(false);
-        return tile;
+        return TileData.builder()
+                .x(x)
+                .y(y)
+                .tileType("GRASS")
+                .textureRef(TEXTURES[random.nextInt(TEXTURES.length)])
+                .passable(true)
+                .selected(false)
+                .build();
     }
 }

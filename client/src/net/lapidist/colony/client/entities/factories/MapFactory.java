@@ -34,11 +34,11 @@ public final class MapFactory {
         for (TileData td : state.tiles().values()) {
             tiles.add(TileFactory.create(
                     world,
-                    TileComponent.TileType.valueOf(td.getTileType()),
-                    td.getTextureRef(),
-                    new Vector2(td.getX(), td.getY()),
-                    td.isPassable(),
-                    td.isSelected()
+                    TileComponent.TileType.valueOf(td.tileType()),
+                    td.textureRef(),
+                    new Vector2(td.x(), td.y()),
+                    td.passable(),
+                    td.selected()
             ));
         }
 

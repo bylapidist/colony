@@ -37,7 +37,7 @@ public class GameServerSelectionTest {
         Thread.sleep(WAIT_MS);
         Events.update();
 
-        assertTrue(server.getMapState().tiles().get(new TilePos(0, 0)).isSelected());
+        assertTrue(server.getMapState().tiles().get(new TilePos(0, 0)).selected());
         assertTrue(handled);
 
         client.stop();
