@@ -32,6 +32,7 @@ public final class MapRenderSystem extends BaseSystem {
         buildingRenderer = renderers.getBuildingRenderer();
 
         map = net.lapidist.colony.map.MapUtils.findMap(world).orElse(null);
+
     }
 
     @Override

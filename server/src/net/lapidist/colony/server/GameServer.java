@@ -6,19 +6,17 @@ import com.esotericsoftware.kryonet.Server;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.config.ColonyConfig;
 import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TileSelectionData;
-import net.lapidist.colony.components.state.TilePos;
-import net.lapidist.colony.server.events.TileSelectionEvent;
 import net.lapidist.colony.server.events.AutosaveEvent;
 import net.lapidist.colony.server.events.ShutdownSaveEvent;
 import net.lapidist.colony.server.events.SaveEvent;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.core.serialization.KryoRegistry;
 import net.lapidist.colony.network.AbstractMessageEndpoint;
+import net.lapidist.colony.network.MessageHandler;
 import net.lapidist.colony.server.io.GameStateIO;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.map.MapGenerator;
+import net.lapidist.colony.server.handlers.TileSelectionMessageHandler;
 import net.mostlyoriginal.api.event.common.EventSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,11 +47,17 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     private final MapGenerator mapGenerator;
     private ScheduledExecutorService executor;
     private MapState mapState;
+    private Iterable<MessageHandler<?>> handlers;
 
     public GameServer(final GameServerConfig config) {
+        this(config, null);
+    }
+
+    public GameServer(final GameServerConfig config, final Iterable<MessageHandler<?>> handlersToUse) {
         this.saveName = config.getSaveName();
         this.autosaveIntervalMs = config.getAutosaveIntervalMs();
         this.mapGenerator = config.getMapGenerator();
+        this.handlers = handlersToUse;
     }
 
     @Override
@@ -64,6 +68,14 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
 
         loadOrGenerateMap();
         setupConnections();
+        if (handlers == null) {
+            handlers = java.util.List.of(
+                    new TileSelectionMessageHandler(() -> mapState, server)
+            );
+        }
+        for (MessageHandler<?> handler : handlers) {
+            handler.register(this);
+        }
         scheduleAutosave();
     }
 
@@ -86,12 +98,6 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         server.start();
         LOGGER.info("Server started on TCP {} UDP {}", TCP_PORT, UDP_PORT);
         server.bind(TCP_PORT, UDP_PORT);
-
-        onMessage(TileSelectionData.class, data -> {
-            handleTileSelection(data);
-            Events.dispatch(new TileSelectionEvent(data.x(), data.y(), data.selected()));
-            server.sendToAllTCP(data);
-        });
 
         server.addListener(new Listener() {
             @Override
@@ -143,13 +149,6 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         server.stop();
         LOGGER.info("Server stopped");
         Events.dispose();
-    }
-
-    private void handleTileSelection(final TileSelectionData data) {
-        TileData tile = mapState.tiles().get(new TilePos(data.x(), data.y()));
-        if (tile != null) {
-            tile.setSelected(data.selected());
-        }
     }
 
     private void autoSave() {

@@ -18,29 +18,26 @@ public final class MapUtils {
      * Returns the first entity in the world containing a {@link MapComponent}.
      *
      * @param world the Artemis world to search
-     * @return the map entity or {@code null} if none exists
+     * @return an {@link Optional} containing the map entity if present
      */
-    public static Entity findMapEntity(final World world) {
+    public static Optional<Entity> findMapEntity(final World world) {
         IntBag maps = world.getAspectSubscriptionManager()
                 .get(Aspect.all(MapComponent.class))
                 .getEntities();
         if (maps.size() > 0) {
-            return world.getEntity(maps.get(0));
+            return Optional.of(world.getEntity(maps.get(0)));
         }
-        return null;
+        return Optional.empty();
     }
 
     /**
      * Returns the {@link MapComponent} from the first map entity in the world.
      *
      * @param world the Artemis world to search
-     * @return an {@link Optional} containing the map component or empty if none exists
+     * @return an {@link Optional} containing the map component if present
      */
     public static Optional<MapComponent> findMap(final World world) {
-        Entity entity = findMapEntity(world);
-        if (entity == null) {
-            return Optional.empty();
-        }
-        return Optional.of(world.getMapper(MapComponent.class).get(entity));
+        return findMapEntity(world)
+                .map(e -> world.getMapper(MapComponent.class).get(e));
     }
 }

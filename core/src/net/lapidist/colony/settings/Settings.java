@@ -2,6 +2,7 @@ package net.lapidist.colony.settings;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import net.lapidist.colony.i18n.I18n;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -43,7 +44,7 @@ public final class Settings {
      */
     public void save() throws IOException {
         if (Gdx.app == null) {
-            throw new IOException("Preferences unavailable");
+            throw new IOException(I18n.get("error.preferencesUnavailable"));
         }
         Preferences prefs = Gdx.app.getPreferences("settings");
         prefs.putString(LANGUAGE_KEY, locale.toLanguageTag());

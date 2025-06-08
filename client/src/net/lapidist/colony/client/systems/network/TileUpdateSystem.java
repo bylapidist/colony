@@ -1,10 +1,8 @@
 package net.lapidist.colony.client.systems.network;
 
-import com.artemis.Aspect;
 import com.artemis.BaseSystem;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.utils.IntBag;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
@@ -27,13 +25,10 @@ public final class TileUpdateSystem extends BaseSystem {
     @Override
     protected void processSystem() {
         if (map == null) {
-            IntBag maps = world.getAspectSubscriptionManager()
-                    .get(Aspect.all(MapComponent.class))
-                    .getEntities();
-            if (maps.size() == 0) {
+            map = net.lapidist.colony.map.MapUtils.findMapEntity(world).orElse(null);
+            if (map == null) {
                 return;
             }
-            map = world.getEntity(maps.get(0));
         }
 
         MapComponent mapComponent = mapMapper.get(map);
