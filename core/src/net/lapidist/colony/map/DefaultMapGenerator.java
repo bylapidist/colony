@@ -24,14 +24,7 @@ public final class DefaultMapGenerator implements MapGenerator {
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                TileData tile = new TileData();
-                tile.setX(x);
-                tile.setY(y);
-                tile.setTileType("GRASS");
-                tile.setTextureRef(TEXTURES[random.nextInt(TEXTURES.length)]);
-                tile.setPassable(true);
-                tile.setSelected(false);
-                state.tiles().add(tile);
+                state.tiles().add(createTile(x, y, random));
             }
         }
 
@@ -39,5 +32,16 @@ public final class DefaultMapGenerator implements MapGenerator {
         state.buildings().add(building);
 
         return state;
+    }
+
+    private static TileData createTile(final int x, final int y, final Random random) {
+        TileData tile = new TileData();
+        tile.setX(x);
+        tile.setY(y);
+        tile.setTileType("GRASS");
+        tile.setTextureRef(TEXTURES[random.nextInt(TEXTURES.length)]);
+        tile.setPassable(true);
+        tile.setSelected(false);
+        return tile;
     }
 }
