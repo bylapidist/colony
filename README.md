@@ -73,3 +73,11 @@ Checkstyle rules are defined in `config/checkstyle/checkstyle.xml`. All Java fil
 ### Contributing
 New classes should be placed under the `net.lapidist.colony` package in the appropriate module. Commit messages and pull request titles follow the [Angular commit message guidelines](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit). When changing or adding functionality, ensure it has adequate test coverage. Scenario tests can be written with the `GameSimulation` utilities under the `tests` module.
 
+
+For more details see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+This project is licensed under the [MIT License](LICENSE).
+
+## Code of Conduct
+Please read our [Code of Conduct](CODE_OF_CONDUCT.md) for guidelines on how to participate in this community.
