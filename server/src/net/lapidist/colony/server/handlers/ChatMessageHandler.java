@@ -2,8 +2,12 @@ package net.lapidist.colony.server.handlers;
 
 import net.lapidist.colony.chat.ChatMessage;
 import net.lapidist.colony.network.AbstractMessageHandler;
+import java.util.HashMap;
+import java.util.Map;
+
 import net.lapidist.colony.server.commands.CommandBus;
-import net.lapidist.colony.server.commands.TileSelectionCommand;
+import net.lapidist.colony.server.chat.ChatCommand;
+import net.lapidist.colony.server.chat.SelectChatCommand;
 import net.lapidist.colony.server.services.NetworkService;
 
 /**
@@ -11,17 +15,23 @@ import net.lapidist.colony.server.services.NetworkService;
  * Messages starting with a slash are treated as commands.
  */
 public final class ChatMessageHandler extends AbstractMessageHandler<ChatMessage> {
-    private static final int SELECT_PARTS = 4;
-    private static final int ARG_X = 1;
-    private static final int ARG_Y = 2;
-    private static final int ARG_SELECTED = 3;
     private final NetworkService networkService;
     private final CommandBus commandBus;
+    private final Map<String, ChatCommand> commands = new HashMap<>();
 
     public ChatMessageHandler(final NetworkService service, final CommandBus bus) {
+        this(service, bus, java.util.List.of(new SelectChatCommand()));
+    }
+
+    public ChatMessageHandler(final NetworkService service,
+                              final CommandBus bus,
+                              final Iterable<ChatCommand> chatCommands) {
         super(ChatMessage.class);
         this.networkService = service;
         this.commandBus = bus;
+        for (ChatCommand cmd : chatCommands) {
+            commands.put(cmd.name(), cmd);
+        }
     }
 
     @Override
@@ -36,15 +46,12 @@ public final class ChatMessageHandler extends AbstractMessageHandler<ChatMessage
 
     private void processCommand(final String commandLine) {
         String[] parts = commandLine.split("\\s+");
-        if (parts.length == SELECT_PARTS && "select".equals(parts[0])) {
-            try {
-                int x = Integer.parseInt(parts[ARG_X]);
-                int y = Integer.parseInt(parts[ARG_Y]);
-                boolean selected = Boolean.parseBoolean(parts[ARG_SELECTED]);
-                commandBus.dispatch(new TileSelectionCommand(x, y, selected));
-            } catch (NumberFormatException ignore) {
-                // silently ignore malformed commands
-            }
+        if (parts.length == 0) {
+            return;
+        }
+        ChatCommand cmd = commands.get(parts[0]);
+        if (cmd != null) {
+            cmd.execute(parts, commandBus);
         }
     }
 }
