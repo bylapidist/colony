@@ -60,22 +60,28 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         KryoRegistry.register(server.getKryo());
         Events.init(new EventSystem());
         Paths.createGameFoldersIfNotExists();
-        Path saveFile = Paths.getAutosave(saveName);
 
+        loadOrGenerateMap();
+        setupConnections();
+        scheduleAutosave();
+    }
+
+    private void loadOrGenerateMap() throws IOException {
+        Path saveFile = Paths.getAutosave(saveName);
         if (Files.exists(saveFile)) {
             mapState = GameStateIO.load(saveFile);
             LOGGER.info("Loaded save file: {}", saveFile);
-            mapState = mapState.withSaveName(saveName);
-            mapState = mapState.withAutosaveName(saveName + AUTOSAVE_SUFFIX);
         } else {
             generateMap();
-            mapState = mapState.withSaveName(saveName);
-            mapState = mapState.withAutosaveName(saveName + AUTOSAVE_SUFFIX);
             GameStateIO.save(mapState, saveFile);
             LOGGER.info("Generated new map and saved to: {}", saveFile);
         }
+        mapState = mapState.withSaveName(saveName);
+        mapState = mapState.withAutosaveName(saveName + AUTOSAVE_SUFFIX);
         Files.writeString(Paths.getLastAutosaveMarker(), saveName);
+    }
 
+    private void setupConnections() throws IOException {
         server.start();
         LOGGER.info("Server started on TCP {} UDP {}", TCP_PORT, UDP_PORT);
         server.bind(TCP_PORT, UDP_PORT);
@@ -99,7 +105,9 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
                 dispatch(object);
             }
         });
+    }
 
+    private void scheduleAutosave() {
         executor = Executors.newSingleThreadScheduledExecutor(r -> {
             Thread thread = new Thread(r);
             thread.setDaemon(true);

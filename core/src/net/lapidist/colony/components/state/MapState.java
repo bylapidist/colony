@@ -30,31 +30,31 @@ public record MapState(
         );
     }
 
-    public MapState withVersion(final int version) {
-        return new MapState(version, name, saveName, autosaveName, description, tiles, buildings);
+    public MapState withVersion(final int newVersion) {
+        return new MapState(newVersion, name, saveName, autosaveName, description, tiles, buildings);
     }
 
-    public MapState withName(final String name) {
-        return new MapState(version, name, saveName, autosaveName, description, tiles, buildings);
+    public MapState withName(final String newName) {
+        return new MapState(version, newName, saveName, autosaveName, description, tiles, buildings);
     }
 
-    public MapState withSaveName(final String saveName) {
-        return new MapState(version, name, saveName, autosaveName, description, tiles, buildings);
+    public MapState withSaveName(final String newSaveName) {
+        return new MapState(version, name, newSaveName, autosaveName, description, tiles, buildings);
     }
 
-    public MapState withAutosaveName(final String autosaveName) {
-        return new MapState(version, name, saveName, autosaveName, description, tiles, buildings);
+    public MapState withAutosaveName(final String newAutosaveName) {
+        return new MapState(version, name, saveName, newAutosaveName, description, tiles, buildings);
     }
 
-    public MapState withDescription(final String description) {
-        return new MapState(version, name, saveName, autosaveName, description, tiles, buildings);
+    public MapState withDescription(final String newDescription) {
+        return new MapState(version, name, saveName, autosaveName, newDescription, tiles, buildings);
     }
 
-    public MapState withTiles(final List<TileData> tiles) {
-        return new MapState(version, name, saveName, autosaveName, description, tiles, buildings);
+    public MapState withTiles(final List<TileData> newTiles) {
+        return new MapState(version, name, saveName, autosaveName, description, newTiles, buildings);
     }
 
-    public MapState withBuildings(final List<BuildingData> buildings) {
-        return new MapState(version, name, saveName, autosaveName, description, tiles, buildings);
+    public MapState withBuildings(final List<BuildingData> newBuildings) {
+        return new MapState(version, name, saveName, autosaveName, description, tiles, newBuildings);
     }
 }
