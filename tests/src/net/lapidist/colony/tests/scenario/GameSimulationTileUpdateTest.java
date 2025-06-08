@@ -30,7 +30,7 @@ public class GameSimulationTileUpdateTest {
         GameSimulation sim = new GameSimulation(state, receiver);
 
         TileSelectionData data = new TileSelectionData(0, 0, true);
-        sender.sendTileSelection(data);
+        sender.sendTileSelectionRequest(data);
 
         Thread.sleep(WAIT_MS);
         sim.step();

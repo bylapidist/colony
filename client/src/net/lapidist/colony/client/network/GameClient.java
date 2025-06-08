@@ -10,7 +10,7 @@ import net.lapidist.colony.network.DispatchListener;
 import net.lapidist.colony.network.MessageHandler;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.client.network.handlers.MapStateMessageHandler;
-import net.lapidist.colony.client.network.handlers.TileSelectionMessageHandler;
+import net.lapidist.colony.client.network.handlers.TileSelectionUpdateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +36,7 @@ public final class GameClient extends AbstractMessageEndpoint {
                     mapState = state;
                     LOGGER.info("Received map state from server");
                 }),
-                new TileSelectionMessageHandler(tileUpdates)
+                new TileSelectionUpdateHandler(tileUpdates)
         );
     }
 
@@ -69,16 +69,16 @@ public final class GameClient extends AbstractMessageEndpoint {
         return mapState;
     }
 
-    public TileSelectionData pollTileSelection() {
+    public TileSelectionData pollTileSelectionUpdate() {
         return tileUpdates.poll();
     }
 
-    public void injectTileSelection(final TileSelectionData data) {
+    public void injectTileSelectionUpdate(final TileSelectionData data) {
         tileUpdates.add(data);
     }
 
 
-    public void sendTileSelection(final TileSelectionData data) {
+    public void sendTileSelectionRequest(final TileSelectionData data) {
         send(data);
     }
 

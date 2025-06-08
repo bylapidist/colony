@@ -38,6 +38,6 @@ public final class TileSelectionCommandHandler implements CommandHandler<TileSel
             state.tiles().put(pos, updated);
         }
         Events.dispatch(new TileSelectionEvent(command.x(), command.y(), command.selected()));
-        networkService.send(new TileSelectionData(command.x(), command.y(), command.selected()));
+        networkService.broadcast(new TileSelectionData(command.x(), command.y(), command.selected()));
     }
 }

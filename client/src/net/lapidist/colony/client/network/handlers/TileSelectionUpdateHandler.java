@@ -8,10 +8,10 @@ import java.util.Queue;
 /**
  * Queues tile selection updates received from the server.
  */
-public final class TileSelectionMessageHandler extends AbstractMessageHandler<TileSelectionData> {
+public final class TileSelectionUpdateHandler extends AbstractMessageHandler<TileSelectionData> {
     private final Queue<TileSelectionData> queue;
 
-    public TileSelectionMessageHandler(final Queue<TileSelectionData> queueToUse) {
+    public TileSelectionUpdateHandler(final Queue<TileSelectionData> queueToUse) {
         super(TileSelectionData.class);
         this.queue = queueToUse;
     }

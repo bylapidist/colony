@@ -54,11 +54,17 @@ All visible text is provided through resource bundles found in `core/src/main/re
 ## Networking Workflow
 Multiplayer features follow a strict request/response pattern:
 
-1. When a user action should modify the world, the client sends a message describing the action to the server.
-2. The server validates and applies the change, then broadcasts the resulting state update to all clients.
-3. Clients queue incoming updates and apply them during their next update step.
+1. When a user action should modify the world, the client sends a **request** message describing the action to the server.
+2. The server validates and applies the change, then **broadcasts** the resulting state update to all clients.
+3. Clients **queue** incoming updates and apply them during their next update step.
 
 Local changes must not be applied before the server's confirmation is processed. This keeps all connected clients in sync.
+
+The code mirrors this flow with clearly named methods:
+
+- Clients call `sendTileSelectionRequest` to issue actions.
+- The server uses `broadcast` to relay updates to all clients.
+- Each client processes queued updates via `pollTileSelectionUpdate` inside its update systems.
 
 ## Development Guidelines
 ### Code Style

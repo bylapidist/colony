@@ -9,7 +9,7 @@ import net.lapidist.colony.network.AbstractMessageEndpoint;
 import net.lapidist.colony.network.MessageHandler;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.map.MapGenerator;
-import net.lapidist.colony.server.handlers.TileSelectionMessageHandler;
+import net.lapidist.colony.server.handlers.TileSelectionRequestHandler;
 import net.lapidist.colony.server.commands.CommandBus;
 import net.lapidist.colony.server.commands.CommandHandler;
 import net.lapidist.colony.server.commands.TileSelectionCommandHandler;
@@ -85,7 +85,7 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
 
         if (handlers == null) {
             handlers = java.util.List.of(
-                    new TileSelectionMessageHandler(commandBus)
+                    new TileSelectionRequestHandler(commandBus)
             );
         }
         registerHandlers(handlers);
@@ -96,9 +96,13 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         return mapState;
     }
 
+    public void broadcast(final Object message) {
+        networkService.broadcast(message);
+    }
+
     @Override
     public void send(final Object message) {
-        networkService.send(message);
+        broadcast(message);
     }
 
 

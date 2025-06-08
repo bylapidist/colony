@@ -43,7 +43,7 @@ public class TileUpdateSystemTest {
         world.process();
 
         TileSelectionData data = new TileSelectionData(0, 0, true);
-        client.injectTileSelection(data);
+        client.injectTileSelectionUpdate(data);
 
         world.process();
 
