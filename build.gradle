@@ -81,10 +81,6 @@ allprojects {
         }
     }
 
-    tasks.register('spotless') {
-        group = 'verification'
-        dependsOn 'spotlessApply'
-    }
 
     tasks.withType(Jar).configureEach {
         manifest.attributes('Implementation-Version': rootProject.applicationVersion)
@@ -117,6 +113,30 @@ subprojects { subproj ->
                 })
             )
         }
+    }
+}
+
+subprojects { proj ->
+    if (proj.name != 'tests') {
+        sourceSets {
+            main.java.srcDirs = ['src/']
+        }
+    }
+    dependencies {
+        implementation "net.mostlyoriginal.artemis-odb:contrib-eventbus:2.5.0"
+        implementation "org.slf4j:slf4j-api:$slf4jVersion"
+    }
+}
+
+configure([project(':client'), project(':server'), project(':tests')]) {
+    dependencies {
+        implementation 'com.esotericsoftware:kryonet:2.22.0-RC1'
+    }
+}
+
+project(':tests') {
+    sourceSets {
+        test.java.srcDirs = ['src/']
     }
 }
 
