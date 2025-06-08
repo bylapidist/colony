@@ -6,6 +6,7 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.save.SaveData;
 
 /**
  * Registers all serializable classes with a given Kryo instance.
@@ -28,11 +29,24 @@ public final class SerializationRegistrar {
         kryo.register(java.util.Map.class);
     }
 
+    /**
+     * Computes a hash of the registered class names. This can be stored in a save
+     * file to detect format drift when registrations change.
+     */
+    public static int registrationHash() {
+        StringBuilder builder = new StringBuilder();
+        for (Class<?> type : REGISTERED_TYPES) {
+            builder.append(type.getName()).append(';');
+        }
+        return builder.toString().hashCode();
+    }
+
     private static final Class<?>[] REGISTERED_TYPES = {
             TileData.class,
             TileSelectionData.class,
             MapState.class,
             BuildingData.class,
-            TilePos.class
+            TilePos.class,
+            SaveData.class
     };
 }

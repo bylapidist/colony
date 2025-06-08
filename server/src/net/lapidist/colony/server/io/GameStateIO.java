@@ -5,6 +5,10 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.core.serialization.KryoRegistry;
+import net.lapidist.colony.save.SaveData;
+import net.lapidist.colony.save.SaveMigrator;
+import net.lapidist.colony.save.SaveVersion;
+import net.lapidist.colony.serialization.SerializationRegistrar;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -19,7 +23,12 @@ public final class GameStateIO {
         Kryo kryo = new Kryo();
         KryoRegistry.register(kryo);
         try (Output output = new Output(new FileOutputStream(file.toFile()))) {
-            kryo.writeObject(output, state);
+            SaveData data = new SaveData(
+                    SaveVersion.CURRENT.number(),
+                    SerializationRegistrar.registrationHash(),
+                    state
+            );
+            kryo.writeObject(output, data);
         }
     }
 
@@ -27,15 +36,22 @@ public final class GameStateIO {
         Kryo kryo = new Kryo();
         KryoRegistry.register(kryo);
         try (Input input = new Input(new FileInputStream(file.toFile()))) {
-            MapState state = kryo.readObject(input, MapState.class);
-            if (state.version() > MapState.CURRENT_VERSION) {
+            SaveData data = kryo.readObject(input, SaveData.class);
+            if (data.version() > SaveVersion.CURRENT.number()) {
                 throw new IOException(
                         String.format(
                                 "Unsupported map version %d (current %d)",
-                                state.version(),
-                                MapState.CURRENT_VERSION
+                                data.version(),
+                                SaveVersion.CURRENT.number()
                         )
                 );
+            }
+            if (data.kryoHash() != SerializationRegistrar.registrationHash()) {
+                throw new IOException("Save file format mismatch with current Kryo registration");
+            }
+            MapState state = data.mapState();
+            if (data.version() < SaveVersion.CURRENT.number()) {
+                state = SaveMigrator.migrate(state, data.version(), SaveVersion.CURRENT.number());
             }
             return state;
         }
