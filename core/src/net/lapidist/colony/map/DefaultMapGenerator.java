@@ -35,11 +35,7 @@ public final class DefaultMapGenerator implements MapGenerator {
             }
         }
 
-        BuildingData building = new BuildingData();
-        building.setX(width / 2);
-        building.setY(height / 2);
-        building.setBuildingType("HOUSE");
-        building.setTextureRef("house0");
+        BuildingData building = new BuildingData(width / 2, height / 2, "HOUSE", "house0");
         state.getBuildings().add(building);
 
         return state;

@@ -113,7 +113,7 @@ public final class GameServer implements AutoCloseable {
                 if (object instanceof TileSelectionData) {
                     TileSelectionData data = (TileSelectionData) object;
                     handleTileSelection(data);
-                    Events.dispatch(new TileSelectionEvent(data.getX(), data.getY(), data.isSelected()));
+                    Events.dispatch(new TileSelectionEvent(data.x(), data.y(), data.selected()));
                     server.sendToAllTCP(data);
                 }
             }
@@ -150,8 +150,8 @@ public final class GameServer implements AutoCloseable {
 
     private void handleTileSelection(final TileSelectionData data) {
         for (TileData tile : mapState.getTiles()) {
-            if (tile.getX() == data.getX() && tile.getY() == data.getY()) {
-                tile.setSelected(data.isSelected());
+            if (tile.getX() == data.x() && tile.getY() == data.y()) {
+                tile.setSelected(data.selected());
                 break;
             }
         }

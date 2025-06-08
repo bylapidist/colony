@@ -42,8 +42,8 @@ public final class TileUpdateSystem extends BaseSystem {
             for (int i = 0; i < mapComponent.getTiles().size; i++) {
                 Entity tile = mapComponent.getTiles().get(i);
                 TileComponent tc = tileMapper.get(tile);
-                if (tc.getX() == update.getX() && tc.getY() == update.getY()) {
-                    tc.setSelected(update.isSelected());
+                if (tc.getX() == update.x() && tc.getY() == update.y()) {
+                    tc.setSelected(update.selected());
                     break;
                 }
             }

@@ -28,11 +28,7 @@ public class MapLoadSystemTest {
         tile.setPassable(true);
         state.getTiles().add(tile);
 
-        BuildingData building = new BuildingData();
-        building.setX(1);
-        building.setY(1);
-        building.setBuildingType("HOUSE");
-        building.setTextureRef("house0");
+        BuildingData building = new BuildingData(1, 1, "HOUSE", "house0");
         state.getBuildings().add(building);
 
         World world = new World(new WorldConfigurationBuilder()

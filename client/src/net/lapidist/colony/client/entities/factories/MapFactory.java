@@ -45,9 +45,9 @@ public final class MapFactory {
         for (BuildingData bd : state.getBuildings()) {
             entities.add(BuildingFactory.create(
                     world,
-                    BuildingComponent.BuildingType.valueOf(bd.getBuildingType()),
-                    bd.getTextureRef(),
-                    new Vector2(bd.getX(), bd.getY())
+                    BuildingComponent.BuildingType.valueOf(bd.buildingType()),
+                    bd.textureRef(),
+                    new Vector2(bd.x(), bd.y())
             ));
         }
 
