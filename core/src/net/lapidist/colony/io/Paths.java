@@ -56,16 +56,18 @@ public final class Paths {
         return getGameFolder().child(SETTINGS_FILE);
     }
 
+    private static void ensureExists(final FileHandle handle) {
+        if (!handle.exists()) {
+            handle.mkdirs();
+        }
+    }
+
     public static void createGameFoldersIfNotExists() throws IOException {
         FileHandle gameFolder = getGameFolder();
-        if (!gameFolder.exists()) {
-            gameFolder.mkdirs();
-        }
+        ensureExists(gameFolder);
 
         FileHandle saveFolder = getSaveFolder();
-        if (!saveFolder.exists()) {
-            saveFolder.mkdirs();
-        }
+        ensureExists(saveFolder);
     }
 
     public static Path getSettingsFile() throws IOException {

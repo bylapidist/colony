@@ -6,7 +6,8 @@ public final class ServerLauncher {
     private ServerLauncher() { }
 
     public static void main(final String[] args) throws IOException {
-        GameServer server = new GameServer();
-        server.start();
+        try (GameServer server = new GameServer()) {
+            server.start();
+        }
     }
 }

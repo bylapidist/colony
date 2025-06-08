@@ -4,8 +4,9 @@ import com.artemis.Entity;
 import com.artemis.World;
 import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.client.core.Constants;
-import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
 import net.lapidist.colony.components.maps.TileComponent;
+
+import static net.lapidist.colony.client.entities.factories.SpriteFactoryUtil.createEntity;
 
 public final class TileFactory {
 
@@ -20,11 +21,8 @@ public final class TileFactory {
             final boolean passable,
             final boolean selected
     ) {
-        Entity entity = world.createEntity();
+        Entity entity = createEntity(world, resourceRef);
         TileComponent tileComponent = new TileComponent();
-        TextureRegionReferenceComponent textureRegionReferenceComponent = new TextureRegionReferenceComponent();
-
-        textureRegionReferenceComponent.setResourceRef(resourceRef);
         tileComponent.setTileType(tileType);
         tileComponent.setHeight(Constants.TILE_SIZE);
         tileComponent.setWidth(Constants.TILE_SIZE);
@@ -34,7 +32,6 @@ public final class TileFactory {
         tileComponent.setY((int) coords.y);
 
         entity.edit().add(tileComponent);
-        entity.edit().add(textureRegionReferenceComponent);
 
         return entity;
     }
