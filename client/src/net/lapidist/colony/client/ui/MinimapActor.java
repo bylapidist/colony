@@ -116,8 +116,8 @@ public final class MinimapActor extends Actor implements Disposable {
         for (int i = 0; i < tiles.size; i++) {
             Entity tile = tiles.get(i);
             TileComponent tileComponent = tileMapper.get(tile);
-            TextureRegion region = resourceLoader.getTextureRegions()
-                    .get(textureMapper.get(tile).getResourceRef());
+            TextureRegion region = resourceLoader.findRegion(
+                    textureMapper.get(tile).getResourceRef());
             if (region != null) {
                 cacheBatch.draw(
                         region,

@@ -4,7 +4,6 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.ObjectMap;
 
 import java.io.IOException;
 
@@ -21,7 +20,6 @@ public final class ResourceLoader implements Disposable {
     private FileLocation fileLocation;
     private AssetManager assetManager;
     private TextureAtlas atlas;
-    private final ObjectMap<String, TextureRegion> textureRegions = new ObjectMap<>();
 
     /**
      * Load all texture regions from the specified atlas file.
@@ -42,10 +40,6 @@ public final class ResourceLoader implements Disposable {
         assetManager.finishLoading();
 
         atlas = assetManager.get(atlasPath, TextureAtlas.class);
-        textureRegions.clear();
-        for (TextureAtlas.AtlasRegion region : atlas.getRegions()) {
-            textureRegions.put(region.name, region);
-        }
 
         loaded = true;
     }
@@ -58,15 +52,24 @@ public final class ResourceLoader implements Disposable {
         return fileLocation;
     }
 
-    public ObjectMap<String, TextureRegion> getTextureRegions() {
-        return textureRegions;
+
+    /**
+     * Find a texture region within the loaded atlas by name.
+     *
+     * @param name region name
+     * @return the {@link TextureRegion} or {@code null} if not found
+     */
+    public TextureRegion findRegion(final String name) {
+        if (atlas == null) {
+            return null;
+        }
+        return atlas.findRegion(name);
     }
 
     @Override
     public void dispose() {
         if (!disposed) {
             disposed = true;
-            textureRegions.clear();
             if (assetManager != null) {
                 assetManager.dispose();
             }
