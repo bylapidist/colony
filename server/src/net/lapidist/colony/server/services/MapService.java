@@ -4,6 +4,7 @@ import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.map.MapGenerator;
+import net.lapidist.colony.server.ServerConfig;
 import net.lapidist.colony.server.io.GameStateIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +23,9 @@ public final class MapService {
     private final MapGenerator mapGenerator;
     private final String saveName;
 
-    public MapService(final MapGenerator generator, final String name) {
-        this.mapGenerator = generator;
-        this.saveName = name;
+    public MapService(final ServerConfig config) {
+        this.mapGenerator = config.getMapGenerator();
+        this.saveName = config.getSaveName();
     }
 
     public MapState load() throws IOException {
