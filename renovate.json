@@ -10,7 +10,8 @@
         "patch"
       ],
       "automerge": true,
-      "semanticCommitType": "fix"
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps"
     }
   ]
 }
