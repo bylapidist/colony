@@ -8,6 +8,7 @@ import net.lapidist.colony.config.ColonyConfig;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TileSelectionData;
+import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.server.events.TileSelectionEvent;
 import net.lapidist.colony.server.events.AutosaveEvent;
 import net.lapidist.colony.server.events.ShutdownSaveEvent;
@@ -145,11 +146,9 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     }
 
     private void handleTileSelection(final TileSelectionData data) {
-        for (TileData tile : mapState.tiles()) {
-            if (tile.getX() == data.x() && tile.getY() == data.y()) {
-                tile.setSelected(data.selected());
-                break;
-            }
+        TileData tile = mapState.tiles().get(new TilePos(data.x(), data.y()));
+        if (tile != null) {
+            tile.setSelected(data.selected());
         }
     }
 

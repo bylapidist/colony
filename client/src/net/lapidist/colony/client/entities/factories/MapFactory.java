@@ -31,7 +31,7 @@ public final class MapFactory {
         Array<Entity> tiles = new Array<>();
         Array<Entity> entities = new Array<>();
 
-        for (TileData td : state.tiles()) {
+        for (TileData td : state.tiles().values()) {
             tiles.add(TileFactory.create(
                     world,
                     TileComponent.TileType.valueOf(td.getTileType()),

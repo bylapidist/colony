@@ -7,6 +7,7 @@ import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.server.events.ShutdownSaveEvent;
 import net.lapidist.colony.server.io.GameStateIO;
 import net.lapidist.colony.io.Paths;
+import net.lapidist.colony.components.state.TilePos;
 import net.mostlyoriginal.api.event.common.Subscribe;
 import org.junit.Before;
 import org.junit.Test;
@@ -84,7 +85,7 @@ public class GameServerSaveTest {
                 GameServerConfig.builder().autosaveIntervalMs(TEST_INTERVAL_MS).build()
         );
         first.start();
-        first.getMapState().tiles().get(0).setTextureRef("changed");
+        first.getMapState().tiles().get(new TilePos(0, 0)).setTextureRef("changed");
         GameStateIO.save(first.getMapState(), Paths.getAutosave("autosave"));
         first.stop();
 
@@ -92,7 +93,7 @@ public class GameServerSaveTest {
                 GameServerConfig.builder().autosaveIntervalMs(TEST_INTERVAL_MS).build()
         );
         second.start();
-        String loaded = second.getMapState().tiles().get(0).getTextureRef();
+        String loaded = second.getMapState().tiles().get(new TilePos(0, 0)).getTextureRef();
         second.stop();
 
         assertTrue("changed".equals(loaded));

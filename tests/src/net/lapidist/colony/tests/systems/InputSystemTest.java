@@ -16,6 +16,7 @@ import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +36,7 @@ public class InputSystemTest {
         tile.setTileType("GRASS");
         tile.setTextureRef("grass0");
         tile.setPassable(true);
-        state.tiles().add(tile);
+        state.tiles().put(new TilePos(0, 0), tile);
 
         GameClient client = mock(GameClient.class);
         World world = new World(new WorldConfigurationBuilder()
