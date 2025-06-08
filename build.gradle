@@ -163,3 +163,12 @@ tasks.register('codeCoverageReport', JacocoReport) {
         html.required.set(true)
     }
 }
+
+tasks.register('aggregateJavadocs', Javadoc) {
+    dependsOn subprojects.collect { it.tasks.javadoc }
+    destinationDir = file("${buildDir}/docs/javadoc")
+    source subprojects.collect { it.sourceSets.main.allJava }
+    classpath = files(subprojects.collect { it.sourceSets.main.compileClasspath })
+    options.encoding = 'UTF-8'
+    options.addBooleanOption('Xdoclint:none', true)
+}
