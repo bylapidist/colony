@@ -39,9 +39,10 @@ public final class MapWorldBuilder {
      */
     public static WorldConfigurationBuilder baseBuilder(
             final GameClient client,
+            final net.lapidist.colony.settings.Settings settings,
             final Stage stage
     ) {
-        InputSystem inputSystem = new InputSystem(client);
+        InputSystem inputSystem = new InputSystem(client, settings);
         inputSystem.addProcessor(stage);
 
         return new WorldConfigurationBuilder()
@@ -68,9 +69,10 @@ public final class MapWorldBuilder {
     public static WorldConfigurationBuilder builder(
             final MapStateProvider provider,
             final GameClient client,
+            final net.lapidist.colony.settings.Settings settings,
             final Stage stage
     ) {
-        return baseBuilder(client, stage)
+        return baseBuilder(client, settings, stage)
                 .with(
                         new MapInitSystem(provider),
                         new PlayerCameraSystem()
@@ -83,9 +85,10 @@ public final class MapWorldBuilder {
     public static WorldConfigurationBuilder builder(
             final MapState state,
             final GameClient client,
+            final net.lapidist.colony.settings.Settings settings,
             final Stage stage
     ) {
-        return builder(new ProvidedMapStateProvider(state), client, stage);
+        return builder(new ProvidedMapStateProvider(state), client, settings, stage);
     }
 
     /**
