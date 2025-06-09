@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
-import net.lapidist.colony.client.systems.InputSystem;
+import net.lapidist.colony.client.systems.CameraInputSystem;
+import net.lapidist.colony.client.systems.SelectionSystem;
+import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.MapRenderSystem;
 import net.lapidist.colony.client.renderers.MapRendererFactory;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
@@ -55,14 +57,18 @@ public final class MapWorldBuilder {
             final KeyBindings keyBindings,
             final ResourceData playerResources
     ) {
-        InputSystem inputSystem = new InputSystem(client, keyBindings);
-        inputSystem.addProcessor(stage);
+        CameraInputSystem cameraInput = new CameraInputSystem(keyBindings);
+        cameraInput.addProcessor(stage);
+        SelectionSystem selection = new SelectionSystem(client, keyBindings);
+        BuildPlacementSystem buildPlacement = new BuildPlacementSystem(client);
 
         return new WorldConfigurationBuilder()
                 .with(
                         new EventSystem(),
                         new ClearScreenSystem(Color.BLACK),
-                        inputSystem,
+                        cameraInput,
+                        selection,
+                        buildPlacement,
                         new PlayerInitSystem(playerResources),
                         new TileUpdateSystem(client),
                         new BuildingUpdateSystem(client),

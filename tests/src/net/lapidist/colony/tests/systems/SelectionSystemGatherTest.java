@@ -1,48 +1,47 @@
 package net.lapidist.colony.tests.systems;
 
-import com.artemis.Aspect;
-import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
-import com.artemis.utils.IntBag;
 import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.client.core.Constants;
 import net.lapidist.colony.client.network.GameClient;
+import net.lapidist.colony.client.systems.SelectionSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
-import net.lapidist.colony.client.util.CameraUtils;
-import net.lapidist.colony.client.systems.InputSystem;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
-import net.lapidist.colony.components.maps.MapComponent;
-import net.lapidist.colony.components.maps.TileComponent;
+import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+/** Tests resource gathering via mouse input. */
 @RunWith(GdxTestRunner.class)
-public class InputSystemTest {
+public class SelectionSystemGatherTest {
+    private static final int INITIAL_WOOD = 5;
 
     @Test
-    public void tapSelectsTileUnderCursor() {
+    public void tapSendsGatherRequest() {
         MapState state = new MapState();
+        ResourceData res = new ResourceData(INITIAL_WOOD, 0, 0);
         TileData tile = TileData.builder()
                 .x(0)
                 .y(0)
                 .tileType("GRASS")
                 .textureRef("grass0")
                 .passable(true)
+                .resources(res)
                 .build();
         state.tiles().put(new TilePos(0, 0), tile);
 
         GameClient client = mock(GameClient.class);
         World world = new World(new WorldConfigurationBuilder()
                 .with(new MapLoadSystem(state), new PlayerCameraSystem(),
-                        new InputSystem(client, new net.lapidist.colony.settings.KeyBindings()))
+                        new SelectionSystem(client, new net.lapidist.colony.settings.KeyBindings()))
                 .build());
 
         world.process();
@@ -52,21 +51,9 @@ public class InputSystemTest {
         camera.getCamera().update();
 
         Vector2 screenCoords = CameraUtils.worldToScreenCoords(camera.getViewport(), 0, 0);
-        float tapX = screenCoords.x;
-        float tapY = screenCoords.y;
+        SelectionSystem input = world.getSystem(SelectionSystem.class);
+        input.tap(screenCoords.x, screenCoords.y, 1, 0);
 
-        InputSystem input = world.getSystem(InputSystem.class);
-        input.tap(tapX, tapY, 1, 0);
-
-        IntBag maps = world.getAspectSubscriptionManager()
-                .get(Aspect.all(MapComponent.class))
-                .getEntities();
-        Entity map = world.getEntity(maps.get(0));
-        MapComponent mapComponent = world.getMapper(MapComponent.class).get(map);
-        TileComponent tileComponent = world.getMapper(TileComponent.class)
-                .get(mapComponent.getTiles().get(0));
-
-        assertFalse(tileComponent.isSelected());
-        verify(client).sendTileSelectionRequest(any());
+        verify(client).sendGatherRequest(any());
     }
 }

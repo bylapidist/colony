@@ -36,7 +36,7 @@ public class GameSimulationCameraTest {
 
         final float deltaX = -20f;
         final float deltaY = 15f;
-        sim.getInput().pan(0, 0, deltaX, deltaY);
+        sim.getCameraInput().pan(0, 0, deltaX, deltaY);
         sim.step();
 
         final float epsilon = 0.01f;

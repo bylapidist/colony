@@ -4,7 +4,9 @@ import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
-import net.lapidist.colony.client.systems.InputSystem;
+import net.lapidist.colony.client.systems.CameraInputSystem;
+import net.lapidist.colony.client.systems.SelectionSystem;
+import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.client.systems.network.TileUpdateSystem;
 import net.lapidist.colony.client.systems.network.BuildingUpdateSystem;
@@ -19,7 +21,9 @@ import static org.mockito.Mockito.mock;
  */
 public final class GameSimulation {
     private final World world;
-    private final InputSystem inputSystem;
+    private final CameraInputSystem cameraInput;
+    private final SelectionSystem selectionSystem;
+    private final BuildPlacementSystem buildPlacementSystem;
     private final PlayerCameraSystem cameraSystem;
     private final GameClient client;
 
@@ -42,7 +46,9 @@ public final class GameSimulation {
                 .with(
                         new MapLoadSystem(state),
                         new PlayerCameraSystem(),
-                        new InputSystem(client, new net.lapidist.colony.settings.KeyBindings()),
+                        new CameraInputSystem(new net.lapidist.colony.settings.KeyBindings()),
+                        new SelectionSystem(client, new net.lapidist.colony.settings.KeyBindings()),
+                        new BuildPlacementSystem(client),
                         new net.lapidist.colony.client.systems.PlayerInitSystem(),
                         new TileUpdateSystem(client),
                         new BuildingUpdateSystem(client),
@@ -51,7 +57,9 @@ public final class GameSimulation {
                 .build());
         // run once so systems initialise
         world.process();
-        inputSystem = world.getSystem(InputSystem.class);
+        cameraInput = world.getSystem(CameraInputSystem.class);
+        selectionSystem = world.getSystem(SelectionSystem.class);
+        buildPlacementSystem = world.getSystem(BuildPlacementSystem.class);
         cameraSystem = world.getSystem(PlayerCameraSystem.class);
     }
 
@@ -65,8 +73,16 @@ public final class GameSimulation {
         return world;
     }
 
-    public InputSystem getInput() {
-        return inputSystem;
+    public CameraInputSystem getCameraInput() {
+        return cameraInput;
+    }
+
+    public SelectionSystem getSelection() {
+        return selectionSystem;
+    }
+
+    public BuildPlacementSystem getBuildPlacement() {
+        return buildPlacementSystem;
     }
 
     public PlayerCameraSystem getCamera() {
