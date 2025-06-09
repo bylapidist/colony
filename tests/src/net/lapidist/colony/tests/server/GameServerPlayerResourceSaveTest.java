@@ -31,7 +31,12 @@ public class GameServerPlayerResourceSaveTest {
         client.start(state -> latch.countDown());
         latch.await(1, TimeUnit.SECONDS);
 
-        client.sendGatherRequest(new ResourceGatherRequestData(0, 0, "WOOD"));
+        var woodPos = server.getMapState().tiles().entrySet().stream()
+                .filter(e -> e.getValue().resources().wood() > 0)
+                .map(java.util.Map.Entry::getKey)
+                .findFirst()
+                .orElse(new net.lapidist.colony.components.state.TilePos(0, 0));
+        client.sendGatherRequest(new ResourceGatherRequestData(woodPos.x(), woodPos.y(), "WOOD"));
         Thread.sleep(WAIT_MS);
 
         client.stop();

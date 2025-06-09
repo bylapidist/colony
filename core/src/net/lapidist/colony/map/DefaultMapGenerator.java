@@ -14,11 +14,12 @@ import java.util.Random;
  */
 public final class DefaultMapGenerator implements MapGenerator {
 
-    private static final String[] TEXTURES = {"grass0", "dirt0"};
+    private static final String[] TERRAIN_TEXTURES = {"grass0", "dirt0"};
     private static final int NAME_RANGE = 100000;
-    private static final int DEFAULT_WOOD = 10;
-    private static final int DEFAULT_STONE = 5;
-    private static final int DEFAULT_FOOD = 3;
+    private static final int RESOURCE_AMOUNT = 10;
+    private static final int RESOURCE_CHANCE = 10; // percent
+    private static final int RANDOM_MAX = 100;
+    private static final int RESOURCE_TYPES = 3;
 
     @Override
     public MapState generate(final int width, final int height) {
@@ -46,14 +47,31 @@ public final class DefaultMapGenerator implements MapGenerator {
     }
 
     private static TileData createTile(final int x, final int y, final Random random) {
+        int chance = random.nextInt(RANDOM_MAX);
+        String texture;
+        ResourceData resources = new ResourceData();
+
+        if (chance < RESOURCE_CHANCE) {
+            texture = "wood0";
+            resources = new ResourceData(RESOURCE_AMOUNT, 0, 0);
+        } else if (chance < RESOURCE_CHANCE * 2) {
+            texture = "stone0";
+            resources = new ResourceData(0, RESOURCE_AMOUNT, 0);
+        } else if (chance < RESOURCE_CHANCE * RESOURCE_TYPES) {
+            texture = "food0";
+            resources = new ResourceData(0, 0, RESOURCE_AMOUNT);
+        } else {
+            texture = TERRAIN_TEXTURES[random.nextInt(TERRAIN_TEXTURES.length)];
+        }
+
         return TileData.builder()
                 .x(x)
                 .y(y)
                 .tileType("GRASS")
-                .textureRef(TEXTURES[random.nextInt(TEXTURES.length)])
+                .textureRef(texture)
                 .passable(true)
                 .selected(false)
-                .resources(new ResourceData(DEFAULT_WOOD, DEFAULT_STONE, DEFAULT_FOOD))
+                .resources(resources)
                 .build();
     }
 }

@@ -42,7 +42,12 @@ public class GameSimulationResourceUpdateTest {
         MapState state = receiver.getMapState();
         GameSimulation sim = new GameSimulation(state, receiver);
 
-        ResourceGatherRequestData data = new ResourceGatherRequestData(0, 0, "WOOD");
+        var woodPos = state.tiles().entrySet().stream()
+                .filter(e -> e.getValue().resources().wood() > 0)
+                .map(java.util.Map.Entry::getKey)
+                .findFirst()
+                .orElse(new net.lapidist.colony.components.state.TilePos(0, 0));
+        ResourceGatherRequestData data = new ResourceGatherRequestData(woodPos.x(), woodPos.y(), "WOOD");
         sender.sendGatherRequest(data);
 
         Thread.sleep(WAIT_MS);

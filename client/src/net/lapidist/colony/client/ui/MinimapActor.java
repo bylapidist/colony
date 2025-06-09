@@ -96,7 +96,7 @@ public final class MinimapActor extends Actor implements Disposable {
         setSize(DEFAULT_SIZE, DEFAULT_SIZE);
         try {
             resourceLoader.load(FileLocation.INTERNAL, "textures/textures.atlas");
-        } catch (IOException e) {
+        } catch (IOException | com.badlogic.gdx.utils.GdxRuntimeException e) {
             // ignore loading errors in headless tests
         }
         mapWidthWorld = -1;
