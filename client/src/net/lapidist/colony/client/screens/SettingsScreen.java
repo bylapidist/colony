@@ -22,12 +22,14 @@ public final class SettingsScreen extends BaseScreen {
         TextButton fr = new TextButton(I18n.get("language.fr"), getSkin());
         TextButton es = new TextButton(I18n.get("language.es"), getSkin());
         TextButton de = new TextButton(I18n.get("language.de"), getSkin());
+        TextButton keybinds = new TextButton(I18n.get("settings.keybinds"), getSkin());
         TextButton back = new TextButton(I18n.get("common.back"), getSkin());
 
         getRoot().add(en).row();
         getRoot().add(fr).row();
         getRoot().add(es).row();
         getRoot().add(de).row();
+        getRoot().add(keybinds).row();
         getRoot().add(back).row();
 
         en.addListener(new ChangeListener() {
@@ -54,6 +56,13 @@ public final class SettingsScreen extends BaseScreen {
                 switchLocale(Locale.GERMAN);
             }
         });
+        keybinds.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                colony.setScreen(new KeybindSettingsScreen(colony));
+            }
+        });
+
         back.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {

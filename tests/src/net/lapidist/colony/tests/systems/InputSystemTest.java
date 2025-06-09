@@ -18,6 +18,7 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.tests.GdxTestRunner;
+import net.lapidist.colony.settings.Settings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -40,8 +41,9 @@ public class InputSystemTest {
         state.tiles().put(new TilePos(0, 0), tile);
 
         GameClient client = mock(GameClient.class);
+        Settings settings = new Settings();
         World world = new World(new WorldConfigurationBuilder()
-                .with(new MapLoadSystem(state), new PlayerCameraSystem(), new InputSystem(client))
+                .with(new MapLoadSystem(state), new PlayerCameraSystem(), new InputSystem(client, settings))
                 .build());
 
         world.process();
