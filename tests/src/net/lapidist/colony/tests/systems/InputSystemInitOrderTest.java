@@ -13,6 +13,7 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.tests.GdxTestRunner;
+import net.lapidist.colony.settings.Settings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -35,7 +36,7 @@ public class InputSystemInitOrderTest {
 
         GameClient client = mock(GameClient.class);
         World world = new World(new WorldConfigurationBuilder()
-                .with(new InputSystem(client), new MapLoadSystem(state), new PlayerCameraSystem())
+                .with(new InputSystem(client, new Settings()), new MapLoadSystem(state), new PlayerCameraSystem())
                 .build());
 
         world.process();
