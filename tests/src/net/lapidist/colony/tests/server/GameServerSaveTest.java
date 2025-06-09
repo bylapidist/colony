@@ -28,9 +28,9 @@ public class GameServerSaveTest {
 
     @Before
     public void setUp() throws IOException {
-        Path saveFile = Paths.getAutosave("autosave");
+        Path saveFile = Paths.get().getAutosave("autosave");
         Files.deleteIfExists(saveFile);
-        Paths.createGameFoldersIfNotExists();
+        Paths.get().createGameFoldersIfNotExists();
     }
 
     @Subscribe
@@ -49,7 +49,7 @@ public class GameServerSaveTest {
                 .saveName("save-test")
                 .autosaveInterval(TEST_INTERVAL_MS)
                 .build();
-        net.lapidist.colony.io.Paths.deleteAutosave("save-test");
+        net.lapidist.colony.io.Paths.get().deleteAutosave("save-test");
         GameServer server = new GameServer(config);
         server.start();
         Events.getInstance().registerEvents(this);
@@ -57,7 +57,7 @@ public class GameServerSaveTest {
         Thread.sleep(WAIT_MS);
         Events.update();
 
-        Path saveFile = Paths.getAutosave("save-test");
+        Path saveFile = Paths.get().getAutosave("save-test");
         assertTrue(Files.exists(saveFile));
         assertTrue(lastEvent != null);
         assertTrue(saveFile.equals(lastEvent.getLocation()));
@@ -78,7 +78,7 @@ public class GameServerSaveTest {
 
         server.stop();
 
-        Path saveFile = Paths.getAutosave("save-test");
+        Path saveFile = Paths.get().getAutosave("save-test");
         assertTrue(Files.exists(saveFile));
         assertTrue(shutdownEvent != null);
         assertTrue(saveFile.equals(shutdownEvent.getLocation()));
@@ -99,7 +99,7 @@ public class GameServerSaveTest {
                 .textureRef("changed")
                 .build();
         first.getMapState().tiles().put(pos, modified);
-        GameStateIO.save(first.getMapState(), Paths.getAutosave("save-test"));
+        GameStateIO.save(first.getMapState(), Paths.get().getAutosave("save-test"));
         first.stop();
 
         GameServer second = new GameServer(cfg);

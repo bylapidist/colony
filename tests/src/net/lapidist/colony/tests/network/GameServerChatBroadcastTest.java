@@ -21,7 +21,7 @@ public class GameServerChatBroadcastTest {
         GameServerConfig config = GameServerConfig.builder()
                 .saveName("chat-broadcast")
                 .build();
-        net.lapidist.colony.io.Paths.deleteAutosave("chat-broadcast");
+        net.lapidist.colony.io.Paths.get().deleteAutosave("chat-broadcast");
         GameServer server = new GameServer(config);
         server.start();
 

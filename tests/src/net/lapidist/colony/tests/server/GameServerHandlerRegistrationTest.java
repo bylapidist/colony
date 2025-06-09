@@ -73,7 +73,7 @@ public class GameServerHandlerRegistrationTest {
         GameServerConfig config = GameServerConfig.builder()
                 .saveName("handler-test")
                 .build();
-        net.lapidist.colony.io.Paths.deleteAutosave("handler-test");
+        net.lapidist.colony.io.Paths.get().deleteAutosave("handler-test");
         GameServer server = new GameServer(
                 config,
                 java.util.List.of(messageHandler),

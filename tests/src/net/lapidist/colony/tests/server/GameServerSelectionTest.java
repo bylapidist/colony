@@ -29,7 +29,7 @@ public class GameServerSelectionTest {
         GameServerConfig config = GameServerConfig.builder()
                 .saveName("selection-test")
                 .build();
-        net.lapidist.colony.io.Paths.deleteAutosave("selection-test");
+        net.lapidist.colony.io.Paths.get().deleteAutosave("selection-test");
         GameServer server = new GameServer(config);
         server.start();
         Events.getInstance().registerEvents(this);

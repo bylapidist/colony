@@ -34,7 +34,6 @@ public class PathServiceResolutionTest {
         System.setProperty("user.home", oldUserHome);
         System.setProperty("os.name", oldOsName);
         Gdx.files = oldFiles;
-        Paths.setService(Paths.createDefaultService());
     }
 
     @Test
@@ -54,9 +53,9 @@ public class PathServiceResolutionTest {
         Path tmp = java.nio.file.Files.createTempDirectory("unix");
         System.setProperty("user.home", tmp.toString());
         PathService service = new UnixPathService();
-        Paths.setService(service);
+        Paths paths = new Paths(service);
 
-        Path save = Paths.getSave("foo");
+        Path save = paths.getSave("foo");
         Path expected = java.nio.file.Paths.get(tmp.toString(), ".colony", "saves", "foo.dat");
         assertEquals(expected, save);
     }
@@ -66,9 +65,9 @@ public class PathServiceResolutionTest {
         Path tmp = java.nio.file.Files.createTempDirectory("win");
         System.setProperty("user.home", tmp.toString());
         PathService service = new WindowsPathService();
-        Paths.setService(service);
+        Paths paths = new Paths(service);
 
-        Path save = Paths.getSave("bar");
+        Path save = paths.getSave("bar");
         Path expected = java.nio.file.Paths.get(tmp.toString(), ".colony", "saves", "bar.dat");
         assertEquals(expected, save);
     }

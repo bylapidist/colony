@@ -63,7 +63,7 @@ public final class Colony extends Game {
     public void create() {
         // Do global initialisation
         try {
-            Paths.createGameFoldersIfNotExists();
+            Paths.get().createGameFoldersIfNotExists();
             settings = Settings.load();
             I18n.setLocale(settings.getLocale());
         } catch (IOException e) {

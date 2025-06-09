@@ -28,7 +28,7 @@ public final class MapService {
     }
 
     public MapState load() throws IOException {
-        Path saveFile = Paths.getAutosave(saveName);
+        Path saveFile = Paths.get().getAutosave(saveName);
         MapState state;
         if (Files.exists(saveFile)) {
             state = GameStateIO.load(saveFile);
@@ -42,7 +42,7 @@ public final class MapService {
                 .saveName(saveName)
                 .autosaveName(saveName + Paths.AUTOSAVE_SUFFIX)
                 .build();
-        Files.writeString(Paths.getLastAutosaveMarker(), saveName);
+        Files.writeString(Paths.get().getLastAutosaveMarker(), saveName);
         return state;
     }
 

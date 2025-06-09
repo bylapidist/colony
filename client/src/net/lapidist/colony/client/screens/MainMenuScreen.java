@@ -27,10 +27,10 @@ public final class MainMenuScreen extends BaseScreen {
         String lastSave = null;
         boolean canContinue = false;
         try {
-            Path marker = Paths.getLastAutosaveMarker();
+            Path marker = Paths.get().getLastAutosaveMarker();
             if (Files.exists(marker)) {
                 lastSave = Files.readString(marker).trim();
-                canContinue = Files.exists(Paths.getAutosave(lastSave));
+                canContinue = Files.exists(Paths.get().getAutosave(lastSave));
             }
         } catch (IOException e) {
             // ignore missing last autosave marker
