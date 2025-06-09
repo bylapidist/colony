@@ -19,6 +19,7 @@ import net.lapidist.colony.map.MapStateProvider;
 import net.lapidist.colony.map.ProvidedMapStateProvider;
 import net.lapidist.colony.core.events.Events;
 import net.mostlyoriginal.api.event.common.EventSystem;
+import net.lapidist.colony.settings.Settings;
 
 /**
  * Builds the {@link World} used by {@link MapScreen}.
@@ -39,9 +40,10 @@ public final class MapWorldBuilder {
      */
     public static WorldConfigurationBuilder baseBuilder(
             final GameClient client,
-            final Stage stage
+            final Stage stage,
+            final Settings settings
     ) {
-        InputSystem inputSystem = new InputSystem(client);
+        InputSystem inputSystem = new InputSystem(client, settings);
         inputSystem.addProcessor(stage);
 
         return new WorldConfigurationBuilder()
@@ -68,9 +70,10 @@ public final class MapWorldBuilder {
     public static WorldConfigurationBuilder builder(
             final MapStateProvider provider,
             final GameClient client,
-            final Stage stage
+            final Stage stage,
+            final Settings settings
     ) {
-        return baseBuilder(client, stage)
+        return baseBuilder(client, stage, settings)
                 .with(
                         new MapInitSystem(provider),
                         new PlayerCameraSystem()
@@ -83,9 +86,10 @@ public final class MapWorldBuilder {
     public static WorldConfigurationBuilder builder(
             final MapState state,
             final GameClient client,
-            final Stage stage
+            final Stage stage,
+            final Settings settings
     ) {
-        return builder(new ProvidedMapStateProvider(state), client, stage);
+        return builder(new ProvidedMapStateProvider(state), client, stage, settings);
     }
 
     /**

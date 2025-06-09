@@ -12,6 +12,7 @@ import net.lapidist.colony.client.systems.input.TileSelectionHandler;
 import net.lapidist.colony.client.systems.input.BuildingPlacementHandler;
 import net.lapidist.colony.client.systems.input.InputGestureListener;
 import net.lapidist.colony.client.systems.input.ScrollInputProcessor;
+import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.state.ResourceGatherRequestData;
@@ -23,6 +24,7 @@ public final class InputSystem extends BaseSystem {
     private PlayerCameraSystem cameraSystem;
 
     private final GameClient client;
+    private final Settings settings;
 
     private final InputMultiplexer multiplexer = new InputMultiplexer();
 
@@ -36,8 +38,9 @@ public final class InputSystem extends BaseSystem {
     private InputGestureListener gestureListener;
     private boolean buildMode;
 
-    public InputSystem(final GameClient clientToSet) {
+    public InputSystem(final GameClient clientToSet, final Settings settingsToUse) {
         this.client = clientToSet;
+        this.settings = settingsToUse;
     }
 
     public void addProcessor(final InputProcessor processor) {
@@ -49,7 +52,7 @@ public final class InputSystem extends BaseSystem {
         cameraSystem = world.getSystem(PlayerCameraSystem.class);
         tileMapper = world.getMapper(TileComponent.class);
         map = net.lapidist.colony.map.MapUtils.findMap(world).orElse(null);
-        keyboardHandler = new KeyboardInputHandler(cameraSystem);
+        keyboardHandler = new KeyboardInputHandler(cameraSystem, settings);
         gestureHandler = new GestureInputHandler(cameraSystem);
         tileSelectionHandler = new TileSelectionHandler(client, cameraSystem);
         buildingPlacementHandler = new BuildingPlacementHandler(client, cameraSystem);
@@ -78,7 +81,7 @@ public final class InputSystem extends BaseSystem {
         keyboardHandler.clampCameraPosition();
         cameraSystem.getCamera().update();
 
-        if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.H) && map != null) {
+        if (Gdx.input.isKeyJustPressed(settings.getGatherKey()) && map != null) {
             for (int i = 0; i < map.getTiles().size; i++) {
                 var tile = map.getTiles().get(i);
                 TileComponent tc = tileMapper.get(tile);

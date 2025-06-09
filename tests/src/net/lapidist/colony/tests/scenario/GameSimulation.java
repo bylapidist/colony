@@ -5,6 +5,7 @@ import com.artemis.WorldConfigurationBuilder;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.InputSystem;
+import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.client.systems.network.TileUpdateSystem;
 import net.lapidist.colony.client.systems.network.BuildingUpdateSystem;
@@ -30,19 +31,27 @@ public final class GameSimulation {
      * @param state initial map state to load
      */
     public GameSimulation(final MapState state) {
-        this(state, mock(GameClient.class));
+        this(state, mock(GameClient.class), new Settings());
     }
 
     /**
      * Create a new simulation world using the provided {@link GameClient}.
      */
     public GameSimulation(final MapState state, final GameClient clientToUse) {
+        this(state, clientToUse, new Settings());
+    }
+
+    public GameSimulation(
+            final MapState state,
+            final GameClient clientToUse,
+            final Settings settings
+    ) {
         client = clientToUse;
         world = new World(new WorldConfigurationBuilder()
                 .with(
                         new MapLoadSystem(state),
                         new PlayerCameraSystem(),
-                        new InputSystem(client),
+                        new InputSystem(client, settings),
                         new TileUpdateSystem(client),
                         new BuildingUpdateSystem(client),
                         new ResourceUpdateSystem(client)
