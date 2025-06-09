@@ -34,6 +34,9 @@ jobs:
     - name: Run style checks
       run: ./gradlew check
 
+    - name: Generate Javadoc
+      run: ./gradlew aggregateJavadocs
+
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v5
       with:
