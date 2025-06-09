@@ -18,7 +18,11 @@ public abstract class BaseScreen extends ScreenAdapter {
     private final Table root;
 
     protected BaseScreen() {
-        stage = new Stage(new ScreenViewport());
+        this(new Stage(new ScreenViewport()));
+    }
+
+    protected BaseScreen(final Stage customStage) {
+        stage = customStage;
         skin = new Skin(Gdx.files.internal("skin/default.json"));
         root = new Table();
         root.setFillParent(true);

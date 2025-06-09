@@ -7,6 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.i18n.I18n;
 import net.lapidist.colony.settings.KeyAction;
@@ -25,6 +27,11 @@ public final class KeybindsScreen extends BaseScreen {
     private KeyAction awaiting;
 
     public KeybindsScreen(final Colony game) {
+        this(game, new Stage(new ScreenViewport()));
+    }
+
+    public KeybindsScreen(final Colony game, final Stage stage) {
+        super(stage);
         this.colony = game;
         KeyBindings bindings = game.getSettings().getKeyBindings();
         Table root = getRoot();
