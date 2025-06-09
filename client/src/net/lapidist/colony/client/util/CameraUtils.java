@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import net.lapidist.colony.client.core.Constants;
+import net.lapidist.colony.components.GameConstants;
 
 /**
  * Utility methods for converting between tile, world and screen coordinates.
@@ -17,7 +17,7 @@ public final class CameraUtils {
     }
 
     public static Vector2 tileCoordsToWorldCoords(final int x, final int y) {
-        return new Vector2(x * Constants.TILE_SIZE, y * Constants.TILE_SIZE);
+        return new Vector2(x * GameConstants.TILE_SIZE, y * GameConstants.TILE_SIZE);
     }
 
     public static Vector2 tileCoordsToWorldCoords(final Vector2 coords) {
@@ -26,8 +26,8 @@ public final class CameraUtils {
 
     public static Vector2 worldCoordsToTileCoords(final int x, final int y) {
         return new Vector2(
-                Math.floorDiv(x, Constants.TILE_SIZE),
-                Math.floorDiv(y, Constants.TILE_SIZE)
+                Math.floorDiv(x, GameConstants.TILE_SIZE),
+                Math.floorDiv(y, GameConstants.TILE_SIZE)
         );
     }
 
@@ -62,8 +62,8 @@ public final class CameraUtils {
 
     public static Vector2 getWorldCenter() {
         return new Vector2(
-                (Constants.TILE_SIZE * Constants.MAP_WIDTH + Constants.TILE_SIZE) / 2f,
-                (Constants.TILE_SIZE * Constants.MAP_HEIGHT + Constants.TILE_SIZE) / 2f
+                (GameConstants.TILE_SIZE * GameConstants.MAP_WIDTH + GameConstants.TILE_SIZE) / 2f,
+                (GameConstants.TILE_SIZE * GameConstants.MAP_HEIGHT + GameConstants.TILE_SIZE) / 2f
         );
     }
 
