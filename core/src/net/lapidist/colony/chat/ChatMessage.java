@@ -11,7 +11,7 @@ public record ChatMessage(int playerId, String text) {
     /**
      * Convenience constructor without a player id. Primarily used by tests.
      *
-     * @param text chat text
+     * @param message chat text
      */
     public ChatMessage(final String message) {
         this(-1, message);

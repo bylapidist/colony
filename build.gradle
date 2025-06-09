@@ -172,3 +172,7 @@ tasks.register('aggregateJavadocs', Javadoc) {
     options.encoding = 'UTF-8'
     options.addBooleanOption('Xdoclint:none', true)
 }
+
+tasks.named('check') {
+    dependsOn 'aggregateJavadocs'
+}
