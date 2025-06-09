@@ -12,6 +12,10 @@ public final class PlayerResourceComponent extends Component {
         return wood;
     }
 
+    public void setWood(final int amount) {
+        this.wood = amount;
+    }
+
     public void addWood(final int amount) {
         this.wood += amount;
     }
@@ -20,12 +24,20 @@ public final class PlayerResourceComponent extends Component {
         return stone;
     }
 
+    public void setStone(final int amount) {
+        this.stone = amount;
+    }
+
     public void addStone(final int amount) {
         this.stone += amount;
     }
 
     public int getFood() {
         return food;
+    }
+
+    public void setFood(final int amount) {
+        this.food = amount;
     }
 
     public void addFood(final int amount) {

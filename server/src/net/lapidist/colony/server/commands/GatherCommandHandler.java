@@ -12,10 +12,14 @@ import java.util.function.Supplier;
 /** Applies a {@link GatherCommand} to the game state and broadcasts the change. */
 public final class GatherCommandHandler implements CommandHandler<GatherCommand> {
     private final Supplier<MapState> stateSupplier;
+    private final java.util.function.Consumer<MapState> stateConsumer;
     private final NetworkService networkService;
 
-    public GatherCommandHandler(final Supplier<MapState> stateSupplierToUse, final NetworkService networkServiceToUse) {
+    public GatherCommandHandler(final Supplier<MapState> stateSupplierToUse,
+                               final java.util.function.Consumer<MapState> stateConsumerToUse,
+                               final NetworkService networkServiceToUse) {
         this.stateSupplier = stateSupplierToUse;
+        this.stateConsumer = stateConsumerToUse;
         this.networkService = networkServiceToUse;
     }
 
@@ -42,6 +46,16 @@ public final class GatherCommandHandler implements CommandHandler<GatherCommand>
         }
         TileData newTile = tile.toBuilder().resources(updated).build();
         state.tiles().put(pos, newTile);
+        ResourceData player = state.playerResources();
+        ResourceData newPlayer = new ResourceData(
+                player.wood() + (res.wood() - updated.wood()),
+                player.stone() + (res.stone() - updated.stone()),
+                player.food() + (res.food() - updated.food())
+        );
+        MapState updatedState = state.toBuilder()
+                .playerResources(newPlayer)
+                .build();
+        stateConsumer.accept(updatedState);
         networkService.broadcast(new ResourceUpdateData(
                 pos.x(),
                 pos.y(),

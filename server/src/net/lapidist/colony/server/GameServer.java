@@ -85,7 +85,7 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
             commandHandlers = java.util.List.of(
                     new TileSelectionCommandHandler(() -> mapState, networkService),
                     new BuildCommandHandler(() -> mapState, networkService),
-                    new GatherCommandHandler(() -> mapState, networkService)
+                    new GatherCommandHandler(() -> mapState, s -> mapState = s, networkService)
             );
         }
         commandBus.registerHandlers(commandHandlers);

@@ -17,7 +17,8 @@ public record MapState(
         String autosaveName,
         String description,
         Map<TilePos, TileData> tiles,
-        List<BuildingData> buildings
+        List<BuildingData> buildings,
+        ResourceData playerResources
 ) {
     public static final int CURRENT_VERSION = SaveVersion.CURRENT.number();
 
@@ -29,7 +30,8 @@ public record MapState(
                 null,
                 null,
                 new HashMap<>(),
-                new ArrayList<>()
+                new ArrayList<>(),
+                new ResourceData()
         );
     }
 
@@ -49,6 +51,7 @@ public record MapState(
         private String description;
         private Map<TilePos, TileData> tiles;
         private List<BuildingData> buildings;
+        private ResourceData playerResources;
 
         private Builder() {
             this.version = CURRENT_VERSION;
@@ -58,6 +61,7 @@ public record MapState(
             this.description = null;
             this.tiles = new HashMap<>();
             this.buildings = new ArrayList<>();
+            this.playerResources = new ResourceData();
         }
 
         private Builder(final MapState state) {
@@ -68,6 +72,7 @@ public record MapState(
             this.description = state.description;
             this.tiles = state.tiles;
             this.buildings = state.buildings;
+            this.playerResources = state.playerResources;
         }
 
         public Builder version(final int newVersion) {
@@ -105,8 +110,13 @@ public record MapState(
             return this;
         }
 
+        public Builder playerResources(final ResourceData newResources) {
+            this.playerResources = newResources;
+            return this;
+        }
+
         public MapState build() {
-            return new MapState(version, name, saveName, autosaveName, description, tiles, buildings);
+            return new MapState(version, name, saveName, autosaveName, description, tiles, buildings, playerResources);
         }
     }
 }

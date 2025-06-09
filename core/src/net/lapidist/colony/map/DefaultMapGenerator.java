@@ -38,6 +38,10 @@ public final class DefaultMapGenerator implements MapGenerator {
         BuildingData building = new BuildingData(width / 2, height / 2, "HOUSE", "house0");
         state.buildings().add(building);
 
+        state = state.toBuilder()
+                .playerResources(new ResourceData())
+                .build();
+
         return state;
     }
 
