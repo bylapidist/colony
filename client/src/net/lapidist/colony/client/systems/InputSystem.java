@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.input.GestureInputHandler;
 import net.lapidist.colony.client.systems.input.KeyboardInputHandler;
@@ -16,6 +17,7 @@ import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.state.ResourceGatherRequestData;
 import net.lapidist.colony.components.resources.ResourceType;
+import net.lapidist.colony.client.util.CameraUtils;
 import com.artemis.ComponentMapper;
 import net.lapidist.colony.settings.KeyAction;
 import net.lapidist.colony.settings.KeyBindings;
@@ -30,6 +32,7 @@ public final class InputSystem extends BaseSystem {
 
     private MapComponent map;
     private ComponentMapper<TileComponent> tileMapper;
+    private ComponentMapper<net.lapidist.colony.components.resources.ResourceComponent> resourceMapper;
 
     private final KeyBindings keyBindings;
 
@@ -53,6 +56,7 @@ public final class InputSystem extends BaseSystem {
     public void initialize() {
         cameraSystem = world.getSystem(PlayerCameraSystem.class);
         tileMapper = world.getMapper(TileComponent.class);
+        resourceMapper = world.getMapper(net.lapidist.colony.components.resources.ResourceComponent.class);
         map = net.lapidist.colony.map.MapUtils.findMap(world).orElse(null);
         keyboardHandler = new KeyboardInputHandler(cameraSystem, keyBindings);
         gestureHandler = new GestureInputHandler(cameraSystem);
@@ -105,7 +109,27 @@ public final class InputSystem extends BaseSystem {
         if (buildMode) {
             return buildingPlacementHandler.handleTap(x, y, map, tileMapper);
         }
-        return tileSelectionHandler.handleTap(x, y, map, tileMapper);
+        boolean result = tileSelectionHandler.handleTap(x, y, map, tileMapper);
+        if (map != null) {
+            cameraSystem.getCamera().update();
+            Vector2 worldCoords = CameraUtils.screenToWorldCoords(
+                    cameraSystem.getViewport(), x, y);
+            Vector2 tileCoords = CameraUtils.worldCoordsToTileCoords(worldCoords);
+            for (int i = 0; i < map.getTiles().size; i++) {
+                var tile = map.getTiles().get(i);
+                TileComponent tc = tileMapper.get(tile);
+                if (tc.getX() == (int) tileCoords.x && tc.getY() == (int) tileCoords.y) {
+                    var rc = resourceMapper.get(tile);
+                    if (rc.getWood() > 0) {
+                        ResourceGatherRequestData msg = new ResourceGatherRequestData(
+                                tc.getX(), tc.getY(), ResourceType.WOOD.name());
+                        client.sendGatherRequest(msg);
+                    }
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
     public boolean pan(final float x, final float y, final float deltaX, final float deltaY) {

@@ -43,6 +43,7 @@ public final class GameSimulation {
                         new MapLoadSystem(state),
                         new PlayerCameraSystem(),
                         new InputSystem(client, new net.lapidist.colony.settings.KeyBindings()),
+                        new net.lapidist.colony.client.systems.PlayerInitSystem(),
                         new TileUpdateSystem(client),
                         new BuildingUpdateSystem(client),
                         new ResourceUpdateSystem(client)
