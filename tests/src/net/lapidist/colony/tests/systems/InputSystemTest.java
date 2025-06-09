@@ -40,8 +40,9 @@ public class InputSystemTest {
         state.tiles().put(new TilePos(0, 0), tile);
 
         GameClient client = mock(GameClient.class);
+        net.lapidist.colony.settings.Settings settings = new net.lapidist.colony.settings.Settings();
         World world = new World(new WorldConfigurationBuilder()
-                .with(new MapLoadSystem(state), new PlayerCameraSystem(), new InputSystem(client))
+                .with(new MapLoadSystem(state), new PlayerCameraSystem(), new InputSystem(client, settings))
                 .build());
 
         world.process();

@@ -34,8 +34,9 @@ public class InputSystemInitOrderTest {
         state.tiles().put(new TilePos(0, 0), tile);
 
         GameClient client = mock(GameClient.class);
+        net.lapidist.colony.settings.Settings settings = new net.lapidist.colony.settings.Settings();
         World world = new World(new WorldConfigurationBuilder()
-                .with(new InputSystem(client), new MapLoadSystem(state), new PlayerCameraSystem())
+                .with(new InputSystem(client, settings), new MapLoadSystem(state), new PlayerCameraSystem())
                 .build());
 
         world.process();
