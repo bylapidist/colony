@@ -3,7 +3,7 @@ package net.lapidist.colony.client.entities.factories;
 import com.artemis.Entity;
 import com.artemis.World;
 import com.badlogic.gdx.math.Vector2;
-import net.lapidist.colony.client.core.Constants;
+import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.BoundedComponent;
 import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
 
@@ -30,8 +30,8 @@ public final class SpriteFactoryUtil {
             final Vector2 coords
     ) {
         Entity entity = createEntity(world, resourceRef);
-        component.setHeight(Constants.TILE_SIZE);
-        component.setWidth(Constants.TILE_SIZE);
+        component.setHeight(GameConstants.TILE_SIZE);
+        component.setWidth(GameConstants.TILE_SIZE);
         component.setX((int) coords.x);
         component.setY((int) coords.y);
         entity.edit().add(component);

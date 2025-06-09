@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-import net.lapidist.colony.client.core.Constants;
+import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.client.core.io.FileLocation;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
@@ -56,16 +56,16 @@ public final class MinimapActor extends Actor implements Disposable {
         for (int i = 0; i < tiles.size; i++) {
             TileComponent tileComponent = tileMapper.get(tiles.get(i));
             mapWidthWorld = Math.max(mapWidthWorld,
-                    (tileComponent.getX() + 1) * Constants.TILE_SIZE);
+                    (tileComponent.getX() + 1) * GameConstants.TILE_SIZE);
             mapHeightWorld = Math.max(mapHeightWorld,
-                    (tileComponent.getY() + 1) * Constants.TILE_SIZE);
+                    (tileComponent.getY() + 1) * GameConstants.TILE_SIZE);
         }
 
         if (mapWidthWorld == 0) {
-            mapWidthWorld = Constants.MAP_WIDTH * Constants.TILE_SIZE;
+            mapWidthWorld = GameConstants.MAP_WIDTH * GameConstants.TILE_SIZE;
         }
         if (mapHeightWorld == 0) {
-            mapHeightWorld = Constants.MAP_HEIGHT * Constants.TILE_SIZE;
+            mapHeightWorld = GameConstants.MAP_HEIGHT * GameConstants.TILE_SIZE;
         }
     }
 

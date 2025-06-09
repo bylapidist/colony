@@ -6,7 +6,7 @@ import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
 import com.artemis.utils.IntBag;
 import com.badlogic.gdx.math.Vector2;
-import net.lapidist.colony.client.core.Constants;
+import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.util.CameraUtils;
@@ -48,7 +48,7 @@ public class InputSystemTest {
         world.process();
 
         PlayerCameraSystem camera = world.getSystem(PlayerCameraSystem.class);
-        camera.getCamera().position.set(Constants.TILE_SIZE / 2f, Constants.TILE_SIZE / 2f, 0);
+        camera.getCamera().position.set(GameConstants.TILE_SIZE / 2f, GameConstants.TILE_SIZE / 2f, 0);
         camera.getCamera().update();
 
         Vector2 screenCoords = CameraUtils.worldToScreenCoords(camera.getViewport(), 0, 0);

@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-import net.lapidist.colony.client.core.Constants;
+import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
 import net.lapidist.colony.components.maps.MapComponent;
@@ -66,10 +66,10 @@ final class MinimapCache implements Disposable {
             if (region != null) {
                 spriteCache.add(
                         region,
-                        tileComponent.getX() * Constants.TILE_SIZE * scaleX,
-                        tileComponent.getY() * Constants.TILE_SIZE * scaleY,
-                        Constants.TILE_SIZE * scaleX,
-                        Constants.TILE_SIZE * scaleY
+                        tileComponent.getX() * GameConstants.TILE_SIZE * scaleX,
+                        tileComponent.getY() * GameConstants.TILE_SIZE * scaleY,
+                        GameConstants.TILE_SIZE * scaleX,
+                        GameConstants.TILE_SIZE * scaleY
                 );
             }
         }

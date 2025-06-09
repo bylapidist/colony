@@ -3,7 +3,7 @@ package net.lapidist.colony.client.systems.input;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
-import net.lapidist.colony.client.core.Constants;
+import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.settings.KeyAction;
 import net.lapidist.colony.settings.KeyBindings;
@@ -46,8 +46,8 @@ public final class KeyboardInputHandler {
 
     public void clampCameraPosition() {
         final Vector3 position = cameraSystem.getCamera().position;
-        final float mapWidth = Constants.MAP_WIDTH * Constants.TILE_SIZE;
-        final float mapHeight = Constants.MAP_HEIGHT * Constants.TILE_SIZE;
+        final float mapWidth = GameConstants.MAP_WIDTH * GameConstants.TILE_SIZE;
+        final float mapHeight = GameConstants.MAP_HEIGHT * GameConstants.TILE_SIZE;
 
         position.x = MathUtils.clamp(position.x, 0, mapWidth);
         position.y = MathUtils.clamp(position.y, 0, mapHeight);
