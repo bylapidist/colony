@@ -17,6 +17,7 @@ import net.lapidist.colony.client.systems.network.ResourceUpdateSystem;
 import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.client.systems.PlayerInitSystem;
 import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.map.MapStateProvider;
 import net.lapidist.colony.map.ProvidedMapStateProvider;
 import net.lapidist.colony.core.events.Events;
@@ -45,6 +46,15 @@ public final class MapWorldBuilder {
             final Stage stage,
             final KeyBindings keyBindings
     ) {
+        return baseBuilder(client, stage, keyBindings, new ResourceData());
+    }
+
+    public static WorldConfigurationBuilder baseBuilder(
+            final GameClient client,
+            final Stage stage,
+            final KeyBindings keyBindings,
+            final ResourceData playerResources
+    ) {
         InputSystem inputSystem = new InputSystem(client, keyBindings);
         inputSystem.addProcessor(stage);
 
@@ -53,7 +63,7 @@ public final class MapWorldBuilder {
                         new EventSystem(),
                         new ClearScreenSystem(Color.BLACK),
                         inputSystem,
-                        new PlayerInitSystem(),
+                        new PlayerInitSystem(playerResources),
                         new TileUpdateSystem(client),
                         new BuildingUpdateSystem(client),
                         new ResourceUpdateSystem(client),
@@ -77,7 +87,7 @@ public final class MapWorldBuilder {
             final Stage stage,
             final KeyBindings keyBindings
     ) {
-        return baseBuilder(client, stage, keyBindings)
+        return baseBuilder(client, stage, keyBindings, new ResourceData())
                 .with(
                         new MapInitSystem(provider),
                         new PlayerCameraSystem()
@@ -93,7 +103,11 @@ public final class MapWorldBuilder {
             final Stage stage,
             final KeyBindings keyBindings
     ) {
-        return builder(new ProvidedMapStateProvider(state), client, stage, keyBindings);
+        return baseBuilder(client, stage, keyBindings, state.playerResources())
+                .with(
+                        new MapInitSystem(new ProvidedMapStateProvider(state)),
+                        new PlayerCameraSystem()
+                );
     }
 
     /**
