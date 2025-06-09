@@ -22,7 +22,7 @@ public class GameServerGatherBroadcastTest {
         GameServerConfig config = GameServerConfig.builder()
                 .saveName("gather-broadcast")
                 .build();
-        net.lapidist.colony.io.Paths.deleteAutosave("gather-broadcast");
+        net.lapidist.colony.io.Paths.get().deleteAutosave("gather-broadcast");
         GameServer server = new GameServer(config);
         server.start();
 

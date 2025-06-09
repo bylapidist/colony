@@ -44,7 +44,7 @@ public final class LoadGameScreen extends BaseScreen {
                         protected void result(final Object obj) {
                             if (Boolean.TRUE.equals(obj)) {
                                 try {
-                                    Paths.deleteAutosave(save);
+                                    Paths.get().deleteAutosave(save);
                                 } catch (IOException e) {
                                     // ignore
                                 }
@@ -72,7 +72,7 @@ public final class LoadGameScreen extends BaseScreen {
 
     private List<String> listSaves() {
         try {
-            return Paths.listAutosaves();
+            return Paths.get().listAutosaves();
         } catch (IOException e) {
             return new ArrayList<>();
         }

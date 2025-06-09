@@ -22,7 +22,7 @@ public class GameServerPlayerResourceSaveTest {
                 .saveName("resource-save")
                 .autosaveInterval(WAIT_MS)
                 .build();
-        Paths.deleteAutosave("resource-save");
+        Paths.get().deleteAutosave("resource-save");
         GameServer server = new GameServer(config);
         server.start();
 

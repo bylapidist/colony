@@ -54,14 +54,7 @@ public record MapState(
         private ResourceData playerResources;
 
         private Builder() {
-            this.version = CURRENT_VERSION;
-            this.name = "map-" + UUID.randomUUID();
-            this.saveName = "save-" + UUID.randomUUID();
-            this.autosaveName = null;
-            this.description = null;
-            this.tiles = new HashMap<>();
-            this.buildings = new ArrayList<>();
-            this.playerResources = new ResourceData();
+            this(new MapState());
         }
 
         private Builder(final MapState state) {

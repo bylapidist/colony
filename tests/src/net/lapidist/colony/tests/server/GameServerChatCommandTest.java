@@ -30,7 +30,7 @@ public class GameServerChatCommandTest {
         GameServerConfig config = GameServerConfig.builder()
                 .saveName("chat-command")
                 .build();
-        net.lapidist.colony.io.Paths.deleteAutosave("chat-command");
+        net.lapidist.colony.io.Paths.get().deleteAutosave("chat-command");
         GameServer server = new GameServer(config);
         server.start();
         Events.getInstance().registerEvents(this);

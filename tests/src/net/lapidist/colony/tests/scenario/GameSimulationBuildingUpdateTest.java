@@ -25,7 +25,7 @@ public class GameSimulationBuildingUpdateTest {
         GameServerConfig config = GameServerConfig.builder()
                 .saveName("scenario-build")
                 .build();
-        net.lapidist.colony.io.Paths.deleteAutosave("scenario-build");
+        net.lapidist.colony.io.Paths.get().deleteAutosave("scenario-build");
         GameServer server = new GameServer(config);
         server.start();
 

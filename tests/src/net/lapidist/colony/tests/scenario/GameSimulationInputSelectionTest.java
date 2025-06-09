@@ -35,7 +35,7 @@ public class GameSimulationInputSelectionTest {
         GameServerConfig config = GameServerConfig.builder()
                 .saveName("scenario")
                 .build();
-        Paths.deleteAutosave("scenario");
+        Paths.get().deleteAutosave("scenario");
         GameServer server = new GameServer(config);
         server.start();
 

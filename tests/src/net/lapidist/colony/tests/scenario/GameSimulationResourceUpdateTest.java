@@ -26,7 +26,7 @@ public class GameSimulationResourceUpdateTest {
         GameServerConfig config = GameServerConfig.builder()
                 .saveName("scenario-gather")
                 .build();
-        net.lapidist.colony.io.Paths.deleteAutosave("scenario-gather");
+        net.lapidist.colony.io.Paths.get().deleteAutosave("scenario-gather");
         GameServer server = new GameServer(config);
         server.start();
 

@@ -76,7 +76,7 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     public void start() throws IOException, InterruptedException {
         KryoRegistry.register(server.getKryo());
         Events.init(new EventSystem());
-        Paths.createGameFoldersIfNotExists();
+        Paths.get().createGameFoldersIfNotExists();
 
         mapState = mapService.load();
         networkService.start(mapState, this::dispatch);
