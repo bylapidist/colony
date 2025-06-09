@@ -1,6 +1,6 @@
 package net.lapidist.colony.tests.scenario;
 
-import net.lapidist.colony.client.core.Constants;
+import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
@@ -40,8 +40,8 @@ public class GameSimulationCameraTest {
         sim.step();
 
         final float epsilon = 0.01f;
-        float expectedX = max(0, min(Constants.MAP_WIDTH * Constants.TILE_SIZE, startX - deltaX));
-        float expectedY = max(0, min(Constants.MAP_HEIGHT * Constants.TILE_SIZE, startY + deltaY));
+        float expectedX = max(0, min(GameConstants.MAP_WIDTH * GameConstants.TILE_SIZE, startX - deltaX));
+        float expectedY = max(0, min(GameConstants.MAP_HEIGHT * GameConstants.TILE_SIZE, startY + deltaY));
 
         assertEquals(expectedX, sim.getCamera().getCamera().position.x, epsilon);
         assertEquals(expectedY, sim.getCamera().getCamera().position.y, epsilon);
