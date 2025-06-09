@@ -6,9 +6,10 @@ package net.lapidist.colony.save;
 public enum SaveVersion {
     V1(1),
     V2(2),
-    V3(3);
+    V3(3),
+    V4(4);
 
-    public static final SaveVersion CURRENT = V3;
+    public static final SaveVersion CURRENT = V4;
 
     private final int number;
 

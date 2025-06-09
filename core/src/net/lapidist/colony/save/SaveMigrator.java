@@ -15,6 +15,7 @@ public final class SaveMigrator {
     static {
         register(new V1ToV2Migration());
         register(new V2ToV3Migration());
+        register(new V3ToV4Migration());
     }
 
     private SaveMigrator() {

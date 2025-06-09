@@ -38,7 +38,8 @@ public final class MapFactory {
                     td.textureRef(),
                     new Vector2(td.x(), td.y()),
                     td.passable(),
-                    td.selected()
+                    td.selected(),
+                    td.resources()
             ));
         }
 

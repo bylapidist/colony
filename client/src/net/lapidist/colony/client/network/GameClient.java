@@ -6,6 +6,8 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.BuildingPlacementData;
+import net.lapidist.colony.components.state.ResourceGatherRequestData;
+import net.lapidist.colony.components.state.ResourceUpdateData;
 import net.lapidist.colony.chat.ChatMessage;
 import net.lapidist.colony.core.serialization.KryoRegistry;
 import net.lapidist.colony.network.AbstractMessageEndpoint;
@@ -16,6 +18,7 @@ import net.lapidist.colony.client.network.handlers.MapStateMessageHandler;
 import net.lapidist.colony.client.network.handlers.TileSelectionUpdateHandler;
 import net.lapidist.colony.client.network.handlers.BuildingUpdateHandler;
 import net.lapidist.colony.client.network.handlers.ChatMessageHandler;
+import net.lapidist.colony.client.network.handlers.ResourceUpdateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +37,7 @@ public final class GameClient extends AbstractMessageEndpoint {
     private final Queue<TileSelectionData> tileUpdates = new ConcurrentLinkedQueue<>();
     private final Queue<BuildingData> buildingUpdates = new ConcurrentLinkedQueue<>();
     private final Queue<ChatMessage> chatMessages = new ConcurrentLinkedQueue<>();
+    private final Queue<ResourceUpdateData> resourceUpdates = new ConcurrentLinkedQueue<>();
     private Iterable<MessageHandler<?>> handlers;
     private static final int CONNECT_TIMEOUT = 5000;
     private Consumer<MapState> readyCallback;
@@ -49,7 +53,8 @@ public final class GameClient extends AbstractMessageEndpoint {
                 }),
                 new TileSelectionUpdateHandler(tileUpdates),
                 new BuildingUpdateHandler(buildingUpdates),
-                new ChatMessageHandler(chatMessages)
+                new ChatMessageHandler(chatMessages),
+                new ResourceUpdateHandler(resourceUpdates)
         );
     }
 
@@ -96,6 +101,10 @@ public final class GameClient extends AbstractMessageEndpoint {
         return buildingUpdates.poll();
     }
 
+    public ResourceUpdateData pollResourceUpdate() {
+        return resourceUpdates.poll();
+    }
+
     public ChatMessage pollChatMessage() {
         return chatMessages.poll();
     }
@@ -108,12 +117,20 @@ public final class GameClient extends AbstractMessageEndpoint {
         buildingUpdates.add(data);
     }
 
+    public void injectResourceUpdate(final ResourceUpdateData data) {
+        resourceUpdates.add(data);
+    }
+
 
     public void sendTileSelectionRequest(final TileSelectionData data) {
         send(data);
     }
 
     public void sendBuildRequest(final BuildingPlacementData data) {
+        send(data);
+    }
+
+    public void sendGatherRequest(final ResourceGatherRequestData data) {
         send(data);
     }
 
