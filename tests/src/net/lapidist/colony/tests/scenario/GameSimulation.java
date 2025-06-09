@@ -8,6 +8,7 @@ import net.lapidist.colony.client.systems.InputSystem;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.client.systems.network.TileUpdateSystem;
 import net.lapidist.colony.client.systems.network.BuildingUpdateSystem;
+import net.lapidist.colony.client.systems.network.ResourceUpdateSystem;
 import net.lapidist.colony.components.state.MapState;
 
 import static org.mockito.Mockito.mock;
@@ -43,7 +44,8 @@ public final class GameSimulation {
                         new PlayerCameraSystem(),
                         new InputSystem(client),
                         new TileUpdateSystem(client),
-                        new BuildingUpdateSystem(client)
+                        new BuildingUpdateSystem(client),
+                        new ResourceUpdateSystem(client)
                 )
                 .build());
         // run once so systems initialise

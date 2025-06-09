@@ -12,10 +12,12 @@ import net.lapidist.colony.map.MapGenerator;
 import net.lapidist.colony.server.handlers.TileSelectionRequestHandler;
 import net.lapidist.colony.server.handlers.BuildingPlacementRequestHandler;
 import net.lapidist.colony.server.handlers.ChatMessageHandler;
+import net.lapidist.colony.server.handlers.ResourceGatherRequestHandler;
 import net.lapidist.colony.server.commands.CommandBus;
 import net.lapidist.colony.server.commands.CommandHandler;
 import net.lapidist.colony.server.commands.TileSelectionCommandHandler;
 import net.lapidist.colony.server.commands.BuildCommandHandler;
+import net.lapidist.colony.server.commands.GatherCommandHandler;
 import net.lapidist.colony.server.services.AutosaveService;
 import net.lapidist.colony.server.services.MapService;
 import net.lapidist.colony.server.services.NetworkService;
@@ -82,7 +84,8 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         if (commandHandlers == null) {
             commandHandlers = java.util.List.of(
                     new TileSelectionCommandHandler(() -> mapState, networkService),
-                    new BuildCommandHandler(() -> mapState, networkService)
+                    new BuildCommandHandler(() -> mapState, networkService),
+                    new GatherCommandHandler(() -> mapState, networkService)
             );
         }
         commandBus.registerHandlers(commandHandlers);
@@ -91,7 +94,8 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
             handlers = java.util.List.of(
                     new TileSelectionRequestHandler(commandBus),
                     new BuildingPlacementRequestHandler(commandBus),
-                    new ChatMessageHandler(networkService, commandBus)
+                    new ChatMessageHandler(networkService, commandBus),
+                    new ResourceGatherRequestHandler(commandBus)
             );
         }
         registerHandlers(handlers);
