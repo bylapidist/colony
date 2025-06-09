@@ -17,6 +17,8 @@ import net.lapidist.colony.client.ui.ChatBox;
 import net.lapidist.colony.client.ui.PlayerResourcesActor;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.i18n.I18n;
+import net.lapidist.colony.settings.KeyBindings;
+import net.lapidist.colony.settings.KeyAction;
 
 /**
  * Builds the UI for {@link MapScreen}.
@@ -44,6 +46,7 @@ public final class MapUiBuilder {
             final Colony colony
     ) {
         Skin skin = new Skin(Gdx.files.internal("skin/default.json"));
+        KeyBindings keyBindings = colony.getSettings().getKeyBindings();
 
         Table table = new Table();
         table.setFillParent(true);
@@ -76,7 +79,7 @@ public final class MapUiBuilder {
         stage.addListener(new InputListener() {
             @Override
             public boolean keyDown(final InputEvent event, final int keycode) {
-                if (keycode == com.badlogic.gdx.Input.Keys.ENTER && !chatBox.isInputVisible()) {
+                if (keycode == keyBindings.getKey(KeyAction.CHAT) && !chatBox.isInputVisible()) {
                     chatBox.showInput();
                     return true;
                 }
