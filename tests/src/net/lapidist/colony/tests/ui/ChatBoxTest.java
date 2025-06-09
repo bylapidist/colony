@@ -21,7 +21,7 @@ public class ChatBoxTest {
     @Test
     public void pollsClientMessagesIntoLog() throws Exception {
         GameClient client = mock(GameClient.class);
-        when(client.pollChatMessage()).thenReturn(new ChatMessage("hi"), null);
+        when(client.pollChatMessage()).thenReturn(new ChatMessage(1, "hi"), null);
 
         Skin skin = new Skin(Gdx.files.internal("skin/default.json"));
         ChatBox box = new ChatBox(skin, client);
@@ -32,6 +32,6 @@ public class ChatBoxTest {
         logField.setAccessible(true);
         com.badlogic.gdx.scenes.scene2d.ui.TextArea log =
                 (com.badlogic.gdx.scenes.scene2d.ui.TextArea) logField.get(box);
-        assertTrue(log.getText().contains("hi"));
+        assertTrue(log.getText().contains("1: hi"));
     }
 }

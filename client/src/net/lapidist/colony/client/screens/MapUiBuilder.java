@@ -7,6 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.artemis.World;
 import net.lapidist.colony.client.Colony;
@@ -48,6 +50,11 @@ public final class MapUiBuilder {
         table.top();
         stage.addActor(table);
 
+        Table chatTable = new Table();
+        chatTable.setFillParent(true);
+        chatTable.bottom().left();
+        stage.addActor(chatTable);
+
         TextButton menuButton = new TextButton(I18n.get("map.menu"), skin);
         MinimapActor minimapActor = new MinimapActor(world);
         ChatBox chatBox = new ChatBox(skin, client);
@@ -64,7 +71,18 @@ public final class MapUiBuilder {
         table.add(resourcesActor).pad(PADDING).expandX().left().top();
         table.add(minimapActor).pad(PADDING).right().top();
         table.row();
-        table.add(chatBox).pad(PADDING).colspan(COLUMN_SPAN).left().bottom().expandX();
+        chatTable.add(chatBox).pad(PADDING).growX();
+
+        stage.addListener(new InputListener() {
+            @Override
+            public boolean keyDown(final InputEvent event, final int keycode) {
+                if (keycode == com.badlogic.gdx.Input.Keys.ENTER && !chatBox.isInputVisible()) {
+                    chatBox.showInput();
+                    return true;
+                }
+                return false;
+            }
+        });
         return new MapUi(stage, minimapActor, chatBox);
     }
 }
