@@ -41,6 +41,7 @@ public final class GameClient extends AbstractMessageEndpoint {
     private Iterable<MessageHandler<?>> handlers;
     private static final int CONNECT_TIMEOUT = 5000;
     private Consumer<MapState> readyCallback;
+    private int playerId = -1;
 
     public GameClient() {
         this.handlers = java.util.List.of(
@@ -73,6 +74,7 @@ public final class GameClient extends AbstractMessageEndpoint {
             @Override
             public void connected(final Connection connection) {
                 LOGGER.info("Connected to server");
+                playerId = connection.getID();
             }
         });
         client.connect(CONNECT_TIMEOUT, "localhost", GameServer.TCP_PORT, GameServer.UDP_PORT);
@@ -91,6 +93,10 @@ public final class GameClient extends AbstractMessageEndpoint {
 
     public MapState getMapState() {
         return mapState;
+    }
+
+    public int getPlayerId() {
+        return playerId;
     }
 
     public TileSelectionData pollTileSelectionUpdate() {

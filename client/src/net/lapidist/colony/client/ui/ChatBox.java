@@ -26,6 +26,7 @@ public final class ChatBox extends Table {
         log.setDisabled(true);
         log.setPrefRows(PREF_ROWS);
         input = new TextField("", skin);
+        input.setVisible(false);
         input.setMessageText(I18n.get("chat.placeholder"));
         input.addListener(new InputListener() {
             @Override
@@ -44,13 +45,30 @@ public final class ChatBox extends Table {
     private void submit() {
         String text = input.getText().trim();
         if (!text.isEmpty()) {
-            client.sendChatMessage(new ChatMessage(text));
+            client.sendChatMessage(new ChatMessage(client.getPlayerId(), text));
             input.setText("");
         }
+        hideInput();
+    }
+
+    public void showInput() {
+        input.setVisible(true);
+        getStage().setKeyboardFocus(input);
+    }
+
+    public void hideInput() {
+        input.setVisible(false);
+        getStage().unfocus(input);
+    }
+
+    public boolean isInputVisible() {
+        return input.isVisible();
     }
 
     public void addMessage(final ChatMessage msg) {
-        log.appendText(msg.text() + "\n");
+        String format = I18n.get("chat.format");
+        String line = String.format(format, msg.playerId(), msg.text());
+        log.appendText(line + "\n");
     }
 
     @Override
