@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import net.lapidist.colony.i18n.I18n;
 import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.io.Paths;
+import net.lapidist.colony.save.SaveVersion;
+import net.lapidist.colony.server.io.GameStateIO;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,14 +24,34 @@ public final class LoadGameScreen extends BaseScreen {
 
         List<String> saves = listSaves();
         for (String save : saves) {
-            TextButton loadButton = new TextButton(save, getSkin());
+            int version;
+            try {
+                version = GameStateIO.readVersion(Paths.getAutosave(save));
+            } catch (IOException e) {
+                version = -1;
+            }
+
+            String text = save + " (v" + version + ")";
+            TextButton loadButton = new TextButton(text, getSkin());
+            TextButton migrateButton = new TextButton(I18n.get("loadGame.migrate"), getSkin());
             TextButton deleteButton = new TextButton(I18n.get("loadGame.delete"), getSkin());
             Table row = new Table();
             row.add(loadButton).padRight(PADDING);
+            if (version < SaveVersion.CURRENT.number()) {
+                loadButton.setDisabled(true);
+                row.add(migrateButton).padRight(PADDING);
+            }
             row.add(deleteButton);
             getRoot().add(row).row();
 
             loadButton.addListener(new ChangeListener() {
+                @Override
+                public void changed(final ChangeEvent event, final Actor actor) {
+                    colony.startGame(save);
+                }
+            });
+
+            migrateButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(final ChangeEvent event, final Actor actor) {
                     colony.startGame(save);

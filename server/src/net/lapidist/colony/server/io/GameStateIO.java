@@ -43,5 +43,14 @@ public final class GameStateIO {
         }
     }
 
+    public static int readVersion(final Path file) throws IOException {
+        Kryo kryo = new Kryo();
+        KryoRegistry.register(kryo);
+        try (Input input = new Input(new FileInputStream(file.toFile()))) {
+            SaveData data = kryo.readObject(input, SaveData.class);
+            return data.version();
+        }
+    }
+
     // Class registration handled by KryoRegistry
 }

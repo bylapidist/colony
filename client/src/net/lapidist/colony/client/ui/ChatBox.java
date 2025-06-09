@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import net.lapidist.colony.chat.ChatMessage;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.i18n.I18n;
@@ -16,17 +17,20 @@ import net.lapidist.colony.i18n.I18n;
 public final class ChatBox extends Table {
     private static final int PREF_ROWS = 6;
     private static final float LOG_HEIGHT = 100f;
+    private static final float PADDING = 10f;
     private final TextArea log;
     private final TextField input;
     private final GameClient client;
+    private final Skin skin;
+    private Dialog dialog;
 
-    public ChatBox(final Skin skin, final GameClient clientToUse) {
+    public ChatBox(final Skin skinToUse, final GameClient clientToUse) {
         this.client = clientToUse;
-        log = new TextArea("", skin);
+        this.skin = skinToUse;
+        log = new TextArea("", skinToUse);
         log.setDisabled(true);
         log.setPrefRows(PREF_ROWS);
-        input = new TextField("", skin);
-        input.setVisible(false);
+        input = new TextField("", skinToUse);
         input.setMessageText(I18n.get("chat.placeholder"));
         input.addListener(new InputListener() {
             @Override
@@ -39,7 +43,6 @@ public final class ChatBox extends Table {
             }
         });
         add(log).growX().height(LOG_HEIGHT).row();
-        add(input).growX();
     }
 
     private void submit() {
@@ -52,17 +55,36 @@ public final class ChatBox extends Table {
     }
 
     public void showInput() {
-        input.setVisible(true);
+        if (dialog != null) {
+            return;
+        }
+        dialog = new Dialog(I18n.get("chat.dialogTitle"), skin, "dialog") {
+            @Override
+            protected void result(final Object obj) {
+                if (Boolean.TRUE.equals(obj)) {
+                    submit();
+                } else {
+                    hideInput();
+                }
+            }
+        };
+        dialog.getContentTable().add(input).growX().pad(PADDING);
+        dialog.button(I18n.get("chat.send"), true);
+        dialog.button(I18n.get("common.cancel"), false);
+        dialog.show(getStage());
         getStage().setKeyboardFocus(input);
     }
 
     public void hideInput() {
-        input.setVisible(false);
+        if (dialog != null) {
+            dialog.hide();
+            dialog = null;
+        }
         getStage().unfocus(input);
     }
 
     public boolean isInputVisible() {
-        return input.isVisible();
+        return dialog != null && dialog.getStage() != null;
     }
 
     public void addMessage(final ChatMessage msg) {
