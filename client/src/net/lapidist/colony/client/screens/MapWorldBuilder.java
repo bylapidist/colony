@@ -12,6 +12,7 @@ import net.lapidist.colony.client.renderers.MapRendererFactory;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.UISystem;
 import net.lapidist.colony.client.systems.network.TileUpdateSystem;
+import net.lapidist.colony.client.systems.network.BuildingUpdateSystem;
 import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.map.MapStateProvider;
@@ -49,6 +50,7 @@ public final class MapWorldBuilder {
                         new ClearScreenSystem(Color.BLACK),
                         inputSystem,
                         new TileUpdateSystem(client),
+                        new BuildingUpdateSystem(client),
                         new MapRenderSystem(new MapRendererFactory()),
                         new UISystem(stage)
                 );

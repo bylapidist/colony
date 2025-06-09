@@ -27,7 +27,11 @@ public class GameServerChatCommandTest {
 
     @Test
     public void chatCommandSelectsTile() throws Exception {
-        GameServer server = new GameServer(GameServerConfig.builder().build());
+        GameServerConfig config = GameServerConfig.builder()
+                .saveName("chat-command")
+                .build();
+        net.lapidist.colony.io.Paths.deleteAutosave("chat-command");
+        GameServer server = new GameServer(config);
         server.start();
         Events.getInstance().registerEvents(this);
 

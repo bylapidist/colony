@@ -9,6 +9,7 @@ import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.input.GestureInputHandler;
 import net.lapidist.colony.client.systems.input.KeyboardInputHandler;
 import net.lapidist.colony.client.systems.input.TileSelectionHandler;
+import net.lapidist.colony.client.systems.input.BuildingPlacementHandler;
 import net.lapidist.colony.client.systems.input.InputGestureListener;
 import net.lapidist.colony.client.systems.input.ScrollInputProcessor;
 import net.lapidist.colony.components.maps.MapComponent;
@@ -29,7 +30,9 @@ public final class InputSystem extends BaseSystem {
     private KeyboardInputHandler keyboardHandler;
     private GestureInputHandler gestureHandler;
     private TileSelectionHandler tileSelectionHandler;
+    private BuildingPlacementHandler buildingPlacementHandler;
     private InputGestureListener gestureListener;
+    private boolean buildMode;
 
     public InputSystem(final GameClient clientToSet) {
         this.client = clientToSet;
@@ -47,6 +50,7 @@ public final class InputSystem extends BaseSystem {
         keyboardHandler = new KeyboardInputHandler(cameraSystem);
         gestureHandler = new GestureInputHandler(cameraSystem);
         tileSelectionHandler = new TileSelectionHandler(client, cameraSystem);
+        buildingPlacementHandler = new BuildingPlacementHandler(client, cameraSystem);
         gestureListener = new InputGestureListener(
                 gestureHandler,
                 keyboardHandler,
@@ -79,6 +83,9 @@ public final class InputSystem extends BaseSystem {
     }
 
     public boolean tap(final float x, final float y, final int count, final int button) {
+        if (buildMode) {
+            return buildingPlacementHandler.handleTap(x, y, map, tileMapper);
+        }
         return tileSelectionHandler.handleTap(x, y, map, tileMapper);
     }
 
@@ -90,5 +97,9 @@ public final class InputSystem extends BaseSystem {
 
     public boolean zoom(final float initialDistance, final float distance) {
         return gestureHandler.zoom(initialDistance, distance);
+    }
+
+    public void setBuildMode(final boolean mode) {
+        this.buildMode = mode;
     }
 }

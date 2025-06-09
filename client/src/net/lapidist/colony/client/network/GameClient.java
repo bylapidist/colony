@@ -4,6 +4,8 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileSelectionData;
+import net.lapidist.colony.components.state.BuildingData;
+import net.lapidist.colony.components.state.BuildingPlacementData;
 import net.lapidist.colony.chat.ChatMessage;
 import net.lapidist.colony.core.serialization.KryoRegistry;
 import net.lapidist.colony.network.AbstractMessageEndpoint;
@@ -12,6 +14,7 @@ import net.lapidist.colony.network.MessageHandler;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.client.network.handlers.MapStateMessageHandler;
 import net.lapidist.colony.client.network.handlers.TileSelectionUpdateHandler;
+import net.lapidist.colony.client.network.handlers.BuildingUpdateHandler;
 import net.lapidist.colony.client.network.handlers.ChatMessageHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +32,7 @@ public final class GameClient extends AbstractMessageEndpoint {
     private final Client client = new Client(BUFFER_SIZE, BUFFER_SIZE);
     private MapState mapState;
     private final Queue<TileSelectionData> tileUpdates = new ConcurrentLinkedQueue<>();
+    private final Queue<BuildingData> buildingUpdates = new ConcurrentLinkedQueue<>();
     private final Queue<ChatMessage> chatMessages = new ConcurrentLinkedQueue<>();
     private Iterable<MessageHandler<?>> handlers;
     private static final int CONNECT_TIMEOUT = 5000;
@@ -44,6 +48,7 @@ public final class GameClient extends AbstractMessageEndpoint {
                     }
                 }),
                 new TileSelectionUpdateHandler(tileUpdates),
+                new BuildingUpdateHandler(buildingUpdates),
                 new ChatMessageHandler(chatMessages)
         );
     }
@@ -87,6 +92,10 @@ public final class GameClient extends AbstractMessageEndpoint {
         return tileUpdates.poll();
     }
 
+    public BuildingData pollBuildingUpdate() {
+        return buildingUpdates.poll();
+    }
+
     public ChatMessage pollChatMessage() {
         return chatMessages.poll();
     }
@@ -95,8 +104,16 @@ public final class GameClient extends AbstractMessageEndpoint {
         tileUpdates.add(data);
     }
 
+    public void injectBuildingUpdate(final BuildingData data) {
+        buildingUpdates.add(data);
+    }
+
 
     public void sendTileSelectionRequest(final TileSelectionData data) {
+        send(data);
+    }
+
+    public void sendBuildRequest(final BuildingPlacementData data) {
         send(data);
     }
 

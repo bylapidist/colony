@@ -4,6 +4,7 @@ import net.lapidist.colony.server.events.AutosaveEvent;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.server.events.ShutdownSaveEvent;
 import net.lapidist.colony.server.events.TileSelectionEvent;
+import net.lapidist.colony.server.events.BuildingPlacedEvent;
 import net.mostlyoriginal.api.event.common.EventSystem;
 import net.mostlyoriginal.api.event.common.Subscribe;
 import org.junit.Before;
@@ -93,6 +94,17 @@ public class ServerEventsTest {
         TileSelectionEvent event = new TileSelectionEvent(x, y, true);
         assertEquals(
                 String.format("TileSelectionEvent(x=%d, y=%d, selected=true)", x, y),
+                event.toString()
+        );
+    }
+
+    @Test
+    public void testBuildingPlacedEventToString() {
+        final int x = 1;
+        final int y = 2;
+        BuildingPlacedEvent event = new BuildingPlacedEvent(x, y, "HOUSE");
+        assertEquals(
+                String.format("BuildingPlacedEvent(x=%d, y=%d, buildingType=HOUSE)", x, y),
                 event.toString()
         );
     }

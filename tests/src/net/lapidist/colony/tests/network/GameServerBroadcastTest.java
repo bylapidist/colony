@@ -17,7 +17,11 @@ public class GameServerBroadcastTest {
 
     @Test
     public void serverBroadcastsTileSelection() throws Exception {
-        GameServer server = new GameServer(GameServerConfig.builder().build());
+        GameServerConfig config = GameServerConfig.builder()
+                .saveName("broadcast")
+                .build();
+        net.lapidist.colony.io.Paths.deleteAutosave("broadcast");
+        GameServer server = new GameServer(config);
         server.start();
 
         GameClient clientA = new GameClient();

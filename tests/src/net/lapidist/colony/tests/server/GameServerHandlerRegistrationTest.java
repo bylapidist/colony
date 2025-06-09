@@ -70,8 +70,12 @@ public class GameServerHandlerRegistrationTest {
     public void registersAndDispatchesCustomHandlers() throws Exception {
         DummyMessageHandler messageHandler = new DummyMessageHandler();
         DummyCommandHandler commandHandler = new DummyCommandHandler();
+        GameServerConfig config = GameServerConfig.builder()
+                .saveName("handler-test")
+                .build();
+        net.lapidist.colony.io.Paths.deleteAutosave("handler-test");
         GameServer server = new GameServer(
-                GameServerConfig.builder().build(),
+                config,
                 java.util.List.of(messageHandler),
                 java.util.List.of(commandHandler)
         );

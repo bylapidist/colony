@@ -1,7 +1,8 @@
 package net.lapidist.colony.tests.network;
 
-import net.lapidist.colony.chat.ChatMessage;
 import net.lapidist.colony.client.network.GameClient;
+import net.lapidist.colony.components.state.BuildingData;
+import net.lapidist.colony.components.state.BuildingPlacementData;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
 import org.junit.Test;
@@ -12,16 +13,16 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class GameServerChatBroadcastTest {
+public class GameServerBuildBroadcastTest {
 
-    private static final int WAIT_MS = 100;
+    private static final int WAIT_MS = 200;
 
     @Test
-    public void serverBroadcastsChatMessages() throws Exception {
+    public void serverBroadcastsBuildingPlacement() throws Exception {
         GameServerConfig config = GameServerConfig.builder()
-                .saveName("chat-broadcast")
+                .saveName("build-broadcast")
                 .build();
-        net.lapidist.colony.io.Paths.deleteAutosave("chat-broadcast");
+        net.lapidist.colony.io.Paths.deleteAutosave("build-broadcast");
         GameServer server = new GameServer(config);
         server.start();
 
@@ -34,16 +35,19 @@ public class GameServerChatBroadcastTest {
         latchA.await(1, TimeUnit.SECONDS);
         latchB.await(1, TimeUnit.SECONDS);
 
-        ChatMessage msg = new ChatMessage("hello");
-        clientA.sendChatMessage(msg);
+        BuildingPlacementData data = new BuildingPlacementData(0, 0, "HOUSE");
+        clientA.sendBuildRequest(data);
+
         Thread.sleep(WAIT_MS);
 
-        ChatMessage received = clientB.pollChatMessage();
-        assertNotNull(received);
-        assertEquals(msg.text(), received.text());
+        BuildingData update = clientB.pollBuildingUpdate();
+        assertNotNull(update);
+        assertEquals(data.x(), update.x());
+        assertEquals(data.y(), update.y());
 
         clientA.stop();
         clientB.stop();
         server.stop();
+        Thread.sleep(WAIT_MS);
     }
 }
