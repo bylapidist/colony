@@ -12,11 +12,12 @@ public record TileData(
         String tileType,
         String textureRef,
         boolean passable,
-        boolean selected
+        boolean selected,
+        ResourceData resources
 ) {
 
     public TileData() {
-        this(0, 0, null, null, false, false);
+        this(0, 0, null, null, false, false, new ResourceData());
     }
 
     /**
@@ -45,6 +46,7 @@ public record TileData(
         private String textureRef;
         private boolean passable;
         private boolean selected;
+        private ResourceData resources;
 
         private Builder() { }
 
@@ -55,6 +57,7 @@ public record TileData(
             this.textureRef = data.textureRef;
             this.passable = data.passable;
             this.selected = data.selected;
+            this.resources = data.resources;
         }
 
         public Builder x(final int newX) {
@@ -87,11 +90,16 @@ public record TileData(
             return this;
         }
 
+        public Builder resources(final ResourceData newResources) {
+            this.resources = newResources;
+            return this;
+        }
+
         /**
          * Construct a new immutable {@link TileData} instance.
          */
         public TileData build() {
-            return new TileData(x, y, tileType, textureRef, passable, selected);
+            return new TileData(x, y, tileType, textureRef, passable, selected, resources);
         }
     }
 }

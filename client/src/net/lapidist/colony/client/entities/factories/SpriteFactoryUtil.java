@@ -37,4 +37,16 @@ public final class SpriteFactoryUtil {
         entity.edit().add(component);
         return entity;
     }
+
+    public static <T extends com.artemis.Component & BoundedComponent> Entity createEntity(
+            final World world,
+            final String resourceRef,
+            final T component,
+            final com.artemis.Component extra,
+            final Vector2 coords
+    ) {
+        Entity entity = createEntity(world, resourceRef, component, coords);
+        entity.edit().add(extra);
+        return entity;
+    }
 }

@@ -8,6 +8,9 @@ import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.components.state.BuildingPlacementData;
+import net.lapidist.colony.components.state.ResourceData;
+import net.lapidist.colony.components.state.ResourceGatherRequestData;
+import net.lapidist.colony.components.state.ResourceUpdateData;
 import net.lapidist.colony.save.SaveData;
 
 /**
@@ -53,6 +56,9 @@ public final class SerializationRegistrar {
             MapState.class,
             BuildingData.class,
             BuildingPlacementData.class,
+            ResourceData.class,
+            ResourceGatherRequestData.class,
+            ResourceUpdateData.class,
             TilePos.class,
             net.lapidist.colony.chat.ChatMessage.class,
             SaveData.class

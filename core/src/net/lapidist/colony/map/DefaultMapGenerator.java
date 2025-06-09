@@ -4,6 +4,7 @@ import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.i18n.I18n;
 
 import java.util.Random;
@@ -15,6 +16,9 @@ public final class DefaultMapGenerator implements MapGenerator {
 
     private static final String[] TEXTURES = {"grass0", "dirt0"};
     private static final int NAME_RANGE = 100000;
+    private static final int DEFAULT_WOOD = 10;
+    private static final int DEFAULT_STONE = 5;
+    private static final int DEFAULT_FOOD = 3;
 
     @Override
     public MapState generate(final int width, final int height) {
@@ -45,6 +49,7 @@ public final class DefaultMapGenerator implements MapGenerator {
                 .textureRef(TEXTURES[random.nextInt(TEXTURES.length)])
                 .passable(true)
                 .selected(false)
+                .resources(new ResourceData(DEFAULT_WOOD, DEFAULT_STONE, DEFAULT_FOOD))
                 .build();
     }
 }

@@ -14,6 +14,8 @@ import net.lapidist.colony.client.systems.input.InputGestureListener;
 import net.lapidist.colony.client.systems.input.ScrollInputProcessor;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
+import net.lapidist.colony.components.state.ResourceGatherRequestData;
+import net.lapidist.colony.components.resources.ResourceType;
 import com.artemis.ComponentMapper;
 
 public final class InputSystem extends BaseSystem {
@@ -75,6 +77,18 @@ public final class InputSystem extends BaseSystem {
         keyboardHandler.handleKeyboardInput(world.getDelta());
         keyboardHandler.clampCameraPosition();
         cameraSystem.getCamera().update();
+
+        if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.H) && map != null) {
+            for (int i = 0; i < map.getTiles().size; i++) {
+                var tile = map.getTiles().get(i);
+                TileComponent tc = tileMapper.get(tile);
+                if (tc.isSelected()) {
+                    ResourceGatherRequestData msg = new ResourceGatherRequestData(
+                            tc.getX(), tc.getY(), ResourceType.WOOD.name());
+                    client.sendGatherRequest(msg);
+                }
+            }
+        }
     }
 
 
