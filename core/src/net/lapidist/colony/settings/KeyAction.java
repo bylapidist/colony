@@ -8,7 +8,8 @@ public enum KeyAction {
     MOVE_DOWN("moveDown"),
     MOVE_LEFT("moveLeft"),
     MOVE_RIGHT("moveRight"),
-    GATHER("gather");
+    GATHER("gather"),
+    CHAT("chat");
 
     private final String i18nKey;
 
