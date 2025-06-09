@@ -13,7 +13,7 @@ import org.junit.runners.model.InitializationError;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 public class GdxTestRunner
         extends BlockJUnit4ClassRunner implements ApplicationListener {
@@ -31,6 +31,27 @@ public class GdxTestRunner
         new HeadlessApplication(this, config);
         Gdx.gl = mock(GL20.class);
         Gdx.gl20 = Gdx.gl;
+
+        when(Gdx.gl20.glCreateShader(anyInt())).thenReturn(1);
+        when(Gdx.gl20.glCreateProgram()).thenReturn(1);
+        doAnswer(inv -> {
+            java.nio.IntBuffer buf = (java.nio.IntBuffer) inv.getArguments()[2];
+            buf.put(0, 1);
+            return null;
+        }).when(Gdx.gl20).glGetShaderiv(anyInt(), anyInt(), any());
+        doAnswer(inv -> {
+            java.nio.IntBuffer buf = (java.nio.IntBuffer) inv.getArguments()[2];
+            buf.put(0, 1);
+            return null;
+        }).when(Gdx.gl20).glGetProgramiv(anyInt(), anyInt(), any());
+        when(Gdx.gl20.glGetShaderInfoLog(anyInt())).thenReturn("");
+        when(Gdx.gl20.glGetProgramInfoLog(anyInt())).thenReturn("");
+        doNothing().when(Gdx.gl20).glShaderSource(anyInt(), any());
+        doNothing().when(Gdx.gl20).glCompileShader(anyInt());
+        doNothing().when(Gdx.gl20).glAttachShader(anyInt(), anyInt());
+        doNothing().when(Gdx.gl20).glLinkProgram(anyInt());
+        doNothing().when(Gdx.gl20).glDeleteShader(anyInt());
+        doNothing().when(Gdx.gl20).glDeleteProgram(anyInt());
     }
 
     private void waitUntilInvokedInRenderMethod() {
