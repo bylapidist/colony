@@ -73,7 +73,7 @@ public final class AutosaveService {
     private void saveGameState(final java.util.function.BiFunction<Path, Long, SaveEvent> creator, final String log) {
         MapState mapState = supplier.get();
         try {
-            Path file = Paths.getAutosave(saveName);
+            Path file = Paths.get().getAutosave(saveName);
             GameStateIO.save(mapState, file);
             long size = Files.size(file);
             Events.dispatch(creator.apply(file, size));

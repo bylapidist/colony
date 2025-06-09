@@ -2,7 +2,6 @@ package net.lapidist.colony.tests.core.io;
 
 import net.lapidist.colony.io.PathService;
 import net.lapidist.colony.io.Paths;
-import org.junit.After;
 import org.junit.Test;
 
 import java.nio.file.Path;
@@ -14,19 +13,15 @@ import static org.mockito.Mockito.*;
 
 public class PathsTest {
 
-    @After
-    public void tearDown() {
-        Paths.setService(Paths.createDefaultService());
-    }
 
     @Test
     public void delegatesGetSave() throws Exception {
         PathService service = mock(PathService.class);
         Path expected = java.nio.file.Paths.get("save.dat");
         when(service.getSave("save")).thenReturn(expected);
-        Paths.setService(service);
+        Paths paths = new Paths(service);
 
-        Path actual = Paths.getSave("save");
+        Path actual = paths.getSave("save");
         assertEquals(expected, actual);
         verify(service).getSave("save");
     }
@@ -36,9 +31,9 @@ public class PathsTest {
         PathService service = mock(PathService.class);
         Path expected = java.nio.file.Paths.get("save" + Paths.AUTOSAVE_SUFFIX);
         when(service.getAutosave("save")).thenReturn(expected);
-        Paths.setService(service);
+        Paths paths = new Paths(service);
 
-        Path actual = Paths.getAutosave("save");
+        Path actual = paths.getAutosave("save");
         assertEquals(expected, actual);
         verify(service).getAutosave("save");
     }
@@ -48,9 +43,9 @@ public class PathsTest {
         PathService service = mock(PathService.class);
         List<String> expected = Arrays.asList("a", "b");
         when(service.listAutosaves()).thenReturn(expected);
-        Paths.setService(service);
+        Paths paths = new Paths(service);
 
-        List<String> actual = Paths.listAutosaves();
+        List<String> actual = paths.listAutosaves();
         assertEquals(expected, actual);
         verify(service).listAutosaves();
     }
@@ -58,18 +53,18 @@ public class PathsTest {
     @Test
     public void delegatesDeleteAutosave() throws Exception {
         PathService service = mock(PathService.class);
-        Paths.setService(service);
+        Paths paths = new Paths(service);
 
-        Paths.deleteAutosave("temp");
+        paths.deleteAutosave("temp");
         verify(service).deleteAutosave("temp");
     }
 
     @Test
     public void delegatesCreateGameFoldersIfNotExists() throws Exception {
         PathService service = mock(PathService.class);
-        Paths.setService(service);
+        Paths paths = new Paths(service);
 
-        Paths.createGameFoldersIfNotExists();
+        paths.createGameFoldersIfNotExists();
         verify(service).createGameFoldersIfNotExists();
     }
 
@@ -78,9 +73,9 @@ public class PathsTest {
         PathService service = mock(PathService.class);
         Path expected = java.nio.file.Paths.get("settings.properties");
         when(service.getSettingsFile()).thenReturn(expected);
-        Paths.setService(service);
+        Paths paths = new Paths(service);
 
-        Path actual = Paths.getSettingsFile();
+        Path actual = paths.getSettingsFile();
         assertEquals(expected, actual);
         verify(service).getSettingsFile();
     }

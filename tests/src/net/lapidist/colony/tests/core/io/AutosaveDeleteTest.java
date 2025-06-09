@@ -13,11 +13,11 @@ public class AutosaveDeleteTest {
 
     @Test
     public void deleteAutosaveRemovesFile() throws Exception {
-        Paths.createGameFoldersIfNotExists();
-        Path file = Paths.getAutosave("delete-test");
+        Paths.get().createGameFoldersIfNotExists();
+        Path file = Paths.get().getAutosave("delete-test");
         Files.writeString(file, "dummy");
         assertTrue(Files.exists(file));
-        Paths.deleteAutosave("delete-test");
+        Paths.get().deleteAutosave("delete-test");
         assertFalse(Files.exists(file));
     }
 }

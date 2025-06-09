@@ -20,7 +20,7 @@ public class GameServerBroadcastTest {
         GameServerConfig config = GameServerConfig.builder()
                 .saveName("broadcast")
                 .build();
-        net.lapidist.colony.io.Paths.deleteAutosave("broadcast");
+        net.lapidist.colony.io.Paths.get().deleteAutosave("broadcast");
         GameServer server = new GameServer(config);
         server.start();
 

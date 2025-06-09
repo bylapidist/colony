@@ -25,7 +25,7 @@ public class GameSimulationPlayerResourcesTest {
         GameServerConfig config = GameServerConfig.builder()
                 .saveName("scenario-player")
                 .build();
-        net.lapidist.colony.io.Paths.deleteAutosave("scenario-player");
+        net.lapidist.colony.io.Paths.get().deleteAutosave("scenario-player");
         GameServer server = new GameServer(config);
         server.start();
 
