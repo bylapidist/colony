@@ -15,6 +15,7 @@ import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.client.ui.MinimapActor;
 import net.lapidist.colony.client.ui.ChatBox;
 import net.lapidist.colony.client.ui.PlayerResourcesActor;
+import net.lapidist.colony.client.ui.ChatDialog;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.i18n.I18n;
 import net.lapidist.colony.settings.KeyBindings;
@@ -79,8 +80,9 @@ public final class MapUiBuilder {
         stage.addListener(new InputListener() {
             @Override
             public boolean keyDown(final InputEvent event, final int keycode) {
-                if (keycode == keyBindings.getKey(KeyAction.CHAT) && !chatBox.isInputVisible()) {
-                    chatBox.showInput();
+                if (keycode == keyBindings.getKey(KeyAction.CHAT)) {
+                    ChatDialog dialog = new ChatDialog(skin, client);
+                    dialog.show(stage);
                     return true;
                 }
                 return false;

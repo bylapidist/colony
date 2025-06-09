@@ -9,6 +9,7 @@ import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.screens.MapUi;
 import net.lapidist.colony.client.screens.MapUiBuilder;
+import net.lapidist.colony.client.ui.ChatDialog;
 import net.lapidist.colony.settings.KeyAction;
 import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.tests.GdxTestRunner;
@@ -33,6 +34,13 @@ public class MapUiBuilderTest {
 
         stage.keyDown(settings.getKeyBindings().getKey(KeyAction.CHAT));
 
-        assertTrue(ui.getChatBox().isInputVisible());
+        boolean found = false;
+        for (com.badlogic.gdx.scenes.scene2d.Actor actor : stage.getActors()) {
+            if (actor instanceof ChatDialog) {
+                found = true;
+                break;
+            }
+        }
+        assertTrue(found);
     }
 }
