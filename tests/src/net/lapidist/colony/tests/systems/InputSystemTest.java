@@ -41,7 +41,8 @@ public class InputSystemTest {
 
         GameClient client = mock(GameClient.class);
         World world = new World(new WorldConfigurationBuilder()
-                .with(new MapLoadSystem(state), new PlayerCameraSystem(), new InputSystem(client))
+                .with(new MapLoadSystem(state), new PlayerCameraSystem(),
+                        new InputSystem(client, new net.lapidist.colony.settings.KeyBindings()))
                 .build());
 
         world.process();

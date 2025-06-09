@@ -13,7 +13,13 @@ import java.util.Locale;
 public final class Settings {
     private static final String LANGUAGE_KEY = "language";
 
+    private final KeyBindings keyBindings = new KeyBindings();
+
     private Locale locale = Locale.getDefault();
+
+    public KeyBindings getKeyBindings() {
+        return keyBindings;
+    }
 
     public Locale getLocale() {
         return locale;
@@ -35,6 +41,10 @@ public final class Settings {
             if (!lang.isEmpty()) {
                 settings.setLocale(Locale.forLanguageTag(lang));
             }
+            KeyBindings loaded = KeyBindings.load(prefs);
+            for (KeyAction action : KeyAction.values()) {
+                settings.keyBindings.setKey(action, loaded.getKey(action));
+            }
         }
         return settings;
     }
@@ -48,6 +58,7 @@ public final class Settings {
         }
         Preferences prefs = Gdx.app.getPreferences("settings");
         prefs.putString(LANGUAGE_KEY, locale.toLanguageTag());
+        keyBindings.save(prefs);
         prefs.flush();
     }
 }

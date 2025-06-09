@@ -35,7 +35,11 @@ public class InputSystemInitOrderTest {
 
         GameClient client = mock(GameClient.class);
         World world = new World(new WorldConfigurationBuilder()
-                .with(new InputSystem(client), new MapLoadSystem(state), new PlayerCameraSystem())
+                .with(
+                        new InputSystem(client, new net.lapidist.colony.settings.KeyBindings()),
+                        new MapLoadSystem(state),
+                        new PlayerCameraSystem()
+                )
                 .build());
 
         world.process();

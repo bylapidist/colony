@@ -17,6 +17,8 @@ import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.state.ResourceGatherRequestData;
 import net.lapidist.colony.components.resources.ResourceType;
 import com.artemis.ComponentMapper;
+import net.lapidist.colony.settings.KeyAction;
+import net.lapidist.colony.settings.KeyBindings;
 
 public final class InputSystem extends BaseSystem {
 
@@ -29,6 +31,8 @@ public final class InputSystem extends BaseSystem {
     private MapComponent map;
     private ComponentMapper<TileComponent> tileMapper;
 
+    private final KeyBindings keyBindings;
+
     private KeyboardInputHandler keyboardHandler;
     private GestureInputHandler gestureHandler;
     private TileSelectionHandler tileSelectionHandler;
@@ -36,8 +40,9 @@ public final class InputSystem extends BaseSystem {
     private InputGestureListener gestureListener;
     private boolean buildMode;
 
-    public InputSystem(final GameClient clientToSet) {
+    public InputSystem(final GameClient clientToSet, final KeyBindings bindings) {
         this.client = clientToSet;
+        this.keyBindings = bindings;
     }
 
     public void addProcessor(final InputProcessor processor) {
@@ -49,7 +54,7 @@ public final class InputSystem extends BaseSystem {
         cameraSystem = world.getSystem(PlayerCameraSystem.class);
         tileMapper = world.getMapper(TileComponent.class);
         map = net.lapidist.colony.map.MapUtils.findMap(world).orElse(null);
-        keyboardHandler = new KeyboardInputHandler(cameraSystem);
+        keyboardHandler = new KeyboardInputHandler(cameraSystem, keyBindings);
         gestureHandler = new GestureInputHandler(cameraSystem);
         tileSelectionHandler = new TileSelectionHandler(client, cameraSystem);
         buildingPlacementHandler = new BuildingPlacementHandler(client, cameraSystem);
@@ -78,7 +83,7 @@ public final class InputSystem extends BaseSystem {
         keyboardHandler.clampCameraPosition();
         cameraSystem.getCamera().update();
 
-        if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.H) && map != null) {
+        if (Gdx.input.isKeyJustPressed(keyBindings.getKey(KeyAction.GATHER)) && map != null) {
             for (int i = 0; i < map.getTiles().size; i++) {
                 var tile = map.getTiles().get(i);
                 TileComponent tc = tileMapper.get(tile);
