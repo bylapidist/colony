@@ -6,6 +6,7 @@ import net.lapidist.colony.client.renderers.BuildingRenderer;
 import net.lapidist.colony.client.renderers.MapRendererFactory;
 import net.lapidist.colony.client.renderers.MapRenderers;
 import net.lapidist.colony.client.renderers.TileRenderer;
+import net.lapidist.colony.client.renderers.ResourceRenderer;
 import net.lapidist.colony.components.maps.MapComponent;
 
 public final class MapRenderSystem extends BaseSystem {
@@ -20,6 +21,7 @@ public final class MapRenderSystem extends BaseSystem {
 
     private TileRenderer tileRenderer;
     private BuildingRenderer buildingRenderer;
+    private ResourceRenderer resourceRenderer;
 
     public MapRenderSystem(final MapRendererFactory factoryToUse) {
         this.factory = factoryToUse;
@@ -31,6 +33,7 @@ public final class MapRenderSystem extends BaseSystem {
         renderers = factory.create(world);
         tileRenderer = renderers.getTileRenderer();
         buildingRenderer = renderers.getBuildingRenderer();
+        resourceRenderer = renderers.getResourceRenderer();
 
     }
 
@@ -56,6 +59,7 @@ public final class MapRenderSystem extends BaseSystem {
 
         tileRenderer.render(map.getTiles());
         buildingRenderer.render(map.getEntities());
+        resourceRenderer.render(map.getTiles());
 
         batch.end();
     }

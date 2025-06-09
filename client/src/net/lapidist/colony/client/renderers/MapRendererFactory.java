@@ -10,6 +10,7 @@ import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
 import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.maps.MapComponent;
+import net.lapidist.colony.components.resources.ResourceComponent;
 
 import java.io.IOException;
 
@@ -44,6 +45,7 @@ public final class MapRendererFactory {
         ComponentMapper<BuildingComponent> buildingMapper = world.getMapper(BuildingComponent.class);
         ComponentMapper<TextureRegionReferenceComponent> textureMapper =
                 world.getMapper(TextureRegionReferenceComponent.class);
+        ComponentMapper<ResourceComponent> resourceMapper = world.getMapper(ResourceComponent.class);
 
         TileRenderer tileRenderer = new TileRenderer(
                 batch,
@@ -59,10 +61,16 @@ public final class MapRendererFactory {
                 buildingMapper,
                 textureMapper
         );
+        ResourceRenderer resourceRenderer = new ResourceRenderer(
+                batch,
+                cameraSystem,
+                tileMapper,
+                resourceMapper
+        );
 
         // trigger map mapper initialization so MapRenderSystem can use it immediately
         world.getMapper(MapComponent.class);
 
-        return new MapRenderers(batch, loader, tileRenderer, buildingRenderer);
+        return new MapRenderers(batch, loader, tileRenderer, buildingRenderer, resourceRenderer);
     }
 }

@@ -6,6 +6,7 @@ import net.lapidist.colony.client.renderers.MapRendererFactory;
 import net.lapidist.colony.client.renderers.MapRenderers;
 import net.lapidist.colony.client.renderers.TileRenderer;
 import net.lapidist.colony.client.renderers.BuildingRenderer;
+import net.lapidist.colony.client.renderers.ResourceRenderer;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.lapidist.colony.client.systems.MapRenderSystem;
@@ -91,12 +92,19 @@ public class MapRenderSystemTest {
                     buildingMapper,
                     textureMapper
             );
+            ResourceRenderer resourceRenderer = new ResourceRenderer(
+                    batch,
+                    cameraSystem,
+                    tileMapper,
+                    w.getMapper(net.lapidist.colony.components.resources.ResourceComponent.class)
+            );
             w.getMapper(MapComponent.class);
             return new MapRenderers(
                     batch,
                     loader,
                     tileRenderer,
-                    buildingRenderer
+                    buildingRenderer,
+                    resourceRenderer
             );
         });
 

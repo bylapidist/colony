@@ -13,17 +13,20 @@ public final class MapRenderers implements Disposable {
     private final ResourceLoader resourceLoader;
     private final TileRenderer tileRenderer;
     private final BuildingRenderer buildingRenderer;
+    private final ResourceRenderer resourceRenderer;
 
     public MapRenderers(
             final SpriteBatch spriteBatchToSet,
             final ResourceLoader resourceLoaderToSet,
             final TileRenderer tileRendererToSet,
-            final BuildingRenderer buildingRendererToSet
+            final BuildingRenderer buildingRendererToSet,
+            final ResourceRenderer resourceRendererToSet
     ) {
         this.spriteBatch = spriteBatchToSet;
         this.resourceLoader = resourceLoaderToSet;
         this.tileRenderer = tileRendererToSet;
         this.buildingRenderer = buildingRendererToSet;
+        this.resourceRenderer = resourceRendererToSet;
     }
 
     public SpriteBatch getSpriteBatch() {
@@ -42,9 +45,14 @@ public final class MapRenderers implements Disposable {
         return buildingRenderer;
     }
 
+    public ResourceRenderer getResourceRenderer() {
+        return resourceRenderer;
+    }
+
     @Override
     public void dispose() {
         resourceLoader.dispose();
+        resourceRenderer.dispose();
         spriteBatch.dispose();
     }
 }

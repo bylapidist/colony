@@ -12,6 +12,7 @@ import com.artemis.World;
 import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.client.ui.MinimapActor;
 import net.lapidist.colony.client.ui.ChatBox;
+import net.lapidist.colony.client.ui.PlayerResourcesActor;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.i18n.I18n;
 
@@ -21,6 +22,7 @@ import net.lapidist.colony.i18n.I18n;
 public final class MapUiBuilder {
 
     private static final float PADDING = 10f;
+    private static final int COLUMN_SPAN = 3;
 
     private MapUiBuilder() {
     }
@@ -49,6 +51,7 @@ public final class MapUiBuilder {
         TextButton menuButton = new TextButton(I18n.get("map.menu"), skin);
         MinimapActor minimapActor = new MinimapActor(world);
         ChatBox chatBox = new ChatBox(skin, client);
+        PlayerResourcesActor resourcesActor = new PlayerResourcesActor(skin, world);
 
         menuButton.addListener(new ChangeListener() {
             @Override
@@ -58,10 +61,10 @@ public final class MapUiBuilder {
         });
 
         table.add(menuButton).pad(PADDING).left().top();
-        table.add(minimapActor).pad(PADDING).expandX().right().top();
+        table.add(resourcesActor).pad(PADDING).expandX().left().top();
+        table.add(minimapActor).pad(PADDING).right().top();
         table.row();
-        table.add(chatBox).pad(PADDING).colspan(2).left().bottom().expandX();
-
+        table.add(chatBox).pad(PADDING).colspan(COLUMN_SPAN).left().bottom().expandX();
         return new MapUi(stage, minimapActor, chatBox);
     }
 }
