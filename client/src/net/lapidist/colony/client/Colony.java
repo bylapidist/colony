@@ -1,6 +1,7 @@
 package net.lapidist.colony.client;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.client.screens.MapScreen;
 import net.lapidist.colony.client.screens.MainMenuScreen;
@@ -43,7 +44,8 @@ public final class Colony extends Game {
             );
             server.start();
             client = new GameClient();
-            client.start(state -> setScreen(new MapScreen(this, state, client)));
+            client.start(state ->
+                    Gdx.app.postRunnable(() -> setScreen(new MapScreen(this, state, client))));
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
