@@ -18,6 +18,7 @@ import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.state.ResourceGatherRequestData;
 import net.lapidist.colony.components.resources.ResourceType;
 import net.lapidist.colony.client.util.CameraUtils;
+import net.lapidist.colony.map.MapUtils;
 import com.artemis.ComponentMapper;
 import net.lapidist.colony.settings.KeyAction;
 import net.lapidist.colony.settings.KeyBindings;
@@ -115,19 +116,16 @@ public final class InputSystem extends BaseSystem {
             Vector2 worldCoords = CameraUtils.screenToWorldCoords(
                     cameraSystem.getViewport(), x, y);
             Vector2 tileCoords = CameraUtils.worldCoordsToTileCoords(worldCoords);
-            for (int i = 0; i < map.getTiles().size; i++) {
-                var tile = map.getTiles().get(i);
-                TileComponent tc = tileMapper.get(tile);
-                if (tc.getX() == (int) tileCoords.x && tc.getY() == (int) tileCoords.y) {
-                    var rc = resourceMapper.get(tile);
-                    if (rc.getWood() > 0) {
-                        ResourceGatherRequestData msg = new ResourceGatherRequestData(
-                                tc.getX(), tc.getY(), ResourceType.WOOD.name());
-                        client.sendGatherRequest(msg);
-                    }
-                    break;
-                }
-            }
+            MapUtils.findTile(map, (int) tileCoords.x, (int) tileCoords.y, tileMapper)
+                    .ifPresent(tile -> {
+                        TileComponent tc = tileMapper.get(tile);
+                        var rc = resourceMapper.get(tile);
+                        if (rc.getWood() > 0) {
+                            ResourceGatherRequestData msg = new ResourceGatherRequestData(
+                                    tc.getX(), tc.getY(), ResourceType.WOOD.name());
+                            client.sendGatherRequest(msg);
+                        }
+                    });
         }
         return result;
     }

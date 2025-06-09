@@ -8,6 +8,7 @@ import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
+import net.lapidist.colony.map.MapUtils;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
@@ -75,14 +76,12 @@ public class GameSimulationDelayedTileUpdateTest {
         Entity map = sim.getWorld().getEntity(maps.get(0));
         MapComponent mapComponent = sim.getWorld().getMapper(MapComponent.class)
                 .get(map);
-        for (int i = 0; i < mapComponent.getTiles().size; i++) {
-            TileComponent tc = sim.getWorld()
-                    .getMapper(TileComponent.class)
-                    .get(mapComponent.getTiles().get(i));
-            if (tc.getX() == 0 && tc.getY() == 0) {
-                return tc;
-            }
-        }
-        return null;
+        return MapUtils.findTile(
+                mapComponent,
+                0,
+                0,
+                sim.getWorld().getMapper(TileComponent.class)
+        ).map(t -> sim.getWorld().getMapper(TileComponent.class).get(t))
+                .orElse(null);
     }
 }
