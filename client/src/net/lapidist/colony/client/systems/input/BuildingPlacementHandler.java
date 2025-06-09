@@ -1,9 +1,8 @@
 package net.lapidist.colony.client.systems.input;
 
 import com.artemis.ComponentMapper;
-import com.artemis.Entity;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
+import net.lapidist.colony.map.MapUtils;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.util.CameraUtils;
@@ -38,20 +37,17 @@ public final class BuildingPlacementHandler {
         Vector2 worldCoords = CameraUtils.screenToWorldCoords(cameraSystem.getViewport(), x, y);
         Vector2 tileCoords = CameraUtils.worldCoordsToTileCoords(worldCoords);
 
-        Array<Entity> tiles = map.getTiles();
-        for (int i = 0; i < tiles.size; i++) {
-            Entity tile = tiles.get(i);
-            TileComponent tc = tileMapper.get(tile);
-            if (tc.getX() == (int) tileCoords.x && tc.getY() == (int) tileCoords.y) {
-                BuildingPlacementData msg = new BuildingPlacementData(
-                        tc.getX(),
-                        tc.getY(),
-                        BuildingComponent.BuildingType.HOUSE.name()
-                );
-                client.sendBuildRequest(msg);
-                return true;
-            }
-        }
-        return false;
+        return MapUtils.findTile(map, (int) tileCoords.x, (int) tileCoords.y, tileMapper)
+                .map(tile -> {
+                    TileComponent tc = tileMapper.get(tile);
+                    BuildingPlacementData msg = new BuildingPlacementData(
+                            tc.getX(),
+                            tc.getY(),
+                            BuildingComponent.BuildingType.HOUSE.name()
+                    );
+                    client.sendBuildRequest(msg);
+                    return true;
+                })
+                .orElse(false);
     }
 }

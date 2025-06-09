@@ -5,6 +5,8 @@ import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.utils.IntBag;
 import net.lapidist.colony.components.maps.MapComponent;
+import net.lapidist.colony.components.maps.TileComponent;
+import com.artemis.ComponentMapper;
 import java.util.Optional;
 
 /**
@@ -45,6 +47,36 @@ public final class MapUtils {
                     world.getMapper(MapComponent.class).get(maps.get(0))
             );
         }
+        return Optional.empty();
+    }
+
+    /**
+     * Finds a tile entity at the given map coordinates.
+     *
+     * @param map    the map component containing tiles
+     * @param x      the tile x coordinate
+     * @param y      the tile y coordinate
+     * @param mapper mapper for {@link TileComponent} instances
+     * @return an {@link Optional} containing the tile entity if present
+     */
+    public static Optional<Entity> findTile(
+            final MapComponent map,
+            final int x,
+            final int y,
+            final ComponentMapper<TileComponent> mapper
+    ) {
+        if (map == null) {
+            return Optional.empty();
+        }
+
+        for (int i = 0; i < map.getTiles().size; i++) {
+            Entity tile = map.getTiles().get(i);
+            TileComponent tc = mapper.get(tile);
+            if (tc.getX() == x && tc.getY() == y) {
+                return Optional.of(tile);
+            }
+        }
+
         return Optional.empty();
     }
 }
