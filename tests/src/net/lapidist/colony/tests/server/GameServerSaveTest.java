@@ -45,16 +45,19 @@ public class GameServerSaveTest {
 
     @Test
     public void autosaveCreatesSaveFileAndFiresEvent() throws Exception {
-        GameServer server = new GameServer(
-                GameServerConfig.builder().autosaveInterval(TEST_INTERVAL_MS).build()
-        );
+        GameServerConfig config = GameServerConfig.builder()
+                .saveName("save-test")
+                .autosaveInterval(TEST_INTERVAL_MS)
+                .build();
+        net.lapidist.colony.io.Paths.deleteAutosave("save-test");
+        GameServer server = new GameServer(config);
         server.start();
         Events.getInstance().registerEvents(this);
 
         Thread.sleep(WAIT_MS);
         Events.update();
 
-        Path saveFile = Paths.getAutosave("autosave");
+        Path saveFile = Paths.getAutosave("save-test");
         assertTrue(Files.exists(saveFile));
         assertTrue(lastEvent != null);
         assertTrue(saveFile.equals(lastEvent.getLocation()));
@@ -65,15 +68,17 @@ public class GameServerSaveTest {
 
     @Test
     public void stoppingSavesFileAndFiresEvent() throws Exception {
-        GameServer server = new GameServer(
-                GameServerConfig.builder().autosaveInterval(TEST_INTERVAL_MS).build()
-        );
+        GameServerConfig config = GameServerConfig.builder()
+                .saveName("save-test")
+                .autosaveInterval(TEST_INTERVAL_MS)
+                .build();
+        GameServer server = new GameServer(config);
         server.start();
         Events.getInstance().registerEvents(this);
 
         server.stop();
 
-        Path saveFile = Paths.getAutosave("autosave");
+        Path saveFile = Paths.getAutosave("save-test");
         assertTrue(Files.exists(saveFile));
         assertTrue(shutdownEvent != null);
         assertTrue(saveFile.equals(shutdownEvent.getLocation()));
@@ -82,9 +87,11 @@ public class GameServerSaveTest {
 
     @Test
     public void loadsExistingSave() throws Exception {
-        GameServer first = new GameServer(
-                GameServerConfig.builder().autosaveInterval(TEST_INTERVAL_MS).build()
-        );
+        GameServerConfig cfg = GameServerConfig.builder()
+                .saveName("save-test")
+                .autosaveInterval(TEST_INTERVAL_MS)
+                .build();
+        GameServer first = new GameServer(cfg);
         first.start();
         TilePos pos = new TilePos(0, 0);
         TileData modified = first.getMapState().tiles().get(pos)
@@ -92,12 +99,10 @@ public class GameServerSaveTest {
                 .textureRef("changed")
                 .build();
         first.getMapState().tiles().put(pos, modified);
-        GameStateIO.save(first.getMapState(), Paths.getAutosave("autosave"));
+        GameStateIO.save(first.getMapState(), Paths.getAutosave("save-test"));
         first.stop();
 
-        GameServer second = new GameServer(
-                GameServerConfig.builder().autosaveInterval(TEST_INTERVAL_MS).build()
-        );
+        GameServer second = new GameServer(cfg);
         second.start();
         String loaded = second.getMapState().tiles().get(new TilePos(0, 0)).textureRef();
         second.stop();
