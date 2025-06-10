@@ -4,6 +4,9 @@ import net.mostlyoriginal.api.event.common.Event;
 
 /**
  * Event fired when the window is resized.
+ *
+ * @param width  the new window width
+ * @param height the new window height
  */
 public record ResizeEvent(int width, int height) implements Event {
 
