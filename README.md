@@ -85,6 +85,7 @@ For more details see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Documentation
 The latest Java API reference is published to [GitHub Pages](https://bylapidist.github.io/colony/) on every release.
+For a high level overview of the modules and networking flow see [docs/architecture.md](docs/architecture.md).
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
