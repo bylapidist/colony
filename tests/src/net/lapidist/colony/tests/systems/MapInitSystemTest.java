@@ -39,6 +39,8 @@ public class MapInitSystemTest {
                 .get(Aspect.all(MapComponent.class))
                 .getEntities();
         assertEquals(1, maps.size());
+        MapComponent map = world.getMapper(MapComponent.class).get(maps.get(0));
+        assertEquals(1, map.getTileMap().size());
     }
 
     @Test

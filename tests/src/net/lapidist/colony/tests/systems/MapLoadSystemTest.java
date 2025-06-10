@@ -47,6 +47,7 @@ public class MapLoadSystemTest {
         Entity map = world.getEntity(maps.get(0));
         MapComponent mapComponent = world.getMapper(MapComponent.class).get(map);
         assertEquals(1, mapComponent.getTiles().size);
+        assertEquals(1, mapComponent.getTileMap().size());
         assertEquals(1, mapComponent.getEntities().size);
     }
 }
