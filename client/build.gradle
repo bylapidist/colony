@@ -9,10 +9,18 @@ dependencies {
     implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
     implementation "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
     runtimeOnly "ch.qos.logback:logback-classic:$logbackVersion"
+
+    testImplementation "junit:junit:$jUnitVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
 }
 
 application {
     mainClass = 'net.lapidist.colony.client.ClientLauncher'
+}
+
+sourceSets {
+    main.java.srcDirs = ['src/net']
+    test.java.srcDirs = ['src/test/java']
 }
 
 eclipse.project.name = "$appName-client"
