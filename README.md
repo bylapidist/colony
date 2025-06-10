@@ -8,6 +8,7 @@ Colony is a small simulation/strategy prototype built with LibGDX and the Artemi
 - [Quick Start](#quick-start)
   - [Building and Testing](#building-and-testing)
   - [Running the Game](#running-the-game)
+- [Controls](#controls)
 - [Project Structure](#project-structure)
 - [Configuration](#configuration)
 - [Networking Workflow](#networking-workflow)
@@ -43,6 +44,10 @@ Both the client and dedicated server can be started directly from Gradle:
 ./gradlew :server:run   # start the dedicated server
 ```
 
+## Controls
+Default keyboard mappings can be remapped in game.
+See [docs/controls.md](docs/controls.md) for the full list and instructions.
+
 ## Project Structure
 The repository is split into four Gradle modules:
 
@@ -73,6 +78,8 @@ The code mirrors this flow with clearly named methods:
 - The server uses `broadcast` to relay updates to all clients.
 - Each client processes queued updates via `poll(TileSelectionData.class)` inside its update systems.
 
+For a step‑by‑step example see [docs/networking.md](docs/networking.md).
+
 ## Development Guidelines
 ### Code Style
 Checkstyle rules are defined in `config/checkstyle/checkstyle.xml`. All Java files use four spaces for indentation and lines are limited to 120 characters. The Gradle `check` task enforces these conventions and should pass before committing.
@@ -86,6 +93,7 @@ For more details see [CONTRIBUTING.md](CONTRIBUTING.md).
 ## Documentation
 The latest Java API reference is published to [GitHub Pages](https://bylapidist.github.io/colony/) on every release.
 For a high level overview of the modules and networking flow see [docs/architecture.md](docs/architecture.md).
+Refer to [docs/networking.md](docs/networking.md) for hands‑on client and server examples.
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
