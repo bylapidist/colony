@@ -10,6 +10,10 @@ import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.TilePos;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Utility factory for creating map entities from {@link MapState} data.
@@ -29,10 +33,12 @@ public final class MapFactory {
         Entity map = world.createEntity();
         MapComponent mapComponent = new MapComponent();
         Array<Entity> tiles = new Array<>();
+        Map<TilePos, Entity> tileMap = new HashMap<>();
         Array<Entity> entities = new Array<>();
 
-        for (TileData td : state.tiles().values()) {
-            tiles.add(TileFactory.create(
+        for (Map.Entry<TilePos, TileData> entry : state.tiles().entrySet()) {
+            TileData td = entry.getValue();
+            Entity tile = TileFactory.create(
                     world,
                     TileComponent.TileType.valueOf(td.tileType()),
                     td.textureRef(),
@@ -40,7 +46,9 @@ public final class MapFactory {
                     td.passable(),
                     td.selected(),
                     td.resources()
-            ));
+            );
+            tiles.add(tile);
+            tileMap.put(entry.getKey(), tile);
         }
 
         for (BuildingData bd : state.buildings()) {
@@ -53,6 +61,7 @@ public final class MapFactory {
         }
 
         mapComponent.setTiles(tiles);
+        mapComponent.setTileMap(tileMap);
         mapComponent.setEntities(entities);
         map.edit().add(mapComponent);
         return map;

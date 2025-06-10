@@ -7,6 +7,7 @@ import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.state.TileSelectionData;
+import net.lapidist.colony.map.MapUtils;
 
 /**
  * Applies tile selection updates received from the server.
@@ -34,14 +35,9 @@ public final class TileUpdateSystem extends BaseSystem {
         MapComponent mapComponent = mapMapper.get(map);
         TileSelectionData update;
         while ((update = client.pollTileSelectionUpdate()) != null) {
-            for (int i = 0; i < mapComponent.getTiles().size; i++) {
-                Entity tile = mapComponent.getTiles().get(i);
-                TileComponent tc = tileMapper.get(tile);
-                if (tc.getX() == update.x() && tc.getY() == update.y()) {
-                    tc.setSelected(update.selected());
-                    break;
-                }
-            }
+            final TileSelectionData data = update;
+            MapUtils.findTile(mapComponent, data.x(), data.y(), tileMapper)
+                    .ifPresent(t -> tileMapper.get(t).setSelected(data.selected()));
         }
     }
 }

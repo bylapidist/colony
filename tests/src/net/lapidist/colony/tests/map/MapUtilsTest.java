@@ -44,6 +44,7 @@ public class MapUtilsTest {
         MapComponent map = MapUtils.findMap(world).orElse(null);
         assertNotNull(map);
         assertEquals(1, map.getTiles().size);
+        assertTrue(map.getTileMap().containsKey(new TilePos(0, 0)));
     }
 
     @Test

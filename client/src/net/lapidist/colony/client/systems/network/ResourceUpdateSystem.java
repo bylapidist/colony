@@ -5,6 +5,7 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.maps.MapComponent;
+import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.resources.ResourceComponent;
 import net.lapidist.colony.components.resources.PlayerResourceComponent;
 import net.lapidist.colony.components.state.ResourceUpdateData;
@@ -15,6 +16,7 @@ public final class ResourceUpdateSystem extends BaseSystem {
     private final GameClient client;
     private ComponentMapper<ResourceComponent> resourceMapper;
     private ComponentMapper<MapComponent> mapMapper;
+    private ComponentMapper<TileComponent> tileMapper;
     private ComponentMapper<PlayerResourceComponent> playerMapper;
     private Entity player;
     private Entity map;
@@ -42,33 +44,29 @@ public final class ResourceUpdateSystem extends BaseSystem {
         }
         ResourceUpdateData update;
         while ((update = client.pollResourceUpdate()) != null) {
-            for (int i = 0; i < mapComponent.getTiles().size; i++) {
-                Entity tile = mapComponent.getTiles().get(i);
-                ResourceComponent rc = resourceMapper.get(tile);
-                var tcMapper = world.getMapper(net.lapidist.colony.components.maps.TileComponent.class);
-                net.lapidist.colony.components.maps.TileComponent tc = tcMapper.get(tile);
-                if (tc.getX() == update.x() && tc.getY() == update.y()) {
-                    int deltaWood = rc.getWood() - update.wood();
-                    int deltaStone = rc.getStone() - update.stone();
-                    int deltaFood = rc.getFood() - update.food();
-                    rc.setWood(update.wood());
-                    rc.setStone(update.stone());
-                    rc.setFood(update.food());
-                    if (player != null) {
-                        var pr = playerMapper.get(player);
-                        if (deltaWood > 0) {
-                            pr.addWood(deltaWood);
+            final ResourceUpdateData data = update;
+            MapUtils.findTile(mapComponent, data.x(), data.y(), tileMapper)
+                    .ifPresent(tile -> {
+                        ResourceComponent rc = resourceMapper.get(tile);
+                        int deltaWood = rc.getWood() - data.wood();
+                        int deltaStone = rc.getStone() - data.stone();
+                        int deltaFood = rc.getFood() - data.food();
+                        rc.setWood(data.wood());
+                        rc.setStone(data.stone());
+                        rc.setFood(data.food());
+                        if (player != null) {
+                            var pr = playerMapper.get(player);
+                            if (deltaWood > 0) {
+                                pr.addWood(deltaWood);
+                            }
+                            if (deltaStone > 0) {
+                                pr.addStone(deltaStone);
+                            }
+                            if (deltaFood > 0) {
+                                pr.addFood(deltaFood);
+                            }
                         }
-                        if (deltaStone > 0) {
-                            pr.addStone(deltaStone);
-                        }
-                        if (deltaFood > 0) {
-                            pr.addFood(deltaFood);
-                        }
-                    }
-                    break;
-                }
-            }
+                    });
         }
     }
 }
