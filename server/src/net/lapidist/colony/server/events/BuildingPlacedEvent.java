@@ -1,35 +1,24 @@
 package net.lapidist.colony.server.events;
 
-import net.lapidist.colony.core.events.AbstractDataEvent;
+import net.mostlyoriginal.api.event.common.Event;
 
 /**
  * Event fired when a building is placed on the map.
  */
-public final class BuildingPlacedEvent extends AbstractDataEvent {
-    private final int x;
-    private final int y;
-    private final String buildingType;
+public record BuildingPlacedEvent(int x, int y, String buildingType) implements Event {
 
-    public BuildingPlacedEvent(final int xToSet, final int yToSet, final String typeToSet) {
-        this.x = xToSet;
-        this.y = yToSet;
-        this.buildingType = typeToSet;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public String getBuildingType() {
-        return buildingType;
+    public BuildingPlacedEvent {
+        // explicit constructor for future validation
     }
 
     @Override
     public String toString() {
-        return format("x", x, "y", y, "buildingType", buildingType);
+        return String.format(
+                "%s(x=%d, y=%d, buildingType=%s)",
+                getClass().getSimpleName(),
+                x,
+                y,
+                buildingType
+        );
     }
 }

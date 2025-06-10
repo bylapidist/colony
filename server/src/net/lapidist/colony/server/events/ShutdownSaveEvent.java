@@ -1,13 +1,25 @@
 package net.lapidist.colony.server.events;
 
+import net.mostlyoriginal.api.event.common.Event;
+
 import java.nio.file.Path;
 
 /**
  * Event fired when the server saves the game on shutdown.
  */
-public final class ShutdownSaveEvent extends SaveEvent {
+public record ShutdownSaveEvent(Path location, long size) implements Event {
 
-    public ShutdownSaveEvent(final Path locationToSet, final long sizeToSet) {
-        super(locationToSet, sizeToSet);
+    public ShutdownSaveEvent {
+        // explicit constructor for future validation
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "%s(location=%s, size=%d)",
+                getClass().getSimpleName(),
+                location,
+                size
+        );
     }
 }

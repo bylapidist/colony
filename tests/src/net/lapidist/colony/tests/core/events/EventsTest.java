@@ -54,8 +54,8 @@ public class EventsTest {
         final int testHeight = 1080;
         Events.dispatch(new ResizeEvent(testWidth, testHeight));
         Events.update();
-        assertEquals(testWidth, resizeEvent.getWidth());
-        assertEquals(testHeight, resizeEvent.getHeight());
+        assertEquals(testWidth, resizeEvent.width());
+        assertEquals(testHeight, resizeEvent.height());
     }
 
     @Test
