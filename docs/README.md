@@ -1,4 +1,4 @@
-# Documentation Overview
+# Documentation
 
 This directory contains all guides for the Colony project. References are grouped by audience.
 
@@ -8,6 +8,5 @@ This directory contains all guides for the Colony project. References are groupe
 
 ## For Developers
 - [Architecture Overview](architecture.md) – explains the module layout and networking workflow.
+- [Localization Guide](i18n.md)
 - [Contributing Guide](../CONTRIBUTING.md) – coding conventions and contribution process.
-
-Additional documents may appear here over time. Check this folder for the latest guides.
