@@ -4,6 +4,10 @@ import net.mostlyoriginal.api.event.common.Event;
 
 /**
  * Event fired when a building is placed on the map.
+ *
+ * @param x            tile x coordinate
+ * @param y            tile y coordinate
+ * @param buildingType the building type
  */
 public record BuildingPlacedEvent(int x, int y, String buildingType) implements Event {
 

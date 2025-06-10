@@ -4,6 +4,10 @@ import net.mostlyoriginal.api.event.common.Event;
 
 /**
  * Event fired when a tile selection state changes.
+ *
+ * @param x        tile x coordinate
+ * @param y        tile y coordinate
+ * @param selected whether the tile is selected
  */
 public record TileSelectionEvent(int x, int y, boolean selected) implements Event {
 
