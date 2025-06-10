@@ -15,10 +15,7 @@ import net.lapidist.colony.network.DispatchListener;
 import net.lapidist.colony.network.MessageHandler;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.client.network.handlers.MapStateMessageHandler;
-import net.lapidist.colony.client.network.handlers.TileSelectionUpdateHandler;
-import net.lapidist.colony.client.network.handlers.BuildingUpdateHandler;
-import net.lapidist.colony.client.network.handlers.ChatMessageHandler;
-import net.lapidist.colony.client.network.handlers.ResourceUpdateHandler;
+import net.lapidist.colony.client.network.handlers.QueueingMessageHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,10 +59,10 @@ public final class GameClient extends AbstractMessageEndpoint {
                         readyCallback.accept(state);
                     }
                 }),
-                new TileSelectionUpdateHandler(messageQueues),
-                new BuildingUpdateHandler(messageQueues),
-                new ChatMessageHandler(messageQueues),
-                new ResourceUpdateHandler(messageQueues)
+                new QueueingMessageHandler<>(TileSelectionData.class, messageQueues),
+                new QueueingMessageHandler<>(BuildingData.class, messageQueues),
+                new QueueingMessageHandler<>(ChatMessage.class, messageQueues),
+                new QueueingMessageHandler<>(ResourceUpdateData.class, messageQueues)
         );
     }
 
