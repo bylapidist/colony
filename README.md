@@ -8,6 +8,7 @@ Colony is a small simulation/strategy prototype built with LibGDX and the Artemi
 - [Quick Start](#quick-start)
   - [Building and Testing](#building-and-testing)
   - [Running the Game](#running-the-game)
+- [Controls](#controls)
 - [Project Structure](#project-structure)
 - [Configuration](#configuration)
 - [Networking Workflow](#networking-workflow)
@@ -42,6 +43,10 @@ Both the client and dedicated server can be started directly from Gradle:
 ./gradlew :client:run   # start the game client
 ./gradlew :server:run   # start the dedicated server
 ```
+
+## Controls
+Default keyboard mappings can be remapped in game.
+See [docs/controls.md](docs/controls.md) for the full list and instructions.
 
 ## Project Structure
 The repository is split into four Gradle modules:
