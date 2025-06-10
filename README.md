@@ -27,6 +27,12 @@ Java 21 toolchains are configured via the Gradle wrapper. Run the following comm
 ./gradlew check              # run Checkstyle and Spotless verification
 ```
 
+You can also run all of these steps at once:
+
+```bash
+./scripts/check.sh
+```
+
 The `tests:copyAssets` task is required so that resources used by the test suite are available. `spotlessApply` will automatically format all Java sources and must be executed before committing.
 
 ### Running the Game
