@@ -120,6 +120,14 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         return mapState;
     }
 
+    /**
+     * Indicates if the server network thread is currently running.
+     */
+    public boolean isRunning() {
+        Thread t = server.getUpdateThread();
+        return t != null && t.isAlive();
+    }
+
     public void broadcast(final Object message) {
         networkService.broadcast(message);
     }
