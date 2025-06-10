@@ -74,13 +74,28 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
 
     @Override
     public void start() throws IOException, InterruptedException {
-        KryoRegistry.register(server.getKryo());
+        initKryo();
         Events.init(new EventSystem());
+        loadMapState();
+        startNetwork();
+        registerDefaultHandlers();
+        autosaveService.start();
+    }
+
+    private void initKryo() {
+        KryoRegistry.register(server.getKryo());
+    }
+
+    private void loadMapState() throws IOException {
         Paths.get().createGameFoldersIfNotExists();
-
         mapState = mapService.load();
-        networkService.start(mapState, this::dispatch);
+    }
 
+    private void startNetwork() throws IOException {
+        networkService.start(mapState, this::dispatch);
+    }
+
+    private void registerDefaultHandlers() {
         if (commandHandlers == null) {
             commandHandlers = java.util.List.of(
                     new TileSelectionCommandHandler(() -> mapState, networkService),
@@ -99,7 +114,6 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
             );
         }
         registerHandlers(handlers);
-        autosaveService.start();
     }
 
     public MapState getMapState() {
