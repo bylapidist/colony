@@ -14,11 +14,16 @@ public final class Settings {
     private static final String LANGUAGE_KEY = "language";
 
     private final KeyBindings keyBindings = new KeyBindings();
+    private final GraphicsSettings graphicsSettings = new GraphicsSettings();
 
     private Locale locale = Locale.getDefault();
 
     public KeyBindings getKeyBindings() {
         return keyBindings;
+    }
+
+    public GraphicsSettings getGraphicsSettings() {
+        return graphicsSettings;
     }
 
     public Locale getLocale() {
@@ -45,6 +50,12 @@ public final class Settings {
             for (KeyAction action : KeyAction.values()) {
                 settings.keyBindings.setKey(action, loaded.getKey(action));
             }
+            GraphicsSettings gLoaded = GraphicsSettings.load(prefs);
+            settings.graphicsSettings.setAntialiasingEnabled(gLoaded.isAntialiasingEnabled());
+            settings.graphicsSettings.setMipMapsEnabled(gLoaded.isMipMapsEnabled());
+            settings.graphicsSettings.setAnisotropicFilteringEnabled(
+                    gLoaded.isAnisotropicFilteringEnabled());
+            settings.graphicsSettings.setShadersEnabled(gLoaded.isShadersEnabled());
         }
         return settings;
     }
@@ -59,6 +70,7 @@ public final class Settings {
         Preferences prefs = Gdx.app.getPreferences("settings");
         prefs.putString(LANGUAGE_KEY, locale.toLanguageTag());
         keyBindings.save(prefs);
+        graphicsSettings.save(prefs);
         prefs.flush();
     }
 }

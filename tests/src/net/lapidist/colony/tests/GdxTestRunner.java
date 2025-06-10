@@ -50,6 +50,9 @@ public class GdxTestRunner
         doNothing().when(Gdx.gl20).glCompileShader(anyInt());
         doNothing().when(Gdx.gl20).glAttachShader(anyInt(), anyInt());
         doNothing().when(Gdx.gl20).glLinkProgram(anyInt());
+        when(Gdx.gl20.glGetAttribLocation(anyInt(), any())).thenReturn(0);
+        when(Gdx.gl20.glGetUniformLocation(anyInt(), any())).thenReturn(0);
+        doNothing().when(Gdx.gl20).glUseProgram(anyInt());
         doNothing().when(Gdx.gl20).glDeleteShader(anyInt());
         doNothing().when(Gdx.gl20).glDeleteProgram(anyInt());
     }
