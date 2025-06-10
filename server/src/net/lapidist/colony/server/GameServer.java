@@ -50,26 +50,53 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     private Iterable<CommandHandler<?>> commandHandlers;
 
     public GameServer(final GameServerConfig config) {
-        this(config, null, null);
+        this(config, null, null, null, null, null, null);
     }
 
     public GameServer(final GameServerConfig config,
                       final Iterable<MessageHandler<?>> handlersToUse) {
-        this(config, handlersToUse, null);
+        this(config, handlersToUse, null, null, null, null, null);
     }
 
     public GameServer(final GameServerConfig config,
                       final Iterable<MessageHandler<?>> handlersToUse,
                       final Iterable<CommandHandler<?>> commandHandlersToUse) {
+        this(config, handlersToUse, commandHandlersToUse, null, null, null, null);
+    }
+
+    /**
+     * Creates a new server instance using the provided services.
+     *
+     * @param config                configuration for the server
+     * @param handlersToUse         optional message handlers to register
+     * @param commandHandlersToUse  optional command handlers to register
+     * @param mapServiceToUse       map service implementation or {@code null} for the default
+     * @param networkServiceToUse   network service implementation or {@code null} for the default
+     * @param autosaveServiceToUse  autosave service implementation or {@code null} for the default
+     * @param commandBusToUse       command bus implementation or {@code null} for the default
+     */
+    public GameServer(
+            final GameServerConfig config,
+            final Iterable<MessageHandler<?>> handlersToUse,
+            final Iterable<CommandHandler<?>> commandHandlersToUse,
+            final MapService mapServiceToUse,
+            final NetworkService networkServiceToUse,
+            final AutosaveService autosaveServiceToUse,
+            final CommandBus commandBusToUse
+    ) {
         this.saveName = config.getSaveName();
         this.autosaveInterval = config.getAutosaveInterval();
         this.mapGenerator = config.getMapGenerator();
         this.handlers = handlersToUse;
         this.commandHandlers = commandHandlersToUse;
-        this.mapService = new MapService(mapGenerator, saveName);
-        this.networkService = new NetworkService(server, TCP_PORT, UDP_PORT);
-        this.autosaveService = new AutosaveService(autosaveInterval, saveName, () -> mapState);
-        this.commandBus = new CommandBus();
+        this.mapService = mapServiceToUse != null ? mapServiceToUse : new MapService(mapGenerator, saveName);
+        this.networkService = networkServiceToUse != null
+                ? networkServiceToUse
+                : new NetworkService(server, TCP_PORT, UDP_PORT);
+        this.autosaveService = autosaveServiceToUse != null
+                ? autosaveServiceToUse
+                : new AutosaveService(autosaveInterval, saveName, () -> mapState);
+        this.commandBus = commandBusToUse != null ? commandBusToUse : new CommandBus();
     }
 
     @Override

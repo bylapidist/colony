@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.lang.reflect.Method;
 
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 public class GameServerHandlerRegistrationTest {
@@ -74,10 +75,15 @@ public class GameServerHandlerRegistrationTest {
                 .saveName("handler-test")
                 .build();
         net.lapidist.colony.io.Paths.get().deleteAutosave("handler-test");
+        CommandBus bus = new CommandBus();
         GameServer server = new GameServer(
                 config,
                 java.util.List.of(messageHandler),
-                java.util.List.of(commandHandler)
+                java.util.List.of(commandHandler),
+                null,
+                null,
+                null,
+                bus
         );
         server.start();
 
@@ -89,6 +95,7 @@ public class GameServerHandlerRegistrationTest {
 
         assertTrue(messageHandler.handled());
         assertTrue(commandHandler.handled());
+        assertSame(bus, commandHandler.getBus());
 
         server.stop();
     }
