@@ -30,6 +30,18 @@ Client driven actions that modify the game world follow this sequence:
 No local changes should be applied until the server response is processed so that every client remains
 synchronized.
 
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as Server
+    C->>S: request action
+    S-->>S: validate & apply
+    S-->>C: broadcast update
+    C-->>C: queue and process
+```
+
+For a detailed walkthrough see [networking.md](networking.md).
+
 ## Future Platform Goals
 The project aims to evolve into a flexible simulation framework inspired by open-source games such as
 [Mindustry](https://github.com/Anuken/Mindustry) and
