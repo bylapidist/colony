@@ -6,11 +6,11 @@ package net.lapidist.colony.io;
 public final class WindowsPathService extends AbstractPathService {
 
     @Override
-    protected String getGameFolderPath() {
+    protected java.nio.file.Path getGameFolderPath() {
         String base = System.getenv("APPDATA");
         if (base == null || base.isBlank()) {
             base = System.getProperty("user.home");
         }
-        return java.nio.file.Paths.get(base, ".colony").toString();
+        return java.nio.file.Paths.get(base, ".colony");
     }
 }
