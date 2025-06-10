@@ -6,6 +6,9 @@ import java.nio.file.Path;
 
 /**
  * Event fired when the server writes a game state autosave file.
+ *
+ * @param location path to the autosave file
+ * @param size     file size in bytes
  */
 public record AutosaveEvent(Path location, long size) implements Event {
 

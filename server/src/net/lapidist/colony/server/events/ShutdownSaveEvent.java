@@ -6,6 +6,9 @@ import java.nio.file.Path;
 
 /**
  * Event fired when the server saves the game on shutdown.
+ *
+ * @param location path to the save file
+ * @param size     file size in bytes
  */
 public record ShutdownSaveEvent(Path location, long size) implements Event {
 

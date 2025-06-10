@@ -4,6 +4,14 @@ import net.lapidist.colony.serialization.KryoType;
 
 /**
  * Immutable tile representation used in {@link MapState}.
+ *
+ * @param x          tile x coordinate
+ * @param y          tile y coordinate
+ * @param tileType   tile terrain type identifier
+ * @param textureRef sprite reference for rendering
+ * @param passable   whether units can move over the tile
+ * @param selected   whether the tile is currently selected
+ * @param resources  resources contained on the tile
  */
 @KryoType
 public record TileData(
