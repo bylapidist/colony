@@ -106,6 +106,13 @@ public final class GameClient extends AbstractMessageEndpoint {
         return playerId;
     }
 
+    /**
+     * Returns true if the underlying network client is connected to the server.
+     */
+    public boolean isConnected() {
+        return client.isConnected();
+    }
+
     @SuppressWarnings("unchecked")
     public <T> T poll(final Class<T> type) {
         Queue<T> queue = (Queue<T>) messageQueues.get(type);
