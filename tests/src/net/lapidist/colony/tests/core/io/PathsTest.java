@@ -79,4 +79,16 @@ public class PathsTest {
         assertEquals(expected, actual);
         verify(service).getSettingsFile();
     }
+
+    @Test
+    public void delegatesGetLastAutosaveMarker() throws Exception {
+        PathService service = mock(PathService.class);
+        Path expected = java.nio.file.Paths.get("marker.dat");
+        when(service.getLastAutosaveMarker()).thenReturn(expected);
+        Paths paths = new Paths(service);
+
+        Path actual = paths.getLastAutosaveMarker();
+        assertEquals(expected, actual);
+        verify(service).getLastAutosaveMarker();
+    }
 }
