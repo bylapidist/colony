@@ -12,6 +12,9 @@ import java.nio.file.Path;
  */
 public record ShutdownSaveEvent(Path location, long size) implements Event {
 
+    /**
+     * Creates a new {@code ShutdownSaveEvent}.
+     */
     public ShutdownSaveEvent {
         // explicit constructor for future validation
     }
