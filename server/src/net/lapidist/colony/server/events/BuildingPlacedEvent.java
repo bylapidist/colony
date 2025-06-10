@@ -11,6 +11,9 @@ import net.mostlyoriginal.api.event.common.Event;
  */
 public record BuildingPlacedEvent(int x, int y, String buildingType) implements Event {
 
+    /**
+     * Creates a new event instance.
+     */
     public BuildingPlacedEvent {
         // explicit constructor for future validation
     }

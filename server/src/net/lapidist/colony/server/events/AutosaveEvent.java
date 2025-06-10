@@ -12,6 +12,9 @@ import java.nio.file.Path;
  */
 public record AutosaveEvent(Path location, long size) implements Event {
 
+    /**
+     * Creates a new {@code AutosaveEvent}.
+     */
     public AutosaveEvent {
         // explicit constructor for future validation
     }

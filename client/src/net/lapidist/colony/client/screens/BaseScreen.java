@@ -17,10 +17,18 @@ public abstract class BaseScreen extends ScreenAdapter {
     private final Skin skin;
     private final Table root;
 
+    /**
+     * Creates a screen with a default {@link Stage} instance.
+     */
     protected BaseScreen() {
         this(new Stage(new ScreenViewport()));
     }
 
+    /**
+     * Creates a screen using the provided stage.
+     *
+     * @param customStage stage used to display the UI
+     */
     protected BaseScreen(final Stage customStage) {
         stage = customStage;
         skin = new Skin(Gdx.files.internal("skin/default.json"));
@@ -30,14 +38,29 @@ public abstract class BaseScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
     }
 
+    /**
+     * Returns the stage used for rendering.
+     *
+     * @return the stage used for rendering
+     */
     protected final Stage getStage() {
         return stage;
     }
 
+    /**
+     * Returns the skin used for UI elements.
+     *
+     * @return the UI skin in use
+     */
     protected final Skin getSkin() {
         return skin;
     }
 
+    /**
+     * Returns the root table containing all actors.
+     *
+     * @return the root table containing all actors
+     */
     protected final Table getRoot() {
         return root;
     }

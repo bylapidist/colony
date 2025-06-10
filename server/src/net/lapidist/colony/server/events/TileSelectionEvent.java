@@ -11,6 +11,9 @@ import net.mostlyoriginal.api.event.common.Event;
  */
 public record TileSelectionEvent(int x, int y, boolean selected) implements Event {
 
+    /**
+     * Creates a new event instance.
+     */
     public TileSelectionEvent {
         // explicit constructor for future validation
     }
