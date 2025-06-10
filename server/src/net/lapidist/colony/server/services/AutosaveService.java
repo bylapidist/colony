@@ -4,8 +4,8 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.core.events.Events;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.server.events.AutosaveEvent;
-import net.lapidist.colony.server.events.SaveEvent;
 import net.lapidist.colony.server.events.ShutdownSaveEvent;
+import net.mostlyoriginal.api.event.common.Event;
 import net.lapidist.colony.server.io.GameStateIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +70,7 @@ public final class AutosaveService {
         saveGameState(ShutdownSaveEvent::new, "Saved game state to {} ({} bytes) on shutdown");
     }
 
-    private void saveGameState(final java.util.function.BiFunction<Path, Long, SaveEvent> creator, final String log) {
+    private void saveGameState(final java.util.function.BiFunction<Path, Long, Event> creator, final String log) {
         MapState mapState = supplier.get();
         try {
             Path file = Paths.get().getAutosave(saveName);

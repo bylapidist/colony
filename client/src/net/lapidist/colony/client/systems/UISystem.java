@@ -24,8 +24,8 @@ public final class UISystem extends BaseSystem {
 
     @Subscribe
     private void onResize(final ResizeEvent event) {
-        viewport.update(event.getWidth(), event.getHeight(), true);
-        stage.getViewport().update(event.getWidth(), event.getHeight(), true);
+        viewport.update(event.width(), event.height(), true);
+        stage.getViewport().update(event.width(), event.height(), true);
     }
 
     @Override

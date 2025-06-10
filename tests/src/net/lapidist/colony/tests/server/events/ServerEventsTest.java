@@ -48,8 +48,8 @@ public class ServerEventsTest {
         Events.dispatch(new AutosaveEvent(file, TEST_SIZE));
         Events.update();
         assertTrue(handled);
-        assertEquals(file, received.getLocation());
-        assertEquals(TEST_SIZE, received.getSize());
+        assertEquals(file, received.location());
+        assertEquals(TEST_SIZE, received.size());
     }
 
     @Test
@@ -59,8 +59,8 @@ public class ServerEventsTest {
         Events.dispatch(new ShutdownSaveEvent(file, TEST_SIZE));
         Events.update();
         assertTrue(handled);
-        assertEquals(file, shutdownReceived.getLocation());
-        assertEquals(TEST_SIZE, shutdownReceived.getSize());
+        assertEquals(file, shutdownReceived.location());
+        assertEquals(TEST_SIZE, shutdownReceived.size());
     }
 
     @Test

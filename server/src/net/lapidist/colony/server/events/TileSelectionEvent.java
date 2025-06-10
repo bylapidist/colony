@@ -1,32 +1,24 @@
 package net.lapidist.colony.server.events;
 
-import net.lapidist.colony.core.events.AbstractDataEvent;
+import net.mostlyoriginal.api.event.common.Event;
 
-public final class TileSelectionEvent extends AbstractDataEvent {
-    private final int x;
-    private final int y;
-    private final boolean selected;
+/**
+ * Event fired when a tile selection state changes.
+ */
+public record TileSelectionEvent(int x, int y, boolean selected) implements Event {
 
-    public TileSelectionEvent(final int xToSet, final int yToSet, final boolean selectedToSet) {
-        this.x = xToSet;
-        this.y = yToSet;
-        this.selected = selectedToSet;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public boolean isSelected() {
-        return selected;
+    public TileSelectionEvent {
+        // explicit constructor for future validation
     }
 
     @Override
     public String toString() {
-        return format("x", x, "y", y, "selected", selected);
+        return String.format(
+                "%s(x=%d, y=%d, selected=%s)",
+                getClass().getSimpleName(),
+                x,
+                y,
+                selected
+        );
     }
 }

@@ -60,8 +60,8 @@ public class GameServerSaveTest {
         Path saveFile = Paths.get().getAutosave("save-test");
         assertTrue(Files.exists(saveFile));
         assertTrue(lastEvent != null);
-        assertTrue(saveFile.equals(lastEvent.getLocation()));
-        assertTrue(lastEvent.getSize() > 0);
+        assertTrue(saveFile.equals(lastEvent.location()));
+        assertTrue(lastEvent.size() > 0);
 
         server.stop();
     }
@@ -81,8 +81,8 @@ public class GameServerSaveTest {
         Path saveFile = Paths.get().getAutosave("save-test");
         assertTrue(Files.exists(saveFile));
         assertTrue(shutdownEvent != null);
-        assertTrue(saveFile.equals(shutdownEvent.getLocation()));
-        assertTrue(shutdownEvent.getSize() > 0);
+        assertTrue(saveFile.equals(shutdownEvent.location()));
+        assertTrue(shutdownEvent.size() > 0);
     }
 
     @Test
