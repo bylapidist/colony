@@ -57,25 +57,7 @@ public final class MapWorldBuilder {
             final KeyBindings keyBindings,
             final ResourceData playerResources
     ) {
-        CameraInputSystem cameraInputSystem = new CameraInputSystem(keyBindings);
-        cameraInputSystem.addProcessor(stage);
-        SelectionSystem selectionSystem = new SelectionSystem(client, keyBindings);
-        BuildPlacementSystem buildPlacementSystem = new BuildPlacementSystem(client);
-
-        return new WorldConfigurationBuilder()
-                .with(
-                        new EventSystem(),
-                        new ClearScreenSystem(Color.BLACK),
-                        cameraInputSystem,
-                        selectionSystem,
-                        buildPlacementSystem,
-                        new PlayerInitSystem(playerResources),
-                        new TileUpdateSystem(client),
-                        new BuildingUpdateSystem(client),
-                        new ResourceUpdateSystem(client),
-                        new MapRenderSystem(new MapRendererFactory()),
-                        new UISystem(stage)
-                );
+        return createBuilder(client, stage, keyBindings, null, playerResources);
     }
 
     /**
@@ -93,11 +75,7 @@ public final class MapWorldBuilder {
             final Stage stage,
             final KeyBindings keyBindings
     ) {
-        return baseBuilder(client, stage, keyBindings, new ResourceData())
-                .with(
-                        new MapInitSystem(provider),
-                        new PlayerCameraSystem()
-                );
+        return createBuilder(client, stage, keyBindings, provider, new ResourceData());
     }
 
     /**
@@ -109,11 +87,50 @@ public final class MapWorldBuilder {
             final Stage stage,
             final KeyBindings keyBindings
     ) {
-        return baseBuilder(client, stage, keyBindings, state.playerResources())
+        return createBuilder(
+                client,
+                stage,
+                keyBindings,
+                new ProvidedMapStateProvider(state),
+                state.playerResources()
+        );
+    }
+
+    private static WorldConfigurationBuilder createBuilder(
+            final GameClient client,
+            final Stage stage,
+            final KeyBindings keyBindings,
+            final MapStateProvider provider,
+            final ResourceData playerResources
+    ) {
+        CameraInputSystem cameraInputSystem = new CameraInputSystem(keyBindings);
+        cameraInputSystem.addProcessor(stage);
+        SelectionSystem selectionSystem = new SelectionSystem(client, keyBindings);
+        BuildPlacementSystem buildPlacementSystem = new BuildPlacementSystem(client);
+
+        WorldConfigurationBuilder builder = new WorldConfigurationBuilder()
                 .with(
-                        new MapInitSystem(new ProvidedMapStateProvider(state)),
-                        new PlayerCameraSystem()
+                        new EventSystem(),
+                        new ClearScreenSystem(Color.BLACK),
+                        cameraInputSystem,
+                        selectionSystem,
+                        buildPlacementSystem,
+                        new PlayerInitSystem(playerResources),
+                        new TileUpdateSystem(client),
+                        new BuildingUpdateSystem(client),
+                        new ResourceUpdateSystem(client),
+                        new MapRenderSystem(new MapRendererFactory()),
+                        new UISystem(stage)
                 );
+
+        if (provider != null) {
+            builder.with(
+                    new MapInitSystem(provider),
+                    new PlayerCameraSystem()
+            );
+        }
+
+        return builder;
     }
 
     /**
