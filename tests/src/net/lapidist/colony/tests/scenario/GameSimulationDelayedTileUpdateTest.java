@@ -51,7 +51,7 @@ public class GameSimulationDelayedTileUpdateTest {
             Vector2 screen = CameraUtils.worldToScreenCoords(
                     sim.getCamera().getViewport(), 0, 0
             );
-            sim.getInput().tap(screen.x, screen.y, 1, 0);
+            sim.getSelection().tap(screen.x, screen.y);
 
             // Check immediately after tap - tile should not be selected yet
             TileComponent tile = findTile(sim);
