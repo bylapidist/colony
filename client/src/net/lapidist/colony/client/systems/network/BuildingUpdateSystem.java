@@ -30,7 +30,7 @@ public final class BuildingUpdateSystem extends BaseSystem {
         }
 
         BuildingData update;
-        while ((update = client.pollBuildingUpdate()) != null) {
+        while ((update = client.poll(BuildingData.class)) != null) {
             world.createEntity();
             map.addEntity(BuildingFactory.create(
                     world,

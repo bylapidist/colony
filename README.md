@@ -65,7 +65,7 @@ The code mirrors this flow with clearly named methods:
 
 - Clients call `sendTileSelectionRequest` to issue actions.
 - The server uses `broadcast` to relay updates to all clients.
-- Each client processes queued updates via `pollTileSelectionUpdate` inside its update systems.
+- Each client processes queued updates via `poll(TileSelectionData.class)` inside its update systems.
 
 ## Development Guidelines
 ### Code Style

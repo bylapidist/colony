@@ -43,7 +43,7 @@ public final class ResourceUpdateSystem extends BaseSystem {
             }
         }
         ResourceUpdateData update;
-        while ((update = client.pollResourceUpdate()) != null) {
+        while ((update = client.poll(ResourceUpdateData.class)) != null) {
             final ResourceUpdateData data = update;
             MapUtils.findTile(mapComponent, data.x(), data.y(), tileMapper)
                     .ifPresent(tile -> {

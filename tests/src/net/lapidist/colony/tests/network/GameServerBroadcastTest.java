@@ -38,7 +38,7 @@ public class GameServerBroadcastTest {
 
         Thread.sleep(WAIT_MS);
 
-        TileSelectionData update = clientB.pollTileSelectionUpdate();
+        TileSelectionData update = clientB.poll(TileSelectionData.class);
         assertNotNull(update);
         assertEquals(data.selected(), update.selected());
         assertEquals(data.x(), update.x());

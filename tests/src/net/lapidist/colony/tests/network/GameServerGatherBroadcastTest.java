@@ -40,7 +40,7 @@ public class GameServerGatherBroadcastTest {
 
         Thread.sleep(WAIT_MS);
 
-        ResourceUpdateData update = clientB.pollResourceUpdate();
+        ResourceUpdateData update = clientB.poll(ResourceUpdateData.class);
         assertNotNull(update);
         assertEquals(0, update.x());
         assertEquals(0, update.y());

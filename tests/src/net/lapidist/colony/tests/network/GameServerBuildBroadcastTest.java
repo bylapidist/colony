@@ -40,7 +40,7 @@ public class GameServerBuildBroadcastTest {
 
         Thread.sleep(WAIT_MS);
 
-        BuildingData update = clientB.pollBuildingUpdate();
+        BuildingData update = clientB.poll(BuildingData.class);
         assertNotNull(update);
         assertEquals(data.x(), update.x());
         assertEquals(data.y(), update.y());

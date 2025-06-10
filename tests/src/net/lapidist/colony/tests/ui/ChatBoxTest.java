@@ -21,7 +21,7 @@ public class ChatBoxTest {
     @Test
     public void pollsClientMessagesIntoLog() throws Exception {
         GameClient client = mock(GameClient.class);
-        when(client.pollChatMessage()).thenReturn(new ChatMessage(1, "hi"), null);
+        when(client.poll(ChatMessage.class)).thenReturn(new ChatMessage(1, "hi"), null);
 
         Skin skin = new Skin(Gdx.files.internal("skin/default.json"));
         ChatBox box = new ChatBox(skin, client);
