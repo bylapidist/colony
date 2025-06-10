@@ -31,6 +31,9 @@ jobs:
         ./gradlew tests:copyAssets
         ./gradlew clean codeCoverageReport
 
+    - name: Verify coverage threshold
+      run: ./gradlew jacocoTestCoverageVerification
+
     - name: Run style checks
       run: ./gradlew check
 

@@ -164,6 +164,35 @@ tasks.register('codeCoverageReport', JacocoReport) {
     }
 }
 
+tasks.named('jacocoTestCoverageVerification', JacocoCoverageVerification) {
+    dependsOn subprojects.collect { it.tasks.withType(Test) }
+
+    def coverageFiles = subprojects.collect { proj ->
+        proj.tasks.withType(Test).collect {
+            it.extensions.getByType(JacocoTaskExtension).destinationFile
+        }
+    }
+    executionData.setFrom(files(coverageFiles))
+
+    def sources = subprojects.collect { it.sourceSets.main.allSource.srcDirs }
+    sourceDirectories.setFrom(files(sources))
+
+    def classes = subprojects.collect { it.sourceSets.main.output }
+    classDirectories.setFrom(files(classes).collect {
+        fileTree(dir: it, exclude: ['**/generated/**', '**/*Launcher*'])
+    })
+
+    violationRules {
+        rule {
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.80
+            }
+        }
+    }
+}
+
 tasks.register('aggregateJavadocs', Javadoc) {
     dependsOn subprojects.collect { it.tasks.javadoc }
     destinationDir = file("${buildDir}/docs/javadoc")
@@ -175,4 +204,5 @@ tasks.register('aggregateJavadocs', Javadoc) {
 
 tasks.named('check') {
     dependsOn 'aggregateJavadocs'
+    dependsOn 'jacocoTestCoverageVerification'
 }
