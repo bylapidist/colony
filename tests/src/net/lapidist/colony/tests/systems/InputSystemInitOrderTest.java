@@ -5,7 +5,8 @@ import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.client.network.GameClient;
-import net.lapidist.colony.client.systems.InputSystem;
+import net.lapidist.colony.client.systems.SelectionSystem;
+import net.lapidist.colony.client.systems.CameraInputSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.client.util.CameraUtils;
@@ -36,7 +37,8 @@ public class InputSystemInitOrderTest {
         GameClient client = mock(GameClient.class);
         World world = new World(new WorldConfigurationBuilder()
                 .with(
-                        new InputSystem(client, new net.lapidist.colony.settings.KeyBindings()),
+                        new SelectionSystem(client, new net.lapidist.colony.settings.KeyBindings()),
+                        new CameraInputSystem(new net.lapidist.colony.settings.KeyBindings()),
                         new MapLoadSystem(state),
                         new PlayerCameraSystem()
                 )
@@ -52,8 +54,8 @@ public class InputSystemInitOrderTest {
         float tapX = screenCoords.x;
         float tapY = screenCoords.y;
 
-        InputSystem input = world.getSystem(InputSystem.class);
-        input.tap(tapX, tapY, 1, 0);
+        SelectionSystem input = world.getSystem(SelectionSystem.class);
+        input.tap(tapX, tapY);
 
         verify(client).sendTileSelectionRequest(any());
     }

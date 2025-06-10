@@ -5,7 +5,8 @@ import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.client.network.GameClient;
-import net.lapidist.colony.client.systems.InputSystem;
+import net.lapidist.colony.client.systems.SelectionSystem;
+import net.lapidist.colony.client.systems.CameraInputSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.client.util.CameraUtils;
@@ -41,7 +42,8 @@ public class InputSystemGatherTest {
         GameClient client = mock(GameClient.class);
         World world = new World(new WorldConfigurationBuilder()
                 .with(new MapLoadSystem(state), new PlayerCameraSystem(),
-                        new InputSystem(client, new net.lapidist.colony.settings.KeyBindings()))
+                        new CameraInputSystem(new net.lapidist.colony.settings.KeyBindings()),
+                        new SelectionSystem(client, new net.lapidist.colony.settings.KeyBindings()))
                 .build());
 
         world.process();
@@ -51,8 +53,8 @@ public class InputSystemGatherTest {
         camera.getCamera().update();
 
         Vector2 screenCoords = CameraUtils.worldToScreenCoords(camera.getViewport(), 0, 0);
-        InputSystem input = world.getSystem(InputSystem.class);
-        input.tap(screenCoords.x, screenCoords.y, 1, 0);
+        SelectionSystem input = world.getSystem(SelectionSystem.class);
+        input.tap(screenCoords.x, screenCoords.y);
 
         verify(client).sendGatherRequest(any());
     }
