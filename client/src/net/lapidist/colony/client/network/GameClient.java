@@ -23,7 +23,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 
@@ -34,16 +36,24 @@ public final class GameClient extends AbstractMessageEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(GameClient.class);
     private final Client client = new Client(BUFFER_SIZE, BUFFER_SIZE);
     private MapState mapState;
-    private final Queue<TileSelectionData> tileUpdates = new ConcurrentLinkedQueue<>();
-    private final Queue<BuildingData> buildingUpdates = new ConcurrentLinkedQueue<>();
-    private final Queue<ChatMessage> chatMessages = new ConcurrentLinkedQueue<>();
-    private final Queue<ResourceUpdateData> resourceUpdates = new ConcurrentLinkedQueue<>();
+    private final Map<Class<?>, Queue<?>> messageQueues = new ConcurrentHashMap<>();
     private Iterable<MessageHandler<?>> handlers;
     private static final int CONNECT_TIMEOUT = 5000;
     private Consumer<MapState> readyCallback;
     private int playerId = -1;
 
+    private <T> Queue<T> registerQueue(final Class<T> type) {
+        Queue<T> queue = new ConcurrentLinkedQueue<>();
+        messageQueues.put(type, queue);
+        return queue;
+    }
+
     public GameClient() {
+        Queue<TileSelectionData> tileUpdates = registerQueue(TileSelectionData.class);
+        Queue<BuildingData> buildingUpdates = registerQueue(BuildingData.class);
+        Queue<ChatMessage> chatMessages = registerQueue(ChatMessage.class);
+        Queue<ResourceUpdateData> resourceUpdates = registerQueue(ResourceUpdateData.class);
+
         this.handlers = java.util.List.of(
                 new MapStateMessageHandler(state -> {
                     mapState = state;
@@ -52,10 +62,10 @@ public final class GameClient extends AbstractMessageEndpoint {
                         readyCallback.accept(state);
                     }
                 }),
-                new TileSelectionUpdateHandler(tileUpdates),
-                new BuildingUpdateHandler(buildingUpdates),
-                new ChatMessageHandler(chatMessages),
-                new ResourceUpdateHandler(resourceUpdates)
+                new TileSelectionUpdateHandler(messageQueues),
+                new BuildingUpdateHandler(messageQueues),
+                new ChatMessageHandler(messageQueues),
+                new ResourceUpdateHandler(messageQueues)
         );
     }
 
@@ -99,32 +109,25 @@ public final class GameClient extends AbstractMessageEndpoint {
         return playerId;
     }
 
-    public TileSelectionData pollTileSelectionUpdate() {
-        return tileUpdates.poll();
+    @SuppressWarnings("unchecked")
+    public <T> T poll(final Class<T> type) {
+        Queue<T> queue = (Queue<T>) messageQueues.get(type);
+        return queue != null ? queue.poll() : null;
     }
 
-    public BuildingData pollBuildingUpdate() {
-        return buildingUpdates.poll();
-    }
-
-    public ResourceUpdateData pollResourceUpdate() {
-        return resourceUpdates.poll();
-    }
-
-    public ChatMessage pollChatMessage() {
-        return chatMessages.poll();
-    }
-
+    @SuppressWarnings("unchecked")
     public void injectTileSelectionUpdate(final TileSelectionData data) {
-        tileUpdates.add(data);
+        ((Queue<TileSelectionData>) messageQueues.get(TileSelectionData.class)).add(data);
     }
 
+    @SuppressWarnings("unchecked")
     public void injectBuildingUpdate(final BuildingData data) {
-        buildingUpdates.add(data);
+        ((Queue<BuildingData>) messageQueues.get(BuildingData.class)).add(data);
     }
 
+    @SuppressWarnings("unchecked")
     public void injectResourceUpdate(final ResourceUpdateData data) {
-        resourceUpdates.add(data);
+        ((Queue<ResourceUpdateData>) messageQueues.get(ResourceUpdateData.class)).add(data);
     }
 
 

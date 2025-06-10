@@ -75,7 +75,7 @@ public final class ChatBox extends Table {
     public void act(final float delta) {
         super.act(delta);
         ChatMessage msg;
-        while ((msg = client.pollChatMessage()) != null) {
+        while ((msg = client.poll(ChatMessage.class)) != null) {
             addMessage(msg);
         }
     }

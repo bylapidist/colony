@@ -38,7 +38,7 @@ public class GameServerChatBroadcastTest {
         clientA.sendChatMessage(msg);
         Thread.sleep(WAIT_MS);
 
-        ChatMessage received = clientB.pollChatMessage();
+        ChatMessage received = clientB.poll(ChatMessage.class);
         assertNotNull(received);
         assertEquals(msg.text(), received.text());
 

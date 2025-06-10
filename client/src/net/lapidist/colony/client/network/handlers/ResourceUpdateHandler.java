@@ -3,19 +3,24 @@ package net.lapidist.colony.client.network.handlers;
 import net.lapidist.colony.components.state.ResourceUpdateData;
 import net.lapidist.colony.network.AbstractMessageHandler;
 
+import java.util.Map;
 import java.util.Queue;
 
 /** Queues resource updates received from the server. */
 public final class ResourceUpdateHandler extends AbstractMessageHandler<ResourceUpdateData> {
-    private final Queue<ResourceUpdateData> queue;
+    private final Map<Class<?>, Queue<?>> queues;
 
-    public ResourceUpdateHandler(final Queue<ResourceUpdateData> queueToUse) {
+    public ResourceUpdateHandler(final Map<Class<?>, Queue<?>> queuesToUse) {
         super(ResourceUpdateData.class);
-        this.queue = queueToUse;
+        this.queues = queuesToUse;
     }
 
     @Override
     public void handle(final ResourceUpdateData message) {
-        queue.add(message);
+        @SuppressWarnings("unchecked")
+        Queue<ResourceUpdateData> queue = (Queue<ResourceUpdateData>) queues.get(ResourceUpdateData.class);
+        if (queue != null) {
+            queue.add(message);
+        }
     }
 }

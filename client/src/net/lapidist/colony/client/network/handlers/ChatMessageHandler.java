@@ -3,21 +3,26 @@ package net.lapidist.colony.client.network.handlers;
 import net.lapidist.colony.chat.ChatMessage;
 import net.lapidist.colony.network.AbstractMessageHandler;
 
+import java.util.Map;
 import java.util.Queue;
 
 /**
  * Queues chat messages received from the server.
  */
 public final class ChatMessageHandler extends AbstractMessageHandler<ChatMessage> {
-    private final Queue<ChatMessage> queue;
+    private final Map<Class<?>, Queue<?>> queues;
 
-    public ChatMessageHandler(final Queue<ChatMessage> queueToUse) {
+    public ChatMessageHandler(final Map<Class<?>, Queue<?>> queuesToUse) {
         super(ChatMessage.class);
-        this.queue = queueToUse;
+        this.queues = queuesToUse;
     }
 
     @Override
     public void handle(final ChatMessage message) {
-        queue.add(message);
+        @SuppressWarnings("unchecked")
+        Queue<ChatMessage> queue = (Queue<ChatMessage>) queues.get(ChatMessage.class);
+        if (queue != null) {
+            queue.add(message);
+        }
     }
 }
