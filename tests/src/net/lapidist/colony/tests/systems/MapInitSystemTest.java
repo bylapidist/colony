@@ -12,11 +12,19 @@ import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.map.GeneratedMapStateProvider;
 import net.lapidist.colony.map.ProvidedMapStateProvider;
 import net.lapidist.colony.map.DefaultMapGenerator;
+import net.lapidist.colony.client.entities.factories.MapFactory;
+import net.lapidist.colony.components.maps.TileComponent;
+import net.lapidist.colony.components.resources.ResourceComponent;
+import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class MapInitSystemTest {
+
+    private static final int WOOD = 1;
+    private static final int STONE = 2;
+    private static final int FOOD = 3;
 
     @Test
     public void loadsProvidedStateIntoWorld() {
@@ -53,5 +61,32 @@ public class MapInitSystemTest {
                 .get(Aspect.all(MapComponent.class))
                 .getEntities();
         assertEquals(1, maps.size());
+    }
+
+    @Test
+    public void mapFactoryCreatesLogicalComponents() {
+        MapState state = new MapState();
+        state.tiles().put(new TilePos(0, 0), TileData.builder()
+                .x(0)
+                .y(0)
+                .tileType("GRASS")
+                .passable(true)
+                .resources(new net.lapidist.colony.components.state.ResourceData(WOOD, STONE, FOOD))
+                .build());
+
+        World world = new World(new WorldConfigurationBuilder().build());
+        var map = MapFactory.create(world, state).getComponent(MapComponent.class);
+        var tile = map.getTiles().get(0);
+
+        TileComponent tc = world.getMapper(TileComponent.class).get(tile);
+        ResourceComponent rc = world.getMapper(ResourceComponent.class).get(tile);
+        TextureRegionReferenceComponent tex =
+                world.getMapper(TextureRegionReferenceComponent.class).get(tile);
+
+        assertEquals(TileComponent.TileType.GRASS, tc.getTileType());
+        assertEquals(WOOD, rc.getWood());
+        assertEquals(STONE, rc.getStone());
+        assertEquals(FOOD, rc.getFood());
+        assertEquals(null, tex);
     }
 }

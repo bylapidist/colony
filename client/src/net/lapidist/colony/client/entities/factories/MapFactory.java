@@ -2,17 +2,16 @@ package net.lapidist.colony.client.entities.factories;
 
 import com.artemis.Entity;
 import com.artemis.World;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
+import net.lapidist.colony.components.resources.ResourceComponent;
 import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
-import net.lapidist.colony.client.renderers.AssetResolver;
-import net.lapidist.colony.client.renderers.DefaultAssetResolver;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,14 +31,6 @@ public final class MapFactory {
      * @return the created map entity containing a {@link MapComponent}
      */
     public static Entity create(final World world, final MapState state) {
-        return create(world, state, new DefaultAssetResolver());
-    }
-
-    public static Entity create(
-            final World world,
-            final MapState state,
-            final AssetResolver resolver
-    ) {
         Entity map = world.createEntity();
         MapComponent mapComponent = new MapComponent();
         Array<Entity> tiles = new Array<>();
@@ -48,29 +39,39 @@ public final class MapFactory {
 
         for (Map.Entry<TilePos, TileData> entry : state.tiles().entrySet()) {
             TileData td = entry.getValue();
-            String texture = resolver.tileAsset(TileComponent.TileType.valueOf(td.tileType()));
-            Entity tile = TileFactory.create(
-                    world,
-                    TileComponent.TileType.valueOf(td.tileType()),
-                    texture,
-                    new Vector2(td.x(), td.y()),
-                    td.passable(),
-                    td.selected(),
-                    td.resources()
-            );
+            Entity tile = world.createEntity();
+            TileComponent tileComponent = new TileComponent();
+            tileComponent.setTileType(TileComponent.TileType.valueOf(td.tileType()));
+            tileComponent.setPassable(td.passable());
+            tileComponent.setSelected(td.selected());
+            tileComponent.setHeight(GameConstants.TILE_SIZE);
+            tileComponent.setWidth(GameConstants.TILE_SIZE);
+            tileComponent.setX(td.x());
+            tileComponent.setY(td.y());
+            tile.edit().add(tileComponent);
+
+            ResourceComponent rc = new ResourceComponent();
+            if (td.resources() != null) {
+                rc.setWood(td.resources().wood());
+                rc.setStone(td.resources().stone());
+                rc.setFood(td.resources().food());
+            }
+            tile.edit().add(rc);
+
             tiles.add(tile);
             tileMap.put(entry.getKey(), tile);
         }
 
         for (BuildingData bd : state.buildings()) {
-            String texture = resolver.buildingAsset(
-                    BuildingComponent.BuildingType.valueOf(bd.buildingType()));
-            entities.add(BuildingFactory.create(
-                    world,
-                    BuildingComponent.BuildingType.valueOf(bd.buildingType()),
-                    texture,
-                    new Vector2(bd.x(), bd.y())
-            ));
+            Entity building = world.createEntity();
+            BuildingComponent component = new BuildingComponent();
+            component.setBuildingType(BuildingComponent.BuildingType.valueOf(bd.buildingType()));
+            component.setHeight(GameConstants.TILE_SIZE);
+            component.setWidth(GameConstants.TILE_SIZE);
+            component.setX(bd.x());
+            component.setY(bd.y());
+            building.edit().add(component);
+            entities.add(building);
         }
 
         mapComponent.setTiles(tiles);
