@@ -44,34 +44,70 @@ public final class PlayerCameraSystem extends BaseSystem implements CameraProvid
             final float worldX,
             final float worldY
     ) {
-        return CameraUtils.worldToScreenCoords(viewport, worldX, worldY);
+        return CameraUtils.worldToScreenCoords(viewport, worldX, worldY, new Vector2());
+    }
+
+    public Vector2 cameraCoordsFromWorldCoords(
+            final float worldX,
+            final float worldY,
+            final Vector2 out
+    ) {
+        return CameraUtils.worldToScreenCoords(viewport, worldX, worldY, out);
     }
 
     public Vector2 worldCoordsFromCameraCoords(
             final float screenX,
             final float screenY
     ) {
-        return CameraUtils.screenToWorldCoords(viewport, screenX, screenY);
+        return CameraUtils.screenToWorldCoords(viewport, screenX, screenY, new Vector2());
+    }
+
+    public Vector2 worldCoordsFromCameraCoords(
+            final float screenX,
+            final float screenY,
+            final Vector2 out
+    ) {
+        return CameraUtils.screenToWorldCoords(viewport, screenX, screenY, out);
     }
 
     public Vector2 screenCoordsToWorldCoords(final float screenX, final float screenY) {
-        return CameraUtils.screenToWorldCoords(viewport, screenX, screenY);
+        return CameraUtils.screenToWorldCoords(viewport, screenX, screenY, new Vector2());
+    }
+
+    public Vector2 screenCoordsToWorldCoords(final float screenX, final float screenY, final Vector2 out) {
+        return CameraUtils.screenToWorldCoords(viewport, screenX, screenY, out);
     }
 
     public Vector2 tileCoordsToWorldCoords(final int x, final int y) {
-        return CameraUtils.tileCoordsToWorldCoords(x, y);
+        return CameraUtils.tileCoordsToWorldCoords(x, y, new Vector2());
     }
 
     public Vector2 tileCoordsToWorldCoords(final Vector2 coords) {
-        return CameraUtils.tileCoordsToWorldCoords(coords);
+        return CameraUtils.tileCoordsToWorldCoords(coords, new Vector2());
+    }
+
+    public Vector2 tileCoordsToWorldCoords(final int x, final int y, final Vector2 out) {
+        return CameraUtils.tileCoordsToWorldCoords(x, y, out);
+    }
+
+    public Vector2 tileCoordsToWorldCoords(final Vector2 coords, final Vector2 out) {
+        return CameraUtils.tileCoordsToWorldCoords(coords, out);
     }
 
     public Vector2 worldCoordsToTileCoords(final int x, final int y) {
-        return CameraUtils.worldCoordsToTileCoords(x, y);
+        return CameraUtils.worldCoordsToTileCoords(x, y, new Vector2());
     }
 
     public Vector2 worldCoordsToTileCoords(final Vector2 coords) {
-        return CameraUtils.worldCoordsToTileCoords(coords);
+        return CameraUtils.worldCoordsToTileCoords(coords, new Vector2());
+    }
+
+    public Vector2 worldCoordsToTileCoords(final int x, final int y, final Vector2 out) {
+        return CameraUtils.worldCoordsToTileCoords(x, y, out);
+    }
+
+    public Vector2 worldCoordsToTileCoords(final Vector2 coords, final Vector2 out) {
+        return CameraUtils.worldCoordsToTileCoords(coords, out);
     }
 
     @Override
