@@ -147,3 +147,4 @@ tests/i18n
 tests/skin
 tests/textures
 tests/textures/textures.atlas
+tests/models
