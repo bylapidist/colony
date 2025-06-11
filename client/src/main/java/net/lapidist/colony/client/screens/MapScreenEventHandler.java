@@ -6,7 +6,7 @@ import net.lapidist.colony.client.events.PauseEvent;
 import net.lapidist.colony.client.events.ResizeEvent;
 import net.lapidist.colony.client.events.ResumeEvent;
 import net.lapidist.colony.client.events.ShowEvent;
-import net.lapidist.colony.core.events.Events;
+import net.lapidist.colony.events.Events;
 
 /**
  * Handles lifecycle events for {@link MapScreen}.

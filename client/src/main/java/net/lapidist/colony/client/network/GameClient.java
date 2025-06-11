@@ -9,7 +9,7 @@ import net.lapidist.colony.components.state.BuildingPlacementData;
 import net.lapidist.colony.components.state.ResourceGatherRequestData;
 import net.lapidist.colony.components.state.ResourceUpdateData;
 import net.lapidist.colony.chat.ChatMessage;
-import net.lapidist.colony.core.serialization.KryoRegistry;
+import net.lapidist.colony.serialization.KryoRegistry;
 import net.lapidist.colony.network.AbstractMessageEndpoint;
 import net.lapidist.colony.network.DispatchListener;
 import net.lapidist.colony.network.MessageHandler;

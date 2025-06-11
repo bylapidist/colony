@@ -1,7 +1,6 @@
-package net.lapidist.colony.core.serialization;
+package net.lapidist.colony.serialization;
 
 import com.esotericsoftware.kryo.Kryo;
-import net.lapidist.colony.serialization.SerializationRegistrar;
 
 public final class KryoRegistry {
 
