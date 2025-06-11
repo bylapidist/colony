@@ -33,4 +33,20 @@ public class G3dResourceLoaderTest {
         ResourceLoader loader = new G3dResourceLoader();
         loader.loadModel(FileLocation.INTERNAL, "models/missing.g3dj");
     }
+
+    @Test
+    public void updateReturnsFalseWhenNotStarted() {
+        ResourceLoader loader = new G3dResourceLoader();
+
+        assertFalse(loader.update());
+        assertEquals(0f, loader.getProgress(), 0f);
+        assertNull(loader.findModel("nothing"));
+    }
+
+    @Test
+    public void findModelBeforeLoadingReturnsNull() {
+        ResourceLoader loader = new G3dResourceLoader();
+
+        assertNull(loader.findModel("models/cube.g3dj"));
+    }
 }

@@ -103,4 +103,26 @@ public class MapRendererFactoryTest {
         }
         world.dispose();
     }
+
+    @Test
+    public void createWithoutCallback() {
+        DummyLoader loader = new DummyLoader();
+        World world = new World(new WorldConfigurationBuilder()
+                .with(new PlayerCameraSystem())
+                .build());
+        try (MockedConstruction<SpriteBatch> ignored =
+                mockConstruction(SpriteBatch.class)) {
+            MapRendererFactory factory = new SpriteMapRendererFactory(
+                    loader,
+                    FileLocation.INTERNAL,
+                    "textures/textures.atlas"
+            );
+            MapRenderer renderer = factory.create(world);
+
+            assertNotNull(renderer);
+            assertTrue(loader.loaded);
+            assertTrue(loader.updated);
+        }
+        world.dispose();
+    }
 }

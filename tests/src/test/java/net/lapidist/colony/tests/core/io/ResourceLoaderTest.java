@@ -50,4 +50,14 @@ public class ResourceLoaderTest {
             assertTrue(texture.getAnisotropicFilter() >= 1f);
         }
     }
+
+    @Test
+    public void updateReturnsFalseWhenNotStarted() {
+        ResourceLoader loader = new TextureAtlasResourceLoader();
+
+        assertFalse(loader.update());
+        assertEquals(0f, loader.getProgress(), 0f);
+        assertFalse(loader.isLoaded());
+        assertNull(loader.findRegion("missing"));
+    }
 }
