@@ -1,7 +1,7 @@
 package net.lapidist.colony.client.systems;
 
 import com.artemis.BaseSystem;
-import net.lapidist.colony.render.MapRenderData;
+import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.renderers.MapRenderer;
 
 public final class MapRenderSystem extends BaseSystem {

@@ -9,7 +9,7 @@ import net.lapidist.colony.client.renderers.BuildingRenderer;
 import net.lapidist.colony.client.renderers.DefaultAssetResolver;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
-import net.lapidist.colony.render.data.RenderBuilding;
+import net.lapidist.colony.client.render.data.RenderBuilding;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;

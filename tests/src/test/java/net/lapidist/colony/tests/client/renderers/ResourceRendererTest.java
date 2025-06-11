@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.math.Vector3;
 import net.lapidist.colony.client.renderers.ResourceRenderer;
 import net.lapidist.colony.client.systems.CameraProvider;
-import net.lapidist.colony.render.data.RenderTile;
+import net.lapidist.colony.client.render.data.RenderTile;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;

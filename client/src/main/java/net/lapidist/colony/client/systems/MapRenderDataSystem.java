@@ -1,8 +1,8 @@
 package net.lapidist.colony.client.systems;
 
 import com.artemis.BaseSystem;
-import net.lapidist.colony.render.MapRenderData;
-import net.lapidist.colony.render.MapRenderDataBuilder;
+import net.lapidist.colony.client.render.MapRenderData;
+import net.lapidist.colony.client.render.MapRenderDataBuilder;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.map.MapUtils;
 

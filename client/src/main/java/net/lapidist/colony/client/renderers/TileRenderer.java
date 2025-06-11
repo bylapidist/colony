@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.util.CameraUtils;
-import net.lapidist.colony.render.data.RenderTile;
+import net.lapidist.colony.client.render.data.RenderTile;
 
 /**
  * Renders tile entities.
