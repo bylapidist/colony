@@ -19,8 +19,6 @@ test {
     testLogging {
         events "PASSED", "STARTED", "FAILED", "SKIPPED"
     }
-    systemProperty 'game.mapWidth', '30'
-    systemProperty 'game.mapHeight', '30'
 }
 
 tasks.register('copyAssets', Copy) {
