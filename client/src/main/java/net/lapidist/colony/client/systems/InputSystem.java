@@ -110,9 +110,13 @@ public final class InputSystem extends BaseSystem {
             for (int i = 0; i < selectedTiles.size; i++) {
                 var tile = selectedTiles.get(i);
                 TileComponent tc = tileMapper.get(tile);
-                ResourceGatherRequestData msg = new ResourceGatherRequestData(
-                        tc.getX(), tc.getY(), ResourceType.WOOD.name());
-                client.sendGatherRequest(msg);
+                var rc = resourceMapper.get(tile);
+                ResourceType type = getResourceType(rc);
+                if (type != null) {
+                    ResourceGatherRequestData msg = new ResourceGatherRequestData(
+                            tc.getX(), tc.getY(), type.name());
+                    client.sendGatherRequest(msg);
+                }
             }
         }
     }
@@ -136,9 +140,10 @@ public final class InputSystem extends BaseSystem {
                     .ifPresent(tile -> {
                         TileComponent tc = tileMapper.get(tile);
                         var rc = resourceMapper.get(tile);
-                        if (rc.getWood() > 0) {
+                        ResourceType type = getResourceType(rc);
+                        if (type != null) {
                             ResourceGatherRequestData msg = new ResourceGatherRequestData(
-                                    tc.getX(), tc.getY(), ResourceType.WOOD.name());
+                                    tc.getX(), tc.getY(), type.name());
                             client.sendGatherRequest(msg);
                         }
                     });
@@ -154,6 +159,17 @@ public final class InputSystem extends BaseSystem {
 
     public boolean zoom(final float initialDistance, final float distance) {
         return gestureHandler.zoom(initialDistance, distance);
+    }
+
+    private ResourceType getResourceType(final net.lapidist.colony.components.resources.ResourceComponent rc) {
+        if (rc.getWood() > 0) {
+            return ResourceType.WOOD;
+        } else if (rc.getStone() > 0) {
+            return ResourceType.STONE;
+        } else if (rc.getFood() > 0) {
+            return ResourceType.FOOD;
+        }
+        return null;
     }
 
     public void setBuildMode(final boolean mode) {
