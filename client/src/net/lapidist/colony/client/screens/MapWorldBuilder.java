@@ -5,12 +5,13 @@ import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import net.lapidist.colony.client.network.GameClient;
+import net.lapidist.colony.client.renderers.MapRendererFactory;
+import net.lapidist.colony.client.renderers.MapRenderer;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
 import net.lapidist.colony.client.systems.CameraInputSystem;
 import net.lapidist.colony.client.systems.SelectionSystem;
 import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.MapRenderSystem;
-import net.lapidist.colony.client.renderers.MapRendererFactory;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.UISystem;
 import net.lapidist.colony.client.systems.network.TileUpdateSystem;
@@ -119,7 +120,7 @@ public final class MapWorldBuilder {
                         new TileUpdateSystem(client),
                         new BuildingUpdateSystem(client),
                         new ResourceUpdateSystem(client),
-                        new MapRenderSystem(new MapRendererFactory()),
+                        new MapRenderSystem(),
                         new UISystem(stage)
                 );
 
@@ -141,6 +142,11 @@ public final class MapWorldBuilder {
      */
     public static World build(final WorldConfigurationBuilder builder) {
         World world = new World(builder.build());
+        MapRenderSystem renderSystem = world.getSystem(MapRenderSystem.class);
+        if (renderSystem != null) {
+            MapRenderer renderer = new MapRendererFactory().create(world);
+            renderSystem.setMapRenderer(renderer);
+        }
         Events.init(world.getSystem(EventSystem.class));
         return world;
     }

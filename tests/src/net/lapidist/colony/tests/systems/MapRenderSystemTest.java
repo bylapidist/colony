@@ -2,23 +2,13 @@ package net.lapidist.colony.tests.systems;
 
 import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
-import net.lapidist.colony.client.renderers.MapRendererFactory;
-import net.lapidist.colony.client.renderers.MapRenderers;
-import net.lapidist.colony.client.renderers.TileRenderer;
-import net.lapidist.colony.client.renderers.BuildingRenderer;
-import net.lapidist.colony.client.renderers.ResourceRenderer;
-import net.lapidist.colony.client.core.io.ResourceLoader;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import net.lapidist.colony.client.renderers.MapRenderer;
 import net.lapidist.colony.client.systems.MapRenderSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
-import net.lapidist.colony.components.maps.MapComponent;
-import net.lapidist.colony.components.maps.TileComponent;
-import net.lapidist.colony.components.entities.BuildingComponent;
-import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
 import net.lapidist.colony.map.ProvidedMapStateProvider;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
@@ -67,47 +57,7 @@ public class MapRenderSystemTest {
                 .build();
         state.tiles().put(new TilePos(0, 0), tile);
 
-        MapRendererFactory factory = Mockito.mock(MapRendererFactory.class);
-        Mockito.when(factory.create(Mockito.any())).thenAnswer(inv -> {
-            World w = (World) inv.getArguments()[0];
-            SpriteBatch batch = Mockito.mock(SpriteBatch.class);
-            ResourceLoader loader = Mockito.mock(ResourceLoader.class);
-            PlayerCameraSystem cameraSystem = w.getSystem(PlayerCameraSystem.class);
-            com.artemis.ComponentMapper<TileComponent> tileMapper = w.getMapper(TileComponent.class);
-            com.artemis.ComponentMapper<BuildingComponent> buildingMapper = w.getMapper(BuildingComponent.class);
-            com.artemis.ComponentMapper<TextureRegionReferenceComponent> textureMapper =
-                    w.getMapper(TextureRegionReferenceComponent.class);
-            TileRenderer tileRenderer = new TileRenderer(
-                    batch,
-                    loader,
-                    cameraSystem,
-                    tileMapper,
-                    textureMapper
-            );
-            BuildingRenderer buildingRenderer = new BuildingRenderer(
-                    batch,
-                    loader,
-                    cameraSystem,
-                    buildingMapper,
-                    textureMapper
-            );
-            ResourceRenderer resourceRenderer = new ResourceRenderer(
-                    batch,
-                    cameraSystem,
-                    tileMapper,
-                    w.getMapper(net.lapidist.colony.components.resources.ResourceComponent.class)
-            );
-            w.getMapper(MapComponent.class);
-            return new MapRenderers(
-                    batch,
-                    loader,
-                    tileRenderer,
-                    buildingRenderer,
-                    resourceRenderer
-            );
-        });
-
-        MapRenderSystem renderSystem = new MapRenderSystem(factory);
+        MapRenderSystem renderSystem = new MapRenderSystem();
 
         World world = new World(new WorldConfigurationBuilder()
                 .with(
@@ -116,6 +66,8 @@ public class MapRenderSystemTest {
                         new PlayerCameraSystem()
                 )
                 .build());
+
+        renderSystem.setMapRenderer(Mockito.mock(MapRenderer.class));
 
         world.setDelta(0f);
         world.process();
