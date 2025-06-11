@@ -5,8 +5,8 @@ controls the initial map size, autosave interval and server ports:
 
 ```hocon
 game {
-  mapWidth = 30
-  mapHeight = 30
+  mapWidth = 300
+  mapHeight = 300
   tileSize = 32
   autosaveInterval = 600000
   defaultSaveName = "autosave"
