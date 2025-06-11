@@ -1,4 +1,4 @@
 /**
  * Plain data objects consumed by client renderers.
  */
-package net.lapidist.colony.render.data;
+package net.lapidist.colony.client.render.data;
