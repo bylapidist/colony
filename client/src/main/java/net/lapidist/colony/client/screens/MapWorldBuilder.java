@@ -114,7 +114,7 @@ public final class MapWorldBuilder {
         CameraInputSystem cameraInputSystem = new CameraInputSystem(keyBindings);
         cameraInputSystem.addProcessor(stage);
         SelectionSystem selectionSystem = new SelectionSystem(client, keyBindings);
-        BuildPlacementSystem buildPlacementSystem = new BuildPlacementSystem(client);
+        BuildPlacementSystem buildPlacementSystem = new BuildPlacementSystem(client, keyBindings);
 
         WorldConfigurationBuilder builder = new WorldConfigurationBuilder()
                 .with(

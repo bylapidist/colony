@@ -42,13 +42,14 @@ public final class GameSimulation {
      */
     public GameSimulation(final MapState state, final GameClient clientToUse) {
         client = clientToUse;
+        var keys = new net.lapidist.colony.settings.KeyBindings();
         world = new World(new WorldConfigurationBuilder()
                 .with(
                         new MapLoadSystem(state),
                         new PlayerCameraSystem(),
-                        new CameraInputSystem(new net.lapidist.colony.settings.KeyBindings()),
-                        new SelectionSystem(client, new net.lapidist.colony.settings.KeyBindings()),
-                        new BuildPlacementSystem(client),
+                        new CameraInputSystem(keys),
+                        new SelectionSystem(client, keys),
+                        new BuildPlacementSystem(client, keys),
                         new net.lapidist.colony.client.systems.PlayerInitSystem(),
                         new TileUpdateSystem(client),
                         new BuildingUpdateSystem(client),
