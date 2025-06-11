@@ -27,7 +27,7 @@ public final class CameraInputSystem extends BaseSystem {
     }
 
     public void addProcessor(final InputProcessor processor) {
-        multiplexer.addProcessor(0, processor);
+        multiplexer.addProcessor(processor);
     }
 
     @Override

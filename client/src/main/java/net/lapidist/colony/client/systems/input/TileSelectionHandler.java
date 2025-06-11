@@ -57,6 +57,8 @@ public final class TileSelectionHandler {
                             newState
                     );
                     client.sendTileSelectionRequest(msg);
+                    tileComponent.setSelected(newState);
+                    map.incrementVersion();
                     if (newState) {
                         if (!selectedTiles.contains(tile, true)) {
                             selectedTiles.add(tile);

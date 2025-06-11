@@ -19,7 +19,6 @@ import org.junit.runner.RunWith;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -53,9 +52,9 @@ public class GameSimulationDelayedTileUpdateTest {
             );
             sim.getSelection().tap(screen.x, screen.y);
 
-            // Check immediately after tap - tile should not be selected yet
+            // Selection should apply immediately
             TileComponent tile = findTile(sim);
-            assertFalse(tile.isSelected());
+            assertTrue(tile.isSelected());
 
             // Wait for server broadcast then process queued update
             Thread.sleep(WAIT_MS);
