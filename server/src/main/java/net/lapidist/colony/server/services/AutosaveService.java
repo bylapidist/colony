@@ -1,7 +1,7 @@
 package net.lapidist.colony.server.services;
 
 import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.core.events.Events;
+import net.lapidist.colony.events.Events;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.server.events.AutosaveEvent;
 import net.lapidist.colony.server.events.ShutdownSaveEvent;

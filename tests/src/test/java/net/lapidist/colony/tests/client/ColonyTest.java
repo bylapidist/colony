@@ -6,7 +6,7 @@ import net.lapidist.colony.client.screens.MainMenuScreen;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.tests.GdxTestRunner;
 import net.lapidist.colony.client.events.GameInitEvent;
-import net.lapidist.colony.core.events.Events;
+import net.lapidist.colony.events.Events;
 import net.mostlyoriginal.api.event.common.EventSystem;
 import net.mostlyoriginal.api.event.common.Subscribe;
 import net.lapidist.colony.settings.Settings;

@@ -5,7 +5,7 @@ import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
-import net.lapidist.colony.core.events.Events;
+import net.lapidist.colony.events.Events;
 import net.lapidist.colony.server.events.TileSelectionEvent;
 import net.mostlyoriginal.api.event.common.Subscribe;
 import org.junit.Test;

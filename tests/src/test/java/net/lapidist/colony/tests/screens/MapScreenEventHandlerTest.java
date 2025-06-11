@@ -2,7 +2,7 @@ package net.lapidist.colony.tests.screens;
 
 import net.lapidist.colony.client.events.*;
 import net.lapidist.colony.client.screens.MapScreenEventHandler;
-import net.lapidist.colony.core.events.Events;
+import net.lapidist.colony.events.Events;
 import net.lapidist.colony.tests.GdxTestRunner;
 import net.mostlyoriginal.api.event.common.EventSystem;
 import net.mostlyoriginal.api.event.common.Subscribe;

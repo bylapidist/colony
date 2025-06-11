@@ -1,4 +1,4 @@
-package net.lapidist.colony.core.events;
+package net.lapidist.colony.events;
 
 import net.mostlyoriginal.api.event.common.Event;
 

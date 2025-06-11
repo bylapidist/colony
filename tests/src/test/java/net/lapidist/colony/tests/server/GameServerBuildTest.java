@@ -4,7 +4,7 @@ import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.state.BuildingPlacementData;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
-import net.lapidist.colony.core.events.Events;
+import net.lapidist.colony.events.Events;
 import net.lapidist.colony.server.events.BuildingPlacedEvent;
 import net.mostlyoriginal.api.event.common.Subscribe;
 import org.junit.Test;

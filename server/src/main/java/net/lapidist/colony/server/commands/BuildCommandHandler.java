@@ -4,7 +4,7 @@ import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
-import net.lapidist.colony.core.events.Events;
+import net.lapidist.colony.events.Events;
 import net.lapidist.colony.server.events.BuildingPlacedEvent;
 import net.lapidist.colony.server.services.NetworkService;
 

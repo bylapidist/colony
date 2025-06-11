@@ -28,7 +28,7 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.map.MapStateProvider;
 import net.lapidist.colony.map.ProvidedMapStateProvider;
-import net.lapidist.colony.core.events.Events;
+import net.lapidist.colony.events.Events;
 import net.lapidist.colony.settings.KeyBindings;
 import net.mostlyoriginal.api.event.common.EventSystem;
 
