@@ -1,8 +1,8 @@
 package net.lapidist.colony.client.systems;
 
 import com.artemis.BaseSystem;
-import net.lapidist.colony.client.render.MapRenderData;
-import net.lapidist.colony.client.render.MapRenderDataBuilder;
+import net.lapidist.colony.render.MapRenderData;
+import net.lapidist.colony.render.MapRenderDataBuilder;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.map.MapUtils;
 
@@ -11,6 +11,8 @@ import net.lapidist.colony.map.MapUtils;
  */
 public final class MapRenderDataSystem extends BaseSystem {
     private MapRenderData renderData;
+    private MapComponent map;
+    private int lastVersion;
 
     public MapRenderData getRenderData() {
         return renderData;
@@ -18,14 +20,24 @@ public final class MapRenderDataSystem extends BaseSystem {
 
     @Override
     public void initialize() {
-        MapComponent map = MapUtils.findMap(world).orElse(null);
+        map = MapUtils.findMap(world).orElse(null);
         if (map != null) {
             renderData = MapRenderDataBuilder.fromMap(map, world);
+            lastVersion = map.getVersion();
         }
     }
 
     @Override
     protected void processSystem() {
-        // Future: update render data when map changes
+        if (map == null) {
+            map = MapUtils.findMap(world).orElse(null);
+            if (map == null) {
+                return;
+            }
+        }
+        if (map.getVersion() != lastVersion) {
+            renderData = MapRenderDataBuilder.fromMap(map, world);
+            lastVersion = map.getVersion();
+        }
     }
 }

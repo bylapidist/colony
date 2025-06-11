@@ -1,6 +1,6 @@
 package net.lapidist.colony.tests.client.render.data;
 
-import net.lapidist.colony.client.render.data.RenderBuilding;
+import net.lapidist.colony.render.data.RenderBuilding;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

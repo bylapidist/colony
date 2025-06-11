@@ -8,6 +8,9 @@ import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.renderers.MapRendererFactory;
 import net.lapidist.colony.client.renderers.MapRenderer;
 import net.lapidist.colony.client.renderers.SpriteMapRendererFactory;
+import net.lapidist.colony.client.renderers.ModelBatchMapRendererFactory;
+import net.lapidist.colony.client.systems.PerspectiveCameraSystem;
+import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
 import net.lapidist.colony.client.systems.CameraInputSystem;
 import net.lapidist.colony.client.systems.SelectionSystem;
@@ -41,7 +44,8 @@ public final class MapWorldBuilder {
      * Create a base {@link WorldConfigurationBuilder} containing the default
      * systems for the map screen except the map initialization system. Tests can
      * customise the returned builder before calling
-     * {@link #build(WorldConfigurationBuilder, MapRendererFactory)}.
+     * the {@code build} method with a {@link MapRendererFactory} and
+     * {@link net.lapidist.colony.settings.Settings}.
      *
      * @param client game client for network updates
      * @param stage  stage used by the UI system
@@ -130,8 +134,7 @@ public final class MapWorldBuilder {
         if (provider != null) {
             builder.with(
                     new MapInitSystem(provider),
-                    new MapRenderDataSystem(),
-                    new PlayerCameraSystem()
+                    new MapRenderDataSystem()
             );
         }
 
@@ -145,13 +148,36 @@ public final class MapWorldBuilder {
      * @param factory optional factory for creating the map renderer
      * @return configured world instance
      */
-    public static World build(final WorldConfigurationBuilder builder, final MapRendererFactory factory) {
+    public static World build(
+            final WorldConfigurationBuilder builder,
+            final MapRendererFactory factory,
+            final Settings settings
+    ) {
+        MapRendererFactory actualFactory = factory;
+        if (actualFactory == null) {
+            String type = settings != null
+                    ? settings.getGraphicsSettings().getRenderer()
+                    : "sprite";
+            actualFactory = "model".equals(type)
+                    ? new ModelBatchMapRendererFactory()
+                    : new SpriteMapRendererFactory();
+        }
+        if (actualFactory instanceof ModelBatchMapRendererFactory) {
+            builder.with(new PerspectiveCameraSystem());
+        } else {
+            builder.with(new PlayerCameraSystem());
+        }
+
         World world = new World(builder.build());
         MapRenderSystem renderSystem = world.getSystem(MapRenderSystem.class);
         if (renderSystem != null) {
-            MapRendererFactory actualFactory = factory != null ? factory : new SpriteMapRendererFactory();
             MapRenderer renderer = actualFactory.create(world);
             renderSystem.setMapRenderer(renderer);
+            if (actualFactory instanceof ModelBatchMapRendererFactory) {
+                renderSystem.setCameraProvider(world.getSystem(PerspectiveCameraSystem.class));
+            } else {
+                renderSystem.setCameraProvider(world.getSystem(PlayerCameraSystem.class));
+            }
         }
         Events.init(world.getSystem(EventSystem.class));
         return world;

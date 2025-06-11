@@ -39,8 +39,8 @@ final class ViewportOverlayRenderer implements Disposable {
             return;
         }
         Rectangle view = CameraUtils.getViewBounds(
-                cameraSystem.getCamera(),
-                cameraSystem.getViewport(),
+                (com.badlogic.gdx.graphics.OrthographicCamera) cameraSystem.getCamera(),
+                (com.badlogic.gdx.utils.viewport.ExtendViewport) cameraSystem.getViewport(),
                 new Rectangle()
         );
         Vector2 bottomLeft = new Vector2(view.x, view.y);

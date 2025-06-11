@@ -49,9 +49,9 @@ public class MapWorldBuilderConfigurationTest {
         KeyBindings keys = new KeyBindings();
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             World world = MapWorldBuilder.build(
-                    MapWorldBuilder.baseBuilder(client, stage, keys)
-                            .with(new PlayerCameraSystem()),
-                    null
+                    MapWorldBuilder.baseBuilder(client, stage, keys),
+                    null,
+                    new net.lapidist.colony.settings.Settings()
             );
 
             assertNotNull(world.getSystem(CameraInputSystem.class));
@@ -81,7 +81,8 @@ public class MapWorldBuilderConfigurationTest {
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             World world = MapWorldBuilder.build(
                     MapWorldBuilder.builder(new ProvidedMapStateProvider(state), client, stage, keys),
-                    null
+                    null,
+                    new net.lapidist.colony.settings.Settings()
             );
             world.process();
 
@@ -111,7 +112,8 @@ public class MapWorldBuilderConfigurationTest {
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             World world = MapWorldBuilder.build(
                     MapWorldBuilder.builder(state, client, stage, keys),
-                    null
+                    null,
+                    new net.lapidist.colony.settings.Settings()
             );
             world.process();
 

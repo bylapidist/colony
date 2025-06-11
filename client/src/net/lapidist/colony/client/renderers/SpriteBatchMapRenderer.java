@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
-import net.lapidist.colony.client.render.MapRenderData;
+import net.lapidist.colony.render.MapRenderData;
 
 /**
  * SpriteBatch backed implementation of {@link MapRenderer}.

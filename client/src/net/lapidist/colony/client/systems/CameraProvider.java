@@ -1,15 +1,15 @@
 package net.lapidist.colony.client.systems;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
  * Provides access to the game camera and viewport for rendering systems.
  */
 public interface CameraProvider {
-    /** Returns the active orthographic camera. */
-    OrthographicCamera getCamera();
+    /** Returns the active camera. */
+    Camera getCamera();
 
     /** Returns the viewport associated with the camera. */
-    ExtendViewport getViewport();
+    Viewport getViewport();
 }

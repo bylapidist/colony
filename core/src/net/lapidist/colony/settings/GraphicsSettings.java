@@ -11,11 +11,13 @@ public final class GraphicsSettings {
     private static final String MIP_KEY = PREFIX + "mipmaps";
     private static final String AF_KEY = PREFIX + "anisotropic";
     private static final String SHADER_KEY = PREFIX + "shaders";
+    private static final String RENDERER_KEY = PREFIX + "renderer";
 
     private boolean antialiasingEnabled;
     private boolean mipMapsEnabled;
     private boolean anisotropicFilteringEnabled;
     private boolean shadersEnabled;
+    private String renderer = "sprite";
 
     public boolean isAntialiasingEnabled() {
         return antialiasingEnabled;
@@ -49,6 +51,14 @@ public final class GraphicsSettings {
         this.shadersEnabled = enabled;
     }
 
+    public String getRenderer() {
+        return renderer;
+    }
+
+    public void setRenderer(final String rendererToSet) {
+        this.renderer = rendererToSet;
+    }
+
     /** Load graphics settings from the given preferences. */
     public static GraphicsSettings load(final Preferences prefs) {
         GraphicsSettings gs = new GraphicsSettings();
@@ -56,6 +66,7 @@ public final class GraphicsSettings {
         gs.mipMapsEnabled = prefs.getBoolean(MIP_KEY, false);
         gs.anisotropicFilteringEnabled = prefs.getBoolean(AF_KEY, false);
         gs.shadersEnabled = prefs.getBoolean(SHADER_KEY, false);
+        gs.renderer = prefs.getString(RENDERER_KEY, "sprite");
         return gs;
     }
 
@@ -65,5 +76,6 @@ public final class GraphicsSettings {
         prefs.putBoolean(MIP_KEY, mipMapsEnabled);
         prefs.putBoolean(AF_KEY, anisotropicFilteringEnabled);
         prefs.putBoolean(SHADER_KEY, shadersEnabled);
+        prefs.putString(RENDERER_KEY, renderer);
     }
 }

@@ -19,27 +19,30 @@ public final class GestureInputHandler {
     }
 
     public boolean scrolled(final float amountX, final float amountY) {
-        final float zoom = cameraSystem.getCamera().zoom + amountY * ZOOM_SPEED;
-        cameraSystem.getCamera().zoom = MathUtils.clamp(zoom, MIN_ZOOM, MAX_ZOOM);
-        cameraSystem.getCamera().update();
+        var cam = (com.badlogic.gdx.graphics.OrthographicCamera) cameraSystem.getCamera();
+        final float zoom = cam.zoom + amountY * ZOOM_SPEED;
+        cam.zoom = MathUtils.clamp(zoom, MIN_ZOOM, MAX_ZOOM);
+        cam.update();
         return true;
     }
 
     public boolean pan(final float deltaX, final float deltaY) {
-        cameraSystem.getCamera().translate(
-                -deltaX * cameraSystem.getCamera().zoom,
-                deltaY * cameraSystem.getCamera().zoom,
+        var cam = (com.badlogic.gdx.graphics.OrthographicCamera) cameraSystem.getCamera();
+        cam.translate(
+                -deltaX * cam.zoom,
+                deltaY * cam.zoom,
                 0
         );
-        cameraSystem.getCamera().update();
+        cam.update();
         return true;
     }
 
     public boolean zoom(final float initialDistance, final float distance) {
+        var cam = (com.badlogic.gdx.graphics.OrthographicCamera) cameraSystem.getCamera();
         final float ratio = initialDistance / distance;
-        final float zoom = cameraSystem.getCamera().zoom * ratio;
-        cameraSystem.getCamera().zoom = MathUtils.clamp(zoom, MIN_ZOOM, MAX_ZOOM);
-        cameraSystem.getCamera().update();
+        final float zoom = cam.zoom * ratio;
+        cam.zoom = MathUtils.clamp(zoom, MIN_ZOOM, MAX_ZOOM);
+        cam.update();
         return true;
     }
 }

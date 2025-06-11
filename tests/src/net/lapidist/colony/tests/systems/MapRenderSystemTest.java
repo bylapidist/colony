@@ -70,6 +70,7 @@ public class MapRenderSystemTest {
                 .build());
 
         renderSystem.setMapRenderer(Mockito.mock(MapRenderer.class));
+        renderSystem.setCameraProvider(world.getSystem(PlayerCameraSystem.class));
 
         world.setDelta(0f);
         world.process();

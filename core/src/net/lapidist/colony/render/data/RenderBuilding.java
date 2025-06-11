@@ -1,4 +1,4 @@
-package net.lapidist.colony.client.render.data;
+package net.lapidist.colony.render.data;
 
 /** Render data object for a building. */
 public final class RenderBuilding {
