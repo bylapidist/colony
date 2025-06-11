@@ -1,23 +1,24 @@
 package net.lapidist.colony.components.entities;
 
 import net.lapidist.colony.components.AbstractBoundedComponent;
+import net.lapidist.colony.i18n.I18n;
 
 public class BuildingComponent extends AbstractBoundedComponent {
 
     public enum BuildingType {
-        HOUSE("House"),
-        MARKET("Market"),
-        FACTORY("Factory");
+        HOUSE("building.house"),
+        MARKET("building.market"),
+        FACTORY("building.factory");
 
-        private final String type;
+        private final String key;
 
-        BuildingType(final String typeToSet) {
-            this.type = typeToSet;
+        BuildingType(final String keyToSet) {
+            this.key = keyToSet;
         }
 
         @Override
         public String toString() {
-            return type;
+            return I18n.get(key);
         }
     }
     private BuildingType buildingType;
