@@ -96,7 +96,7 @@ public class GameServerSaveTest {
         TilePos pos = new TilePos(0, 0);
         TileData modified = first.getMapState().tiles().get(pos)
                 .toBuilder()
-                .textureRef("changed")
+                .selected(true)
                 .build();
         first.getMapState().tiles().put(pos, modified);
         GameStateIO.save(first.getMapState(), Paths.get().getAutosave("save-test"));
@@ -104,9 +104,9 @@ public class GameServerSaveTest {
 
         GameServer second = new GameServer(cfg);
         second.start();
-        String loaded = second.getMapState().tiles().get(new TilePos(0, 0)).textureRef();
+        boolean loaded = second.getMapState().tiles().get(new TilePos(0, 0)).selected();
         second.stop();
 
-        assertTrue("changed".equals(loaded));
+        assertTrue(loaded);
     }
 }

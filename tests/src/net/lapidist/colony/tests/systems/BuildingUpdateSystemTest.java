@@ -30,7 +30,6 @@ public class BuildingUpdateSystemTest {
                 .x(0)
                 .y(0)
                 .tileType("GRASS")
-                .textureRef("grass0")
                 .passable(true)
                 .build();
         state.tiles().put(new TilePos(0, 0), tile);
@@ -42,7 +41,7 @@ public class BuildingUpdateSystemTest {
 
         world.process();
 
-        BuildingData data = new BuildingData(0, 0, "HOUSE", "house0");
+        BuildingData data = new BuildingData(0, 0, "HOUSE");
         client.injectBuildingUpdate(data);
 
         world.process();
