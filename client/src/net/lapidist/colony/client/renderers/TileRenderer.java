@@ -51,11 +51,12 @@ public final class TileRenderer implements EntityRenderer {
                 continue;
             }
 
-            TextureRegion region = resourceLoader.findRegion(
-                    textureMapper.get(entity).getResourceRef()
-            );
-            if (region != null) {
-                spriteBatch.draw(region, worldCoords.x, worldCoords.y);
+            TextureRegionReferenceComponent tex = textureMapper.get(entity);
+            if (tex != null) {
+                TextureRegion region = resourceLoader.findRegion(tex.getResourceRef());
+                if (region != null) {
+                    spriteBatch.draw(region, worldCoords.x, worldCoords.y);
+                }
             }
 
             if (tile.isSelected()) {

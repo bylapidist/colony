@@ -42,6 +42,14 @@ sequenceDiagram
 
 For a detailed walkthrough see [networking.md](networking.md).
 
+## Render Abstraction
+
+Rendering code is decoupled from map creation through the `MapRendererFactory`
+interface. `MapWorldBuilder` accepts a factory instance when building the world
+and defaults to a sprite batch based implementation. Alternative renderers, such
+as the prototype 3‑D renderer, can be plugged in by providing a different
+factory when calling `MapWorldBuilder.build`.
+
 ## Future Platform Goals
 The project aims to evolve into a flexible simulation framework inspired by open-source games such as
 [Mindustry](https://github.com/Anuken/Mindustry) and

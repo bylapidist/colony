@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.renderers.MapRendererFactory;
 import net.lapidist.colony.client.renderers.MapRenderer;
+import net.lapidist.colony.client.renderers.SpriteMapRendererFactory;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
 import net.lapidist.colony.client.systems.CameraInputSystem;
 import net.lapidist.colony.client.systems.SelectionSystem;
@@ -18,6 +19,7 @@ import net.lapidist.colony.client.systems.network.TileUpdateSystem;
 import net.lapidist.colony.client.systems.network.BuildingUpdateSystem;
 import net.lapidist.colony.client.systems.network.ResourceUpdateSystem;
 import net.lapidist.colony.client.systems.MapInitSystem;
+import net.lapidist.colony.client.systems.MapRenderInitSystem;
 import net.lapidist.colony.client.systems.PlayerInitSystem;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
@@ -38,7 +40,8 @@ public final class MapWorldBuilder {
     /**
      * Create a base {@link WorldConfigurationBuilder} containing the default
      * systems for the map screen except the map initialization system. Tests can
-     * customise the returned builder before calling {@link #build(WorldConfigurationBuilder)}.
+     * customise the returned builder before calling
+     * {@link #build(WorldConfigurationBuilder, MapRendererFactory)}.
      *
      * @param client game client for network updates
      * @param stage  stage used by the UI system
@@ -127,6 +130,7 @@ public final class MapWorldBuilder {
         if (provider != null) {
             builder.with(
                     new MapInitSystem(provider),
+                    new MapRenderInitSystem(),
                     new PlayerCameraSystem()
             );
         }
@@ -138,13 +142,15 @@ public final class MapWorldBuilder {
      * Build a world using the supplied configuration.
      *
      * @param builder preconfigured world builder with all desired systems
+     * @param factory optional factory for creating the map renderer
      * @return configured world instance
      */
-    public static World build(final WorldConfigurationBuilder builder) {
+    public static World build(final WorldConfigurationBuilder builder, final MapRendererFactory factory) {
         World world = new World(builder.build());
         MapRenderSystem renderSystem = world.getSystem(MapRenderSystem.class);
         if (renderSystem != null) {
-            MapRenderer renderer = new MapRendererFactory().create(world);
+            MapRendererFactory actualFactory = factory != null ? factory : new SpriteMapRendererFactory();
+            MapRenderer renderer = actualFactory.create(world);
             renderSystem.setMapRenderer(renderer);
         }
         Events.init(world.getSystem(EventSystem.class));
