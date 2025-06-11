@@ -9,6 +9,7 @@ public enum KeyAction {
     MOVE_LEFT("moveLeft"),
     MOVE_RIGHT("moveRight"),
     GATHER("gather"),
+    BUILD("build"),
     CHAT("chat");
 
     private final String i18nKey;

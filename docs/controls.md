@@ -11,6 +11,7 @@ This page lists the default keyboard bindings and how to customize them in-game.
 | Move Left | **A** | Pan the camera to the left |
 | Move Right | **D** | Pan the camera to the right |
 | Gather | **H** | Order selected tiles to gather resources |
+| Build | **B** | Toggle building placement mode |
 | Chat | **Enter** | Open the chat input box |
 
 The defaults are defined in [`KeyBindings.java`](../core/src/main/java/net/lapidist/colony/settings/KeyBindings.java).
