@@ -19,7 +19,7 @@ public final class KeyBindings {
             KeyAction.MOVE_RIGHT, Input.Keys.D,
             KeyAction.GATHER, Input.Keys.H,
             KeyAction.BUILD, Input.Keys.B,
-            KeyAction.CHAT, Input.Keys.ENTER
+            KeyAction.CHAT, Input.Keys.T
     );
 
     private final EnumMap<KeyAction, Integer> bindings = new EnumMap<>(KeyAction.class);
