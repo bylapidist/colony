@@ -9,6 +9,7 @@ import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.client.render.data.RenderBuilding;
+import net.lapidist.colony.client.render.MapRenderData;
 
 /**
  * Renders building entities.
@@ -33,7 +34,8 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
     }
 
     @Override
-    public void render(final Array<RenderBuilding> entities) {
+    public void render(final MapRenderData map) {
+        Array<RenderBuilding> entities = map.getBuildings();
         Vector2 worldCoords = new Vector2();
         Vector3 tmp = new Vector3();
         for (int i = 0; i < entities.size; i++) {

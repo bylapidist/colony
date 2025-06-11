@@ -10,6 +10,10 @@ import com.badlogic.gdx.math.Vector3;
 import net.lapidist.colony.client.renderers.ResourceRenderer;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.render.data.RenderTile;
+import net.lapidist.colony.client.render.MapRenderData;
+import net.lapidist.colony.client.render.SimpleMapRenderData;
+import net.lapidist.colony.client.render.data.RenderBuilding;
+import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +38,7 @@ public class ResourceRendererTest {
         ResourceRenderer renderer = new ResourceRenderer(batch, camera);
 
         Array<RenderTile> tiles = new Array<>();
-        tiles.add(RenderTile.builder()
+        RenderTile tile = RenderTile.builder()
                 .x(0)
                 .y(0)
                 .tileType("GRASS")
@@ -42,9 +46,14 @@ public class ResourceRendererTest {
                 .wood(WOOD)
                 .stone(STONE)
                 .food(FOOD)
-                .build());
+                .build();
+        tiles.add(tile);
 
-        renderer.render(tiles);
+        RenderTile[][] grid = new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT];
+        grid[0][0] = tile;
+        MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);
+
+        renderer.render(map);
         renderer.dispose();
     }
 
@@ -68,7 +77,7 @@ public class ResourceRendererTest {
         layoutField.set(renderer, layout);
 
         Array<RenderTile> tiles = new Array<>();
-        tiles.add(RenderTile.builder()
+        RenderTile tile = RenderTile.builder()
                 .x(0)
                 .y(0)
                 .tileType("GRASS")
@@ -76,9 +85,14 @@ public class ResourceRendererTest {
                 .wood(WOOD)
                 .stone(STONE)
                 .food(FOOD)
-                .build());
+                .build();
+        tiles.add(tile);
 
-        renderer.render(tiles);
+        RenderTile[][] grid = new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT];
+        grid[0][0] = tile;
+        MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);
+
+        renderer.render(map);
 
         ArgumentCaptor<CharSequence> captor = ArgumentCaptor.forClass(CharSequence.class);
         verify(layout).setText(eq(font), captor.capture());
@@ -103,7 +117,7 @@ public class ResourceRendererTest {
         fontField.set(renderer, font);
 
         Array<RenderTile> tiles = new Array<>();
-        tiles.add(RenderTile.builder()
+        RenderTile tile2 = RenderTile.builder()
                 .x(0)
                 .y(0)
                 .tileType("GRASS")
@@ -111,9 +125,14 @@ public class ResourceRendererTest {
                 .wood(WOOD)
                 .stone(STONE)
                 .food(FOOD)
-                .build());
+                .build();
+        tiles.add(tile2);
 
-        renderer.render(tiles);
+        RenderTile[][] grid2 = new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT];
+        grid2[0][0] = tile2;
+        MapRenderData map2 = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid2);
+
+        renderer.render(map2);
 
         verify(font, never()).draw(any(SpriteBatch.class), any(GlyphLayout.class), anyFloat(), anyFloat());
         renderer.dispose();

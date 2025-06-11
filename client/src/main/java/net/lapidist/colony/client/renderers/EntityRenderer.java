@@ -1,15 +1,15 @@
 package net.lapidist.colony.client.renderers;
 
-import com.badlogic.gdx.utils.Array;
+import net.lapidist.colony.client.render.MapRenderData;
 
 /**
  * Common interface for entity renderers.
  */
 public interface EntityRenderer<T> {
     /**
-     * Render the supplied entities.
+     * Render game entities contained in the provided {@link MapRenderData}.
      *
-     * @param entities entities to render
+     * @param map render data snapshot
      */
-    void render(Array<T> entities);
+    void render(MapRenderData map);
 }
