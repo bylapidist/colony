@@ -41,6 +41,7 @@ public class MapRenderDataSystemTest {
         MapRenderDataSystem system = world.getSystem(MapRenderDataSystem.class);
         assertNotNull(system.getRenderData());
         assertEquals(1, system.getRenderData().getTiles().size);
+        assertEquals(0, system.getRenderData().getBuildings().size);
 
         world.dispose();
     }
