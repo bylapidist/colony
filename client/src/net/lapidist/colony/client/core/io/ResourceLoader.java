@@ -1,110 +1,77 @@
 package net.lapidist.colony.client.core.io;
 
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.GLTexture;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import net.lapidist.colony.settings.GraphicsSettings;
+import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.utils.Disposable;
+import net.lapidist.colony.settings.GraphicsSettings;
 
 import java.io.IOException;
 
 /**
- * Simplified resource loader using LibGDX's {@link TextureAtlas} to
- * manage textures. This replaces the previous implementation which
- * parsed a custom configuration file.
+ * Abstraction for loading graphical assets used by renderers.
  */
-public final class ResourceLoader implements Disposable {
-
-    private boolean disposed;
-    private boolean loaded;
-
-    private FileLocation fileLocation;
-    private AssetManager assetManager;
-    private TextureAtlas atlas;
+public interface ResourceLoader extends Disposable {
 
     /**
-     * Load all texture regions from the specified atlas file.
+     * Load texture regions from the given atlas.
      *
-     * @param fileLocationToSet location resolver
-     * @param atlasPath path to the .atlas file
-     * @throws IOException if the atlas cannot be found
+     * @param fileLocation location resolver
+     * @param atlasPath    path to the texture atlas
+     * @param graphicsSettings optional texture settings
+     * @throws IOException if the atlas cannot be loaded
      */
-    public void load(
-            final FileLocation fileLocationToSet,
-            final String atlasPath,
-            final GraphicsSettings graphicsSettings
-    ) throws IOException {
-        fileLocation = fileLocationToSet;
-
-        if (!fileLocation.getFile(atlasPath).exists()) {
-            throw new IOException(String.format("%s does not exist", atlasPath));
-        }
-
-        assetManager = new AssetManager(fileLocation.getResolver());
-        assetManager.load(atlasPath, TextureAtlas.class);
-        assetManager.finishLoading();
-
-        atlas = assetManager.get(atlasPath, TextureAtlas.class);
-
-        if (graphicsSettings != null) {
-            Texture.TextureFilter minFilter = graphicsSettings.isMipMapsEnabled()
-                    ? Texture.TextureFilter.MipMapLinearLinear
-                    : Texture.TextureFilter.Linear;
-            Texture.TextureFilter magFilter = Texture.TextureFilter.Linear;
-            for (Texture texture : atlas.getTextures()) {
-                texture.setFilter(minFilter, magFilter);
-                if (graphicsSettings.isAnisotropicFilteringEnabled()) {
-                    texture.setAnisotropicFilter(GLTexture.getMaxAnisotropicFilterLevel());
-                }
-            }
-        }
-
-        loaded = true;
-    }
-
-    public void load(final FileLocation fileLocationToSet, final String atlasPath) throws IOException {
-        load(fileLocationToSet, atlasPath, null);
-    }
-
-    public boolean isLoaded() {
-        return loaded;
-    }
-
-    public FileLocation getFileLocation() {
-        return fileLocation;
-    }
-
-    public TextureAtlas getAtlas() {
-        return atlas;
-    }
-
+    void loadTextures(
+            FileLocation fileLocation,
+            String atlasPath,
+            GraphicsSettings graphicsSettings
+    ) throws IOException;
 
     /**
-     * Find a texture region within the loaded atlas by name.
+     * Convenience overload without graphics settings.
      *
-     * @param name region name
-     * @return the {@link TextureRegion} or {@code null} if not found
+     * @param fileLocation location resolver
+     * @param atlasPath    path to the texture atlas
+     * @throws IOException if the atlas cannot be loaded
      */
-    public TextureRegion findRegion(final String name) {
-        if (atlas == null) {
-            return null;
-        }
-        return atlas.findRegion(name);
-    }
+    void loadTextures(FileLocation fileLocation, String atlasPath) throws IOException;
 
-    @Override
-    public void dispose() {
-        if (!disposed) {
-            disposed = true;
-            if (assetManager != null) {
-                assetManager.dispose();
-            }
-        }
-    }
+    /**
+     * Load a 3D model from the specified path.
+     *
+     * @param fileLocation location resolver
+     * @param modelPath    path to the model file
+     * @throws IOException if the model cannot be loaded
+     */
+    void loadModel(FileLocation fileLocation, String modelPath) throws IOException;
 
-    public boolean isDisposed() {
-        return disposed;
-    }
+    /**
+     * Check whether assets have been loaded.
+     *
+     * @return {@code true} if the loader has loaded resources
+     */
+    boolean isLoaded();
+
+    /**
+     * Access the atlas used for texture lookups.
+     *
+     * @return loaded texture atlas or {@code null}
+     */
+    TextureAtlas getAtlas();
+
+    /**
+     * Find a texture region by name.
+     *
+     * @param name region identifier
+     * @return matching region or {@code null}
+     */
+    TextureRegion findRegion(String name);
+
+    /**
+     * Retrieve a loaded 3D model by name.
+     *
+     * @param name model identifier
+     * @return matching model or {@code null}
+     */
+    Model findModel(String name);
 }

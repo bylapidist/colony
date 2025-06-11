@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Disposable;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.client.core.io.FileLocation;
 import net.lapidist.colony.client.core.io.ResourceLoader;
+import net.lapidist.colony.client.core.io.TextureAtlasResourceLoader;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.settings.GraphicsSettings;
 import net.lapidist.colony.settings.Settings;
@@ -30,7 +31,7 @@ public final class MinimapActor extends Actor implements Disposable {
     private static final int DEFAULT_SIZE = 128;
 
     private final World world;
-    private final ResourceLoader resourceLoader = new ResourceLoader();
+    private final ResourceLoader resourceLoader = new TextureAtlasResourceLoader();
     private ViewportOverlayRenderer overlayRenderer;
     private ComponentMapper<MapComponent> mapMapper;
     private ComponentMapper<TileComponent> tileMapper;
@@ -103,7 +104,7 @@ public final class MinimapActor extends Actor implements Disposable {
         this.world = worldToSet;
         setSize(DEFAULT_SIZE, DEFAULT_SIZE);
         try {
-            resourceLoader.load(FileLocation.INTERNAL, "textures/textures.atlas", graphicsSettings);
+            resourceLoader.loadTextures(FileLocation.INTERNAL, "textures/textures.atlas", graphicsSettings);
         } catch (IOException e) {
             // ignore loading errors in headless tests
         }
