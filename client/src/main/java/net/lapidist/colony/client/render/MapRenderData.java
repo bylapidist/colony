@@ -11,4 +11,7 @@ public interface MapRenderData {
     Array<RenderTile> getTiles();
 
     Array<RenderBuilding> getBuildings();
+
+    /** Returns the tile at the given map coordinates or {@code null} if none exists. */
+    RenderTile getTile(int x, int y);
 }

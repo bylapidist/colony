@@ -3,13 +3,15 @@ package net.lapidist.colony.tests.client.renderers;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.Viewport;
-import com.badlogic.gdx.math.Vector3;
 import net.lapidist.colony.client.renderers.DefaultAssetResolver;
 import net.lapidist.colony.client.renderers.TileRenderer;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.render.data.RenderTile;
+import net.lapidist.colony.client.render.MapRenderData;
+import net.lapidist.colony.client.render.SimpleMapRenderData;
+import net.lapidist.colony.client.render.data.RenderBuilding;
+import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,14 +30,17 @@ public class TileRendererTest {
         when(loader.findRegion(eq("hoveredTile0"))).thenReturn(overlay);
 
         CameraProvider camera = mock(CameraProvider.class);
-        Viewport viewport = mock(Viewport.class);
+        com.badlogic.gdx.graphics.OrthographicCamera cam = new com.badlogic.gdx.graphics.OrthographicCamera();
+        com.badlogic.gdx.utils.viewport.ExtendViewport viewport =
+                new com.badlogic.gdx.utils.viewport.ExtendViewport(1f, 1f, cam);
+        cam.update();
         when(camera.getViewport()).thenReturn(viewport);
-        when(viewport.project(any(Vector3.class))).thenReturn(new Vector3());
+        when(camera.getCamera()).thenReturn(cam);
 
         TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver());
 
         Array<RenderTile> tiles = new Array<>();
-        tiles.add(RenderTile.builder()
+        RenderTile tile = RenderTile.builder()
                 .x(0)
                 .y(0)
                 .tileType("GRASS")
@@ -43,9 +48,14 @@ public class TileRendererTest {
                 .wood(0)
                 .stone(0)
                 .food(0)
-                .build());
+                .build();
+        tiles.add(tile);
 
-        renderer.render(tiles);
+        RenderTile[][] grid = new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT];
+        grid[0][0] = tile;
+        MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);
+
+        renderer.render(map);
 
         verify(batch, times(2)).draw(any(TextureRegion.class), anyFloat(), anyFloat());
     }

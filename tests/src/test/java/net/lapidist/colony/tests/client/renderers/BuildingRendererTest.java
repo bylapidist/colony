@@ -10,6 +10,10 @@ import net.lapidist.colony.client.renderers.DefaultAssetResolver;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.render.data.RenderBuilding;
+import net.lapidist.colony.client.render.MapRenderData;
+import net.lapidist.colony.client.render.SimpleMapRenderData;
+import net.lapidist.colony.client.render.data.RenderTile;
+import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,9 +37,13 @@ public class BuildingRendererTest {
         BuildingRenderer renderer = new BuildingRenderer(batch, loader, camera, new DefaultAssetResolver());
 
         Array<RenderBuilding> buildings = new Array<>();
-        buildings.add(RenderBuilding.builder().x(0).y(0).buildingType("HOUSE").build());
+        RenderBuilding building = RenderBuilding.builder().x(0).y(0).buildingType("HOUSE").build();
+        buildings.add(building);
 
-        renderer.render(buildings);
+        MapRenderData map = new SimpleMapRenderData(new Array<RenderTile>(), buildings,
+                new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT]);
+
+        renderer.render(map);
 
         verify(batch).draw(eq(region), anyFloat(), anyFloat());
     }

@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.client.render.data.RenderTile;
+import net.lapidist.colony.client.render.MapRenderData;
 import com.badlogic.gdx.utils.Disposable;
 
 /** Draws resource amounts on tiles. */
@@ -29,7 +30,8 @@ public final class ResourceRenderer implements EntityRenderer<RenderTile>, Dispo
     }
 
     @Override
-    public void render(final Array<RenderTile> entities) {
+    public void render(final MapRenderData map) {
+        Array<RenderTile> entities = map.getTiles();
         Vector2 worldCoords = new Vector2();
         Vector3 tmp = new Vector3();
         for (int i = 0; i < entities.size; i++) {

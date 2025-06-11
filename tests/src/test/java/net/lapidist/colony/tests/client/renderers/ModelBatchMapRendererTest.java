@@ -10,6 +10,7 @@ import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.render.SimpleMapRenderData;
 import net.lapidist.colony.client.render.data.RenderBuilding;
 import net.lapidist.colony.client.render.data.RenderTile;
+import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +38,11 @@ public class ModelBatchMapRendererTest {
                 .food(0)
                 .build());
 
-        MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>());
+        MapRenderData map = new SimpleMapRenderData(
+                tiles,
+                new Array<RenderBuilding>(),
+                new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT]
+        );
 
         ModelBatchMapRenderer renderer = new ModelBatchMapRenderer(batch, instance);
         renderer.render(map, cameraProvider);

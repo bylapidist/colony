@@ -36,9 +36,9 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         spriteBatch.setProjectionMatrix(camera.getCamera().combined);
         spriteBatch.begin();
 
-        tileRenderer.render(map.getTiles());
-        buildingRenderer.render(map.getBuildings());
-        resourceRenderer.render(map.getTiles());
+        tileRenderer.render(map);
+        buildingRenderer.render(map);
+        resourceRenderer.render(map);
 
         spriteBatch.end();
     }

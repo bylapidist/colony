@@ -10,6 +10,7 @@ import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.resources.ResourceComponent;
+import net.lapidist.colony.components.GameConstants;
 
 /** Utility to convert {@link MapComponent} to {@link MapRenderData}. */
 public final class MapRenderDataBuilder {
@@ -22,6 +23,7 @@ public final class MapRenderDataBuilder {
         ComponentMapper<BuildingComponent> buildingMapper = world.getMapper(BuildingComponent.class);
 
         Array<RenderTile> tiles = new Array<>();
+        RenderTile[][] grid = new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT];
         Array<Entity> mapTiles = map.getTiles();
         for (int i = 0; i < mapTiles.size; i++) {
             Entity entity = mapTiles.get(i);
@@ -37,6 +39,10 @@ public final class MapRenderDataBuilder {
                     .food(rc.getFood())
                     .build();
             tiles.add(tile);
+            if (tc.getX() >= 0 && tc.getX() < GameConstants.MAP_WIDTH
+                    && tc.getY() >= 0 && tc.getY() < GameConstants.MAP_HEIGHT) {
+                grid[tc.getX()][tc.getY()] = tile;
+            }
         }
 
         Array<RenderBuilding> buildings = new Array<>();
@@ -52,6 +58,6 @@ public final class MapRenderDataBuilder {
             buildings.add(building);
         }
 
-        return new SimpleMapRenderData(tiles, buildings);
+        return new SimpleMapRenderData(tiles, buildings, grid);
     }
 }
