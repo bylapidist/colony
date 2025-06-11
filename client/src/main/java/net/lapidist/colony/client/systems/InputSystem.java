@@ -6,6 +6,8 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+import com.artemis.Entity;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.input.GestureInputHandler;
 import net.lapidist.colony.client.systems.input.KeyboardInputHandler;
@@ -30,6 +32,8 @@ public final class InputSystem extends BaseSystem {
     private final GameClient client;
 
     private final InputMultiplexer multiplexer = new InputMultiplexer();
+
+    private final Array<Entity> selectedTiles = new Array<>();
 
     private MapComponent map;
     private ComponentMapper<TileComponent> tileMapper;
@@ -59,9 +63,17 @@ public final class InputSystem extends BaseSystem {
         tileMapper = world.getMapper(TileComponent.class);
         resourceMapper = world.getMapper(net.lapidist.colony.components.resources.ResourceComponent.class);
         map = net.lapidist.colony.map.MapUtils.findMap(world).orElse(null);
+        if (map != null) {
+            for (int i = 0; i < map.getTiles().size; i++) {
+                var tile = map.getTiles().get(i);
+                if (tileMapper.get(tile).isSelected()) {
+                    selectedTiles.add(tile);
+                }
+            }
+        }
         keyboardHandler = new KeyboardInputHandler(cameraSystem, keyBindings);
         gestureHandler = new GestureInputHandler(cameraSystem);
-        tileSelectionHandler = new TileSelectionHandler(client, cameraSystem);
+        tileSelectionHandler = new TileSelectionHandler(client, cameraSystem, selectedTiles);
         buildingPlacementHandler = new BuildingPlacementHandler(client, cameraSystem);
         gestureListener = new InputGestureListener(
                 gestureHandler,
@@ -82,6 +94,12 @@ public final class InputSystem extends BaseSystem {
             map = net.lapidist.colony.map.MapUtils.findMap(world).orElse(null);
             if (map != null) {
                 gestureListener.setMap(map);
+                for (int i = 0; i < map.getTiles().size; i++) {
+                    var tile = map.getTiles().get(i);
+                    if (tileMapper.get(tile).isSelected()) {
+                        selectedTiles.add(tile);
+                    }
+                }
             }
         }
         keyboardHandler.handleKeyboardInput(world.getDelta());
@@ -89,14 +107,12 @@ public final class InputSystem extends BaseSystem {
         cameraSystem.getCamera().update();
 
         if (Gdx.input.isKeyJustPressed(keyBindings.getKey(KeyAction.GATHER)) && map != null) {
-            for (int i = 0; i < map.getTiles().size; i++) {
-                var tile = map.getTiles().get(i);
+            for (int i = 0; i < selectedTiles.size; i++) {
+                var tile = selectedTiles.get(i);
                 TileComponent tc = tileMapper.get(tile);
-                if (tc.isSelected()) {
-                    ResourceGatherRequestData msg = new ResourceGatherRequestData(
-                            tc.getX(), tc.getY(), ResourceType.WOOD.name());
-                    client.sendGatherRequest(msg);
-                }
+                ResourceGatherRequestData msg = new ResourceGatherRequestData(
+                        tc.getX(), tc.getY(), ResourceType.WOOD.name());
+                client.sendGatherRequest(msg);
             }
         }
     }

@@ -4,6 +4,8 @@ import com.artemis.BaseSystem;
 import com.artemis.ComponentMapper;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.utils.Array;
+import com.artemis.Entity;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.input.TileSelectionHandler;
 import net.lapidist.colony.client.util.CameraUtils;
@@ -23,6 +25,8 @@ public final class SelectionSystem extends BaseSystem {
 
     private final GameClient client;
     private final KeyBindings keyBindings;
+
+    private final Array<Entity> selectedTiles = new Array<>();
 
     private PlayerCameraSystem cameraSystem;
     private CameraInputSystem cameraInputSystem;
@@ -45,7 +49,15 @@ public final class SelectionSystem extends BaseSystem {
         tileMapper = world.getMapper(TileComponent.class);
         resourceMapper = world.getMapper(ResourceComponent.class);
         map = MapUtils.findMap(world).orElse(null);
-        tileSelectionHandler = new TileSelectionHandler(client, cameraSystem);
+        if (map != null) {
+            for (int i = 0; i < map.getTiles().size; i++) {
+                var tile = map.getTiles().get(i);
+                if (tileMapper.get(tile).isSelected()) {
+                    selectedTiles.add(tile);
+                }
+            }
+        }
+        tileSelectionHandler = new TileSelectionHandler(client, cameraSystem, selectedTiles);
         GestureDetector detector = new GestureDetector(new SelectionGestureListener());
         cameraInputSystem.addProcessor(detector);
     }
@@ -54,16 +66,22 @@ public final class SelectionSystem extends BaseSystem {
     protected void processSystem() {
         if (map == null) {
             map = MapUtils.findMap(world).orElse(null);
+            if (map != null) {
+                for (int i = 0; i < map.getTiles().size; i++) {
+                    var tile = map.getTiles().get(i);
+                    if (tileMapper.get(tile).isSelected()) {
+                        selectedTiles.add(tile);
+                    }
+                }
+            }
         }
         if (map != null && Gdx.input.isKeyJustPressed(keyBindings.getKey(KeyAction.GATHER))) {
-            for (int i = 0; i < map.getTiles().size; i++) {
-                var tile = map.getTiles().get(i);
+            for (int i = 0; i < selectedTiles.size; i++) {
+                var tile = selectedTiles.get(i);
                 TileComponent tc = tileMapper.get(tile);
-                if (tc.isSelected()) {
-                    ResourceGatherRequestData msg = new ResourceGatherRequestData(
-                            tc.getX(), tc.getY(), ResourceType.WOOD.name());
-                    client.sendGatherRequest(msg);
-                }
+                ResourceGatherRequestData msg = new ResourceGatherRequestData(
+                        tc.getX(), tc.getY(), ResourceType.WOOD.name());
+                client.sendGatherRequest(msg);
             }
         }
     }
