@@ -114,7 +114,7 @@ public final class InputSystem extends BaseSystem {
                 ResourceType type = getResourceType(rc);
                 if (type != null) {
                     ResourceGatherRequestData msg = new ResourceGatherRequestData(
-                            tc.getX(), tc.getY(), type.name());
+                            tc.getX(), tc.getY(), type);
                     client.sendGatherRequest(msg);
                 }
             }
@@ -143,7 +143,7 @@ public final class InputSystem extends BaseSystem {
                         ResourceType type = getResourceType(rc);
                         if (type != null) {
                             ResourceGatherRequestData msg = new ResourceGatherRequestData(
-                                    tc.getX(), tc.getY(), type.name());
+                                    tc.getX(), tc.getY(), type);
                             client.sendGatherRequest(msg);
                         }
                     });
