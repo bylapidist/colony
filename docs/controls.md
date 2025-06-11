@@ -13,7 +13,7 @@ This page lists the default keyboard bindings and how to customize them in-game.
 | Gather | **H** | Order selected tiles to gather resources |
 | Chat | **Enter** | Open the chat input box |
 
-The defaults are defined in [`KeyBindings.java`](../core/src/net/lapidist/colony/settings/KeyBindings.java).
+The defaults are defined in [`KeyBindings.java`](../core/src/main/java/net/lapidist/colony/settings/KeyBindings.java).
 
 ## Changing bindings
 

@@ -19,4 +19,4 @@ game {
 
 Saves and user preferences are written to a platform specific directory. The
 exact locations are resolved by
-[`Paths`](../core/src/net/lapidist/colony/io/Paths.java).
+[`Paths`](../core/src/main/java/net/lapidist/colony/io/Paths.java).

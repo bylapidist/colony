@@ -22,7 +22,7 @@ test {
 }
 
 tasks.register('copyAssets', Copy) {
-    from project(":client").file("assets")
+    from project(":client").file("src/main/resources/assets")
     into file(".")
 }
 
