@@ -25,7 +25,8 @@ public final class MapScreen implements Screen {
         this.colony = colonyToSet;
         stage = new Stage(new ScreenViewport());
         world = MapWorldBuilder.build(
-                MapWorldBuilder.builder(state, client, stage, colony.getSettings().getKeyBindings())
+                MapWorldBuilder.builder(state, client, stage, colony.getSettings().getKeyBindings()),
+                null
         );
         MapUi ui = MapUiBuilder.build(stage, world, client, colony);
         minimapActor = ui.getMinimapActor();

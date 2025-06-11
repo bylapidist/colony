@@ -15,6 +15,7 @@ import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.SelectionSystem;
 import net.lapidist.colony.client.systems.PlayerInitSystem;
 import net.lapidist.colony.client.systems.MapRenderSystem;
+import net.lapidist.colony.client.systems.MapRenderInitSystem;
 import net.lapidist.colony.components.resources.PlayerResourceComponent;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
@@ -49,7 +50,8 @@ public class MapWorldBuilderConfigurationTest {
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             World world = MapWorldBuilder.build(
                     MapWorldBuilder.baseBuilder(client, stage, keys)
-                            .with(new PlayerCameraSystem())
+                            .with(new PlayerCameraSystem()),
+                    null
             );
 
             assertNotNull(world.getSystem(CameraInputSystem.class));
@@ -58,6 +60,7 @@ public class MapWorldBuilderConfigurationTest {
             assertNotNull(world.getSystem(PlayerInitSystem.class));
             assertNotNull(world.getSystem(MapRenderSystem.class));
             assertNull(world.getSystem(MapInitSystem.class));
+            assertNull(world.getSystem(MapRenderInitSystem.class));
 
             world.dispose();
         }
@@ -77,12 +80,14 @@ public class MapWorldBuilderConfigurationTest {
         KeyBindings keys = new KeyBindings();
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             World world = MapWorldBuilder.build(
-                    MapWorldBuilder.builder(new ProvidedMapStateProvider(state), client, stage, keys)
+                    MapWorldBuilder.builder(new ProvidedMapStateProvider(state), client, stage, keys),
+                    null
             );
             world.process();
 
             assertNotNull(world.getSystem(MapInitSystem.class));
             assertNotNull(world.getSystem(PlayerCameraSystem.class));
+            assertNotNull(world.getSystem(MapRenderInitSystem.class));
             assertEquals(1, world.getAspectSubscriptionManager()
                     .get(Aspect.all(PlayerResourceComponent.class))
                     .getEntities().size());
@@ -105,7 +110,8 @@ public class MapWorldBuilderConfigurationTest {
         KeyBindings keys = new KeyBindings();
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             World world = MapWorldBuilder.build(
-                    MapWorldBuilder.builder(state, client, stage, keys)
+                    MapWorldBuilder.builder(state, client, stage, keys),
+                    null
             );
             world.process();
 

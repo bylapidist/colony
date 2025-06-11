@@ -5,6 +5,7 @@ import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.lapidist.colony.client.renderers.MapRenderer;
 import net.lapidist.colony.client.renderers.MapRendererFactory;
+import net.lapidist.colony.client.renderers.SpriteMapRendererFactory;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.core.io.FileLocation;
 import net.lapidist.colony.client.core.io.ResourceLoader;
@@ -73,7 +74,7 @@ public class MapRendererFactoryTest {
                 .build());
         try (MockedConstruction<SpriteBatch> ignored =
                 mockConstruction(SpriteBatch.class)) {
-            MapRendererFactory factory = new MapRendererFactory(
+            MapRendererFactory factory = new SpriteMapRendererFactory(
                     loader,
                     FileLocation.INTERNAL,
                     "textures/textures.atlas"

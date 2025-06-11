@@ -32,7 +32,7 @@ public class MapWorldBuilderTest {
         WorldConfigurationBuilder builder = new WorldConfigurationBuilder()
                 .with(new EventSystem(), dummy);
 
-        World world = MapWorldBuilder.build(builder);
+        World world = MapWorldBuilder.build(builder, null);
         world.setDelta(0f);
         world.process();
 
