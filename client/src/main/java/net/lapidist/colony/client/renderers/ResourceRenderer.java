@@ -2,6 +2,7 @@ package net.lapidist.colony.client.renderers;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
@@ -15,6 +16,8 @@ public final class ResourceRenderer implements EntityRenderer<RenderTile>, Dispo
     private final SpriteBatch spriteBatch;
     private final CameraProvider cameraSystem;
     private final BitmapFont font = new BitmapFont();
+    private final GlyphLayout layout = new GlyphLayout();
+    private final StringBuilder textBuilder = new StringBuilder();
     private static final float OFFSET_Y = 8f;
 
     public ResourceRenderer(
@@ -31,12 +34,22 @@ public final class ResourceRenderer implements EntityRenderer<RenderTile>, Dispo
         Vector3 tmp = new Vector3();
         for (int i = 0; i < entities.size; i++) {
             RenderTile tile = entities.get(i);
+            if (!tile.isSelected()) {
+                continue;
+            }
             CameraUtils.tileCoordsToWorldCoords(tile.getX(), tile.getY(), worldCoords);
             if (!CameraUtils.withinCameraView(cameraSystem.getViewport(), worldCoords, tmp)) {
                 continue;
             }
-            String text = tile.getWood() + "/" + tile.getStone() + "/" + tile.getFood();
-            font.draw(spriteBatch, text, worldCoords.x, worldCoords.y + OFFSET_Y);
+            textBuilder.setLength(0);
+            textBuilder
+                    .append(tile.getWood())
+                    .append('/')
+                    .append(tile.getStone())
+                    .append('/')
+                    .append(tile.getFood());
+            layout.setText(font, textBuilder);
+            font.draw(spriteBatch, layout, worldCoords.x, worldCoords.y + OFFSET_Y);
         }
     }
 
