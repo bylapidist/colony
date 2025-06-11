@@ -18,22 +18,40 @@ public final class CameraUtils {
     }
 
     public static Vector2 tileCoordsToWorldCoords(final int x, final int y) {
-        return new Vector2(x * GameConstants.TILE_SIZE, y * GameConstants.TILE_SIZE);
+        return tileCoordsToWorldCoords(x, y, new Vector2());
     }
 
     public static Vector2 tileCoordsToWorldCoords(final Vector2 coords) {
-        return tileCoordsToWorldCoords((int) coords.x, (int) coords.y);
+        return tileCoordsToWorldCoords((int) coords.x, (int) coords.y, new Vector2());
+    }
+
+    public static Vector2 tileCoordsToWorldCoords(final int x, final int y, final Vector2 out) {
+        out.set(x * GameConstants.TILE_SIZE, y * GameConstants.TILE_SIZE);
+        return out;
+    }
+
+    public static Vector2 tileCoordsToWorldCoords(final Vector2 coords, final Vector2 out) {
+        return tileCoordsToWorldCoords((int) coords.x, (int) coords.y, out);
     }
 
     public static Vector2 worldCoordsToTileCoords(final int x, final int y) {
-        return new Vector2(
-                Math.floorDiv(x, GameConstants.TILE_SIZE),
-                Math.floorDiv(y, GameConstants.TILE_SIZE)
-        );
+        return worldCoordsToTileCoords(x, y, new Vector2());
     }
 
     public static Vector2 worldCoordsToTileCoords(final Vector2 coords) {
-        return worldCoordsToTileCoords((int) coords.x, (int) coords.y);
+        return worldCoordsToTileCoords((int) coords.x, (int) coords.y, new Vector2());
+    }
+
+    public static Vector2 worldCoordsToTileCoords(final int x, final int y, final Vector2 out) {
+        out.set(
+                Math.floorDiv(x, GameConstants.TILE_SIZE),
+                Math.floorDiv(y, GameConstants.TILE_SIZE)
+        );
+        return out;
+    }
+
+    public static Vector2 worldCoordsToTileCoords(final Vector2 coords, final Vector2 out) {
+        return worldCoordsToTileCoords((int) coords.x, (int) coords.y, out);
     }
 
     public static Vector2 screenToWorldCoords(
@@ -41,7 +59,18 @@ public final class CameraUtils {
             final float screenX,
             final float screenY
     ) {
-        return viewport.unproject(new Vector2(screenX, screenY));
+        return screenToWorldCoords(viewport, screenX, screenY, new Vector2());
+    }
+
+    public static Vector2 screenToWorldCoords(
+            final Viewport viewport,
+            final float screenX,
+            final float screenY,
+            final Vector2 out
+    ) {
+        out.set(screenX, screenY);
+        viewport.unproject(out);
+        return out;
     }
 
     public static Vector2 worldToScreenCoords(
@@ -49,8 +78,29 @@ public final class CameraUtils {
             final float worldX,
             final float worldY
     ) {
-        Vector3 tmp = viewport.project(new Vector3(worldX, worldY, 0));
-        return new Vector2(tmp.x, tmp.y);
+        return worldToScreenCoords(viewport, worldX, worldY, new Vector2());
+    }
+
+    public static Vector2 worldToScreenCoords(
+            final Viewport viewport,
+            final float worldX,
+            final float worldY,
+            final Vector2 out
+    ) {
+        return worldToScreenCoords(viewport, worldX, worldY, out, new Vector3());
+    }
+
+    public static Vector2 worldToScreenCoords(
+            final Viewport viewport,
+            final float worldX,
+            final float worldY,
+            final Vector2 out,
+            final Vector3 tmp
+    ) {
+        tmp.set(worldX, worldY, 0);
+        viewport.project(tmp);
+        out.set(tmp.x, tmp.y);
+        return out;
     }
 
     public static Vector3 worldToScreenCoords3D(
@@ -73,7 +123,16 @@ public final class CameraUtils {
             final Viewport viewport,
             final Vector2 worldCoords
     ) {
-        Vector3 tmp = viewport.project(new Vector3(worldCoords.x, worldCoords.y, 0));
+        return withinCameraView(viewport, worldCoords, new Vector3());
+    }
+
+    public static boolean withinCameraView(
+            final Viewport viewport,
+            final Vector2 worldCoords,
+            final Vector3 tmp
+    ) {
+        tmp.set(worldCoords.x, worldCoords.y, 0);
+        viewport.project(tmp);
         return !(tmp.x > Gdx.graphics.getWidth() || tmp.y > Gdx.graphics.getHeight());
     }
 

@@ -3,6 +3,7 @@ package net.lapidist.colony.client.renderers;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
@@ -33,14 +34,13 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
 
     @Override
     public void render(final Array<RenderTile> entities) {
+        Vector2 worldCoords = new Vector2();
+        Vector3 tmp = new Vector3();
         for (int i = 0; i < entities.size; i++) {
             RenderTile tile = entities.get(i);
-            Vector2 worldCoords = CameraUtils.tileCoordsToWorldCoords(
-                    tile.getX(),
-                    tile.getY()
-            );
+            CameraUtils.tileCoordsToWorldCoords(tile.getX(), tile.getY(), worldCoords);
 
-            if (!CameraUtils.withinCameraView(cameraSystem.getViewport(), worldCoords)) {
+            if (!CameraUtils.withinCameraView(cameraSystem.getViewport(), worldCoords, tmp)) {
                 continue;
             }
 

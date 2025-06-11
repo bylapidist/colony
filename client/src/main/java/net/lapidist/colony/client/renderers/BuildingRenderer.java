@@ -3,6 +3,7 @@ package net.lapidist.colony.client.renderers;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
@@ -33,14 +34,13 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
 
     @Override
     public void render(final Array<RenderBuilding> entities) {
+        Vector2 worldCoords = new Vector2();
+        Vector3 tmp = new Vector3();
         for (int i = 0; i < entities.size; i++) {
             RenderBuilding building = entities.get(i);
-            Vector2 worldCoords = CameraUtils.tileCoordsToWorldCoords(
-                    building.getX(),
-                    building.getY()
-            );
+            CameraUtils.tileCoordsToWorldCoords(building.getX(), building.getY(), worldCoords);
 
-            if (!CameraUtils.withinCameraView(cameraSystem.getViewport(), worldCoords)) {
+            if (!CameraUtils.withinCameraView(cameraSystem.getViewport(), worldCoords, tmp)) {
                 continue;
             }
 
