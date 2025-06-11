@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import net.lapidist.colony.components.GameConstants;
 
 /**
@@ -36,7 +37,7 @@ public final class CameraUtils {
     }
 
     public static Vector2 screenToWorldCoords(
-            final ExtendViewport viewport,
+            final Viewport viewport,
             final float screenX,
             final float screenY
     ) {
@@ -44,7 +45,7 @@ public final class CameraUtils {
     }
 
     public static Vector2 worldToScreenCoords(
-            final ExtendViewport viewport,
+            final Viewport viewport,
             final float worldX,
             final float worldY
     ) {
@@ -52,8 +53,24 @@ public final class CameraUtils {
         return new Vector2(tmp.x, tmp.y);
     }
 
+    public static Vector3 worldToScreenCoords3D(
+            final Viewport viewport,
+            final Vector3 world
+    ) {
+        return viewport.project(new Vector3(world));
+    }
+
+    public static Vector3 screenToWorldCoords3D(
+            final Viewport viewport,
+            final float screenX,
+            final float screenY,
+            final float screenZ
+    ) {
+        return viewport.unproject(new Vector3(screenX, screenY, screenZ));
+    }
+
     public static boolean withinCameraView(
-            final ExtendViewport viewport,
+            final Viewport viewport,
             final Vector2 worldCoords
     ) {
         Vector3 tmp = viewport.project(new Vector3(worldCoords.x, worldCoords.y, 0));

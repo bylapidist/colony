@@ -20,18 +20,16 @@ public final class BuildingFactory {
      *
      * @param world        the Artemis world the entity belongs to
      * @param buildingType the building type
-     * @param resourceRef  texture or atlas reference for the sprite
      * @param coords       spawn coordinates
      * @return created entity
      */
     public static Entity create(
             final World world,
             final BuildingComponent.BuildingType buildingType,
-            final String resourceRef,
             final Vector2 coords
     ) {
         BuildingComponent buildingComponent = new BuildingComponent();
         buildingComponent.setBuildingType(buildingType);
-        return createEntity(world, resourceRef, buildingComponent, coords);
+        return createEntity(world, buildingComponent, coords);
     }
 }

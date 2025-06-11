@@ -10,7 +10,6 @@ import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.settings.GraphicsSettings;
 import net.lapidist.colony.settings.Settings;
-import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
 import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.maps.MapComponent;
@@ -54,8 +53,6 @@ public final class SpriteMapRendererFactory implements MapRendererFactory {
         CameraProvider cameraSystem = world.getSystem(PlayerCameraSystem.class);
         ComponentMapper<TileComponent> tileMapper = world.getMapper(TileComponent.class);
         ComponentMapper<BuildingComponent> buildingMapper = world.getMapper(BuildingComponent.class);
-        ComponentMapper<TextureRegionReferenceComponent> textureMapper =
-                world.getMapper(TextureRegionReferenceComponent.class);
         ComponentMapper<ResourceComponent> resourceMapper = world.getMapper(ResourceComponent.class);
 
         TileRenderer tileRenderer = new TileRenderer(
@@ -63,14 +60,14 @@ public final class SpriteMapRendererFactory implements MapRendererFactory {
                 resourceLoader,
                 cameraSystem,
                 tileMapper,
-                textureMapper
+                new DefaultAssetResolver()
         );
         BuildingRenderer buildingRenderer = new BuildingRenderer(
                 batch,
                 resourceLoader,
                 cameraSystem,
                 buildingMapper,
-                textureMapper
+                new DefaultAssetResolver()
         );
         ResourceRenderer resourceRenderer = new ResourceRenderer(
                 batch,

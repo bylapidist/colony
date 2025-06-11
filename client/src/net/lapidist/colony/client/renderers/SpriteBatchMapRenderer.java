@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
-import net.lapidist.colony.components.maps.MapComponent;
+import net.lapidist.colony.client.render.MapRenderData;
 
 /**
  * SpriteBatch backed implementation of {@link MapRenderer}.
@@ -32,7 +32,7 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
     }
 
     @Override
-    public void render(final MapComponent map, final CameraProvider camera) {
+    public void render(final MapRenderData map, final CameraProvider camera) {
         spriteBatch.setProjectionMatrix(camera.getCamera().combined);
         spriteBatch.begin();
 
