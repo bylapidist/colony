@@ -51,10 +51,10 @@ as the prototype 3‑D renderer, can be plugged in by providing a different
 factory when calling `MapWorldBuilder.build`.
 
 `MapRenderData` acts as a lightweight view of the map state for renderers. A
-`MapRenderDataSystem` converts the ECS `MapComponent` into this immutable
-structure so renderers never depend on gameplay components. Swapping in a 3‑D
-renderer simply requires implementing the `MapRenderer` interface against this
-data.
+`MapRenderDataSystem` converts the ECS `MapComponent` into immutable
+`RenderTile` and `RenderBuilding` objects so renderers never depend on gameplay
+components. Swapping in a 3‑D renderer simply requires implementing the
+`MapRenderer` interface against this data.
 
 ## Future Platform Goals
 The project aims to evolve into a flexible simulation framework inspired by open-source games such as

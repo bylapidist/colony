@@ -20,7 +20,7 @@ public final class MapRenderDataSystem extends BaseSystem {
     public void initialize() {
         MapComponent map = MapUtils.findMap(world).orElse(null);
         if (map != null) {
-            renderData = MapRenderDataBuilder.fromMap(map);
+            renderData = MapRenderDataBuilder.fromMap(map, world);
         }
     }
 

@@ -63,7 +63,7 @@ final class MinimapCache implements Disposable {
             Entity tile = tiles.get(i);
             TileComponent tileComponent = tileMapper.get(tile);
             TextureRegion region = resourceLoader.findRegion(
-                    resolver.tileAsset(tileComponent.getTileType()));
+                    resolver.tileAsset(tileComponent.getTileType().toString()));
             if (region != null) {
                 spriteCache.add(
                         region,

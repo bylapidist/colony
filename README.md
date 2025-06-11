@@ -57,7 +57,7 @@ The repository is split into four Gradle modules:
 - **tests** – JUnit tests and a custom `GdxTestRunner` that boots a headless LibGDX environment so game systems can be tested without a graphical context.
 
 ### Map Renderer Abstraction
-`MapWorldBuilder` uses a `MapRendererFactory` to create the renderer at build time. The default factory produces a sprite based renderer but alternative implementations can be supplied, including the experimental 3‑D renderer.
+`MapWorldBuilder` uses a `MapRendererFactory` to create the renderer at build time. The default factory produces a sprite based renderer but alternative implementations can be supplied, including the experimental 3‑D renderer. `MapRenderDataSystem` converts the live map into simple `RenderTile` and `RenderBuilding` objects so renderers work with plain data.
 
 Each module keeps its source under `src/` with all packages rooted at `net.lapidist.colony`. Shared constants and configuration files live in the `core` module and are imported by both the client and server.
 
