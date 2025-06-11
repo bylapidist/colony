@@ -1,7 +1,9 @@
 package net.lapidist.colony.client.systems.input;
 
 import com.artemis.ComponentMapper;
+import com.artemis.Entity;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.map.MapUtils;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
@@ -17,13 +19,16 @@ public final class TileSelectionHandler {
 
     private final GameClient client;
     private final PlayerCameraSystem cameraSystem;
+    private final Array<Entity> selectedTiles;
 
     public TileSelectionHandler(
             final GameClient clientToSet,
-            final PlayerCameraSystem cameraSystemToSet
+            final PlayerCameraSystem cameraSystemToSet,
+            final Array<Entity> selectedTilesToUse
     ) {
         this.client = clientToSet;
         this.cameraSystem = cameraSystemToSet;
+        this.selectedTiles = selectedTilesToUse;
     }
 
     public boolean handleTap(
@@ -52,6 +57,13 @@ public final class TileSelectionHandler {
                             newState
                     );
                     client.sendTileSelectionRequest(msg);
+                    if (newState) {
+                        if (!selectedTiles.contains(tile, true)) {
+                            selectedTiles.add(tile);
+                        }
+                    } else {
+                        selectedTiles.removeValue(tile, true);
+                    }
                     return true;
                 })
                 .orElse(false);
