@@ -23,6 +23,7 @@ public class GraphicsSettingsTest {
         gs.setMipMapsEnabled(true);
         gs.setAnisotropicFilteringEnabled(true);
         gs.setShadersEnabled(true);
+        gs.setRenderer("model");
         gs.save(prefs);
         prefs.flush();
 
@@ -31,6 +32,7 @@ public class GraphicsSettingsTest {
         assertTrue(loaded.isMipMapsEnabled());
         assertTrue(loaded.isAnisotropicFilteringEnabled());
         assertTrue(loaded.isShadersEnabled());
+        assertEquals("model", loaded.getRenderer());
     }
 
     @Test
@@ -44,5 +46,6 @@ public class GraphicsSettingsTest {
         assertFalse(loaded.isMipMapsEnabled());
         assertFalse(loaded.isAnisotropicFilteringEnabled());
         assertFalse(loaded.isShadersEnabled());
+        assertEquals("sprite", loaded.getRenderer());
     }
 }
