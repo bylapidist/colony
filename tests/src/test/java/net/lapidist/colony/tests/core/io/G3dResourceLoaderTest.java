@@ -19,6 +19,9 @@ public class G3dResourceLoaderTest {
         ResourceLoader loader = new G3dResourceLoader();
         loader.loadTextures(FileLocation.INTERNAL, "textures/textures.atlas");
         loader.loadModel(FileLocation.INTERNAL, "models/cube.g3dj");
+        while (!loader.update()) {
+            assertTrue(loader.getProgress() < 1f);
+        }
 
         assertTrue(loader.isLoaded());
         assertNotNull(loader.getAtlas());

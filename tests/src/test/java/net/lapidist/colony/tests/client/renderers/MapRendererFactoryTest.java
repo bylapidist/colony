@@ -22,6 +22,7 @@ public class MapRendererFactoryTest {
 
     private static final class DummyLoader implements ResourceLoader {
         private boolean loaded;
+        private boolean updated;
 
         @Override
         public void loadTextures(
@@ -29,12 +30,12 @@ public class MapRendererFactoryTest {
                 final String path,
                 final net.lapidist.colony.settings.GraphicsSettings settings
         ) {
-            loaded = true;
+            // start load
         }
 
         @Override
         public void loadTextures(final FileLocation location, final String path) {
-            loaded = true;
+            // start load
         }
 
         @Override
@@ -62,6 +63,18 @@ public class MapRendererFactoryTest {
         }
 
         @Override
+        public boolean update() {
+            updated = true;
+            loaded = true;
+            return true;
+        }
+
+        @Override
+        public float getProgress() {
+            return 1f;
+        }
+
+        @Override
         public void dispose() {
         }
     }
@@ -74,15 +87,19 @@ public class MapRendererFactoryTest {
                 .build());
         try (MockedConstruction<SpriteBatch> ignored =
                 mockConstruction(SpriteBatch.class)) {
+            java.util.concurrent.atomic.AtomicInteger progressCalls = new java.util.concurrent.atomic.AtomicInteger();
             MapRendererFactory factory = new SpriteMapRendererFactory(
                     loader,
                     FileLocation.INTERNAL,
-                    "textures/textures.atlas"
+                    "textures/textures.atlas",
+                    p -> progressCalls.incrementAndGet()
             );
             MapRenderer renderer = factory.create(world);
 
             assertNotNull(renderer);
             assertTrue(loader.loaded);
+            assertTrue(loader.updated);
+            assertTrue(progressCalls.get() > 0);
         }
         world.dispose();
     }

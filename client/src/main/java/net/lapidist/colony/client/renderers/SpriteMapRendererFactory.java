@@ -21,19 +21,30 @@ public final class SpriteMapRendererFactory implements MapRendererFactory {
     private final FileLocation fileLocation;
     private final String atlasPath;
     private final ResourceLoader resourceLoader;
+    private final java.util.function.Consumer<Float> progressCallback;
 
     public SpriteMapRendererFactory() {
-        this(new TextureAtlasResourceLoader(), FileLocation.INTERNAL, "textures/textures.atlas");
+        this(new TextureAtlasResourceLoader(), FileLocation.INTERNAL, "textures/textures.atlas", null);
     }
 
-    public SpriteMapRendererFactory(final ResourceLoader loader, final FileLocation location, final String path) {
+    public SpriteMapRendererFactory(
+            final ResourceLoader loader,
+            final FileLocation location,
+            final String path,
+            final java.util.function.Consumer<Float> callback
+    ) {
         this.fileLocation = location;
         this.atlasPath = path;
         this.resourceLoader = loader;
+        this.progressCallback = callback;
+    }
+
+    public SpriteMapRendererFactory(final ResourceLoader loader, final FileLocation location, final String path) {
+        this(loader, location, path, null);
     }
 
     public SpriteMapRendererFactory(final FileLocation location, final String path) {
-        this(new TextureAtlasResourceLoader(), location, path);
+        this(new TextureAtlasResourceLoader(), location, path, null);
     }
 
     @Override
@@ -41,6 +52,14 @@ public final class SpriteMapRendererFactory implements MapRendererFactory {
         try {
             GraphicsSettings graphics = Settings.load().getGraphicsSettings();
             resourceLoader.loadTextures(fileLocation, atlasPath, graphics);
+            while (!resourceLoader.update()) {
+                if (progressCallback != null) {
+                    progressCallback.accept(resourceLoader.getProgress());
+                }
+            }
+            if (progressCallback != null) {
+                progressCallback.accept(1f);
+            }
         } catch (IOException e) {
             // ignore loading errors in headless tests
         }
