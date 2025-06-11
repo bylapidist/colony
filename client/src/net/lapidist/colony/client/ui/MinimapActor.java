@@ -15,7 +15,6 @@ import net.lapidist.colony.client.core.io.TextureAtlasResourceLoader;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.settings.GraphicsSettings;
 import net.lapidist.colony.settings.Settings;
-import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 
@@ -35,7 +34,6 @@ public final class MinimapActor extends Actor implements Disposable {
     private ViewportOverlayRenderer overlayRenderer;
     private ComponentMapper<MapComponent> mapMapper;
     private ComponentMapper<TileComponent> tileMapper;
-    private ComponentMapper<TextureRegionReferenceComponent> textureMapper;
     private Entity map;
     private PlayerCameraSystem cameraSystem;
     private float mapWidthWorld;
@@ -76,7 +74,6 @@ public final class MinimapActor extends Actor implements Disposable {
         if (mapMapper == null) {
             mapMapper = world.getMapper(MapComponent.class);
             tileMapper = world.getMapper(TileComponent.class);
-            textureMapper = world.getMapper(TextureRegionReferenceComponent.class);
         }
 
         if (cameraSystem == null) {
@@ -139,7 +136,7 @@ public final class MinimapActor extends Actor implements Disposable {
         float scaleY = getHeight() / mapHeightWorld;
 
         cache.setViewport(getWidth(), getHeight());
-        cache.ensureCache(resourceLoader, map, mapMapper, tileMapper, textureMapper,
+        cache.ensureCache(resourceLoader, map, mapMapper, tileMapper,
                 scaleX, scaleY);
         cache.draw((SpriteBatch) batch, getX(), getY());
 

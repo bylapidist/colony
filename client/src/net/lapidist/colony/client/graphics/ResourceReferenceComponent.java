@@ -1,4 +1,4 @@
-package net.lapidist.colony.components.assets;
+package net.lapidist.colony.client.graphics;
 
 import com.artemis.Component;
 

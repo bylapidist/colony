@@ -10,7 +10,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.client.core.io.ResourceLoader;
-import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
+import net.lapidist.colony.client.renderers.AssetResolver;
+import net.lapidist.colony.client.renderers.DefaultAssetResolver;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 
@@ -42,7 +43,6 @@ final class MinimapCache implements Disposable {
             final Entity map,
             final ComponentMapper<MapComponent> mapMapper,
             final ComponentMapper<TileComponent> tileMapper,
-            final ComponentMapper<TextureRegionReferenceComponent> textureMapper,
             final float scaleX,
             final float scaleY
     ) {
@@ -57,12 +57,13 @@ final class MinimapCache implements Disposable {
         spriteCache.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, viewportWidth, viewportHeight));
         spriteCache.beginCache();
 
+        AssetResolver resolver = new DefaultAssetResolver();
         Array<Entity> tiles = mapMapper.get(map).getTiles();
         for (int i = 0; i < tiles.size; i++) {
             Entity tile = tiles.get(i);
             TileComponent tileComponent = tileMapper.get(tile);
             TextureRegion region = resourceLoader.findRegion(
-                    textureMapper.get(tile).getResourceRef());
+                    resolver.tileAsset(tileComponent.getTileType()));
             if (region != null) {
                 spriteCache.add(
                         region,

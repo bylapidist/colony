@@ -1,14 +1,14 @@
 package net.lapidist.colony.client.systems;
 
 import com.artemis.BaseSystem;
+import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.renderers.MapRenderer;
-import net.lapidist.colony.components.maps.MapComponent;
 
 public final class MapRenderSystem extends BaseSystem {
 
     private MapRenderer mapRenderer;
 
-    private MapComponent map;
+    private MapRenderData mapData;
 
     private CameraProvider cameraSystem;
 
@@ -34,15 +34,18 @@ public final class MapRenderSystem extends BaseSystem {
 
     @Override
     protected void processSystem() {
-        if (map == null) {
-            map = net.lapidist.colony.map.MapUtils.findMap(world).orElse(null);
-            if (map == null) {
+        if (mapData == null) {
+            MapRenderDataSystem dataSystem = world.getSystem(MapRenderDataSystem.class);
+            if (dataSystem != null) {
+                mapData = dataSystem.getRenderData();
+            }
+            if (mapData == null) {
                 return;
             }
         }
 
         if (mapRenderer != null) {
-            mapRenderer.render(map, cameraSystem);
+            mapRenderer.render(mapData, cameraSystem);
         }
     }
 }

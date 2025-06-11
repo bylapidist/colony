@@ -6,6 +6,7 @@ import net.lapidist.colony.client.renderers.MapRenderer;
 import net.lapidist.colony.client.systems.MapRenderSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.MapInitSystem;
+import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
@@ -63,6 +64,7 @@ public class MapRenderSystemTest {
                 .with(
                         renderSystem,
                         new MapInitSystem(new ProvidedMapStateProvider(state)),
+                        new MapRenderDataSystem(),
                         new PlayerCameraSystem()
                 )
                 .build());
@@ -73,7 +75,7 @@ public class MapRenderSystemTest {
         world.process();
 
         MapRenderSystem system = world.getSystem(MapRenderSystem.class);
-        Field mapField = MapRenderSystem.class.getDeclaredField("map");
+        Field mapField = MapRenderSystem.class.getDeclaredField("mapData");
         mapField.setAccessible(true);
         Object map = mapField.get(system);
 

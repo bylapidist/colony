@@ -9,7 +9,6 @@ import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.util.CameraUtils;
-import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 
 /**
@@ -21,20 +20,20 @@ public final class TileRenderer implements EntityRenderer {
     private final ResourceLoader resourceLoader;
     private final CameraProvider cameraSystem;
     private final ComponentMapper<TileComponent> tileMapper;
-    private final ComponentMapper<TextureRegionReferenceComponent> textureMapper;
+    private final AssetResolver resolver;
 
     public TileRenderer(
             final SpriteBatch spriteBatchToSet,
             final ResourceLoader resourceLoaderToSet,
             final CameraProvider cameraSystemToSet,
             final ComponentMapper<TileComponent> tileMapperToSet,
-            final ComponentMapper<TextureRegionReferenceComponent> textureMapperToSet
+            final AssetResolver resolverToSet
     ) {
         this.spriteBatch = spriteBatchToSet;
         this.resourceLoader = resourceLoaderToSet;
         this.cameraSystem = cameraSystemToSet;
         this.tileMapper = tileMapperToSet;
-        this.textureMapper = textureMapperToSet;
+        this.resolver = resolverToSet;
     }
 
     @Override
@@ -51,12 +50,10 @@ public final class TileRenderer implements EntityRenderer {
                 continue;
             }
 
-            TextureRegionReferenceComponent tex = textureMapper.get(entity);
-            if (tex != null) {
-                TextureRegion region = resourceLoader.findRegion(tex.getResourceRef());
-                if (region != null) {
-                    spriteBatch.draw(region, worldCoords.x, worldCoords.y);
-                }
+            String ref = resolver.tileAsset(tile.getTileType());
+            TextureRegion region = resourceLoader.findRegion(ref);
+            if (region != null) {
+                spriteBatch.draw(region, worldCoords.x, worldCoords.y);
             }
 
             if (tile.isSelected()) {

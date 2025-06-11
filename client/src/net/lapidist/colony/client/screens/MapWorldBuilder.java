@@ -19,7 +19,7 @@ import net.lapidist.colony.client.systems.network.TileUpdateSystem;
 import net.lapidist.colony.client.systems.network.BuildingUpdateSystem;
 import net.lapidist.colony.client.systems.network.ResourceUpdateSystem;
 import net.lapidist.colony.client.systems.MapInitSystem;
-import net.lapidist.colony.client.systems.MapRenderInitSystem;
+import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.client.systems.PlayerInitSystem;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
@@ -130,7 +130,7 @@ public final class MapWorldBuilder {
         if (provider != null) {
             builder.with(
                     new MapInitSystem(provider),
-                    new MapRenderInitSystem(),
+                    new MapRenderDataSystem(),
                     new PlayerCameraSystem()
             );
         }

@@ -17,7 +17,6 @@ public final class TileFactory {
     public static Entity create(
             final World world,
             final TileComponent.TileType tileType,
-            final String resourceRef,
             final Vector2 coords,
             final boolean passable,
             final boolean selected,
@@ -35,6 +34,6 @@ public final class TileFactory {
             rc.setFood(resources.food());
         }
 
-        return createEntity(world, resourceRef, tileComponent, rc, coords);
+        return createEntity(world, tileComponent, rc, coords);
     }
 }

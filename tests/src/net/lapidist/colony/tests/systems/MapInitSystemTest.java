@@ -15,7 +15,6 @@ import net.lapidist.colony.map.DefaultMapGenerator;
 import net.lapidist.colony.client.entities.factories.MapFactory;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.resources.ResourceComponent;
-import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -80,13 +79,10 @@ public class MapInitSystemTest {
 
         TileComponent tc = world.getMapper(TileComponent.class).get(tile);
         ResourceComponent rc = world.getMapper(ResourceComponent.class).get(tile);
-        TextureRegionReferenceComponent tex =
-                world.getMapper(TextureRegionReferenceComponent.class).get(tile);
 
         assertEquals(TileComponent.TileType.GRASS, tc.getTileType());
         assertEquals(WOOD, rc.getWood());
         assertEquals(STONE, rc.getStone());
         assertEquals(FOOD, rc.getFood());
-        assertEquals(null, tex);
     }
 }

@@ -9,7 +9,6 @@ import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.util.CameraUtils;
-import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
 import net.lapidist.colony.components.entities.BuildingComponent;
 
 /**
@@ -21,20 +20,20 @@ public final class BuildingRenderer implements EntityRenderer {
     private final ResourceLoader resourceLoader;
     private final CameraProvider cameraSystem;
     private final ComponentMapper<BuildingComponent> buildingMapper;
-    private final ComponentMapper<TextureRegionReferenceComponent> textureMapper;
+    private final AssetResolver resolver;
 
     public BuildingRenderer(
             final SpriteBatch spriteBatchToSet,
             final ResourceLoader resourceLoaderToSet,
             final CameraProvider cameraSystemToSet,
             final ComponentMapper<BuildingComponent> buildingMapperToSet,
-            final ComponentMapper<TextureRegionReferenceComponent> textureMapperToSet
+            final AssetResolver resolverToSet
     ) {
         this.spriteBatch = spriteBatchToSet;
         this.resourceLoader = resourceLoaderToSet;
         this.cameraSystem = cameraSystemToSet;
         this.buildingMapper = buildingMapperToSet;
-        this.textureMapper = textureMapperToSet;
+        this.resolver = resolverToSet;
     }
 
     @Override
@@ -51,9 +50,8 @@ public final class BuildingRenderer implements EntityRenderer {
                 continue;
             }
 
-            TextureRegion region = resourceLoader.findRegion(
-                    textureMapper.get(entity).getResourceRef()
-            );
+            String ref = resolver.buildingAsset(building.getBuildingType());
+            TextureRegion region = resourceLoader.findRegion(ref);
             if (region != null) {
                 spriteBatch.draw(region, worldCoords.x, worldCoords.y);
             }
