@@ -1,8 +1,11 @@
 package net.lapidist.colony.client.core.io;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.GLTexture;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import net.lapidist.colony.settings.GraphicsSettings;
 import com.badlogic.gdx.utils.Disposable;
 
 import java.io.IOException;
@@ -28,7 +31,11 @@ public final class ResourceLoader implements Disposable {
      * @param atlasPath path to the .atlas file
      * @throws IOException if the atlas cannot be found
      */
-    public void load(final FileLocation fileLocationToSet, final String atlasPath) throws IOException {
+    public void load(
+            final FileLocation fileLocationToSet,
+            final String atlasPath,
+            final GraphicsSettings graphicsSettings
+    ) throws IOException {
         fileLocation = fileLocationToSet;
 
         if (!fileLocation.getFile(atlasPath).exists()) {
@@ -41,7 +48,24 @@ public final class ResourceLoader implements Disposable {
 
         atlas = assetManager.get(atlasPath, TextureAtlas.class);
 
+        if (graphicsSettings != null) {
+            Texture.TextureFilter minFilter = graphicsSettings.isMipMapsEnabled()
+                    ? Texture.TextureFilter.MipMapLinearLinear
+                    : Texture.TextureFilter.Linear;
+            Texture.TextureFilter magFilter = Texture.TextureFilter.Linear;
+            for (Texture texture : atlas.getTextures()) {
+                texture.setFilter(minFilter, magFilter);
+                if (graphicsSettings.isAnisotropicFilteringEnabled()) {
+                    texture.setAnisotropicFilter(GLTexture.getMaxAnisotropicFilterLevel());
+                }
+            }
+        }
+
         loaded = true;
+    }
+
+    public void load(final FileLocation fileLocationToSet, final String atlasPath) throws IOException {
+        load(fileLocationToSet, atlasPath, null);
     }
 
     public boolean isLoaded() {
@@ -50,6 +74,10 @@ public final class ResourceLoader implements Disposable {
 
     public FileLocation getFileLocation() {
         return fileLocation;
+    }
+
+    public TextureAtlas getAtlas() {
+        return atlas;
     }
 
 
