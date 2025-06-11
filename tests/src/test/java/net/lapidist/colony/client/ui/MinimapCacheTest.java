@@ -35,6 +35,7 @@ public class MinimapCacheTest {
     private static final float VIEW_SIZE_LARGER = VIEW_SIZE + 1f;
     private static final int THREE = 3;
     private static final int LARGE_SIZE = 40;
+    private static final int BATCH_LIMIT_EXCEEDING_SIZE = 100;
 
     private World createWorldWithTile() {
         MapState state = new MapState();
@@ -207,6 +208,36 @@ public class MinimapCacheTest {
 
             assertEquals(Integer.valueOf(size * size), capturedArgs[0].get(0));
             assertEquals(Boolean.TRUE, capturedArgs[0].get(1));
+        }
+    }
+
+    @Test
+    public void splitsCacheWhenMapExceedsBatchLimit() {
+        int size = BATCH_LIMIT_EXCEEDING_SIZE;
+        World world = createWorldWithTiles(size, size);
+        int mapId = world.getAspectSubscriptionManager()
+                .get(com.artemis.Aspect.all(MapComponent.class))
+                .getEntities().get(0);
+        Entity map = world.getEntity(mapId);
+        ComponentMapper<MapComponent> mapMapper = world.getMapper(MapComponent.class);
+        ComponentMapper<TileComponent> tileMapper = world.getMapper(TileComponent.class);
+
+        ResourceLoader loader = mock(ResourceLoader.class);
+        when(loader.findRegion(any())).thenReturn(new TextureRegion());
+
+        try (MockedConstruction<SpriteCache> cons = mockConstruction(SpriteCache.class,
+                (mock, ctx) -> {
+                    when(mock.getProjectionMatrix()).thenReturn(new Matrix4());
+                    when(mock.getTransformMatrix()).thenReturn(new Matrix4());
+                    when(mock.endCache()).thenReturn(0);
+                });
+             MockedConstruction<DefaultAssetResolver> resCons = mockConstruction(DefaultAssetResolver.class,
+                (m, c) -> when(m.tileAsset(any())).thenAnswer(inv -> inv.getArgument(0) + "0"))) {
+            MinimapCache cache = new MinimapCache();
+            cache.setViewport(VIEW_SIZE, VIEW_SIZE);
+            cache.ensureCache(loader, map, mapMapper, tileMapper, SCALE, SCALE);
+
+            assertTrue(cons.constructed().size() > 1);
         }
     }
 }
