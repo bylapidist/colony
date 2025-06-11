@@ -10,6 +10,8 @@ public class DefaultAssetResolverTest {
     public void returnsSpriteReferences() {
         DefaultAssetResolver resolver = new DefaultAssetResolver();
         assertEquals("grass0", resolver.tileAsset("GRASS"));
+        assertEquals("grass0", resolver.tileAsset("grass"));
         assertEquals("house0", resolver.buildingAsset("HOUSE"));
+        assertEquals("house0", resolver.buildingAsset("house"));
     }
 }
