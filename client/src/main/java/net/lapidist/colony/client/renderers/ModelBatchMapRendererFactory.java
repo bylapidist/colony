@@ -16,9 +16,22 @@ public final class ModelBatchMapRendererFactory implements MapRendererFactory {
     private final FileLocation location;
     private final String modelPath;
     private final ResourceLoader loader;
+    private final java.util.function.Consumer<Float> progressCallback;
 
     public ModelBatchMapRendererFactory() {
-        this(new G3dResourceLoader(), FileLocation.INTERNAL, "models/cube.g3dj");
+        this(new G3dResourceLoader(), FileLocation.INTERNAL, "models/cube.g3dj", null);
+    }
+
+    public ModelBatchMapRendererFactory(
+            final ResourceLoader loaderToSet,
+            final FileLocation locationToSet,
+            final String path,
+            final java.util.function.Consumer<Float> callback
+    ) {
+        this.location = locationToSet;
+        this.modelPath = path;
+        this.loader = loaderToSet;
+        this.progressCallback = callback;
     }
 
     public ModelBatchMapRendererFactory(
@@ -26,9 +39,7 @@ public final class ModelBatchMapRendererFactory implements MapRendererFactory {
             final FileLocation locationToSet,
             final String path
     ) {
-        this.location = locationToSet;
-        this.modelPath = path;
-        this.loader = loaderToSet;
+        this(loaderToSet, locationToSet, path, null);
     }
 
     @Override
@@ -36,6 +47,14 @@ public final class ModelBatchMapRendererFactory implements MapRendererFactory {
         try {
             loader.loadTextures(location, "textures/textures.atlas");
             loader.loadModel(location, modelPath);
+            while (!loader.update()) {
+                if (progressCallback != null) {
+                    progressCallback.accept(loader.getProgress());
+                }
+            }
+            if (progressCallback != null) {
+                progressCallback.accept(1f);
+            }
         } catch (Exception e) {
             // ignore errors in headless tests
         }

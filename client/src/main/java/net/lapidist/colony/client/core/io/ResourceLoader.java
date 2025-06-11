@@ -74,4 +74,27 @@ public interface ResourceLoader extends Disposable {
      * @return matching model or {@code null}
      */
     Model findModel(String name);
+
+    /**
+     * Progress the asynchronous loading process once.
+     *
+     * @return {@code true} when all assets are loaded
+     */
+    boolean update();
+
+    /**
+     * Current loading progress between 0 and 1.
+     *
+     * @return progress value
+     */
+    float getProgress();
+
+    /**
+     * Block until all queued assets have finished loading.
+     */
+    default void finishLoading() {
+        while (!update()) {
+            Thread.yield();
+        }
+    }
 }
