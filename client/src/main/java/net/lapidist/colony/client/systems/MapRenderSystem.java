@@ -32,17 +32,15 @@ public final class MapRenderSystem extends BaseSystem {
 
     @Override
     protected void processSystem() {
-        if (mapData == null) {
-            MapRenderDataSystem dataSystem = world.getSystem(MapRenderDataSystem.class);
-            if (dataSystem != null) {
-                mapData = dataSystem.getRenderData();
-            }
-            if (mapData == null) {
-                return;
+        MapRenderDataSystem dataSystem = world.getSystem(MapRenderDataSystem.class);
+        if (dataSystem != null) {
+            MapRenderData newData = dataSystem.getRenderData();
+            if (newData != null) {
+                mapData = newData;
             }
         }
 
-        if (mapRenderer != null) {
+        if (mapRenderer != null && mapData != null) {
             mapRenderer.render(mapData, cameraSystem);
         }
     }
