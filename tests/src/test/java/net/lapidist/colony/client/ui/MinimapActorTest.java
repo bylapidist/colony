@@ -71,6 +71,11 @@ public class MinimapActorTest {
             rf.setAccessible(true);
             rf.set(actor, renderer);
 
+            MinimapOutlineRenderer outline = mock(MinimapOutlineRenderer.class);
+            java.lang.reflect.Field of = MinimapActor.class.getDeclaredField("outlineRenderer");
+            of.setAccessible(true);
+            of.set(actor, outline);
+
             SpriteBatch batch = new SpriteBatch();
 
             actor.invalidateCache();
@@ -85,10 +90,13 @@ public class MinimapActorTest {
                     same(batch), anyFloat(), anyFloat(), anyFloat(), anyFloat(),
                     eq(actor.getX()), eq(actor.getY())
             );
+            verify(outline).render(batch, actor.getX(), actor.getY(), actor.getWidth(), actor.getHeight());
 
             actor.dispose();
             batch.dispose();
             stage.dispose();
+
+            verify(outline).dispose();
         }
     }
 }
