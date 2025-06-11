@@ -37,6 +37,7 @@ public final class BuildingUpdateSystem extends BaseSystem {
                     BuildingComponent.BuildingType.valueOf(update.buildingType()),
                     new Vector2(update.x(), update.y())
             ));
+            map.incrementVersion();
         }
     }
 }

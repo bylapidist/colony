@@ -46,7 +46,11 @@ public class InputSystemInitOrderTest {
         world.process();
 
         PlayerCameraSystem camera = world.getSystem(PlayerCameraSystem.class);
-        camera.getCamera().position.set(GameConstants.TILE_SIZE / 2f, GameConstants.TILE_SIZE / 2f, 0);
+        ((com.badlogic.gdx.graphics.OrthographicCamera) camera.getCamera()).position.set(
+                GameConstants.TILE_SIZE / 2f,
+                GameConstants.TILE_SIZE / 2f,
+                0
+        );
         camera.getCamera().update();
 
         Vector2 screenCoords = CameraUtils.worldToScreenCoords(camera.getViewport(), 0, 0);

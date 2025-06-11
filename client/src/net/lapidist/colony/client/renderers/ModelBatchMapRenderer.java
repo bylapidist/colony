@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.utils.Disposable;
 import net.lapidist.colony.client.systems.CameraProvider;
-import net.lapidist.colony.client.render.MapRenderData;
+import net.lapidist.colony.render.MapRenderData;
 
 /**
  * Very basic 3-D implementation of {@link MapRenderer} for experiments.

@@ -2,10 +2,12 @@ package net.lapidist.colony.client.systems;
 
 import com.artemis.BaseSystem;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import net.lapidist.colony.client.util.CameraUtils;
 
 public final class PlayerCameraSystem extends BaseSystem implements CameraProvider {
@@ -82,7 +84,7 @@ public final class PlayerCameraSystem extends BaseSystem implements CameraProvid
         return camera.zoom;
     }
 
-    public OrthographicCamera getCamera() {
+    public Camera getCamera() {
         return camera;
     }
 
@@ -90,7 +92,7 @@ public final class PlayerCameraSystem extends BaseSystem implements CameraProvid
         this.camera = cameraToSet;
     }
 
-    public ExtendViewport getViewport() {
+    public Viewport getViewport() {
         return viewport;
     }
 

@@ -9,11 +9,29 @@ import java.util.Map;
 
 public class MapComponent extends Component {
 
+    private int version;
+
     private Array<Entity> tiles;
 
     private Map<TilePos, Entity> tileMap;
 
     private Array<Entity> entities;
+
+    /**
+     * Returns the current modification counter for this map. Render systems use
+     * this value to detect changes.
+     */
+    public int getVersion() {
+        return version;
+    }
+
+    /**
+     * Increments the modification counter to signal that the map state has
+     * changed.
+     */
+    public void incrementVersion() {
+        this.version++;
+    }
 
     public final Array<Entity> getTiles() {
         return tiles;
@@ -41,10 +59,12 @@ public class MapComponent extends Component {
 
     public final void addEntity(final Entity entityToAdd) {
         this.entities.add(entityToAdd);
+        incrementVersion();
     }
 
     public final void removeEntity(final Entity entityToRemove) {
         this.entities.removeValue(entityToRemove, true);
+        incrementVersion();
     }
 
     public final void reset() {
@@ -53,5 +73,6 @@ public class MapComponent extends Component {
             this.tileMap.clear();
         }
         this.entities.clear();
+        incrementVersion();
     }
 }

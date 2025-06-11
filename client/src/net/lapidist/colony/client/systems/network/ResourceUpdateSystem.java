@@ -66,6 +66,7 @@ public final class ResourceUpdateSystem extends BaseSystem {
                                 pr.addFood(deltaFood);
                             }
                         }
+                        mapComponent.incrementVersion();
                     });
         }
     }

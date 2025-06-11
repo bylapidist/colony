@@ -12,7 +12,7 @@ import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.map.GeneratedMapStateProvider;
 import net.lapidist.colony.map.ProvidedMapStateProvider;
 import net.lapidist.colony.map.DefaultMapGenerator;
-import net.lapidist.colony.client.entities.factories.MapFactory;
+import net.lapidist.colony.map.MapFactory;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.resources.ResourceComponent;
 import org.junit.Test;

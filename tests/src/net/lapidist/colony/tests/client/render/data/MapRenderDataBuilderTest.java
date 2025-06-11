@@ -2,9 +2,9 @@ package net.lapidist.colony.tests.client.render.data;
 
 import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
-import net.lapidist.colony.client.entities.factories.MapFactory;
-import net.lapidist.colony.client.render.MapRenderData;
-import net.lapidist.colony.client.render.MapRenderDataBuilder;
+import net.lapidist.colony.map.MapFactory;
+import net.lapidist.colony.render.MapRenderData;
+import net.lapidist.colony.render.MapRenderDataBuilder;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;

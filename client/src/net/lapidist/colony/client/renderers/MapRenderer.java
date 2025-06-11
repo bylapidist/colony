@@ -1,7 +1,7 @@
 package net.lapidist.colony.client.renderers;
 
 import net.lapidist.colony.client.systems.CameraProvider;
-import net.lapidist.colony.client.render.MapRenderData;
+import net.lapidist.colony.render.MapRenderData;
 
 /**
  * Rendering abstraction for map visuals.

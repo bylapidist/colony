@@ -1,4 +1,4 @@
-package net.lapidist.colony.client.entities.factories;
+package net.lapidist.colony.map;
 
 import com.artemis.Entity;
 import com.artemis.World;
@@ -78,6 +78,7 @@ public final class MapFactory {
         mapComponent.setTileMap(tileMap);
         mapComponent.setEntities(entities);
         map.edit().add(mapComponent);
+        mapComponent.incrementVersion();
         return map;
     }
 }

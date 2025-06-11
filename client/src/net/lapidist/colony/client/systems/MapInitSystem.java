@@ -1,7 +1,7 @@
 package net.lapidist.colony.client.systems;
 
 import com.artemis.BaseSystem;
-import net.lapidist.colony.client.entities.factories.MapFactory;
+import net.lapidist.colony.map.MapFactory;
 import net.lapidist.colony.map.MapStateProvider;
 
 /**

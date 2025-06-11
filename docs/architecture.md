@@ -48,7 +48,12 @@ Rendering code is decoupled from map creation through the `MapRendererFactory`
 interface. `MapWorldBuilder` accepts a factory instance when building the world
 and defaults to a sprite batch based implementation. Alternative renderers, such
 as the prototype 3‑D renderer, can be plugged in by providing a different
-factory when calling `MapWorldBuilder.build`.
+factory when calling `MapWorldBuilder.build`. The chosen renderer also determines
+which camera system is registered. When a `ModelBatchMapRendererFactory` is
+selected a perspective camera system is used, otherwise the default
+`PlayerCameraSystem` provides an orthographic view.
+The active factory can be configured via the `graphics.renderer` setting with
+values `sprite` or `model`.
 
 `MapRenderData` acts as a lightweight view of the map state for renderers. A
 `MapRenderDataSystem` converts the ECS `MapComponent` into immutable
