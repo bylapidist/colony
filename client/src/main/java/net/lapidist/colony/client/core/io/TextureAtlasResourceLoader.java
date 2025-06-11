@@ -23,6 +23,8 @@ public final class TextureAtlasResourceLoader implements ResourceLoader {
     private FileLocation fileLocation;
     private AssetManager assetManager;
     private TextureAtlas atlas;
+    private String pendingAtlasPath;
+    private GraphicsSettings pendingSettings;
 
     /**
      * Load all texture regions from the specified atlas file.
@@ -44,24 +46,9 @@ public final class TextureAtlasResourceLoader implements ResourceLoader {
 
         assetManager = new AssetManager(fileLocation.getResolver());
         assetManager.load(atlasPath, TextureAtlas.class);
-        assetManager.finishLoading();
-
-        atlas = assetManager.get(atlasPath, TextureAtlas.class);
-
-        if (graphicsSettings != null) {
-            Texture.TextureFilter minFilter = graphicsSettings.isMipMapsEnabled()
-                    ? Texture.TextureFilter.MipMapLinearLinear
-                    : Texture.TextureFilter.Linear;
-            Texture.TextureFilter magFilter = Texture.TextureFilter.Linear;
-            for (Texture texture : atlas.getTextures()) {
-                texture.setFilter(minFilter, magFilter);
-                if (graphicsSettings.isAnisotropicFilteringEnabled()) {
-                    texture.setAnisotropicFilter(GLTexture.getMaxAnisotropicFilterLevel());
-                }
-            }
-        }
-
-        loaded = true;
+        pendingAtlasPath = atlasPath;
+        pendingSettings = graphicsSettings;
+        loaded = false;
     }
 
     public void loadTextures(final FileLocation fileLocationToSet, final String atlasPath) throws IOException {
@@ -78,6 +65,36 @@ public final class TextureAtlasResourceLoader implements ResourceLoader {
 
     public TextureAtlas getAtlas() {
         return atlas;
+    }
+
+    @Override
+    public boolean update() {
+        if (assetManager == null) {
+            return false;
+        }
+        boolean done = assetManager.update();
+        if (done && !loaded) {
+            atlas = assetManager.get(pendingAtlasPath, TextureAtlas.class);
+            if (pendingSettings != null) {
+                Texture.TextureFilter minFilter = pendingSettings.isMipMapsEnabled()
+                        ? Texture.TextureFilter.MipMapLinearLinear
+                        : Texture.TextureFilter.Linear;
+                Texture.TextureFilter magFilter = Texture.TextureFilter.Linear;
+                for (Texture texture : atlas.getTextures()) {
+                    texture.setFilter(minFilter, magFilter);
+                    if (pendingSettings.isAnisotropicFilteringEnabled()) {
+                        texture.setAnisotropicFilter(GLTexture.getMaxAnisotropicFilterLevel());
+                    }
+                }
+            }
+            loaded = true;
+        }
+        return done;
+    }
+
+    @Override
+    public float getProgress() {
+        return assetManager == null ? 0f : assetManager.getProgress();
     }
 
 

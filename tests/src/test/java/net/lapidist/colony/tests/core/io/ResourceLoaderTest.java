@@ -29,6 +29,9 @@ public class ResourceLoaderTest {
                 "textures/textures.atlas",
                 gs
         );
+        while (!resourceLoader.update()) {
+            assertTrue(resourceLoader.getProgress() < 1f);
+        }
         assertTrue(resourceLoader.isLoaded());
     }
 
@@ -40,10 +43,21 @@ public class ResourceLoaderTest {
         ResourceLoader resourceLoader = new TextureAtlasResourceLoader();
 
         resourceLoader.loadTextures(FileLocation.INTERNAL, "textures/textures.atlas", gs);
+        resourceLoader.finishLoading();
 
         for (Texture texture : resourceLoader.getAtlas().getTextures()) {
             assertEquals(Texture.TextureFilter.MipMapLinearLinear, texture.getMinFilter());
             assertTrue(texture.getAnisotropicFilter() >= 1f);
         }
+    }
+
+    @Test
+    public void updateReturnsFalseWhenNotStarted() {
+        ResourceLoader loader = new TextureAtlasResourceLoader();
+
+        assertFalse(loader.update());
+        assertEquals(0f, loader.getProgress(), 0f);
+        assertFalse(loader.isLoaded());
+        assertNull(loader.findRegion("missing"));
     }
 }

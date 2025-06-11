@@ -19,6 +19,8 @@ public final class G3dResourceLoader implements ResourceLoader {
     private FileLocation fileLocation;
     private AssetManager assetManager;
     private TextureAtlas atlas;
+    private String pendingAtlasPath;
+    private String pendingModelPath;
 
     @Override
     public void loadTextures(
@@ -34,11 +36,8 @@ public final class G3dResourceLoader implements ResourceLoader {
 
         assetManager = new AssetManager(fileLocation.getResolver());
         assetManager.load(atlasPath, TextureAtlas.class);
-        assetManager.finishLoading();
-
-        atlas = assetManager.get(atlasPath, TextureAtlas.class);
-
-        loaded = true;
+        pendingAtlasPath = atlasPath;
+        loaded = false;
     }
 
     @Override
@@ -58,9 +57,7 @@ public final class G3dResourceLoader implements ResourceLoader {
             assetManager = new AssetManager(fileLocation.getResolver());
         }
         assetManager.load(modelPath, Model.class);
-        assetManager.finishLoading();
-
-        loaded = true;
+        pendingModelPath = modelPath;
     }
 
     @Override
@@ -87,6 +84,26 @@ public final class G3dResourceLoader implements ResourceLoader {
             return null;
         }
         return assetManager.get(name, Model.class);
+    }
+
+    @Override
+    public boolean update() {
+        if (assetManager == null) {
+            return false;
+        }
+        boolean done = assetManager.update();
+        if (done && !loaded) {
+            if (pendingAtlasPath != null) {
+                atlas = assetManager.get(pendingAtlasPath, TextureAtlas.class);
+            }
+            loaded = true;
+        }
+        return done;
+    }
+
+    @Override
+    public float getProgress() {
+        return assetManager == null ? 0f : assetManager.getProgress();
     }
 
     @Override
