@@ -1,0 +1,54 @@
+package net.lapidist.colony.tests.server;
+
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
+import com.esotericsoftware.kryonet.Server;
+import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.server.services.NetworkService;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+
+import static org.mockito.Mockito.*;
+
+public class NetworkServiceTest {
+
+    @Test
+    public void startBindsServerAndSendsStateOnConnect() throws Exception {
+        Server server = mock(Server.class);
+        NetworkService service = new NetworkService(server, 1, 2);
+        MapState state = new MapState();
+
+        service.start(state, o -> { });
+
+        verify(server).start();
+        verify(server).bind(1, 2);
+        ArgumentCaptor<Listener> captor = ArgumentCaptor.forClass(Listener.class);
+        verify(server).addListener(captor.capture());
+
+        Listener listener = captor.getValue();
+        Connection connection = mock(Connection.class);
+        listener.connected(connection);
+        verify(connection).sendTCP(state);
+    }
+
+    @Test
+    public void broadcastUsesServerSend() {
+        Server server = mock(Server.class);
+        NetworkService service = new NetworkService(server, 1, 2);
+        Object message = new Object();
+
+        service.broadcast(message);
+
+        verify(server).sendToAllTCP(message);
+    }
+
+    @Test
+    public void stopStopsServer() {
+        Server server = mock(Server.class);
+        NetworkService service = new NetworkService(server, 1, 2);
+
+        service.stop();
+
+        verify(server).stop();
+    }
+}
