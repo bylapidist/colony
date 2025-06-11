@@ -4,6 +4,7 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteCache;
+import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
@@ -20,8 +21,10 @@ import net.lapidist.colony.components.maps.TileComponent;
  */
 final class MinimapCache implements Disposable {
 
-    private SpriteCache spriteCache;
-    private int cacheId;
+    private static final int MAX_SPRITES_PER_CACHE = 8191;
+
+    private final Array<SpriteCache> spriteCaches = new Array<>();
+    private final IntArray cacheIds = new IntArray();
     private int cacheWidth;
     private int cacheHeight;
     private boolean invalidated = true;
@@ -46,62 +49,70 @@ final class MinimapCache implements Disposable {
             final float scaleX,
             final float scaleY
     ) {
-        if (spriteCache != null && !invalidated
+        if (!spriteCaches.isEmpty() && !invalidated
                 && cacheWidth == (int) viewportWidth && cacheHeight == (int) viewportHeight) {
             return;
         }
-        if (spriteCache != null) {
-            spriteCache.dispose();
-        }
+        dispose();
         Array<Entity> tiles = mapMapper.get(map).getTiles();
-        spriteCache = new SpriteCache(tiles.size, true);
-        spriteCache.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, viewportWidth, viewportHeight));
-        spriteCache.beginCache();
-
         AssetResolver resolver = new DefaultAssetResolver();
-        for (int i = 0; i < tiles.size; i++) {
-            Entity tile = tiles.get(i);
-            TileComponent tileComponent = tileMapper.get(tile);
-            TextureRegion region = resourceLoader.findRegion(
-                    resolver.tileAsset(tileComponent.getTileType().toString()));
-            if (region != null) {
-                spriteCache.add(
-                        region,
-                        tileComponent.getX() * GameConstants.TILE_SIZE * scaleX,
-                        tileComponent.getY() * GameConstants.TILE_SIZE * scaleY,
-                        GameConstants.TILE_SIZE * scaleX,
-                        GameConstants.TILE_SIZE * scaleY
-                );
+        for (int start = 0; start < tiles.size; start += MAX_SPRITES_PER_CACHE) {
+            int count = Math.min(MAX_SPRITES_PER_CACHE, tiles.size - start);
+            SpriteCache cache = new SpriteCache(count, true);
+            cache.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, viewportWidth, viewportHeight));
+            cache.beginCache();
+            for (int i = 0; i < count; i++) {
+                Entity tile = tiles.get(start + i);
+                TileComponent tileComponent = tileMapper.get(tile);
+                TextureRegion region = resourceLoader.findRegion(
+                        resolver.tileAsset(tileComponent.getTileType().toString()));
+                if (region != null) {
+                    cache.add(
+                            region,
+                            tileComponent.getX() * GameConstants.TILE_SIZE * scaleX,
+                            tileComponent.getY() * GameConstants.TILE_SIZE * scaleY,
+                            GameConstants.TILE_SIZE * scaleX,
+                            GameConstants.TILE_SIZE * scaleY
+                    );
+                }
             }
+            cacheIds.add(cache.endCache());
+            spriteCaches.add(cache);
         }
 
-        cacheId = spriteCache.endCache();
         cacheWidth = (int) viewportWidth;
         cacheHeight = (int) viewportHeight;
         invalidated = false;
     }
 
     void draw(final SpriteBatch batch, final float x, final float y) {
-        if (spriteCache == null) {
+        if (spriteCaches.isEmpty()) {
             return;
         }
-        Matrix4 oldProj = spriteCache.getProjectionMatrix().cpy();
-        Matrix4 oldTrans = spriteCache.getTransformMatrix().cpy();
+        Matrix4 oldProj = spriteCaches.first().getProjectionMatrix().cpy();
+        Matrix4 oldTrans = spriteCaches.first().getTransformMatrix().cpy();
         batch.end();
-        spriteCache.setProjectionMatrix(batch.getProjectionMatrix());
-        spriteCache.setTransformMatrix(new Matrix4().setToTranslation(x, y, 0));
-        spriteCache.begin();
-        spriteCache.draw(cacheId);
-        spriteCache.end();
+        for (int i = 0; i < spriteCaches.size; i++) {
+            SpriteCache cache = spriteCaches.get(i);
+            cache.setProjectionMatrix(batch.getProjectionMatrix());
+            cache.setTransformMatrix(new Matrix4().setToTranslation(x, y, 0));
+            cache.begin();
+            cache.draw(cacheIds.get(i));
+            cache.end();
+        }
         batch.begin();
-        spriteCache.setProjectionMatrix(oldProj);
-        spriteCache.setTransformMatrix(oldTrans);
+        for (SpriteCache cache : spriteCaches) {
+            cache.setProjectionMatrix(oldProj);
+            cache.setTransformMatrix(oldTrans);
+        }
     }
 
     @Override
     public void dispose() {
-        if (spriteCache != null) {
-            spriteCache.dispose();
+        for (SpriteCache cache : spriteCaches) {
+            cache.dispose();
         }
+        spriteCaches.clear();
+        cacheIds.clear();
     }
 }
