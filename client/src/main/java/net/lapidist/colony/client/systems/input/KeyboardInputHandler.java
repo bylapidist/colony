@@ -54,8 +54,8 @@ public final class KeyboardInputHandler {
         var camera = (OrthographicCamera) cameraSystem.getCamera();
         var viewport = (ExtendViewport) cameraSystem.getViewport();
 
-        float halfWidth = viewport.getWorldWidth() * camera.zoom / 2f;
-        float halfHeight = viewport.getWorldHeight() * camera.zoom / 2f;
+        float halfWidth = Math.min(viewport.getWorldWidth() * camera.zoom / 2f, mapWidth / 2f);
+        float halfHeight = Math.min(viewport.getWorldHeight() * camera.zoom / 2f, mapHeight / 2f);
 
         position.x = MathUtils.clamp(position.x, halfWidth, mapWidth - halfWidth);
         position.y = MathUtils.clamp(position.y, halfHeight, mapHeight - halfHeight);

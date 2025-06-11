@@ -67,7 +67,7 @@ public class InputSystemTest {
         TileComponent tileComponent = world.getMapper(TileComponent.class)
                 .get(mapComponent.getTiles().get(0));
 
-        assertFalse(tileComponent.isSelected());
+        assertTrue(tileComponent.isSelected());
         verify(client).sendTileSelectionRequest(any());
     }
 }
