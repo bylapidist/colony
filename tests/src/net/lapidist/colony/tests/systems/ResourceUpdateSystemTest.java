@@ -37,7 +37,6 @@ public class ResourceUpdateSystemTest {
                 .x(0)
                 .y(0)
                 .tileType("GRASS")
-                .textureRef("grass0")
                 .passable(true)
                 .resources(res)
                 .build();

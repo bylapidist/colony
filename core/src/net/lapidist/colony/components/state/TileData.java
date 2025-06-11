@@ -8,7 +8,6 @@ import net.lapidist.colony.serialization.KryoType;
  * @param x          tile x coordinate
  * @param y          tile y coordinate
  * @param tileType   tile terrain type identifier
- * @param textureRef sprite reference for rendering
  * @param passable   whether units can move over the tile
  * @param selected   whether the tile is currently selected
  * @param resources  resources contained on the tile
@@ -18,14 +17,13 @@ public record TileData(
         int x,
         int y,
         String tileType,
-        String textureRef,
         boolean passable,
         boolean selected,
         ResourceData resources
 ) {
 
     public TileData() {
-        this(0, 0, null, null, false, false, new ResourceData());
+        this(0, 0, null, false, false, new ResourceData());
     }
 
     /**
@@ -51,7 +49,6 @@ public record TileData(
         private int x;
         private int y;
         private String tileType;
-        private String textureRef;
         private boolean passable;
         private boolean selected;
         private ResourceData resources;
@@ -62,7 +59,6 @@ public record TileData(
             this.x = data.x;
             this.y = data.y;
             this.tileType = data.tileType;
-            this.textureRef = data.textureRef;
             this.passable = data.passable;
             this.selected = data.selected;
             this.resources = data.resources;
@@ -80,11 +76,6 @@ public record TileData(
 
         public Builder tileType(final String newTileType) {
             this.tileType = newTileType;
-            return this;
-        }
-
-        public Builder textureRef(final String newTextureRef) {
-            this.textureRef = newTextureRef;
             return this;
         }
 
@@ -107,7 +98,7 @@ public record TileData(
          * Construct a new immutable {@link TileData} instance.
          */
         public TileData build() {
-            return new TileData(x, y, tileType, textureRef, passable, selected, resources);
+            return new TileData(x, y, tileType, passable, selected, resources);
         }
     }
 }

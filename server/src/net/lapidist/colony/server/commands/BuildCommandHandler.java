@@ -1,6 +1,5 @@
 package net.lapidist.colony.server.commands;
 
-import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
@@ -38,18 +37,10 @@ public final class BuildCommandHandler implements CommandHandler<BuildCommand> {
         if (tile == null || occupied) {
             return;
         }
-        String texture = defaultTexture(command.type());
-        BuildingData building = new BuildingData(command.x(), command.y(), command.type().name(), texture);
+        BuildingData building = new BuildingData(command.x(), command.y(), command.type().name());
         state.buildings().add(building);
         Events.dispatch(new BuildingPlacedEvent(command.x(), command.y(), command.type().name()));
         networkService.broadcast(building);
     }
 
-    private static String defaultTexture(final BuildingComponent.BuildingType type) {
-        return switch (type) {
-            case HOUSE -> "house0";
-            case MARKET -> "house0";
-            case FACTORY -> "house0";
-        };
-    }
 }

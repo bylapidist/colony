@@ -30,7 +30,6 @@ public class MapUtilsTest {
                 .x(0)
                 .y(0)
                 .tileType("GRASS")
-                .textureRef("grass0")
                 .passable(true)
                 .build();
         state.tiles().put(new TilePos(0, 0), tile);
@@ -54,7 +53,6 @@ public class MapUtilsTest {
                 .x(1)
                 .y(2)
                 .tileType("GRASS")
-                .textureRef("grass0")
                 .passable(true)
                 .build();
         state.tiles().put(new TilePos(1, 2), tile);

@@ -11,6 +11,8 @@ import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.client.renderers.AssetResolver;
+import net.lapidist.colony.client.renderers.DefaultAssetResolver;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +32,14 @@ public final class MapFactory {
      * @return the created map entity containing a {@link MapComponent}
      */
     public static Entity create(final World world, final MapState state) {
+        return create(world, state, new DefaultAssetResolver());
+    }
+
+    public static Entity create(
+            final World world,
+            final MapState state,
+            final AssetResolver resolver
+    ) {
         Entity map = world.createEntity();
         MapComponent mapComponent = new MapComponent();
         Array<Entity> tiles = new Array<>();
@@ -38,10 +48,11 @@ public final class MapFactory {
 
         for (Map.Entry<TilePos, TileData> entry : state.tiles().entrySet()) {
             TileData td = entry.getValue();
+            String texture = resolver.tileAsset(TileComponent.TileType.valueOf(td.tileType()));
             Entity tile = TileFactory.create(
                     world,
                     TileComponent.TileType.valueOf(td.tileType()),
-                    td.textureRef(),
+                    texture,
                     new Vector2(td.x(), td.y()),
                     td.passable(),
                     td.selected(),
@@ -52,10 +63,12 @@ public final class MapFactory {
         }
 
         for (BuildingData bd : state.buildings()) {
+            String texture = resolver.buildingAsset(
+                    BuildingComponent.BuildingType.valueOf(bd.buildingType()));
             entities.add(BuildingFactory.create(
                     world,
                     BuildingComponent.BuildingType.valueOf(bd.buildingType()),
-                    bd.textureRef(),
+                    texture,
                     new Vector2(bd.x(), bd.y())
             ));
         }

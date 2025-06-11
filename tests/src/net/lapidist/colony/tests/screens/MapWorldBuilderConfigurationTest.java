@@ -67,7 +67,7 @@ public class MapWorldBuilderConfigurationTest {
     public void builderRegistersMapSystems() {
         MapState state = new MapState();
         state.tiles().put(new TilePos(0, 0), TileData.builder()
-                .x(0).y(0).tileType("GRASS").textureRef("grass0").passable(true)
+                .x(0).y(0).tileType("GRASS").passable(true)
                 .build());
         Batch batch = mock(Batch.class);
         when(batch.getTransformMatrix()).thenReturn(new com.badlogic.gdx.math.Matrix4());
