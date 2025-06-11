@@ -32,6 +32,7 @@ public final class MinimapActor extends Actor implements Disposable {
     private final World world;
     private final ResourceLoader resourceLoader = new TextureAtlasResourceLoader();
     private ViewportOverlayRenderer overlayRenderer;
+    private MinimapOutlineRenderer outlineRenderer;
     private ComponentMapper<MapComponent> mapMapper;
     private ComponentMapper<TileComponent> tileMapper;
     private Entity map;
@@ -109,6 +110,7 @@ public final class MinimapActor extends Actor implements Disposable {
         mapWidthWorld = -1;
         mapHeightWorld = -1;
         cacheInvalidated = true;
+        outlineRenderer = new MinimapOutlineRenderer();
     }
 
     @Override
@@ -144,6 +146,9 @@ public final class MinimapActor extends Actor implements Disposable {
         if (cameraSystem != null && overlayRenderer != null) {
             overlayRenderer.render(batch, mapWidthWorld, mapHeightWorld, scaleX, scaleY, getX(), getY());
         }
+        if (outlineRenderer != null) {
+            outlineRenderer.render(batch, getX(), getY(), getWidth(), getHeight());
+        }
     }
 
     @Override
@@ -151,6 +156,9 @@ public final class MinimapActor extends Actor implements Disposable {
         resourceLoader.dispose();
         if (overlayRenderer != null) {
             overlayRenderer.dispose();
+        }
+        if (outlineRenderer != null) {
+            outlineRenderer.dispose();
         }
         cache.dispose();
     }
