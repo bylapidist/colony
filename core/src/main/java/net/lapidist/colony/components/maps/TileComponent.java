@@ -6,6 +6,7 @@ public class TileComponent extends AbstractBoundedComponent {
 
     public enum TileType {
         EMPTY("empty"),
+        DIRT("dirt"),
         GRASS("grass");
 
         private final String type;

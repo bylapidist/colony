@@ -18,11 +18,13 @@ public final class DefaultMapGenerator implements MapGenerator {
     private static final int DEFAULT_WOOD = 10;
     private static final int DEFAULT_STONE = 5;
     private static final int DEFAULT_FOOD = 3;
+    private static final double NOISE_SCALE = 0.1;
 
     @Override
     public MapState generate(final int width, final int height) {
         MapState state = new MapState();
         Random random = new Random();
+        PerlinNoise noise = new PerlinNoise(random.nextLong());
         state = state.toBuilder()
                 .name("map-" + random.nextInt(NAME_RANGE))
                 .description(I18n.get("generator.generatedMap"))
@@ -30,7 +32,8 @@ public final class DefaultMapGenerator implements MapGenerator {
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                state.tiles().put(new TilePos(x, y), createTile(x, y));
+                String type = noise.noise(x * NOISE_SCALE, y * NOISE_SCALE) > 0 ? "GRASS" : "DIRT";
+                state.tiles().put(new TilePos(x, y), createTile(x, y, type));
             }
         }
 
@@ -44,11 +47,11 @@ public final class DefaultMapGenerator implements MapGenerator {
         return state;
     }
 
-    private static TileData createTile(final int x, final int y) {
+    private static TileData createTile(final int x, final int y, final String type) {
         return TileData.builder()
                 .x(x)
                 .y(y)
-                .tileType("GRASS")
+                .tileType(type)
                 .passable(true)
                 .selected(false)
                 .resources(new ResourceData(DEFAULT_WOOD, DEFAULT_STONE, DEFAULT_FOOD))

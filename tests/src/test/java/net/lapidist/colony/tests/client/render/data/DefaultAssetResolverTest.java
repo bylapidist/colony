@@ -11,6 +11,7 @@ public class DefaultAssetResolverTest {
         DefaultAssetResolver resolver = new DefaultAssetResolver();
         assertEquals("grass0", resolver.tileAsset("GRASS"));
         assertEquals("grass0", resolver.tileAsset("grass"));
+        assertEquals("dirt0", resolver.tileAsset("DIRT"));
         assertEquals("dirt0", resolver.tileAsset("EMPTY"));
         assertEquals("dirt0", resolver.tileAsset(null));
         assertEquals("dirt0", resolver.tileAsset("invalid"));
