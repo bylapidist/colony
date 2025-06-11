@@ -14,7 +14,7 @@ public final class DefaultAssetResolver implements AssetResolver {
             TileComponent.TileType tile = TileComponent.TileType
                     .valueOf(type.toUpperCase(java.util.Locale.ROOT));
             return switch (tile) {
-                case EMPTY -> "dirt0";
+                case EMPTY, DIRT -> "dirt0";
                 case GRASS -> "grass0";
             };
         } catch (IllegalArgumentException ex) {
