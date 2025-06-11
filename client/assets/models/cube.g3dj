@@ -1,0 +1,20 @@
+{
+  "version": [0, 1],
+  "id": "minimal",
+  "meshes": [
+    {
+      "id": "mesh",
+      "attributes": ["POSITION"],
+      "vertices": [0.0, 0.0, 0.0],
+      "parts": [
+        {"id": "part", "type": "TRIANGLES", "indices": [0]}
+      ]
+    }
+  ],
+  "materials": [
+    {"id": "mat"}
+  ],
+  "nodes": [
+    {"id": "node", "parts": [{"meshpartid": "part", "materialid": "mat"}]}
+  ]
+}
