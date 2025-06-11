@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.client.core.io.ResourceLoader;
-import net.lapidist.colony.client.systems.PlayerCameraSystem;
+import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
 import net.lapidist.colony.components.entities.BuildingComponent;
@@ -19,14 +19,14 @@ public final class BuildingRenderer implements EntityRenderer {
 
     private final SpriteBatch spriteBatch;
     private final ResourceLoader resourceLoader;
-    private final PlayerCameraSystem cameraSystem;
+    private final CameraProvider cameraSystem;
     private final ComponentMapper<BuildingComponent> buildingMapper;
     private final ComponentMapper<TextureRegionReferenceComponent> textureMapper;
 
     public BuildingRenderer(
             final SpriteBatch spriteBatchToSet,
             final ResourceLoader resourceLoaderToSet,
-            final PlayerCameraSystem cameraSystemToSet,
+            final CameraProvider cameraSystemToSet,
             final ComponentMapper<BuildingComponent> buildingMapperToSet,
             final ComponentMapper<TextureRegionReferenceComponent> textureMapperToSet
     ) {
