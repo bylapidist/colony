@@ -9,6 +9,7 @@ import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.components.state.BuildingPlacementData;
 import net.lapidist.colony.components.state.ResourceData;
+import net.lapidist.colony.components.resources.ResourceType;
 import net.lapidist.colony.components.state.ResourceGatherRequestData;
 import net.lapidist.colony.components.state.ResourceUpdateData;
 import net.lapidist.colony.components.state.MapMetadata;
@@ -59,6 +60,7 @@ public final class SerializationRegistrar {
             BuildingData.class,
             BuildingPlacementData.class,
             ResourceData.class,
+            ResourceType.class,
             ResourceGatherRequestData.class,
             ResourceUpdateData.class,
             MapMetadata.class,

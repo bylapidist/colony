@@ -5,6 +5,7 @@ import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.state.ResourceUpdateData;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.components.resources.ResourceType;
 import net.lapidist.colony.server.services.NetworkService;
 
 import java.util.function.Supplier;
@@ -39,9 +40,9 @@ public final class GatherCommandHandler implements CommandHandler<GatherCommand>
         ResourceData res = tile.resources();
         ResourceData updated;
         switch (command.resourceType()) {
-            case "WOOD" -> updated = new ResourceData(Math.max(res.wood() - 1, 0), res.stone(), res.food());
-            case "STONE" -> updated = new ResourceData(res.wood(), Math.max(res.stone() - 1, 0), res.food());
-            case "FOOD" -> updated = new ResourceData(res.wood(), res.stone(), Math.max(res.food() - 1, 0));
+            case ResourceType.WOOD -> updated = new ResourceData(Math.max(res.wood() - 1, 0), res.stone(), res.food());
+            case ResourceType.STONE -> updated = new ResourceData(res.wood(), Math.max(res.stone() - 1, 0), res.food());
+            case ResourceType.FOOD -> updated = new ResourceData(res.wood(), res.stone(), Math.max(res.food() - 1, 0));
             default -> updated = res;
         }
         TileData newTile = tile.toBuilder().resources(updated).build();

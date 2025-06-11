@@ -3,6 +3,7 @@ package net.lapidist.colony.tests.scenario;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceGatherRequestData;
+import net.lapidist.colony.components.resources.ResourceType;
 import net.lapidist.colony.components.resources.ResourceComponent;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
@@ -42,7 +43,11 @@ public class GameSimulationResourceUpdateTest {
         MapState state = receiver.getMapState();
         GameSimulation sim = new GameSimulation(state, receiver);
 
-        ResourceGatherRequestData data = new ResourceGatherRequestData(0, 0, "WOOD");
+        ResourceGatherRequestData data = new ResourceGatherRequestData(
+                0,
+                0,
+                ResourceType.WOOD
+        );
         sender.sendGatherRequest(data);
 
         Thread.sleep(WAIT_MS);

@@ -111,7 +111,7 @@ public final class InputSystem extends BaseSystem {
                 var tile = selectedTiles.get(i);
                 TileComponent tc = tileMapper.get(tile);
                 ResourceGatherRequestData msg = new ResourceGatherRequestData(
-                        tc.getX(), tc.getY(), ResourceType.WOOD.name());
+                        tc.getX(), tc.getY(), ResourceType.WOOD);
                 client.sendGatherRequest(msg);
             }
         }
@@ -138,7 +138,7 @@ public final class InputSystem extends BaseSystem {
                         var rc = resourceMapper.get(tile);
                         if (rc.getWood() > 0) {
                             ResourceGatherRequestData msg = new ResourceGatherRequestData(
-                                    tc.getX(), tc.getY(), ResourceType.WOOD.name());
+                                    tc.getX(), tc.getY(), ResourceType.WOOD);
                             client.sendGatherRequest(msg);
                         }
                     });
