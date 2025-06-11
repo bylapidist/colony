@@ -33,7 +33,7 @@ public final class MapRendererFactory {
         this.atlasPath = path;
     }
 
-    public MapRenderers create(final World world) {
+    public MapRenderer create(final World world) {
         ResourceLoader loader = new ResourceLoader();
         try {
             GraphicsSettings graphics = Settings.load().getGraphicsSettings();
@@ -74,6 +74,12 @@ public final class MapRendererFactory {
         // trigger map mapper initialization so MapRenderSystem can use it immediately
         world.getMapper(MapComponent.class);
 
-        return new MapRenderers(batch, loader, tileRenderer, buildingRenderer, resourceRenderer);
+        return new SpriteBatchMapRenderer(
+                batch,
+                loader,
+                tileRenderer,
+                buildingRenderer,
+                resourceRenderer
+        );
     }
 }
