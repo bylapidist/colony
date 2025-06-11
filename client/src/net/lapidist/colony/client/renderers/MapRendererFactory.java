@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.lapidist.colony.client.core.io.FileLocation;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
+import net.lapidist.colony.settings.GraphicsSettings;
+import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
 import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.components.maps.TileComponent;
@@ -34,7 +36,8 @@ public final class MapRendererFactory {
     public MapRenderers create(final World world) {
         ResourceLoader loader = new ResourceLoader();
         try {
-            loader.load(fileLocation, atlasPath);
+            GraphicsSettings graphics = Settings.load().getGraphicsSettings();
+            loader.load(fileLocation, atlasPath, graphics);
         } catch (IOException e) {
             // ignore loading errors in headless tests
         }

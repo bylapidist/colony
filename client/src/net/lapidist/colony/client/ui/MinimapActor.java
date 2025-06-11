@@ -12,6 +12,8 @@ import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.client.core.io.FileLocation;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
+import net.lapidist.colony.settings.GraphicsSettings;
+import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.components.assets.TextureRegionReferenceComponent;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
@@ -91,11 +93,17 @@ public final class MinimapActor extends Actor implements Disposable {
 
 
     public MinimapActor(final World worldToSet) {
+        this(worldToSet, Settings.load().getGraphicsSettings());
+    }
+
+    public MinimapActor(
+            final World worldToSet,
+            final GraphicsSettings graphicsSettings
+    ) {
         this.world = worldToSet;
-        // Overlay renderer will draw the viewport rectangle when GL is available
         setSize(DEFAULT_SIZE, DEFAULT_SIZE);
         try {
-            resourceLoader.load(FileLocation.INTERNAL, "textures/textures.atlas");
+            resourceLoader.load(FileLocation.INTERNAL, "textures/textures.atlas", graphicsSettings);
         } catch (IOException e) {
             // ignore loading errors in headless tests
         }
