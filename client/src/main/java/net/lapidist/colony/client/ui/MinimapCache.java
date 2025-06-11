@@ -53,12 +53,12 @@ final class MinimapCache implements Disposable {
         if (spriteCache != null) {
             spriteCache.dispose();
         }
-        spriteCache = new SpriteCache();
+        Array<Entity> tiles = mapMapper.get(map).getTiles();
+        spriteCache = new SpriteCache(tiles.size, true);
         spriteCache.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, viewportWidth, viewportHeight));
         spriteCache.beginCache();
 
         AssetResolver resolver = new DefaultAssetResolver();
-        Array<Entity> tiles = mapMapper.get(map).getTiles();
         for (int i = 0; i < tiles.size; i++) {
             Entity tile = tiles.get(i);
             TileComponent tileComponent = tileMapper.get(tile);

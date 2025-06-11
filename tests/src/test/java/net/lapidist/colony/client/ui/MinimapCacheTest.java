@@ -34,12 +34,27 @@ public class MinimapCacheTest {
     private static final float DRAW_Y = 3f;
     private static final float VIEW_SIZE_LARGER = VIEW_SIZE + 1f;
     private static final int THREE = 3;
+    private static final int LARGE_SIZE = 40;
 
     private World createWorldWithTile() {
         MapState state = new MapState();
         state.tiles().put(new TilePos(0, 0), TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .build());
+        World world = new World(new WorldConfigurationBuilder().build());
+        MapFactory.create(world, state);
+        return world;
+    }
+
+    private World createWorldWithTiles(final int width, final int height) {
+        MapState state = new MapState();
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                state.tiles().put(new TilePos(x, y), TileData.builder()
+                        .x(x).y(y).tileType("GRASS").passable(true)
+                        .build());
+            }
+        }
         World world = new World(new WorldConfigurationBuilder().build());
         MapFactory.create(world, state);
         return world;
@@ -159,6 +174,39 @@ public class MinimapCacheTest {
             order.verify(batch).begin();
             order.verify(sprite).setProjectionMatrix(any(Matrix4.class));
             order.verify(sprite).setTransformMatrix(any(Matrix4.class));
+        }
+    }
+
+    @Test
+    public void createsCacheWithCapacityForLargeMaps() {
+        int size = LARGE_SIZE;
+        World world = createWorldWithTiles(size, size);
+        int mapId = world.getAspectSubscriptionManager()
+                .get(com.artemis.Aspect.all(MapComponent.class))
+                .getEntities().get(0);
+        Entity map = world.getEntity(mapId);
+        ComponentMapper<MapComponent> mapMapper = world.getMapper(MapComponent.class);
+        ComponentMapper<TileComponent> tileMapper = world.getMapper(TileComponent.class);
+
+        ResourceLoader loader = mock(ResourceLoader.class);
+        when(loader.findRegion(any())).thenReturn(new TextureRegion());
+
+        final java.util.List<?>[] capturedArgs = new java.util.List[1];
+        try (MockedConstruction<SpriteCache> cons = mockConstruction(SpriteCache.class,
+                (mock, ctx) -> {
+                    when(mock.getProjectionMatrix()).thenReturn(new Matrix4());
+                    when(mock.getTransformMatrix()).thenReturn(new Matrix4());
+                    when(mock.endCache()).thenReturn(0);
+                    capturedArgs[0] = ctx.arguments();
+                });
+             MockedConstruction<DefaultAssetResolver> resCons = mockConstruction(DefaultAssetResolver.class,
+                (m, c) -> when(m.tileAsset(any())).thenAnswer(inv -> inv.getArgument(0) + "0"))) {
+            MinimapCache cache = new MinimapCache();
+            cache.setViewport(VIEW_SIZE, VIEW_SIZE);
+            cache.ensureCache(loader, map, mapMapper, tileMapper, SCALE, SCALE);
+
+            assertEquals(Integer.valueOf(size * size), capturedArgs[0].get(0));
+            assertEquals(Boolean.TRUE, capturedArgs[0].get(1));
         }
     }
 }
