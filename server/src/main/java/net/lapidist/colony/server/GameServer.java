@@ -33,8 +33,10 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     public static final int TCP_PORT = ColonyConfig.get().getInt("game.server.tcpPort");
     public static final int UDP_PORT = ColonyConfig.get().getInt("game.server.udpPort");
 
-    // Increase buffers so the entire map can be serialized in one object
-    private static final int BUFFER_SIZE = 65536;
+    // Increase buffers so the entire map can be serialized in one object.
+    // Larger maps (e.g. 320x320) require several megabytes when encoded by Kryo,
+    // so allocate 4MB to avoid overflow.
+    private static final int BUFFER_SIZE = 4 * 1024 * 1024;
     private static final Logger LOGGER = LoggerFactory.getLogger(GameServer.class);
 
     private final Server server = new Server(BUFFER_SIZE, BUFFER_SIZE);

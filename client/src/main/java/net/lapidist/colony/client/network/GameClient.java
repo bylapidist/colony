@@ -8,13 +8,16 @@ import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.BuildingPlacementData;
 import net.lapidist.colony.components.state.ResourceGatherRequestData;
 import net.lapidist.colony.components.state.ResourceUpdateData;
+import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.chat.ChatMessage;
 import net.lapidist.colony.serialization.KryoRegistry;
 import net.lapidist.colony.network.AbstractMessageEndpoint;
 import net.lapidist.colony.network.DispatchListener;
 import net.lapidist.colony.network.MessageHandler;
 import net.lapidist.colony.server.GameServer;
-import net.lapidist.colony.client.network.handlers.MapStateMessageHandler;
+import net.lapidist.colony.client.network.handlers.MapMetadataHandler;
+import net.lapidist.colony.client.network.handlers.MapChunkHandler;
 import net.lapidist.colony.client.network.handlers.QueueingMessageHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +31,9 @@ import java.util.function.Consumer;
 
 
 public final class GameClient extends AbstractMessageEndpoint {
-    // Increase buffers to handle large serialized map data
-    private static final int BUFFER_SIZE = 65536;
+    // Increase buffers to handle large serialized map data.
+    // Matches the server allocation of 4MB to allow receiving big map states.
+    private static final int BUFFER_SIZE = 4 * 1024 * 1024;
     private static final Logger LOGGER = LoggerFactory.getLogger(GameClient.class);
     private final Client client = new Client(BUFFER_SIZE, BUFFER_SIZE);
     private MapState mapState;
@@ -38,6 +42,10 @@ public final class GameClient extends AbstractMessageEndpoint {
     private static final int CONNECT_TIMEOUT = 5000;
     private Consumer<MapState> readyCallback;
     private int playerId = -1;
+    private MapState.Builder mapBuilder;
+    private java.util.Map<TilePos, TileData> tileBuffer;
+    private int expectedChunks;
+    private int receivedChunks;
 
     private <T> Queue<T> registerQueue(final Class<T> type) {
         Queue<T> queue = new ConcurrentLinkedQueue<>();
@@ -52,11 +60,35 @@ public final class GameClient extends AbstractMessageEndpoint {
         Queue<ResourceUpdateData> resourceUpdates = registerQueue(ResourceUpdateData.class);
 
         this.handlers = java.util.List.of(
-                new MapStateMessageHandler(state -> {
-                    mapState = state;
-                    LOGGER.info("Received map state from server");
-                    if (readyCallback != null) {
-                        readyCallback.accept(state);
+                new MapMetadataHandler(meta -> {
+                    mapBuilder = MapState.builder()
+                            .version(meta.version())
+                            .name(meta.name())
+                            .saveName(meta.saveName())
+                            .autosaveName(meta.autosaveName())
+                            .description(meta.description())
+                            .buildings(new java.util.ArrayList<>(meta.buildings()))
+                            .playerResources(meta.playerResources());
+                    tileBuffer = new java.util.HashMap<>();
+                    expectedChunks = meta.chunkCount();
+                    receivedChunks = 0;
+                    if (expectedChunks == 0) {
+                        mapState = mapBuilder.tiles(tileBuffer).build();
+                        if (readyCallback != null) {
+                            readyCallback.accept(mapState);
+                        }
+                    }
+                }),
+                new MapChunkHandler(chunk -> {
+                    if (tileBuffer != null) {
+                        tileBuffer.putAll(chunk.tiles());
+                        receivedChunks++;
+                        if (receivedChunks >= expectedChunks) {
+                            mapState = mapBuilder.tiles(tileBuffer).build();
+                            if (readyCallback != null) {
+                                readyCallback.accept(mapState);
+                            }
+                        }
                     }
                 }),
                 new QueueingMessageHandler<>(TileSelectionData.class, messageQueues),
