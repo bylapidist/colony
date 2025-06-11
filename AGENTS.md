@@ -1,72 +1,63 @@
-This repository contains a multi-module Java project built with Gradle. It is
-split into four modules:
+# Colony AGENT Guide
+
+## Project Layout
+This repository is a multi-module Java project built with Gradle. The modules are:
 
 - **core** – shared game logic, ECS components and serializers
-- **client** – the desktop LibGDX client
-- **server** – the headless game server
+- **client** – desktop LibGDX client
+- **server** – headless game server
 - **tests** – JUnit test utilities and suites
+- **docs** – developer and player guides
 
-## Running checks
-- Always run `./gradlew tests:copyAssets` before running the normal test suite. This copies required assets for the test module.
-- Run `./gradlew spotlessApply` before committing to automatically format the code.
-- After copying the assets run `./gradlew clean test` to execute all tests.
-- Run `./gradlew check` to verify code style. Only commit if this task succeeds. It includes Checkstyle and Spotless checks defined in `config/checkstyle/checkstyle.xml`.
+Each module contains its own `AGENTS.md` with extra notes.
+
+## Getting Started
+- Java 21 toolchains are provided via Gradle, no local JDK is required.
+- Run `./gradlew tests:copyAssets` to copy client assets for the test module.
+- Run `./gradlew spotlessApply` to format the code base.
+- Run `./gradlew clean test` to compile and execute tests.
+- Run `./gradlew check` to verify Checkstyle and Spotless rules.
+- The helper script `./scripts/check.sh` performs all steps at once.
 
 ## Running the game
-- Use `./gradlew :client:run` to start the desktop client.
-- Use `./gradlew :server:run` to start the dedicated server.
+- `./gradlew :client:run` – start the desktop client.
+- `./gradlew :server:run` – start the dedicated server.
 
-## Coding conventions
-- All Java source files use four space indentation and must not contain tab characters.
-- Keep lines under 120 characters as configured in Checkstyle.
+## Development Conventions
+- Four space indentation, no tab characters, line length under 120 characters.
+- Place new classes under the `net.lapidist.colony` package in the appropriate module.
+- Use the i18n translation system for all user-facing text.
 - Ensure each file ends with a newline and avoid trailing whitespace.
-- New classes should be placed under the `net.lapidist.colony` package in the
-  module that matches their purpose (`core`, `client`, `server`, or `tests`).
-- Use the i18n translation system for all user-facing text. Never hardcode
-  strings directly in the code.
 
-## Notes
-The project uses Java 21 toolchains and standard Gradle tasks. No additional tools are required beyond what is defined in the Gradle build.
+## Testing and Coverage
+- Achieve **at least 80% line coverage** on new or modified code.
+- Run `./gradlew codeCoverageReport` and inspect `build/reports/jacoco` before opening a PR.
+- For new gameplay mechanisms, add a scenario test using `GameSimulation` in the `tests` module.
 
-Semantic Release automatically increments versions and generates GitHub release notes from commit messages. Provide a concise description of your changes in the PR body so release notes remain meaningful.
-
-When changing or adding new functionality, ensure it has adequate test coverage.
-You must achieve **at least 80% line coverage** on any new or modified code.
-Run `./gradlew codeCoverageReport` and review the results under
-`build/reports/jacoco` before opening a pull request.
-Only submit your PR once the coverage requirement is met.
-When modifying or introducing new gameplay mechanisms, write a scenario test
-using the `GameSimulation` utility found under the `tests` module to verify the
-behaviour.
-
-When introducing a new save format or modifying Kryo serialization, you must:
-1. Define the next constant in `SaveVersion`.
-2. Implement a migration from the previous version in `SaveMigrator`.
+## Save Format and Serialization
+When changing save formats or Kryo serialization:
+1. Add the next constant in `SaveVersion`.
+2. Implement migration logic in `SaveMigrator`.
 3. Add tests covering the migration.
-4. Update the Kryo registration hash so version mismatches are detected.
+4. Update the Kryo registration hash to detect mismatches.
 
-If any command fails, fix the issues before committing.
+## Commit and Release Guidelines
+- All commit messages and PR titles must follow the [Angular commit message guidelines](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit).
+- Use `feat:` for new features and `fix:` for bug fixes.
+- If the change is breaking for users, include `BREAKING CHANGE:` in the commit footer.
+- Semantic Release uses commit messages to determine version bumps and generate release notes.
 
-## Commit Messages
-All commit messages must follow the [Angular commit message guidelines](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit).
+## Networking Workflow
+Client-driven actions follow this sequence:
+1. The client sends a request message to the server.
+2. The server validates and applies the change, then broadcasts the result.
+3. Clients queue incoming updates and apply them during their normal update loop.
 
-When creating PRs make sure the PR title also follows this convention.
+Do not apply world changes locally until the server response is processed so every client stays in sync.
 
-## Release Versioning
-Carefully consider how your changes affect the next version of the game. We
-strictly follow the Angular commit guidelines which control semantic release.
-- Use a `feat:` commit to introduce new features. This triggers a minor version
-  bump.
-- Use a `fix:` commit for bug fixes. This triggers a patch version bump.
-- If the change is breaking for users (for example modifying configuration or
-  save file formats) include `BREAKING CHANGE:` in the commit footer. This will
-  release a new major version.
+## Helpful Resources
+- Consult `README.md` for quick start instructions.
+- See the guides under `docs/` for architecture, networking and configuration details.
+- Each module's `AGENTS.md` provides additional module specific notes.
 
-## Networking workflow
-Client driven actions that modify the game world must follow this sequence:
-
-1. The client sends a request message to the server describing the action.
-2. The server processes the request and broadcasts the resulting state change to all clients.
-3. Clients queue incoming updates and apply them in a system during their normal update loop.
-
-Do not apply world state changes locally until the server response is received and processed. This ensures all clients stay in sync.
+If any command fails during checks or tests, resolve the issue before committing.
