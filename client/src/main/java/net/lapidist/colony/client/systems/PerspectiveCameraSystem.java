@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.math.Rectangle;
 
 /** Simple perspective camera implementation. */
 public final class PerspectiveCameraSystem extends BaseSystem implements CameraProvider {
@@ -43,5 +44,10 @@ public final class PerspectiveCameraSystem extends BaseSystem implements CameraP
     @Override
     public Viewport getViewport() {
         return viewport;
+    }
+
+    @Override
+    public Rectangle getVisibleTileBounds() {
+        return new Rectangle();
     }
 }

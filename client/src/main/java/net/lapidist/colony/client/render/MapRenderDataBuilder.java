@@ -22,6 +22,7 @@ public final class MapRenderDataBuilder {
         ComponentMapper<BuildingComponent> buildingMapper = world.getMapper(BuildingComponent.class);
 
         Array<RenderTile> tiles = new Array<>();
+        java.util.Map<net.lapidist.colony.components.state.TilePos, RenderTile> tileMap = new java.util.HashMap<>();
         Array<Entity> mapTiles = map.getTiles();
         for (int i = 0; i < mapTiles.size; i++) {
             Entity entity = mapTiles.get(i);
@@ -37,9 +38,15 @@ public final class MapRenderDataBuilder {
                     .food(rc.getFood())
                     .build();
             tiles.add(tile);
+            tileMap.put(
+                    new net.lapidist.colony.components.state.TilePos(tc.getX(), tc.getY()),
+                    tile
+            );
         }
 
         Array<RenderBuilding> buildings = new Array<>();
+        java.util.Map<net.lapidist.colony.components.state.TilePos, RenderBuilding> buildingMap =
+                new java.util.HashMap<>();
         Array<Entity> mapEntities = map.getEntities();
         for (int i = 0; i < mapEntities.size; i++) {
             Entity entity = mapEntities.get(i);
@@ -50,8 +57,12 @@ public final class MapRenderDataBuilder {
                     .buildingType(bc.getBuildingType().toString())
                     .build();
             buildings.add(building);
+            buildingMap.put(
+                    new net.lapidist.colony.components.state.TilePos(bc.getX(), bc.getY()),
+                    building
+            );
         }
 
-        return new SimpleMapRenderData(tiles, buildings);
+        return new SimpleMapRenderData(tiles, buildings, tileMap, buildingMap);
     }
 }

@@ -13,6 +13,7 @@ import net.lapidist.colony.client.util.CameraUtils;
 public final class PlayerCameraSystem extends BaseSystem implements CameraProvider {
 
     private final Rectangle viewBounds = new Rectangle();
+    private final Rectangle tileViewBounds = new Rectangle();
 
     private OrthographicCamera camera;
 
@@ -143,5 +144,22 @@ public final class PlayerCameraSystem extends BaseSystem implements CameraProvid
      */
     public Rectangle getViewBounds() {
         return CameraUtils.getViewBounds(camera, viewport, viewBounds);
+    }
+
+    /**
+     * Returns the current camera view bounds in tile coordinates.
+     *
+     * @return rectangle representing the visible tile area
+     */
+    @Override
+    public Rectangle getVisibleTileBounds() {
+        Rectangle bounds = getViewBounds();
+        Vector2 start = CameraUtils.worldCoordsToTileCoords((int) bounds.x, (int) bounds.y);
+        Vector2 end = CameraUtils.worldCoordsToTileCoords(
+                (int) (bounds.x + bounds.width),
+                (int) (bounds.y + bounds.height)
+        );
+        tileViewBounds.set(start.x, start.y, end.x - start.x + 1, end.y - start.y + 1);
+        return tileViewBounds;
     }
 }

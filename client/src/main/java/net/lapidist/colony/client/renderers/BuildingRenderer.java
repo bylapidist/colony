@@ -3,17 +3,17 @@ package net.lapidist.colony.client.renderers;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.math.Rectangle;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.client.render.data.RenderBuilding;
+import net.lapidist.colony.client.render.MapRenderData;
 
 /**
  * Renders building entities.
  */
-public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
+public final class BuildingRenderer {
 
     private final SpriteBatch spriteBatch;
     private final ResourceLoader resourceLoader;
@@ -32,22 +32,28 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
         this.resolver = resolverToSet;
     }
 
-    @Override
-    public void render(final Array<RenderBuilding> entities) {
+    public void render(final MapRenderData map) {
         Vector2 worldCoords = new Vector2();
-        Vector3 tmp = new Vector3();
-        for (int i = 0; i < entities.size; i++) {
-            RenderBuilding building = entities.get(i);
-            CameraUtils.tileCoordsToWorldCoords(building.getX(), building.getY(), worldCoords);
+        Rectangle bounds = cameraSystem.getVisibleTileBounds();
+        int startX = (int) bounds.x;
+        int startY = (int) bounds.y;
+        int endX = (int) (bounds.x + bounds.width);
+        int endY = (int) (bounds.y + bounds.height);
 
-            if (!CameraUtils.withinCameraView(cameraSystem.getViewport(), worldCoords, tmp)) {
-                continue;
-            }
+        for (int x = startX; x <= endX; x++) {
+            for (int y = startY; y <= endY; y++) {
+                RenderBuilding building = map.getBuilding(x, y);
+                if (building == null) {
+                    continue;
+                }
 
-            String ref = resolver.buildingAsset(building.getBuildingType());
-            TextureRegion region = resourceLoader.findRegion(ref);
-            if (region != null) {
-                spriteBatch.draw(region, worldCoords.x, worldCoords.y);
+                CameraUtils.tileCoordsToWorldCoords(building.getX(), building.getY(), worldCoords);
+
+                String ref = resolver.buildingAsset(building.getBuildingType());
+                TextureRegion region = resourceLoader.findRegion(ref);
+                if (region != null) {
+                    spriteBatch.draw(region, worldCoords.x, worldCoords.y);
+                }
             }
         }
     }

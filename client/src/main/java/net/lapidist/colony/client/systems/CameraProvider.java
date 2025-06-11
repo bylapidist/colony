@@ -12,4 +12,7 @@ public interface CameraProvider {
 
     /** Returns the viewport associated with the camera. */
     Viewport getViewport();
+
+    /** Returns visible tile bounds in tile coordinates. */
+    com.badlogic.gdx.math.Rectangle getVisibleTileBounds();
 }

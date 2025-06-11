@@ -2,11 +2,12 @@ package net.lapidist.colony.tests.client.renderers;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.Viewport;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.Rectangle;
 import net.lapidist.colony.client.renderers.ResourceRenderer;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.render.data.RenderTile;
+import net.lapidist.colony.client.render.SimpleMapRenderData;
+import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,9 +24,7 @@ public class ResourceRendererTest {
     public void rendersResourceTextWithoutErrors() {
         SpriteBatch batch = mock(SpriteBatch.class);
         CameraProvider camera = mock(CameraProvider.class);
-        Viewport viewport = mock(Viewport.class);
-        when(camera.getViewport()).thenReturn(viewport);
-        when(viewport.project(any(Vector3.class))).thenReturn(new Vector3());
+        when(camera.getVisibleTileBounds()).thenReturn(new Rectangle(0, 0, 0, 0));
 
         ResourceRenderer renderer = new ResourceRenderer(batch, camera);
 
@@ -39,8 +38,9 @@ public class ResourceRendererTest {
                 .stone(STONE)
                 .food(FOOD)
                 .build());
+        MapRenderData map = new SimpleMapRenderData(tiles, new Array<>());
 
-        renderer.render(tiles);
+        renderer.render(map);
         renderer.dispose();
     }
 }

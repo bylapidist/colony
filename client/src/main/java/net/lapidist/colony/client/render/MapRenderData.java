@@ -11,4 +11,8 @@ public interface MapRenderData {
     Array<RenderTile> getTiles();
 
     Array<RenderBuilding> getBuildings();
+
+    RenderTile getTile(int x, int y);
+
+    RenderBuilding getBuilding(int x, int y);
 }
