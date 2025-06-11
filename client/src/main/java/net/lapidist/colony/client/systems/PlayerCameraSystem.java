@@ -113,7 +113,11 @@ public final class PlayerCameraSystem extends BaseSystem implements CameraProvid
     @Override
     protected void processSystem() {
         camera.update();
-        viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    }
+
+    @net.mostlyoriginal.api.event.common.Subscribe
+    private void onResize(final net.lapidist.colony.client.events.ResizeEvent event) {
+        viewport.update(event.width(), event.height(), true);
     }
 
     public float getZoom() {
