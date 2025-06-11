@@ -61,7 +61,7 @@ Each module keeps its source under `src/` with all packages rooted at `net.lapid
 ## Configuration
 Configuration defaults such as map size, autosave interval and network ports are defined in `core/src/main/resources/game.conf` and loaded at runtime. Per-user saves and settings are written to a platform specific directory under the user's home folder. `core/src/net/lapidist/colony/io/Paths.java` resolves the exact locations.
 
-All visible text is provided through resource bundles found in `core/src/main/resources/i18n`. The current locale can be changed in the in‑game settings screen and is persisted alongside the user's other settings.
+All visible text is provided through resource bundles found in `core/src/main/resources/i18n`. The current locale can be changed in the in‑game settings screen and is persisted alongside the user's other settings. Graphics options, such as anti‑aliasing, are stored under the `graphics` preference group in the same settings file.
 
 ## Networking Workflow
 Multiplayer features follow a strict request/response pattern:

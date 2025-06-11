@@ -5,6 +5,7 @@ dependencies {
     implementation "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
     implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
 
     runtimeOnly "ch.qos.logback:logback-classic:$logbackVersion"
 
