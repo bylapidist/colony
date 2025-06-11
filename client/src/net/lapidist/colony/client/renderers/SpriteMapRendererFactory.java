@@ -1,6 +1,5 @@
 package net.lapidist.colony.client.renderers;
 
-import com.artemis.ComponentMapper;
 import com.artemis.World;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.lapidist.colony.client.core.io.FileLocation;
@@ -10,10 +9,7 @@ import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.settings.GraphicsSettings;
 import net.lapidist.colony.settings.Settings;
-import net.lapidist.colony.components.entities.BuildingComponent;
-import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.maps.MapComponent;
-import net.lapidist.colony.components.resources.ResourceComponent;
 
 import java.io.IOException;
 
@@ -51,29 +47,22 @@ public final class SpriteMapRendererFactory implements MapRendererFactory {
         SpriteBatch batch = new SpriteBatch();
 
         CameraProvider cameraSystem = world.getSystem(PlayerCameraSystem.class);
-        ComponentMapper<TileComponent> tileMapper = world.getMapper(TileComponent.class);
-        ComponentMapper<BuildingComponent> buildingMapper = world.getMapper(BuildingComponent.class);
-        ComponentMapper<ResourceComponent> resourceMapper = world.getMapper(ResourceComponent.class);
 
         TileRenderer tileRenderer = new TileRenderer(
                 batch,
                 resourceLoader,
                 cameraSystem,
-                tileMapper,
                 new DefaultAssetResolver()
         );
         BuildingRenderer buildingRenderer = new BuildingRenderer(
                 batch,
                 resourceLoader,
                 cameraSystem,
-                buildingMapper,
                 new DefaultAssetResolver()
         );
         ResourceRenderer resourceRenderer = new ResourceRenderer(
                 batch,
-                cameraSystem,
-                tileMapper,
-                resourceMapper
+                cameraSystem
         );
 
         // trigger map mapper initialization so MapRenderSystem can use it immediately
