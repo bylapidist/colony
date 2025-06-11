@@ -83,4 +83,73 @@ public class MapRenderSystemTest {
         assertNotNull("MapRenderSystem should find map after initialization", map);
         world.dispose();
     }
+
+    @Test
+    public void refreshesMapDataWhenDataSystemUpdates() throws Exception {
+        GL20 gl = Gdx.gl20;
+        Mockito.when(gl.glCreateShader(Mockito.anyInt())).thenReturn(1);
+        Mockito.when(gl.glCreateProgram()).thenReturn(1);
+        Mockito.doAnswer(inv -> {
+            java.nio.IntBuffer buf = (java.nio.IntBuffer) inv.getArguments()[2];
+            buf.put(0, 1);
+            return null;
+        }).when(gl).glGetShaderiv(Mockito.anyInt(), Mockito.anyInt(), Mockito.any());
+        Mockito.doAnswer(inv -> {
+            java.nio.IntBuffer buf = (java.nio.IntBuffer) inv.getArguments()[2];
+            buf.put(0, 1);
+            return null;
+        }).when(gl).glGetProgramiv(Mockito.anyInt(), Mockito.anyInt(), Mockito.any());
+        Mockito.when(gl.glGetShaderInfoLog(Mockito.anyInt())).thenReturn("");
+        Mockito.when(gl.glGetProgramInfoLog(Mockito.anyInt())).thenReturn("");
+        Mockito.doNothing().when(gl).glShaderSource(Mockito.anyInt(), Mockito.any());
+        Mockito.doNothing().when(gl).glCompileShader(Mockito.anyInt());
+        Mockito.doNothing().when(gl).glAttachShader(Mockito.anyInt(), Mockito.anyInt());
+        Mockito.doNothing().when(gl).glLinkProgram(Mockito.anyInt());
+        Mockito.doNothing().when(gl).glDeleteShader(Mockito.anyInt());
+        Mockito.doNothing().when(gl).glDeleteProgram(Mockito.anyInt());
+
+        MapState state = new MapState();
+        TileData tile = TileData.builder()
+                .x(0)
+                .y(0)
+                .tileType("GRASS")
+                .passable(true)
+                .build();
+        state.tiles().put(new TilePos(0, 0), tile);
+
+        MapRenderSystem renderSystem = new MapRenderSystem();
+        MapRenderDataSystem dataSystem = new MapRenderDataSystem();
+
+        World world = new World(new WorldConfigurationBuilder()
+                .with(
+                        renderSystem,
+                        new MapInitSystem(new ProvidedMapStateProvider(state)),
+                        dataSystem,
+                        new PlayerCameraSystem()
+                )
+                .build());
+
+        renderSystem.setMapRenderer(Mockito.mock(MapRenderer.class));
+        renderSystem.setCameraProvider(world.getSystem(PlayerCameraSystem.class));
+
+        world.process();
+
+        MapRenderSystem system = world.getSystem(MapRenderSystem.class);
+        Field mapField = MapRenderSystem.class.getDeclaredField("mapData");
+        mapField.setAccessible(true);
+        Object first = mapField.get(system);
+
+        var map = net.lapidist.colony.map.MapUtils.findMap(world).orElseThrow();
+        var entity = map.getTiles().first();
+        world.getMapper(net.lapidist.colony.components.maps.TileComponent.class)
+                .get(entity).setSelected(true);
+        map.incrementVersion();
+
+        world.process();
+        world.process();
+
+        Object second = mapField.get(system);
+        assertNotSame(first, second);
+        world.dispose();
+    }
 }
