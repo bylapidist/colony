@@ -10,7 +10,7 @@ public final class MapRenderSystem extends BaseSystem {
 
     private MapComponent map;
 
-    private PlayerCameraSystem cameraSystem;
+    private CameraProvider cameraSystem;
 
     public MapRenderSystem() {
     }

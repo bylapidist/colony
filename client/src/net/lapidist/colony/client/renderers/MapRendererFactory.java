@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.lapidist.colony.client.core.io.FileLocation;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.core.io.TextureAtlasResourceLoader;
+import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.settings.GraphicsSettings;
 import net.lapidist.colony.settings.Settings;
@@ -49,7 +50,7 @@ public final class MapRendererFactory {
         }
         SpriteBatch batch = new SpriteBatch();
 
-        PlayerCameraSystem cameraSystem = world.getSystem(PlayerCameraSystem.class);
+        CameraProvider cameraSystem = world.getSystem(PlayerCameraSystem.class);
         ComponentMapper<TileComponent> tileMapper = world.getMapper(TileComponent.class);
         ComponentMapper<BuildingComponent> buildingMapper = world.getMapper(BuildingComponent.class);
         ComponentMapper<TextureRegionReferenceComponent> textureMapper =

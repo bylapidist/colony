@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import net.lapidist.colony.client.util.CameraUtils;
 
-public final class PlayerCameraSystem extends BaseSystem {
+public final class PlayerCameraSystem extends BaseSystem implements CameraProvider {
 
     private final Rectangle viewBounds = new Rectangle();
 

@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import net.lapidist.colony.client.systems.PlayerCameraSystem;
+import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.resources.ResourceComponent;
@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.Disposable;
 /** Draws resource amounts on tiles. */
 public final class ResourceRenderer implements EntityRenderer, Disposable {
     private final SpriteBatch spriteBatch;
-    private final PlayerCameraSystem cameraSystem;
+    private final CameraProvider cameraSystem;
     private final BitmapFont font = new BitmapFont();
     private final ComponentMapper<TileComponent> tileMapper;
     private final ComponentMapper<ResourceComponent> resourceMapper;
@@ -23,7 +23,7 @@ public final class ResourceRenderer implements EntityRenderer, Disposable {
 
     public ResourceRenderer(
             final SpriteBatch spriteBatchToUse,
-            final PlayerCameraSystem cameraSystemToUse,
+            final CameraProvider cameraSystemToUse,
             final ComponentMapper<TileComponent> tileMapperToUse,
             final ComponentMapper<ResourceComponent> resourceMapperToUse
     ) {
