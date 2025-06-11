@@ -5,6 +5,7 @@ import com.artemis.World;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.lapidist.colony.client.core.io.FileLocation;
 import net.lapidist.colony.client.core.io.ResourceLoader;
+import net.lapidist.colony.client.core.io.TextureAtlasResourceLoader;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.settings.GraphicsSettings;
 import net.lapidist.colony.settings.Settings;
@@ -23,21 +24,26 @@ public final class MapRendererFactory {
 
     private final FileLocation fileLocation;
     private final String atlasPath;
+    private final ResourceLoader resourceLoader;
 
     public MapRendererFactory() {
-        this(FileLocation.INTERNAL, "textures/textures.atlas");
+        this(new TextureAtlasResourceLoader(), FileLocation.INTERNAL, "textures/textures.atlas");
+    }
+
+    public MapRendererFactory(final ResourceLoader loader, final FileLocation location, final String path) {
+        this.fileLocation = location;
+        this.atlasPath = path;
+        this.resourceLoader = loader;
     }
 
     public MapRendererFactory(final FileLocation location, final String path) {
-        this.fileLocation = location;
-        this.atlasPath = path;
+        this(new TextureAtlasResourceLoader(), location, path);
     }
 
     public MapRenderer create(final World world) {
-        ResourceLoader loader = new ResourceLoader();
         try {
             GraphicsSettings graphics = Settings.load().getGraphicsSettings();
-            loader.load(fileLocation, atlasPath, graphics);
+            resourceLoader.loadTextures(fileLocation, atlasPath, graphics);
         } catch (IOException e) {
             // ignore loading errors in headless tests
         }
@@ -52,14 +58,14 @@ public final class MapRendererFactory {
 
         TileRenderer tileRenderer = new TileRenderer(
                 batch,
-                loader,
+                resourceLoader,
                 cameraSystem,
                 tileMapper,
                 textureMapper
         );
         BuildingRenderer buildingRenderer = new BuildingRenderer(
                 batch,
-                loader,
+                resourceLoader,
                 cameraSystem,
                 buildingMapper,
                 textureMapper
@@ -76,7 +82,7 @@ public final class MapRendererFactory {
 
         return new SpriteBatchMapRenderer(
                 batch,
-                loader,
+                resourceLoader,
                 tileRenderer,
                 buildingRenderer,
                 resourceRenderer

@@ -2,6 +2,7 @@ package net.lapidist.colony.tests.core.io;
 
 import net.lapidist.colony.client.core.io.FileLocation;
 import net.lapidist.colony.client.core.io.ResourceLoader;
+import net.lapidist.colony.client.core.io.TextureAtlasResourceLoader;
 import net.lapidist.colony.tests.GdxTestRunner;
 import net.lapidist.colony.settings.GraphicsSettings;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,13 +18,13 @@ public class ResourceLoaderTest {
 
     @Test
     public final void testLoadsResources() throws IOException {
-        ResourceLoader resourceLoader = new ResourceLoader();
+        ResourceLoader resourceLoader = new TextureAtlasResourceLoader();
 
         GraphicsSettings gs = new GraphicsSettings();
         gs.setMipMapsEnabled(true);
         gs.setAnisotropicFilteringEnabled(true);
 
-        resourceLoader.load(
+        resourceLoader.loadTextures(
                 FileLocation.INTERNAL,
                 "textures/textures.atlas",
                 gs
@@ -36,9 +37,9 @@ public class ResourceLoaderTest {
         GraphicsSettings gs = new GraphicsSettings();
         gs.setMipMapsEnabled(true);
         gs.setAnisotropicFilteringEnabled(true);
-        ResourceLoader resourceLoader = new ResourceLoader();
+        ResourceLoader resourceLoader = new TextureAtlasResourceLoader();
 
-        resourceLoader.load(FileLocation.INTERNAL, "textures/textures.atlas", gs);
+        resourceLoader.loadTextures(FileLocation.INTERNAL, "textures/textures.atlas", gs);
 
         for (Texture texture : resourceLoader.getAtlas().getTextures()) {
             assertEquals(Texture.TextureFilter.MipMapLinearLinear, texture.getMinFilter());
