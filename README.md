@@ -9,13 +9,11 @@ Colony is a small simulation/strategy prototype built with LibGDX and the Artemi
   - [Building and Testing](#building-and-testing)
   - [Running the Game](#running-the-game)
 - [Controls](#controls)
-- [Project Structure](#project-structure)
+- [Architecture](#architecture)
 - [Configuration](#configuration)
-- [Networking Workflow](#networking-workflow)
-- [Development Guidelines](#development-guidelines)
-  - [Code Style](#code-style)
-  - [Contributing](#contributing)
-  - [Documentation](#documentation)
+- [Networking](#networking)
+- [Contributing](#contributing)
+- [Documentation](#documentation)
 
 ## Quick Start
 ### Building and Testing
@@ -45,58 +43,31 @@ Both the client and dedicated server can be started directly from Gradle:
 ```
 
 ## Controls
-Default keyboard mappings can be remapped in game.
-See [docs/controls.md](docs/controls.md) for the full list and instructions.
+Default keyboard mappings can be remapped in game. See
+[docs/controls.md](docs/controls.md) for the full list and instructions.
 
-## Project Structure
-The repository is split into four Gradle modules:
-
-- **core** – shared ECS components, constants, cross-platform game logic and Kryo serializers.
-- **client** – desktop client using LibGDX. This module contains the game loop, rendering logic, UI classes and networking code to communicate with the server.
-- **server** – headless game server. It exposes networking services using Kryonet and runs the same ECS logic as the client to keep game state in sync.
-- **tests** – JUnit tests and a custom `GdxTestRunner` that boots a headless LibGDX environment so game systems can be tested without a graphical context.
-
-### Map Renderer Abstraction
-`MapWorldBuilder` uses a `MapRendererFactory` to create the renderer at build time. The default factory produces a sprite based renderer but alternative implementations can be supplied, including the experimental 3‑D renderer. `MapRenderDataSystem` converts the live map into simple `RenderTile` and `RenderBuilding` objects so renderers work with plain data. The active renderer is chosen via the `graphics.renderer` setting (`sprite` or `model`).
-
-Each module keeps its source under `src/` with all packages rooted at `net.lapidist.colony`. Shared constants and configuration files live in the `core` module and are imported by both the client and server.
+## Architecture
+An overview of the project layout and renderer abstraction is available in
+[docs/architecture.md](docs/architecture.md).
 
 ## Configuration
-Configuration defaults such as map size, autosave interval and network ports are defined in `core/src/main/resources/game.conf` and loaded at runtime. Per-user saves and settings are written to a platform specific directory under the user's home folder. `core/src/net/lapidist/colony/io/Paths.java` resolves the exact locations.
+Game defaults and save locations are detailed in
+[docs/configuration.md](docs/configuration.md).
 
-All visible text is provided through resource bundles found in `core/src/main/resources/i18n`. The current locale can be changed in the in‑game settings screen and is persisted alongside the user's other settings. Graphics options, such as anti‑aliasing, are stored under the `graphics` preference group in the same settings file.
+## Networking
+The client and server communicate using a request/response protocol. See
+[docs/networking.md](docs/networking.md) for a detailed walkthrough and code
+examples.
 
-## Networking Workflow
-Multiplayer features follow a strict request/response pattern:
-
-1. When a user action should modify the world, the client sends a **request** message describing the action to the server.
-2. The server validates and applies the change, then **broadcasts** the resulting state update to all clients.
-3. Clients **queue** incoming updates and apply them during their next update step.
-
-Local changes must not be applied before the server's confirmation is processed. This keeps all connected clients in sync.
-
-The code mirrors this flow with clearly named methods:
-
-- Clients call `sendTileSelectionRequest` to issue actions.
-- The server uses `broadcast` to relay updates to all clients.
-- Each client processes queued updates via `poll(TileSelectionData.class)` inside its update systems.
-
-For a step‑by‑step example see [docs/networking.md](docs/networking.md).
-
-## Development Guidelines
-### Code Style
-Checkstyle rules are defined in `config/checkstyle/checkstyle.xml`. All Java files use four spaces for indentation and lines are limited to 120 characters. The Gradle `check` task enforces these conventions and should pass before committing.
-
-### Contributing
-New classes should be placed under the `net.lapidist.colony` package in the appropriate module. Commit messages and pull request titles follow the [Angular commit message guidelines](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit). When changing or adding functionality, ensure it has adequate test coverage. Scenario tests can be written with the `GameSimulation` utilities under the `tests` module.
-
-
-For more details see [CONTRIBUTING.md](CONTRIBUTING.md).
+## Contributing
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for coding conventions and the
+development workflow.
 
 ## Documentation
 The latest Java API reference is published to [GitHub Pages](https://bylapidist.github.io/colony/) on every release.
-For a high level overview of the modules and networking flow see [docs/architecture.md](docs/architecture.md).
+For a high level overview of the modules see [docs/architecture.md](docs/architecture.md).
 Refer to [docs/networking.md](docs/networking.md) for hands‑on client and server examples.
+Configuration details are in [docs/configuration.md](docs/configuration.md).
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
