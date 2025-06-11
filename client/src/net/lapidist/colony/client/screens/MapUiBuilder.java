@@ -18,6 +18,7 @@ import net.lapidist.colony.client.ui.PlayerResourcesActor;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.i18n.I18n;
 import net.lapidist.colony.settings.KeyBindings;
+import net.lapidist.colony.settings.GraphicsSettings;
 import net.lapidist.colony.settings.KeyAction;
 
 /**
@@ -59,7 +60,8 @@ public final class MapUiBuilder {
         stage.addActor(chatTable);
 
         TextButton menuButton = new TextButton(I18n.get("map.menu"), skin);
-        MinimapActor minimapActor = new MinimapActor(world);
+        GraphicsSettings graphics = colony.getSettings().getGraphicsSettings();
+        MinimapActor minimapActor = new MinimapActor(world, graphics);
         ChatBox chatBox = new ChatBox(skin, client);
         PlayerResourcesActor resourcesActor = new PlayerResourcesActor(skin, world);
 
