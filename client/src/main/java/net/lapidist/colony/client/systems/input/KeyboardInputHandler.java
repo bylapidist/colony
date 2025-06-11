@@ -3,6 +3,8 @@ package net.lapidist.colony.client.systems.input;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.settings.KeyAction;
@@ -49,7 +51,13 @@ public final class KeyboardInputHandler {
         final float mapWidth = GameConstants.MAP_WIDTH * GameConstants.TILE_SIZE;
         final float mapHeight = GameConstants.MAP_HEIGHT * GameConstants.TILE_SIZE;
 
-        position.x = MathUtils.clamp(position.x, 0, mapWidth);
-        position.y = MathUtils.clamp(position.y, 0, mapHeight);
+        var camera = (OrthographicCamera) cameraSystem.getCamera();
+        var viewport = (ExtendViewport) cameraSystem.getViewport();
+
+        float halfWidth = viewport.getWorldWidth() * camera.zoom / 2f;
+        float halfHeight = viewport.getWorldHeight() * camera.zoom / 2f;
+
+        position.x = MathUtils.clamp(position.x, halfWidth, mapWidth - halfWidth);
+        position.y = MathUtils.clamp(position.y, halfHeight, mapHeight - halfHeight);
     }
 }

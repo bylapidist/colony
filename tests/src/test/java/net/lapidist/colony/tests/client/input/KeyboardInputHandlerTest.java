@@ -46,9 +46,15 @@ public class KeyboardInputHandlerTest {
                 0f
         );
         handler.clampCameraPosition();
-        assertEquals(GameConstants.MAP_WIDTH * GameConstants.TILE_SIZE,
+
+        var viewport = (com.badlogic.gdx.utils.viewport.ExtendViewport) cameraSystem.getViewport();
+        var cam = (OrthographicCamera) cameraSystem.getCamera();
+        float halfW = viewport.getWorldWidth() * cam.zoom / 2f;
+        float halfH = viewport.getWorldHeight() * cam.zoom / 2f;
+
+        assertEquals(GameConstants.MAP_WIDTH * GameConstants.TILE_SIZE - halfW,
                 cameraSystem.getCamera().position.x, TOL);
-        assertEquals(GameConstants.MAP_HEIGHT * GameConstants.TILE_SIZE,
+        assertEquals(GameConstants.MAP_HEIGHT * GameConstants.TILE_SIZE - halfH,
                 cameraSystem.getCamera().position.y, TOL);
     }
 }
