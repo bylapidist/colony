@@ -230,4 +230,25 @@ public class MapTileCacheTest {
             assertEquals(1, cons.constructed().size());
         }
     }
+
+    @Test
+    public void recreatesCacheWhenMapChanges() {
+        SimpleMapRenderData data = (SimpleMapRenderData) createData();
+        SimpleMapRenderData data2 = (SimpleMapRenderData) createData();
+        CameraProvider cam = mock(CameraProvider.class);
+        when(cam.getCamera()).thenReturn(new OrthographicCamera());
+        ResourceLoader loader = mock(ResourceLoader.class);
+        when(loader.findRegion(any())).thenReturn(new TextureRegion());
+        try (MockedConstruction<SpriteCache> cons = mockConstruction(SpriteCache.class,
+                (mock, ctx) -> {
+                    when(mock.getProjectionMatrix()).thenReturn(new Matrix4());
+                    when(mock.endCache()).thenReturn(0);
+                })) {
+            MapTileCache cache = new MapTileCache();
+            cache.ensureCache(loader, data, new DefaultAssetResolver(), cam);
+            assertEquals(1, cons.constructed().size());
+            cache.ensureCache(loader, data2, new DefaultAssetResolver(), cam);
+            assertEquals(2, cons.constructed().size());
+        }
+    }
 }
