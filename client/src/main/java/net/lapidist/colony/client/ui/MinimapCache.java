@@ -2,17 +2,13 @@ package net.lapidist.colony.client.ui;
 
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.SpriteCache;
-import com.badlogic.gdx.utils.IntArray;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.client.core.io.ResourceLoader;
-import net.lapidist.colony.client.renderers.AssetResolver;
-import net.lapidist.colony.client.renderers.DefaultAssetResolver;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 
@@ -21,18 +17,18 @@ import net.lapidist.colony.components.maps.TileComponent;
  */
 final class MinimapCache implements Disposable {
 
-    private static final int MAX_SPRITES_PER_CACHE = 8191;
+    private static final Color GRASS_COLOR = new Color(0.3f, 0.8f, 0.3f, 1f);
+    private static final Color DIRT_COLOR = new Color(0.55f, 0.27f, 0.07f, 1f);
 
-    private final Array<SpriteCache> spriteCaches = new Array<>();
-    private final IntArray cacheIds = new IntArray();
-    private final Matrix4 oldProj = new Matrix4();
-    private final Matrix4 oldTrans = new Matrix4();
-    private final Matrix4 transform = new Matrix4();
+    private Texture texture;
+    private Pixmap pixmap;
     private int cacheWidth;
     private int cacheHeight;
     private boolean invalidated = true;
     private float viewportWidth;
     private float viewportHeight;
+    private int mapWidth;
+    private int mapHeight;
 
     void invalidate() {
         invalidated = true;
@@ -52,36 +48,38 @@ final class MinimapCache implements Disposable {
             final float scaleX,
             final float scaleY
     ) {
-        if (!spriteCaches.isEmpty() && !invalidated
+        if (texture != null && !invalidated
                 && cacheWidth == (int) viewportWidth && cacheHeight == (int) viewportHeight) {
             return;
         }
+
         dispose();
+
         Array<Entity> tiles = mapMapper.get(map).getTiles();
-        AssetResolver resolver = new DefaultAssetResolver();
-        for (int start = 0; start < tiles.size; start += MAX_SPRITES_PER_CACHE) {
-            int count = Math.min(MAX_SPRITES_PER_CACHE, tiles.size - start);
-            SpriteCache cache = new SpriteCache(count, true);
-            cache.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, viewportWidth, viewportHeight));
-            cache.beginCache();
-            for (int i = 0; i < count; i++) {
-                Entity tile = tiles.get(start + i);
-                TileComponent tileComponent = tileMapper.get(tile);
-                TextureRegion region = resourceLoader.findRegion(
-                        resolver.tileAsset(tileComponent.getTileType().toString()));
-                if (region != null) {
-                    cache.add(
-                            region,
-                            tileComponent.getX() * GameConstants.TILE_SIZE * scaleX,
-                            tileComponent.getY() * GameConstants.TILE_SIZE * scaleY,
-                            GameConstants.TILE_SIZE * scaleX,
-                            GameConstants.TILE_SIZE * scaleY
-                    );
-                }
-            }
-            cacheIds.add(cache.endCache());
-            spriteCaches.add(cache);
+        int maxX = 0;
+        int maxY = 0;
+        for (int i = 0; i < tiles.size; i++) {
+            TileComponent tc = tileMapper.get(tiles.get(i));
+            maxX = Math.max(maxX, tc.getX());
+            maxY = Math.max(maxY, tc.getY());
         }
+        mapWidth = Math.max(1, maxX + 1);
+        mapHeight = Math.max(1, maxY + 1);
+
+        pixmap = new Pixmap(mapWidth, mapHeight, Pixmap.Format.RGBA8888);
+        for (int i = 0; i < tiles.size; i++) {
+            TileComponent tc = tileMapper.get(tiles.get(i));
+            Color c = switch (tc.getTileType()) {
+                case GRASS -> GRASS_COLOR;
+                case DIRT -> DIRT_COLOR;
+                case EMPTY -> Color.CLEAR;
+            };
+            this.pixmap.setColor(c);
+            this.pixmap.drawPixel(tc.getX(), mapHeight - 1 - tc.getY());
+        }
+
+        texture = new Texture(pixmap);
+        texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
         cacheWidth = (int) viewportWidth;
         cacheHeight = (int) viewportHeight;
@@ -89,34 +87,29 @@ final class MinimapCache implements Disposable {
     }
 
     void draw(final SpriteBatch batch, final float x, final float y) {
-        if (spriteCaches.isEmpty()) {
+        if (texture == null) {
             return;
         }
-        oldProj.set(spriteCaches.first().getProjectionMatrix());
-        oldTrans.set(spriteCaches.first().getTransformMatrix());
-        batch.end();
-        for (int i = 0; i < spriteCaches.size; i++) {
-            SpriteCache cache = spriteCaches.get(i);
-            cache.setProjectionMatrix(batch.getProjectionMatrix());
-            transform.setToTranslation(x, y, 0);
-            cache.setTransformMatrix(transform);
-            cache.begin();
-            cache.draw(cacheIds.get(i));
-            cache.end();
-        }
-        batch.begin();
-        for (SpriteCache cache : spriteCaches) {
-            cache.setProjectionMatrix(oldProj);
-            cache.setTransformMatrix(oldTrans);
-        }
+        batch.draw(texture, x, y, cacheWidth, cacheHeight);
+    }
+
+    Texture getTexture() {
+        return texture;
+    }
+
+    Pixmap getPixmap() {
+        return pixmap;
     }
 
     @Override
     public void dispose() {
-        for (SpriteCache cache : spriteCaches) {
-            cache.dispose();
+        if (texture != null) {
+            texture.dispose();
+            texture = null;
         }
-        spriteCaches.clear();
-        cacheIds.clear();
+        if (pixmap != null) {
+            pixmap.dispose();
+            pixmap = null;
+        }
     }
 }
