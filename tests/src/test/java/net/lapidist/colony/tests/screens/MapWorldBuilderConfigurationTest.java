@@ -12,7 +12,6 @@ import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.CameraInputSystem;
 import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
-import net.lapidist.colony.client.systems.PerspectiveCameraSystem;
 import net.lapidist.colony.client.systems.SelectionSystem;
 import net.lapidist.colony.client.systems.PlayerInitSystem;
 import net.lapidist.colony.client.systems.MapRenderSystem;
@@ -134,10 +133,9 @@ public class MapWorldBuilderConfigurationTest {
     @Test
     public void selectsCameraSystemFromSettings() {
         net.lapidist.colony.settings.Settings settings = new net.lapidist.colony.settings.Settings();
-        settings.getGraphicsSettings().setRenderer("model");
+        settings.getGraphicsSettings().setRenderer("sprite");
         World world = MapWorldBuilder.build(new com.artemis.WorldConfigurationBuilder(), null, settings);
-        assertNotNull(world.getSystem(PerspectiveCameraSystem.class));
-        assertNull(world.getSystem(PlayerCameraSystem.class));
+        assertNotNull(world.getSystem(PlayerCameraSystem.class));
         world.dispose();
     }
 }

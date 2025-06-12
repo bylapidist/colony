@@ -5,15 +5,13 @@ import com.badlogic.gdx.graphics.GLTexture;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.Model;
 import net.lapidist.colony.settings.GraphicsSettings;
 
 import java.io.IOException;
 
 /**
  * {@link ResourceLoader} implementation that loads textures from a
- * {@link TextureAtlas}. Model loading is not supported and will throw an
- * {@link UnsupportedOperationException}.
+ * {@link TextureAtlas}.
  */
 public final class TextureAtlasResourceLoader implements ResourceLoader {
 
@@ -111,15 +109,6 @@ public final class TextureAtlasResourceLoader implements ResourceLoader {
         return atlas.findRegion(name);
     }
 
-    @Override
-    public void loadModel(final FileLocation fileLocationToSet, final String modelPath) throws IOException {
-        throw new UnsupportedOperationException("Model loading not supported");
-    }
-
-    @Override
-    public Model findModel(final String name) {
-        return null;
-    }
 
     @Override
     public void dispose() {

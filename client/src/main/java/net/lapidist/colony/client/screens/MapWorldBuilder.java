@@ -8,8 +8,6 @@ import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.renderers.MapRendererFactory;
 import net.lapidist.colony.client.renderers.MapRenderer;
 import net.lapidist.colony.client.renderers.SpriteMapRendererFactory;
-import net.lapidist.colony.client.renderers.ModelBatchMapRendererFactory;
-import net.lapidist.colony.client.systems.PerspectiveCameraSystem;
 import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
 import net.lapidist.colony.client.systems.CameraInputSystem;
@@ -155,29 +153,16 @@ public final class MapWorldBuilder {
     ) {
         MapRendererFactory actualFactory = factory;
         if (actualFactory == null) {
-            String type = settings != null
-                    ? settings.getGraphicsSettings().getRenderer()
-                    : "sprite";
-            actualFactory = "model".equals(type)
-                    ? new ModelBatchMapRendererFactory()
-                    : new SpriteMapRendererFactory();
+            actualFactory = new SpriteMapRendererFactory();
         }
-        if (actualFactory instanceof ModelBatchMapRendererFactory) {
-            builder.with(new PerspectiveCameraSystem());
-        } else {
-            builder.with(new PlayerCameraSystem());
-        }
+        builder.with(new PlayerCameraSystem());
 
         World world = new World(builder.build());
         MapRenderSystem renderSystem = world.getSystem(MapRenderSystem.class);
         if (renderSystem != null) {
             MapRenderer renderer = actualFactory.create(world);
             renderSystem.setMapRenderer(renderer);
-            if (actualFactory instanceof ModelBatchMapRendererFactory) {
-                renderSystem.setCameraProvider(world.getSystem(PerspectiveCameraSystem.class));
-            } else {
-                renderSystem.setCameraProvider(world.getSystem(PlayerCameraSystem.class));
-            }
+            renderSystem.setCameraProvider(world.getSystem(PlayerCameraSystem.class));
         }
         Events.init(world.getSystem(EventSystem.class));
         return world;
