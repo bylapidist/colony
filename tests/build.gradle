@@ -1,3 +1,7 @@
+plugins {
+    id 'me.champeau.jmh' version '0.7.3'
+}
+
 dependencies {
     implementation project(":client")
     implementation project(":server")
@@ -8,6 +12,14 @@ dependencies {
     implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
 
     runtimeOnly "ch.qos.logback:logback-classic:$logbackVersion"
+
+    jmhImplementation project(":client")
+    jmhImplementation project(":server")
+    jmhImplementation project(":core")
+    jmhImplementation "org.mockito:mockito-core:$mockitoVersion"
+    jmhImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+    jmhImplementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+    jmhImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
 
     testImplementation "junit:junit:$jUnitVersion"
     testImplementation "org.mockito:mockito-core:$mockitoVersion"

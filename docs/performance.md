@@ -29,3 +29,17 @@ collections remain necessary despite the overhead.
 per-frame lookups. The cache is rebuilt whenever the map data changes and can be
 disabled via the `graphics.spritecache` setting. Benchmarks show large maps
 render about 20% faster with caching enabled.
+
+## Microbenchmarks
+
+Additional performance tests use JMH and reside in the `tests` module. Run them with:
+
+```bash
+./gradlew :tests:jmh
+```
+
+To execute a specific benchmark use the `jmh.include` property:
+
+```bash
+./gradlew :tests:jmh -Djmh.include=SpriteBatchRendererBenchmark
+```
