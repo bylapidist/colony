@@ -49,3 +49,14 @@ To execute a specific benchmark use the `jmh.include` property:
 `SpriteBatchRendererBenchmark` measures the render system with and without tile
 caching enabled. Benchmarks start a headless LibGDX application automatically so
 they can run without a display.
+
+### Benchmark results (JDK 21)
+
+| Benchmark | Score (ops/s) |
+|-----------|---------------|
+| MapTileCacheBenchmark.rebuildCache | ~79 |
+| SpriteBatchRendererBenchmark.renderWithCache | ~12,700 |
+| SpriteBatchRendererBenchmark.renderWithoutCache | ~146 |
+
+These results were captured on a headless JDK 21 runtime and serve as a baseline
+for future renderer changes.
