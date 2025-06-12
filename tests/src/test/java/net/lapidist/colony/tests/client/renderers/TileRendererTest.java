@@ -51,12 +51,25 @@ public class TileRendererTest {
                 .build();
         tiles.add(tile);
 
+        RenderTile tile2 = RenderTile.builder()
+                .x(1)
+                .y(1)
+                .tileType("GRASS")
+                .selected(false)
+                .wood(0)
+                .stone(0)
+                .food(0)
+                .build();
+        tiles.add(tile2);
+
         RenderTile[][] grid = new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT];
         grid[0][0] = tile;
+        grid[1][1] = tile2;
         MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);
 
         renderer.render(map);
 
-        verify(batch, times(2)).draw(any(TextureRegion.class), anyFloat(), anyFloat());
+        int expectedDraws = tiles.size + 1;
+        verify(batch, times(expectedDraws)).draw(any(TextureRegion.class), anyFloat(), anyFloat());
     }
 }
