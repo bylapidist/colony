@@ -18,6 +18,9 @@ final class ViewportOverlayRenderer implements Disposable {
 
     private final PlayerCameraSystem cameraSystem;
     private ShapeRenderer shapeRenderer;
+    private final Rectangle viewBounds = new Rectangle();
+    private final Vector2 bottomLeft = new Vector2();
+    private final Vector2 topRight = new Vector2();
 
     ViewportOverlayRenderer(final PlayerCameraSystem system) {
         this.cameraSystem = system;
@@ -41,10 +44,10 @@ final class ViewportOverlayRenderer implements Disposable {
         Rectangle view = CameraUtils.getViewBounds(
                 (com.badlogic.gdx.graphics.OrthographicCamera) cameraSystem.getCamera(),
                 (com.badlogic.gdx.utils.viewport.ExtendViewport) cameraSystem.getViewport(),
-                new Rectangle()
+                viewBounds
         );
-        Vector2 bottomLeft = new Vector2(view.x, view.y);
-        Vector2 topRight = new Vector2(view.x + view.width, view.y + view.height);
+        bottomLeft.set(view.x, view.y);
+        topRight.set(view.x + view.width, view.y + view.height);
 
         float clampedLeft = Math.max(0, bottomLeft.x);
         float clampedBottom = Math.max(0, bottomLeft.y);

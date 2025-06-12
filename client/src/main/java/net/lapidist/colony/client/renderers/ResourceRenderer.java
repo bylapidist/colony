@@ -21,6 +21,8 @@ public final class ResourceRenderer implements EntityRenderer<RenderTile>, Dispo
     private final BitmapFont font = new BitmapFont();
     private final GlyphLayout layout = new GlyphLayout();
     private final StringBuilder textBuilder = new StringBuilder();
+    private final Vector2 worldCoords = new Vector2();
+    private final Vector3 tmp = new Vector3();
     private static final float OFFSET_Y = 8f;
 
     public ResourceRenderer(
@@ -36,8 +38,6 @@ public final class ResourceRenderer implements EntityRenderer<RenderTile>, Dispo
     @Override
     public void render(final MapRenderData map) {
         Array<RenderTile> entities = map.getTiles();
-        Vector2 worldCoords = new Vector2();
-        Vector3 tmp = new Vector3();
         com.badlogic.gdx.utils.IntArray indices = dataSystem.getSelectedTileIndices();
         for (int j = 0; j < indices.size; j++) {
             int i = indices.get(j);

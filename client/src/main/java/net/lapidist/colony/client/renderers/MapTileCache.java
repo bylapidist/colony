@@ -27,6 +27,8 @@ final class MapTileCache implements Disposable {
     private final Array<SpriteCache> spriteCaches = new Array<>();
     private final IntArray cacheIds = new IntArray();
     private final Array<Rectangle> cacheBounds = new Array<>();
+    private final Matrix4 oldProj = new Matrix4();
+    private final Rectangle viewBounds = new Rectangle();
     private MapRenderData cachedData;
     private int cachedVersion;
     private boolean invalidated = true;
@@ -94,13 +96,13 @@ final class MapTileCache implements Disposable {
         if (spriteCaches.isEmpty()) {
             return;
         }
-        Matrix4 oldProj = spriteCaches.first().getProjectionMatrix().cpy();
+        oldProj.set(spriteCaches.first().getProjectionMatrix());
         batch.end();
 
         Rectangle view = CameraUtils.getViewBounds(
                 (OrthographicCamera) camera.getCamera(),
                 (ExtendViewport) camera.getViewport(),
-                new Rectangle()
+                viewBounds
         );
 
         for (int i = 0; i < spriteCaches.size; i++) {
