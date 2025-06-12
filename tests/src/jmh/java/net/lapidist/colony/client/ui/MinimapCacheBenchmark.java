@@ -24,8 +24,9 @@ import static org.mockito.Mockito.mock;
 /**
  * Benchmarks minimap cache creation for large maps.
  */
+@SuppressWarnings("DesignForExtension")
 @State(Scope.Thread)
-public final class MinimapCacheBenchmark {
+public class MinimapCacheBenchmark {
 
     private static final int MAP_SIZE = 100;
 
@@ -39,7 +40,7 @@ public final class MinimapCacheBenchmark {
     private MinimapCache cache;
 
     @Setup(Level.Trial)
-    public void setUp() {
+    public final void setUp() {
         GdxBenchmarkEnvironment.init();
         MapState state = new MapState();
         for (int x = 0; x < MAP_SIZE; x++) {
@@ -59,13 +60,13 @@ public final class MinimapCacheBenchmark {
     }
 
     @Benchmark
-    public void buildMinimap() {
+    public final void buildMinimap() {
         cache.invalidate();
         cache.ensureCache(loader, map, mapMapper, tileMapper, 1f, 1f);
     }
 
     @TearDown(Level.Trial)
-    public void tearDown() {
+    public final void tearDown() {
         cache.dispose();
         world.dispose();
     }
