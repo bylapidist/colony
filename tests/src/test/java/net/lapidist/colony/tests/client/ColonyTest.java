@@ -3,6 +3,7 @@ package net.lapidist.colony.tests.client;
 import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.screens.MainMenuScreen;
+import net.lapidist.colony.client.screens.LoadingScreen;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.tests.GdxTestRunner;
 import net.lapidist.colony.client.events.GameInitEvent;
@@ -27,7 +28,8 @@ public class ColonyTest {
     public void startGameLaunchesServerAndClient() throws Exception {
         Colony colony = new Colony();
         try (MockedConstruction<GameServer> serverCons = mockConstruction(GameServer.class);
-             MockedConstruction<GameClient> clientCons = mockConstruction(GameClient.class)) {
+             MockedConstruction<GameClient> clientCons = mockConstruction(GameClient.class);
+             MockedConstruction<LoadingScreen> loadCons = mockConstruction(LoadingScreen.class)) {
             colony.startGame("test");
 
             GameServer server = serverCons.constructed().get(0);
@@ -42,7 +44,8 @@ public class ColonyTest {
         Colony colony = new Colony();
         try (MockedConstruction<GameServer> serverCons = mockConstruction(GameServer.class);
              MockedConstruction<GameClient> clientCons = mockConstruction(GameClient.class);
-             MockedConstruction<MainMenuScreen> menuCons = mockConstruction(MainMenuScreen.class)) {
+             MockedConstruction<MainMenuScreen> menuCons = mockConstruction(MainMenuScreen.class);
+             MockedConstruction<LoadingScreen> loadCons = mockConstruction(LoadingScreen.class)) {
             colony.startGame("test");
             GameServer server = serverCons.constructed().get(0);
             GameClient client = clientCons.constructed().get(0);
@@ -92,7 +95,8 @@ public class ColonyTest {
     public void disposeStopsActiveConnectionsAndEvents() throws Exception {
         Colony colony = new Colony();
         try (MockedConstruction<GameServer> serverCons = mockConstruction(GameServer.class);
-             MockedConstruction<GameClient> clientCons = mockConstruction(GameClient.class)) {
+             MockedConstruction<GameClient> clientCons = mockConstruction(GameClient.class);
+             MockedConstruction<LoadingScreen> loadCons = mockConstruction(LoadingScreen.class)) {
             colony.startGame("test");
             GameServer server = serverCons.constructed().get(0);
             GameClient client = clientCons.constructed().get(0);

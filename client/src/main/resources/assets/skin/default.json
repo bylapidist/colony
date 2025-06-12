@@ -241,12 +241,19 @@
       knobBefore: scrubber_vertical_primary,
       knobAfter: scrubber_vertical_secondary
     },
-    down-vertical: {
+  down-vertical: {
       background: scrubber_vertical_track,
       knob: scrubber_control_normal,
       knobBefore: scrubber_vertical_secondary,
       knobAfter: scrubber_vertical_primary
     },
+  },
+  ProgressBarStyle: {
+    default-horizontal: {
+      background: scrubber_track,
+      knob: scrubber_control_normal,
+      knobBefore: scrubber_primary
+    }
   },
   LabelStyle: {
     default: {

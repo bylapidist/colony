@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.client.screens.MapScreen;
 import net.lapidist.colony.client.screens.MainMenuScreen;
+import net.lapidist.colony.client.screens.LoadingScreen;
 import net.lapidist.colony.i18n.I18n;
 import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.client.network.GameClient;
@@ -44,6 +45,8 @@ public final class Colony extends Game {
             );
             server.start();
             client = new GameClient();
+            LoadingScreen loading = new LoadingScreen(client);
+            setScreen(loading);
             client.start(state ->
                     Gdx.app.postRunnable(() -> setScreen(new MapScreen(this, state, client))));
         } catch (IOException | InterruptedException e) {

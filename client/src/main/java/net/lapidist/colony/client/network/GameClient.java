@@ -139,6 +139,16 @@ public final class GameClient extends AbstractMessageEndpoint {
     }
 
     /**
+     * Returns loading progress from 0 to 1 based on received map chunks.
+     */
+    public float getLoadProgress() {
+        if (expectedChunks <= 0) {
+            return 0f;
+        }
+        return Math.min(1f, receivedChunks / (float) expectedChunks);
+    }
+
+    /**
      * Returns true if the underlying network client is connected to the server.
      */
     public boolean isConnected() {
