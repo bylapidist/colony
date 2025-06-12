@@ -7,6 +7,7 @@ import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.core.io.TextureAtlasResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
+import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.settings.GraphicsSettings;
 import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.components.maps.MapComponent;
@@ -83,7 +84,8 @@ public final class SpriteMapRendererFactory implements MapRendererFactory {
         );
         ResourceRenderer resourceRenderer = new ResourceRenderer(
                 batch,
-                cameraSystem
+                cameraSystem,
+                world.getSystem(MapRenderDataSystem.class)
         );
 
         // trigger map mapper initialization so MapRenderSystem can use it immediately

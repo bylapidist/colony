@@ -47,6 +47,29 @@ public class MapRenderDataSystemTest {
     }
 
     @Test
+    public void tracksSelectedTileIndices() {
+        MapState state = new MapState();
+        state.tiles().put(new TilePos(0, 0), TileData.builder()
+                .x(0).y(0).tileType("GRASS").passable(true).selected(true)
+                .build());
+        state.tiles().put(new TilePos(1, 0), TileData.builder()
+                .x(1).y(0).tileType("GRASS").passable(true)
+                .build());
+
+        World world = new World(new WorldConfigurationBuilder()
+                .with(new MapInitSystem(new ProvidedMapStateProvider(state)),
+                        new MapRenderDataSystem())
+                .build());
+        world.process();
+
+        MapRenderDataSystem system = world.getSystem(MapRenderDataSystem.class);
+        assertEquals(1, system.getSelectedTileIndices().size);
+        assertEquals(0, system.getSelectedTileIndices().first());
+
+        world.dispose();
+    }
+
+    @Test
     public void updatesWhenMapChanges() {
         MapState state = new MapState();
         state.tiles().put(new TilePos(0, 0), TileData.builder()
@@ -68,6 +91,8 @@ public class MapRenderDataSystemTest {
         world.process();
         assertSame(firstData, system.getRenderData());
         assertTrue(system.getRenderData().getTiles().first().isSelected());
+        assertEquals(1, system.getSelectedTileIndices().size);
+        assertEquals(0, system.getSelectedTileIndices().first());
         world.dispose();
     }
 

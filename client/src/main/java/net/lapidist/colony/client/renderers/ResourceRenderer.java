@@ -10,12 +10,14 @@ import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.client.render.data.RenderTile;
 import net.lapidist.colony.client.render.MapRenderData;
+import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import com.badlogic.gdx.utils.Disposable;
 
 /** Draws resource amounts on tiles. */
 public final class ResourceRenderer implements EntityRenderer<RenderTile>, Disposable {
     private final SpriteBatch spriteBatch;
     private final CameraProvider cameraSystem;
+    private final MapRenderDataSystem dataSystem;
     private final BitmapFont font = new BitmapFont();
     private final GlyphLayout layout = new GlyphLayout();
     private final StringBuilder textBuilder = new StringBuilder();
@@ -23,10 +25,12 @@ public final class ResourceRenderer implements EntityRenderer<RenderTile>, Dispo
 
     public ResourceRenderer(
             final SpriteBatch spriteBatchToUse,
-            final CameraProvider cameraSystemToUse
+            final CameraProvider cameraSystemToUse,
+            final MapRenderDataSystem dataSystemToUse
     ) {
         this.spriteBatch = spriteBatchToUse;
         this.cameraSystem = cameraSystemToUse;
+        this.dataSystem = dataSystemToUse;
     }
 
     @Override
@@ -34,11 +38,13 @@ public final class ResourceRenderer implements EntityRenderer<RenderTile>, Dispo
         Array<RenderTile> entities = map.getTiles();
         Vector2 worldCoords = new Vector2();
         Vector3 tmp = new Vector3();
-        for (int i = 0; i < entities.size; i++) {
-            RenderTile tile = entities.get(i);
-            if (!tile.isSelected()) {
+        com.badlogic.gdx.utils.IntArray indices = dataSystem.getSelectedTileIndices();
+        for (int j = 0; j < indices.size; j++) {
+            int i = indices.get(j);
+            if (i < 0 || i >= entities.size) {
                 continue;
             }
+            RenderTile tile = entities.get(i);
             CameraUtils.tileCoordsToWorldCoords(tile.getX(), tile.getY(), worldCoords);
             if (!CameraUtils.withinCameraView(cameraSystem.getViewport(), worldCoords, tmp)) {
                 continue;
