@@ -97,7 +97,8 @@ public class MapRendererFactoryTest {
             MapRenderer renderer = factory.create(world);
 
             assertNotNull(renderer);
-            assertTrue(loader.loaded);
+            assertFalse(loader.updated);
+            renderer.render(null, null);
             assertTrue(loader.updated);
             assertTrue(progressCalls.get() > 0);
         }
@@ -120,7 +121,8 @@ public class MapRendererFactoryTest {
             MapRenderer renderer = factory.create(world);
 
             assertNotNull(renderer);
-            assertTrue(loader.loaded);
+            assertFalse(loader.updated);
+            renderer.render(null, null);
             assertTrue(loader.updated);
         }
         world.dispose();

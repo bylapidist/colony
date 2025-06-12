@@ -30,6 +30,14 @@ per-frame lookups. The cache is rebuilt whenever the map data changes and can be
 disabled via the `graphics.spritecache` setting. Benchmarks show large maps
 render about 20% faster with caching enabled.
 
+## Asynchronous renderer loading
+
+`SpriteMapRendererFactory` and `ModelBatchMapRendererFactory` now load assets
+using LibGDX's `AssetManager`. They return lightweight renderers that simply
+poll the asset manager each frame and draw nothing until all resources are
+ready. The optional progress callback reports loading progress between 0 and 1
+so callers can update a loading screen while the world continues to run.
+
 ## Microbenchmarks
 
 Additional performance tests use JMH and reside in the `tests` module. Run them with:
@@ -54,12 +62,12 @@ they can run without a display.
 
 | Benchmark | Score (ops/s) |
 |-----------|---------------|
-| MapTileCacheBenchmark.rebuildCache | ~79 |
-| MapRenderDataSystemBenchmark.updateIncremental (30) | ~117,000 |
-| MapRenderDataSystemBenchmark.updateIncremental (60) | ~26,000 |
-| MapRenderDataSystemBenchmark.updateIncremental (90) | ~10,000 |
-| SpriteBatchRendererBenchmark.renderWithCache | ~12,700 |
-| SpriteBatchRendererBenchmark.renderWithoutCache | ~146 |
+| MapTileCacheBenchmark.rebuildCache | ~55 |
+| MapRenderDataSystemBenchmark.updateIncremental (30) | ~82,000 |
+| MapRenderDataSystemBenchmark.updateIncremental (60) | ~20,000 |
+| MapRenderDataSystemBenchmark.updateIncremental (90) | ~8,500 |
+| SpriteBatchRendererBenchmark.renderWithCache | ~8,400 |
+| SpriteBatchRendererBenchmark.renderWithoutCache | ~113 |
 
 These results were captured on a headless JDK 21 runtime and serve as a baseline
 for future renderer changes.

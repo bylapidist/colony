@@ -1,9 +1,6 @@
 package net.lapidist.colony.client.renderers;
 
 import com.artemis.World;
-import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import net.lapidist.colony.client.core.io.FileLocation;
 import net.lapidist.colony.client.core.io.G3dResourceLoader;
 import net.lapidist.colony.client.core.io.ResourceLoader;
@@ -47,19 +44,15 @@ public final class ModelBatchMapRendererFactory implements MapRendererFactory {
         try {
             loader.loadTextures(location, "textures/textures.atlas");
             loader.loadModel(location, modelPath);
-            while (!loader.update()) {
-                if (progressCallback != null) {
-                    progressCallback.accept(loader.getProgress());
-                }
-            }
-            if (progressCallback != null) {
-                progressCallback.accept(1f);
-            }
         } catch (Exception e) {
             // ignore errors in headless tests
         }
-        Model model = loader.findModel(modelPath);
-        ModelInstance instance = model != null ? new ModelInstance(model) : null;
-        return new ModelBatchMapRenderer(new ModelBatch(), instance);
+
+        return new LoadingModelBatchMapRenderer(
+                world,
+                loader,
+                modelPath,
+                progressCallback
+        );
     }
 }
