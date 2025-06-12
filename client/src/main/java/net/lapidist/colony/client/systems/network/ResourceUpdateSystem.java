@@ -54,6 +54,7 @@ public final class ResourceUpdateSystem extends BaseSystem {
                         rc.setWood(data.wood());
                         rc.setStone(data.stone());
                         rc.setFood(data.food());
+                        rc.setDirty(true);
                         if (player != null) {
                             var pr = playerMapper.get(player);
                             if (deltaWood > 0) {

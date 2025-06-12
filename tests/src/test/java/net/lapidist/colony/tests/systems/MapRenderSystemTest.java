@@ -143,8 +143,10 @@ public class MapRenderSystemTest {
 
         var map = net.lapidist.colony.map.MapUtils.findMap(world).orElseThrow();
         var entity = map.getTiles().first();
-        world.getMapper(net.lapidist.colony.components.maps.TileComponent.class)
-                .get(entity).setSelected(true);
+        var tc = world.getMapper(net.lapidist.colony.components.maps.TileComponent.class)
+                .get(entity);
+        tc.setSelected(true);
+        tc.setDirty(true);
         map.incrementVersion();
 
         world.process();

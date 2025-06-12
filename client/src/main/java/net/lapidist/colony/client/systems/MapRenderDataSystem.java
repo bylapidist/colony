@@ -9,7 +9,6 @@ import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.render.MapRenderDataBuilder;
 import net.lapidist.colony.client.render.SimpleMapRenderData;
 import net.lapidist.colony.client.render.data.RenderBuilding;
-import net.lapidist.colony.client.render.data.RenderTile;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.resources.ResourceComponent;
@@ -76,17 +75,29 @@ public final class MapRenderDataSystem extends BaseSystem {
 
         modifiedIndices.clear();
         Array<Entity> mapTiles = map.getTiles();
-        selectedTileIndices.clear();
         for (int i = 0; i < mapTiles.size; i++) {
             Entity entity = mapTiles.get(i);
             TileComponent tc = tileMapper.get(entity);
             ResourceComponent rc = resourceMapper.get(entity);
-            RenderTile old = data.getTiles().get(i);
-            if (old == null || tileChanged(old, tc, rc)) {
-                modifiedIndices.add(i);
+            boolean dirty = false;
+            if (tc.isDirty()) {
+                dirty = true;
+                int index = selectedTileIndices.indexOf(i);
+                if (tc.isSelected()) {
+                    if (index == -1) {
+                        selectedTileIndices.add(i);
+                    }
+                } else if (index != -1) {
+                    selectedTileIndices.removeIndex(index);
+                }
+                tc.setDirty(false);
             }
-            if (tc.isSelected()) {
-                selectedTileIndices.add(i);
+            if (rc.isDirty()) {
+                dirty = true;
+                rc.setDirty(false);
+            }
+            if (dirty) {
+                modifiedIndices.add(i);
             }
         }
 
@@ -102,35 +113,20 @@ public final class MapRenderDataSystem extends BaseSystem {
                 Entity e = mapEntities.get(i);
                 BuildingComponent bc = buildingMapper.get(e);
                 buildings.add(MapRenderDataBuilder.toBuilding(bc));
+                bc.setDirty(false);
             }
         } else {
             for (int i = 0; i < mapEntities.size; i++) {
                 Entity e = mapEntities.get(i);
                 BuildingComponent bc = buildingMapper.get(e);
-                RenderBuilding old = buildings.get(i);
-                if (old == null || buildingChanged(old, bc)) {
+                if (bc.isDirty()) {
                     buildings.set(i, MapRenderDataBuilder.toBuilding(bc));
+                    bc.setDirty(false);
                 }
             }
         }
 
         data.setVersion(map.getVersion());
-    }
-
-    private static boolean tileChanged(final RenderTile old, final TileComponent tc, final ResourceComponent rc) {
-        return old.getX() != tc.getX()
-                || old.getY() != tc.getY()
-                || !old.getTileType().equals(tc.getTileType().name())
-                || old.isSelected() != tc.isSelected()
-                || old.getWood() != rc.getWood()
-                || old.getStone() != rc.getStone()
-                || old.getFood() != rc.getFood();
-    }
-
-    private static boolean buildingChanged(final RenderBuilding old, final BuildingComponent bc) {
-        return old.getX() != bc.getX()
-                || old.getY() != bc.getY()
-                || !old.getBuildingType().equals(bc.getBuildingType().name());
     }
 
     private void rebuildSelectedIndices() {

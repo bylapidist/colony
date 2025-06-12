@@ -9,6 +9,7 @@ public final class ResourceComponent extends Component {
     private int wood;
     private int stone;
     private int food;
+    private boolean dirty;
 
     public int getWood() {
         return wood;
@@ -28,6 +29,14 @@ public final class ResourceComponent extends Component {
 
     public int getFood() {
         return food;
+    }
+
+    public boolean isDirty() {
+        return dirty;
+    }
+
+    public void setDirty(final boolean dirtyToSet) {
+        this.dirty = dirtyToSet;
     }
 
     public void setFood(final int foodToSet) {

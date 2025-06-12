@@ -2,7 +2,7 @@ package net.lapidist.colony.components.maps;
 
 import net.lapidist.colony.components.AbstractBoundedComponent;
 
-public class TileComponent extends AbstractBoundedComponent {
+public final class TileComponent extends AbstractBoundedComponent {
 
     public enum TileType {
         EMPTY("empty"),
@@ -25,29 +25,39 @@ public class TileComponent extends AbstractBoundedComponent {
 
     private boolean selected;
 
+    private boolean dirty;
+
     private TileType tileType;
 
-    public final boolean isPassable() {
+    public boolean isPassable() {
         return passable;
     }
 
-    public final boolean isSelected() {
+    public boolean isSelected() {
         return selected;
     }
 
-    public final TileType getTileType() {
+    public TileType getTileType() {
         return tileType;
     }
 
-    public final void setPassable(final boolean passableToSet) {
+    public boolean isDirty() {
+        return dirty;
+    }
+
+    public void setDirty(final boolean dirtyToSet) {
+        this.dirty = dirtyToSet;
+    }
+
+    public void setPassable(final boolean passableToSet) {
         this.passable = passableToSet;
     }
 
-    public final void setSelected(final boolean selectedToSet) {
+    public void setSelected(final boolean selectedToSet) {
         this.selected = selectedToSet;
     }
 
-    public final void setTileType(final TileType tileTypeToSet) {
+    public void setTileType(final TileType tileTypeToSet) {
         this.tileType = tileTypeToSet;
     }
 }
