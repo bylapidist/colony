@@ -27,6 +27,7 @@ public final class MapRenderDataSystem extends BaseSystem {
     private ComponentMapper<BuildingComponent> buildingMapper;
     private final IntArray selectedTileIndices = new IntArray();
     private final IntArray dirtyIndices = new IntArray();
+    private final IntArray updatedIndices = new IntArray();
 
     public MapRenderData getRenderData() {
         return renderData;
@@ -40,6 +41,13 @@ public final class MapRenderDataSystem extends BaseSystem {
     /** Queues a tile index to be refreshed on the next update. */
     public void addDirtyIndex(final int index) {
         dirtyIndices.add(index);
+    }
+
+    /** Returns and clears the indices updated in the last tick. */
+    public IntArray consumeUpdatedIndices() {
+        IntArray copy = new IntArray(updatedIndices);
+        updatedIndices.clear();
+        return copy;
     }
 
     @Override
@@ -102,6 +110,8 @@ public final class MapRenderDataSystem extends BaseSystem {
 
         if (dirtyIndices.size > 0) {
             MapRenderDataBuilder.updateTiles(map, world, data, dirtyIndices);
+            updatedIndices.clear();
+            updatedIndices.addAll(dirtyIndices);
         }
         dirtyIndices.clear();
 

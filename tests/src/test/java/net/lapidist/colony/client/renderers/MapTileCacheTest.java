@@ -34,12 +34,29 @@ public class MapTileCacheTest {
 
     private static final float VIEW_SIZE = 64f;
     private static final float FAR_POS = 100f;
+    private static final int LARGE_TILE_COUNT = 8200;
+    private static final int EXPECTED_CACHE_COUNT_AFTER_UPDATE = 3;
 
     private MapRenderData createData() {
         MapState state = new MapState();
         state.tiles().put(new TilePos(0, 0), TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .build());
+        World world = new World(new WorldConfigurationBuilder().build());
+        Entity map = MapFactory.create(world, state);
+        ComponentMapper<MapComponent> mapMapper = world.getMapper(MapComponent.class);
+        world.process();
+        return MapRenderDataBuilder.fromMap(mapMapper.get(map), world);
+    }
+
+    private MapRenderData createLargeData() {
+        MapState state = new MapState();
+        int total = LARGE_TILE_COUNT;
+        for (int i = 0; i < total; i++) {
+            state.tiles().put(new TilePos(i, 0), TileData.builder()
+                    .x(i).y(0).tileType("GRASS").passable(true)
+                    .build());
+        }
         World world = new World(new WorldConfigurationBuilder().build());
         Entity map = MapFactory.create(world, state);
         ComponentMapper<MapComponent> mapMapper = world.getMapper(MapComponent.class);
@@ -153,7 +170,30 @@ public class MapTileCacheTest {
             assertEquals(1, cons.constructed().size());
             data.setVersion(data.getVersion() + 1);
             cache.ensureCache(loader, data, new DefaultAssetResolver(), cam);
+            assertEquals(1, cons.constructed().size());
+        }
+    }
+
+    @Test
+    public void rebuildsOnlyInvalidSegments() {
+        SimpleMapRenderData data = (SimpleMapRenderData) createLargeData();
+        CameraProvider cam = mock(CameraProvider.class);
+        when(cam.getCamera()).thenReturn(new OrthographicCamera());
+        ResourceLoader loader = mock(ResourceLoader.class);
+        when(loader.findRegion(any())).thenReturn(new TextureRegion());
+        try (MockedConstruction<SpriteCache> cons = mockConstruction(SpriteCache.class,
+                (mock, ctx) -> {
+                    when(mock.getProjectionMatrix()).thenReturn(new Matrix4());
+                    when(mock.endCache()).thenReturn(0);
+                })) {
+            MapTileCache cache = new MapTileCache();
+            cache.ensureCache(loader, data, new DefaultAssetResolver(), cam);
             assertEquals(2, cons.constructed().size());
+            com.badlogic.gdx.utils.IntArray indices = new com.badlogic.gdx.utils.IntArray(new int[] {0});
+            cache.invalidateTiles(indices);
+            data.setVersion(data.getVersion() + 1);
+            cache.ensureCache(loader, data, new DefaultAssetResolver(), cam);
+            assertEquals(EXPECTED_CACHE_COUNT_AFTER_UPDATE, cons.constructed().size());
         }
     }
 }

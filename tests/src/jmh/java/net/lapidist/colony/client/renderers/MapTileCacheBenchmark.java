@@ -35,13 +35,14 @@ import static org.mockito.Mockito.*;
 @State(Scope.Thread)
 public class MapTileCacheBenchmark {
 
-    private static final int MAP_SIZE = 30;
+    private static final int MAP_SIZE = 120;
 
     private MapTileCache cache;
     private MapRenderData data;
     private ResourceLoader loader;
     private CameraProvider camera;
     private AssetResolver resolver;
+    private com.badlogic.gdx.utils.IntArray updateIndices;
     private MockedConstruction<SpriteCache> construction;
 
     @Setup(Level.Trial)
@@ -53,6 +54,7 @@ public class MapTileCacheBenchmark {
         cache = new MapTileCache();
         camera = createCamera();
         data = createData(MAP_SIZE, MAP_SIZE);
+        updateIndices = new com.badlogic.gdx.utils.IntArray(new int[] {0});
         construction = mockConstruction(SpriteCache.class, (mock, ctx) -> {
             when(mock.getProjectionMatrix()).thenReturn(new Matrix4());
             when(mock.endCache()).thenReturn(0);
@@ -105,6 +107,14 @@ public class MapTileCacheBenchmark {
     @Benchmark
     public final void rebuildCache() {
         cache.invalidate();
+        cache.ensureCache(loader, data, resolver, camera);
+    }
+
+    @Benchmark
+    public final void updateTile() {
+        cache.invalidateTiles(updateIndices);
+        ((net.lapidist.colony.client.render.SimpleMapRenderData) data)
+                .setVersion(((net.lapidist.colony.client.render.SimpleMapRenderData) data).getVersion() + 1);
         cache.ensureCache(loader, data, resolver, camera);
     }
 }

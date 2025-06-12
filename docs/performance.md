@@ -62,7 +62,8 @@ they can run without a display.
 
 | Benchmark | Score (ops/s) |
 |-----------|---------------|
-| MapTileCacheBenchmark.rebuildCache | ~45 |
+| MapTileCacheBenchmark.rebuildCache | ~3.9 |
+| MapTileCacheBenchmark.updateTile | ~3.8 |
 | MapRenderDataSystemBenchmark.updateIncremental (30) | ~138,000 |
 | MapRenderDataSystemBenchmark.updateIncremental (60) | ~31,000 |
 | MapRenderDataSystemBenchmark.updateIncremental (90) | ~10,700 |
