@@ -14,6 +14,7 @@ import net.lapidist.colony.client.render.MapRenderDataBuilder;
 import net.lapidist.colony.client.render.SimpleMapRenderData;
 import net.lapidist.colony.client.systems.CameraProvider;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
@@ -31,6 +32,9 @@ import static org.mockito.Mockito.*;
 @RunWith(GdxTestRunner.class)
 public class MapTileCacheTest {
 
+    private static final float VIEW_SIZE = 64f;
+    private static final float FAR_POS = 100f;
+
     private MapRenderData createData() {
         MapState state = new MapState();
         state.tiles().put(new TilePos(0, 0), TileData.builder()
@@ -47,7 +51,12 @@ public class MapTileCacheTest {
     public void doesNotRecreateCacheWhenUnchanged() {
         MapRenderData data = createData();
         CameraProvider cam = mock(CameraProvider.class);
-        when(cam.getCamera()).thenReturn(new OrthographicCamera());
+        OrthographicCamera camera = new OrthographicCamera();
+        ExtendViewport viewport = new ExtendViewport(VIEW_SIZE, VIEW_SIZE, camera);
+        viewport.update((int) VIEW_SIZE, (int) VIEW_SIZE, true);
+        camera.update();
+        when(cam.getCamera()).thenReturn(camera);
+        when(cam.getViewport()).thenReturn(viewport);
         ResourceLoader loader = mock(ResourceLoader.class);
         when(loader.findRegion(any())).thenReturn(new TextureRegion());
         try (MockedConstruction<SpriteCache> cons = mockConstruction(SpriteCache.class,
@@ -67,7 +76,12 @@ public class MapTileCacheTest {
     public void drawRestoresMatrix() {
         MapRenderData data = createData();
         CameraProvider cam = mock(CameraProvider.class);
-        when(cam.getCamera()).thenReturn(new OrthographicCamera());
+        OrthographicCamera camera = new OrthographicCamera();
+        ExtendViewport viewport = new ExtendViewport(VIEW_SIZE, VIEW_SIZE, camera);
+        viewport.update((int) VIEW_SIZE, (int) VIEW_SIZE, true);
+        camera.update();
+        when(cam.getCamera()).thenReturn(camera);
+        when(cam.getViewport()).thenReturn(viewport);
         ResourceLoader loader = mock(ResourceLoader.class);
         when(loader.findRegion(any())).thenReturn(new TextureRegion());
         Matrix4 oldProj = new Matrix4();
@@ -82,7 +96,7 @@ public class MapTileCacheTest {
             SpriteCache sprite = cons.constructed().get(0);
             SpriteBatch batch = mock(SpriteBatch.class);
             when(batch.getProjectionMatrix()).thenReturn(batchProj);
-            cache.draw(batch);
+            cache.draw(batch, cam);
             InOrder order = inOrder(batch, sprite);
             order.verify(batch).end();
             order.verify(sprite).setProjectionMatrix(batchProj);
@@ -91,6 +105,34 @@ public class MapTileCacheTest {
             order.verify(sprite).end();
             order.verify(batch).begin();
             order.verify(sprite).setProjectionMatrix(any(Matrix4.class));
+        }
+    }
+
+    @Test
+    public void skipsCacheOutsideView() {
+        MapRenderData data = createData();
+        CameraProvider cam = mock(CameraProvider.class);
+        OrthographicCamera camera = new OrthographicCamera();
+        ExtendViewport viewport = new ExtendViewport(VIEW_SIZE, VIEW_SIZE, camera);
+        viewport.update((int) VIEW_SIZE, (int) VIEW_SIZE, true);
+        camera.position.set(FAR_POS, FAR_POS, 0f);
+        camera.update();
+        when(cam.getCamera()).thenReturn(camera);
+        when(cam.getViewport()).thenReturn(viewport);
+        ResourceLoader loader = mock(ResourceLoader.class);
+        when(loader.findRegion(any())).thenReturn(new TextureRegion());
+        Matrix4 proj = new Matrix4();
+        try (MockedConstruction<SpriteCache> cons = mockConstruction(SpriteCache.class,
+                (mock, ctx) -> {
+                    when(mock.getProjectionMatrix()).thenReturn(proj);
+                    when(mock.endCache()).thenReturn(0);
+                })) {
+            MapTileCache cache = new MapTileCache();
+            cache.ensureCache(loader, data, new DefaultAssetResolver(), cam);
+            SpriteCache sprite = cons.constructed().get(0);
+            SpriteBatch batch = mock(SpriteBatch.class);
+            cache.draw(batch, cam);
+            verify(sprite, never()).draw(anyInt());
         }
     }
 

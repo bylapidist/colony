@@ -4,9 +4,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteCache;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.IntArray;
+import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.render.data.RenderTile;
@@ -22,6 +26,7 @@ final class MapTileCache implements Disposable {
 
     private final Array<SpriteCache> spriteCaches = new Array<>();
     private final IntArray cacheIds = new IntArray();
+    private final Array<Rectangle> cacheBounds = new Array<>();
     private MapRenderData cachedData;
     private int cachedVersion;
     private boolean invalidated = true;
@@ -54,35 +59,61 @@ final class MapTileCache implements Disposable {
             SpriteCache cache = new SpriteCache(count, true);
             cache.setProjectionMatrix(camera.getCamera().combined);
             cache.beginCache();
+
+            float minX = Float.MAX_VALUE;
+            float minY = Float.MAX_VALUE;
+            float maxX = -Float.MAX_VALUE;
+            float maxY = -Float.MAX_VALUE;
+
             for (int i = 0; i < count; i++) {
                 RenderTile tile = tiles.get(start + i);
                 String ref = resolver.tileAsset(tile.getTileType());
                 TextureRegion region = loader.findRegion(ref);
+
+                float worldX = tile.getX() * GameConstants.TILE_SIZE;
+                float worldY = tile.getY() * GameConstants.TILE_SIZE;
+
+                minX = Math.min(minX, worldX);
+                minY = Math.min(minY, worldY);
+                maxX = Math.max(maxX, worldX + GameConstants.TILE_SIZE);
+                maxY = Math.max(maxY, worldY + GameConstants.TILE_SIZE);
+
                 if (region != null) {
-                    float worldX = tile.getX() * GameConstants.TILE_SIZE;
-                    float worldY = tile.getY() * GameConstants.TILE_SIZE;
                     cache.add(region, worldX, worldY);
                 }
             }
+
             cacheIds.add(cache.endCache());
             spriteCaches.add(cache);
+            cacheBounds.add(new Rectangle(minX, minY, maxX - minX, maxY - minY));
         }
         invalidated = false;
     }
 
-    void draw(final SpriteBatch batch) {
+    void draw(final SpriteBatch batch, final CameraProvider camera) {
         if (spriteCaches.isEmpty()) {
             return;
         }
         Matrix4 oldProj = spriteCaches.first().getProjectionMatrix().cpy();
         batch.end();
+
+        Rectangle view = CameraUtils.getViewBounds(
+                (OrthographicCamera) camera.getCamera(),
+                (ExtendViewport) camera.getViewport(),
+                new Rectangle()
+        );
+
         for (int i = 0; i < spriteCaches.size; i++) {
+            if (!view.overlaps(cacheBounds.get(i))) {
+                continue;
+            }
             SpriteCache cache = spriteCaches.get(i);
             cache.setProjectionMatrix(batch.getProjectionMatrix());
             cache.begin();
             cache.draw(cacheIds.get(i));
             cache.end();
         }
+
         batch.begin();
         for (SpriteCache cache : spriteCaches) {
             cache.setProjectionMatrix(oldProj);
@@ -96,6 +127,7 @@ final class MapTileCache implements Disposable {
         }
         spriteCaches.clear();
         cacheIds.clear();
+        cacheBounds.clear();
         cachedData = null;
     }
 }
