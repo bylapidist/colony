@@ -2,7 +2,6 @@ package net.lapidist.colony.client.core.io;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.utils.Disposable;
 import net.lapidist.colony.settings.GraphicsSettings;
 
@@ -36,14 +35,6 @@ public interface ResourceLoader extends Disposable {
      */
     void loadTextures(FileLocation fileLocation, String atlasPath) throws IOException;
 
-    /**
-     * Load a 3D model from the specified path.
-     *
-     * @param fileLocation location resolver
-     * @param modelPath    path to the model file
-     * @throws IOException if the model cannot be loaded
-     */
-    void loadModel(FileLocation fileLocation, String modelPath) throws IOException;
 
     /**
      * Check whether assets have been loaded.
@@ -67,13 +58,6 @@ public interface ResourceLoader extends Disposable {
      */
     TextureRegion findRegion(String name);
 
-    /**
-     * Retrieve a loaded 3D model by name.
-     *
-     * @param name model identifier
-     * @return matching model or {@code null}
-     */
-    Model findModel(String name);
 
     /**
      * Progress the asynchronous loading process once.

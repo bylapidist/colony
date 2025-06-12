@@ -103,22 +103,6 @@ public final class CameraUtils {
         return out;
     }
 
-    public static Vector3 worldToScreenCoords3D(
-            final Viewport viewport,
-            final Vector3 world
-    ) {
-        return viewport.project(new Vector3(world));
-    }
-
-    public static Vector3 screenToWorldCoords3D(
-            final Viewport viewport,
-            final float screenX,
-            final float screenY,
-            final float screenZ
-    ) {
-        return viewport.unproject(new Vector3(screenX, screenY, screenZ));
-    }
-
     public static boolean withinCameraView(
             final Viewport viewport,
             final Vector2 worldCoords

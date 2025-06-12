@@ -42,10 +42,6 @@ public class MapRendererFactoryTest {
         }
 
         @Override
-        public void loadModel(final FileLocation location, final String path) {
-        }
-
-        @Override
         public boolean isLoaded() {
             return loaded;
         }
@@ -60,10 +56,6 @@ public class MapRendererFactoryTest {
             return null;
         }
 
-        @Override
-        public com.badlogic.gdx.graphics.g3d.Model findModel(final String name) {
-            return null;
-        }
 
         @Override
         public boolean update() {
@@ -153,10 +145,6 @@ public class MapRendererFactoryTest {
         }
 
         @Override
-        public void loadModel(final FileLocation location, final String path) {
-        }
-
-        @Override
         public boolean isLoaded() {
             return loaded;
         }
@@ -171,10 +159,6 @@ public class MapRendererFactoryTest {
             return null;
         }
 
-        @Override
-        public com.badlogic.gdx.graphics.g3d.Model findModel(final String name) {
-            return null;
-        }
 
         @Override
         public boolean update() {

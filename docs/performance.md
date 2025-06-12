@@ -32,8 +32,8 @@ render about 20% faster with caching enabled.
 
 ## Asynchronous renderer loading
 
-`SpriteMapRendererFactory` and `ModelBatchMapRendererFactory` now load assets
-using LibGDX's `AssetManager`. They return lightweight renderers that simply
+`SpriteMapRendererFactory` now loads assets using LibGDX's `AssetManager` and
+returns a lightweight renderer that simply
 poll the asset manager each frame and draw nothing until all resources are
 ready. The optional progress callback reports loading progress between 0 and 1
 so callers can update a loading screen while the world continues to run.
