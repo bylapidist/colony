@@ -7,10 +7,8 @@ import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.core.io.TextureAtlasResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
-import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.settings.GraphicsSettings;
 import net.lapidist.colony.settings.Settings;
-import net.lapidist.colony.components.maps.MapComponent;
 
 import java.io.IOException;
 
@@ -54,14 +52,6 @@ public final class SpriteMapRendererFactory implements MapRendererFactory {
         try {
             graphics = Settings.load().getGraphicsSettings();
             resourceLoader.loadTextures(fileLocation, atlasPath, graphics);
-            while (!resourceLoader.update()) {
-                if (progressCallback != null) {
-                    progressCallback.accept(resourceLoader.getProgress());
-                }
-            }
-            if (progressCallback != null) {
-                progressCallback.accept(1f);
-            }
         } catch (IOException e) {
             // ignore loading errors in headless tests
             graphics = new GraphicsSettings();
@@ -70,34 +60,13 @@ public final class SpriteMapRendererFactory implements MapRendererFactory {
 
         CameraProvider cameraSystem = world.getSystem(PlayerCameraSystem.class);
 
-        TileRenderer tileRenderer = new TileRenderer(
+        return new LoadingSpriteMapRenderer(
+                world,
                 batch,
                 resourceLoader,
                 cameraSystem,
-                new DefaultAssetResolver()
-        );
-        BuildingRenderer buildingRenderer = new BuildingRenderer(
-                batch,
-                resourceLoader,
-                cameraSystem,
-                new DefaultAssetResolver()
-        );
-        ResourceRenderer resourceRenderer = new ResourceRenderer(
-                batch,
-                cameraSystem,
-                world.getSystem(MapRenderDataSystem.class)
-        );
-
-        // trigger map mapper initialization so MapRenderSystem can use it immediately
-        world.getMapper(MapComponent.class);
-
-        return new SpriteBatchMapRenderer(
-                batch,
-                resourceLoader,
-                tileRenderer,
-                buildingRenderer,
-                resourceRenderer,
-                graphics.isSpriteCacheEnabled()
+                graphics.isSpriteCacheEnabled(),
+                progressCallback
         );
     }
 }
