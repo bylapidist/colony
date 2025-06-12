@@ -74,6 +74,7 @@ public class MapRenderDataSystemBenchmark {
             TileComponent tc = tileMapper.get(e);
             tc.setSelected(!tc.isSelected());
             tc.setDirty(true);
+            system.addDirtyIndex(0);
             map.incrementVersion();
         }
         update.invoke(system);

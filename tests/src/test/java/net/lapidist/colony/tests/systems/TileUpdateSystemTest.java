@@ -8,6 +8,7 @@ import com.artemis.utils.IntBag;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.client.systems.network.TileUpdateSystem;
+import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.state.MapState;
@@ -36,7 +37,7 @@ public class TileUpdateSystemTest {
 
         GameClient client = new GameClient();
         World world = new World(new WorldConfigurationBuilder()
-                .with(new MapLoadSystem(state), new TileUpdateSystem(client))
+                .with(new MapLoadSystem(state), new MapRenderDataSystem(), new TileUpdateSystem(client))
                 .build());
 
         world.process();
@@ -44,6 +45,7 @@ public class TileUpdateSystemTest {
         TileSelectionData data = new TileSelectionData(0, 0, true);
         client.injectTileSelectionUpdate(data);
 
+        world.process();
         world.process();
 
         IntBag maps = world.getAspectSubscriptionManager()
