@@ -21,6 +21,7 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
     private final ResourceLoader resourceLoader;
     private final CameraProvider cameraSystem;
     private final AssetResolver resolver;
+    private final java.util.Map<String, TextureRegion> regionCache = new java.util.HashMap<>();
 
     public TileRenderer(
             final SpriteBatch spriteBatchToSet,
@@ -68,13 +69,16 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                 }
 
                 String ref = resolver.tileAsset(tile.getTileType());
-                TextureRegion region = resourceLoader.findRegion(ref);
+                TextureRegion region = regionCache.computeIfAbsent(ref, resourceLoader::findRegion);
                 if (region != null) {
                     spriteBatch.draw(region, worldCoords.x, worldCoords.y);
                 }
 
                 if (tile.isSelected()) {
-                    TextureRegion overlay = resourceLoader.findRegion("hoveredTile0");
+                    TextureRegion overlay = regionCache.computeIfAbsent(
+                            "hoveredTile0",
+                            resourceLoader::findRegion
+                    );
                     if (overlay != null) {
                         spriteBatch.draw(overlay, worldCoords.x, worldCoords.y);
                     }
