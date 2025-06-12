@@ -80,7 +80,7 @@ public final class AutosaveService {
             Events.update();
             LOGGER.info(log, file, size);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to save game state", e);
         }
     }
 }
