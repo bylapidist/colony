@@ -5,8 +5,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import org.mockito.ArgumentCaptor;
-import com.badlogic.gdx.utils.viewport.Viewport;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import net.lapidist.colony.client.renderers.ResourceRenderer;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.render.data.RenderTile;
@@ -27,14 +27,18 @@ public class ResourceRendererTest {
     private static final int WOOD = 1;
     private static final int STONE = 2;
     private static final int FOOD = 3;
+    private static final int VIEW_SIZE = 32;
 
     @Test
     public void rendersResourceTextWithoutErrors() {
         SpriteBatch batch = mock(SpriteBatch.class);
         CameraProvider camera = mock(CameraProvider.class);
-        Viewport viewport = mock(Viewport.class);
+        OrthographicCamera cam = new OrthographicCamera();
+        ExtendViewport viewport = new ExtendViewport(VIEW_SIZE, VIEW_SIZE, cam);
+        viewport.update(VIEW_SIZE, VIEW_SIZE, true);
+        cam.update();
+        when(camera.getCamera()).thenReturn(cam);
         when(camera.getViewport()).thenReturn(viewport);
-        when(viewport.project(any(Vector3.class))).thenReturn(new Vector3());
 
         MapRenderDataSystem dataSystem = new MapRenderDataSystem();
         ResourceRenderer renderer = new ResourceRenderer(batch, camera, dataSystem);
@@ -63,9 +67,12 @@ public class ResourceRendererTest {
     public void drawsResourceTextForSelectedTile() throws Exception {
         SpriteBatch batch = mock(SpriteBatch.class);
         CameraProvider camera = mock(CameraProvider.class);
-        Viewport viewport = mock(Viewport.class);
+        OrthographicCamera cam = new OrthographicCamera();
+        ExtendViewport viewport = new ExtendViewport(VIEW_SIZE, VIEW_SIZE, cam);
+        viewport.update(VIEW_SIZE, VIEW_SIZE, true);
+        cam.update();
+        when(camera.getCamera()).thenReturn(cam);
         when(camera.getViewport()).thenReturn(viewport);
-        when(viewport.project(any(Vector3.class))).thenReturn(new Vector3());
 
         MapRenderDataSystem dataSystem = new MapRenderDataSystem();
         dataSystem.getSelectedTileIndices().add(0);
@@ -109,9 +116,12 @@ public class ResourceRendererTest {
     public void skipsUnselectedTiles() throws Exception {
         SpriteBatch batch = mock(SpriteBatch.class);
         CameraProvider camera = mock(CameraProvider.class);
-        Viewport viewport = mock(Viewport.class);
+        OrthographicCamera cam = new OrthographicCamera();
+        ExtendViewport viewport = new ExtendViewport(VIEW_SIZE, VIEW_SIZE, cam);
+        viewport.update(VIEW_SIZE, VIEW_SIZE, true);
+        cam.update();
+        when(camera.getCamera()).thenReturn(cam);
         when(camera.getViewport()).thenReturn(viewport);
-        when(viewport.project(any(Vector3.class))).thenReturn(new Vector3());
 
         MapRenderDataSystem dataSystem = new MapRenderDataSystem();
         ResourceRenderer renderer = new ResourceRenderer(batch, camera, dataSystem);
@@ -147,9 +157,12 @@ public class ResourceRendererTest {
     public void doesNotIterateAllTiles() {
         SpriteBatch batch = mock(SpriteBatch.class);
         CameraProvider camera = mock(CameraProvider.class);
-        Viewport viewport = mock(Viewport.class);
+        OrthographicCamera cam = new OrthographicCamera();
+        ExtendViewport viewport = new ExtendViewport(VIEW_SIZE, VIEW_SIZE, cam);
+        viewport.update(VIEW_SIZE, VIEW_SIZE, true);
+        cam.update();
+        when(camera.getCamera()).thenReturn(cam);
         when(camera.getViewport()).thenReturn(viewport);
-        when(viewport.project(any(Vector3.class))).thenReturn(new Vector3());
 
         MapRenderDataSystem dataSystem = new MapRenderDataSystem();
         dataSystem.getSelectedTileIndices().add(0);

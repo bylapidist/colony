@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.util.CameraUtils;
@@ -21,8 +21,8 @@ public final class ResourceRenderer implements EntityRenderer<RenderTile>, Dispo
     private final BitmapFont font = new BitmapFont();
     private final GlyphLayout layout = new GlyphLayout();
     private final StringBuilder textBuilder = new StringBuilder();
+    private final Rectangle viewBounds = new Rectangle();
     private final Vector2 worldCoords = new Vector2();
-    private final Vector3 tmp = new Vector3();
     private static final float OFFSET_Y = 8f;
 
     public ResourceRenderer(
@@ -37,6 +37,11 @@ public final class ResourceRenderer implements EntityRenderer<RenderTile>, Dispo
 
     @Override
     public void render(final MapRenderData map) {
+        Rectangle view = CameraUtils.getViewBounds(
+                (com.badlogic.gdx.graphics.OrthographicCamera) cameraSystem.getCamera(),
+                (com.badlogic.gdx.utils.viewport.ExtendViewport) cameraSystem.getViewport(),
+                viewBounds
+        );
         Array<RenderTile> entities = map.getTiles();
         com.badlogic.gdx.utils.IntArray indices = dataSystem.getSelectedTileIndices();
         for (int j = 0; j < indices.size; j++) {
@@ -46,7 +51,7 @@ public final class ResourceRenderer implements EntityRenderer<RenderTile>, Dispo
             }
             RenderTile tile = entities.get(i);
             CameraUtils.tileCoordsToWorldCoords(tile.getX(), tile.getY(), worldCoords);
-            if (!CameraUtils.withinCameraView(cameraSystem.getViewport(), worldCoords, tmp)) {
+            if (!CameraUtils.isVisible(view, worldCoords.x, worldCoords.y)) {
                 continue;
             }
             textBuilder.setLength(0);

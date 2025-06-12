@@ -2,8 +2,8 @@ package net.lapidist.colony.client.renderers;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
@@ -22,8 +22,8 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
     private final CameraProvider cameraSystem;
     private final AssetResolver resolver;
     private final java.util.Map<String, TextureRegion> buildingRegions = new java.util.HashMap<>();
+    private final Rectangle viewBounds = new Rectangle();
     private final Vector2 worldCoords = new Vector2();
-    private final Vector3 tmp = new Vector3();
 
     public BuildingRenderer(
             final SpriteBatch spriteBatchToSet,
@@ -47,12 +47,17 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
 
     @Override
     public void render(final MapRenderData map) {
+        Rectangle view = CameraUtils.getViewBounds(
+                (com.badlogic.gdx.graphics.OrthographicCamera) cameraSystem.getCamera(),
+                (com.badlogic.gdx.utils.viewport.ExtendViewport) cameraSystem.getViewport(),
+                viewBounds
+        );
         Array<RenderBuilding> entities = map.getBuildings();
         for (int i = 0; i < entities.size; i++) {
             RenderBuilding building = entities.get(i);
             CameraUtils.tileCoordsToWorldCoords(building.getX(), building.getY(), worldCoords);
 
-            if (!CameraUtils.withinCameraView(cameraSystem.getViewport(), worldCoords, tmp)) {
+            if (!CameraUtils.isVisible(view, worldCoords.x, worldCoords.y)) {
                 continue;
             }
 

@@ -142,4 +142,17 @@ public final class CameraUtils {
         );
         return out;
     }
+
+    /**
+     * Returns {@code true} if the provided world coordinate lies within the
+     * specified camera view bounds.
+     *
+     * @param view   world-space camera view rectangle
+     * @param worldX world x coordinate
+     * @param worldY world y coordinate
+     * @return {@code true} when the coordinate is visible
+     */
+    public static boolean isVisible(final Rectangle view, final float worldX, final float worldY) {
+        return view.contains(worldX, worldY);
+    }
 }
