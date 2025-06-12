@@ -41,7 +41,7 @@ public class MapRenderDataBuilderTest {
         assertEquals(1, data.getBuildings().size);
 
         var tile = data.getTiles().first();
-        assertEquals("grass", tile.getTileType());
+        assertEquals("GRASS", tile.getTileType());
         assertEquals(1, tile.getWood());
         assertEquals(BUILDING_X, data.getBuildings().first().getX());
         assertEquals(tile, data.getTile(TILE_X, TILE_Y));

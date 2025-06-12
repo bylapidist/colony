@@ -119,7 +119,7 @@ public final class MapRenderDataSystem extends BaseSystem {
     private static boolean tileChanged(final RenderTile old, final TileComponent tc, final ResourceComponent rc) {
         return old.getX() != tc.getX()
                 || old.getY() != tc.getY()
-                || !old.getTileType().equals(tc.getTileType().toString())
+                || !old.getTileType().equals(tc.getTileType().name())
                 || old.isSelected() != tc.isSelected()
                 || old.getWood() != rc.getWood()
                 || old.getStone() != rc.getStone()
@@ -129,7 +129,7 @@ public final class MapRenderDataSystem extends BaseSystem {
     private static boolean buildingChanged(final RenderBuilding old, final BuildingComponent bc) {
         return old.getX() != bc.getX()
                 || old.getY() != bc.getY()
-                || !old.getBuildingType().equals(bc.getBuildingType().toString());
+                || !old.getBuildingType().equals(bc.getBuildingType().name());
     }
 
     private void rebuildSelectedIndices() {
