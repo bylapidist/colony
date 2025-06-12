@@ -62,13 +62,13 @@ they can run without a display.
 
 | Benchmark | Score (ops/s) |
 |-----------|---------------|
-| MapTileCacheBenchmark.rebuildCache | ~3.5 |
-| MapTileCacheBenchmark.updateTile | ~6.4 |
-| MapRenderDataSystemBenchmark.updateIncremental (30) | ~10,125,000 |
-| MapRenderDataSystemBenchmark.updateIncremental (60) | ~10,460,000 |
-| MapRenderDataSystemBenchmark.updateIncremental (90) | ~9,900,000 |
-| SpriteBatchRendererBenchmark.renderWithCache | ~9,100 |
-| SpriteBatchRendererBenchmark.renderWithoutCache | ~111 |
+| MapTileCacheBenchmark.rebuildCache | ~5.9 |
+| MapTileCacheBenchmark.updateTile | ~10.8 |
+| MapRenderDataSystemBenchmark.updateIncremental (30) | ~15,194,000 |
+| MapRenderDataSystemBenchmark.updateIncremental (60) | ~15,476,000 |
+| MapRenderDataSystemBenchmark.updateIncremental (90) | ~15,497,000 |
+| SpriteBatchRendererBenchmark.renderWithCache | ~12,800 |
+| SpriteBatchRendererBenchmark.renderWithoutCache | ~160 |
 
 These results were captured on a headless JDK 21 runtime and serve as a baseline
 for future renderer changes.
@@ -88,3 +88,13 @@ reflection with a 64×64 tile map.
 | Benchmark | Score (ops/s) |
 |-----------|---------------|
 | NetworkServiceBenchmark.sendMapState | ~5,000 |
+
+## Minimap cache performance
+
+`MinimapCacheBenchmark` measures the cost of regenerating the Pixmap-based minimap texture on a 100×100 tile map.
+
+### Benchmark results (JDK 21)
+
+| Benchmark | Score (ops/s) |
+|-----------|---------------|
+| MinimapCacheBenchmark.buildMinimap | ~2,800 |
