@@ -43,3 +43,9 @@ To execute a specific benchmark use the `jmh.include` property:
 ```bash
 ./gradlew :tests:jmh -Djmh.include=SpriteBatchRendererBenchmark
 ```
+
+## Rendering pipeline benchmark
+
+`SpriteBatchRendererBenchmark` measures the render system with and without tile
+caching enabled. Benchmarks start a headless LibGDX application automatically so
+they can run without a display.

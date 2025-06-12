@@ -18,6 +18,7 @@ import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.tests.GdxBenchmarkEnvironment;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.map.MapFactory;
@@ -32,7 +33,7 @@ import org.mockito.MockedConstruction;
 import static org.mockito.Mockito.*;
 
 @State(Scope.Thread)
-public final class MapTileCacheBenchmark {
+public class MapTileCacheBenchmark {
 
     private static final int MAP_SIZE = 30;
 
@@ -44,7 +45,8 @@ public final class MapTileCacheBenchmark {
     private MockedConstruction<SpriteCache> construction;
 
     @Setup(Level.Trial)
-    public void setUp() {
+    public final void setUp() {
+        GdxBenchmarkEnvironment.init();
         loader = mock(ResourceLoader.class);
         when(loader.findRegion(any())).thenReturn(new TextureRegion());
         resolver = new DefaultAssetResolver();
@@ -58,7 +60,7 @@ public final class MapTileCacheBenchmark {
     }
 
     @TearDown(Level.Trial)
-    public void tearDown() {
+    public final void tearDown() {
         construction.close();
     }
 
@@ -101,7 +103,7 @@ public final class MapTileCacheBenchmark {
     }
 
     @Benchmark
-    public void rebuildCache() {
+    public final void rebuildCache() {
         cache.invalidate();
         cache.ensureCache(loader, data, resolver, camera);
     }

@@ -38,4 +38,10 @@ tasks.register('copyAssets', Copy) {
     into file(".")
 }
 
+jmh {
+    iterations = 1
+    warmupIterations = 1
+    fork = 1
+}
+
 eclipse.project.name = "$appName-tests"
