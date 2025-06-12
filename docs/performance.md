@@ -62,13 +62,13 @@ they can run without a display.
 
 | Benchmark | Score (ops/s) |
 |-----------|---------------|
-| MapTileCacheBenchmark.rebuildCache | ~4.9 |
-| MapTileCacheBenchmark.updateTile | ~9.9 |
-| MapRenderDataSystemBenchmark.updateIncremental (30) | ~138,000 |
-| MapRenderDataSystemBenchmark.updateIncremental (60) | ~31,000 |
-| MapRenderDataSystemBenchmark.updateIncremental (90) | ~10,700 |
-| SpriteBatchRendererBenchmark.renderWithCache | ~12,300 |
-| SpriteBatchRendererBenchmark.renderWithoutCache | ~145 |
+| MapTileCacheBenchmark.rebuildCache | ~3.5 |
+| MapTileCacheBenchmark.updateTile | ~6.4 |
+| MapRenderDataSystemBenchmark.updateIncremental (30) | ~10,125,000 |
+| MapRenderDataSystemBenchmark.updateIncremental (60) | ~10,460,000 |
+| MapRenderDataSystemBenchmark.updateIncremental (90) | ~9,900,000 |
+| SpriteBatchRendererBenchmark.renderWithCache | ~9,100 |
+| SpriteBatchRendererBenchmark.renderWithoutCache | ~111 |
 
 These results were captured on a headless JDK 21 runtime and serve as a baseline
 for future renderer changes.

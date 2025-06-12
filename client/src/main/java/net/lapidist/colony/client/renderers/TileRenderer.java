@@ -21,7 +21,8 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
     private final ResourceLoader resourceLoader;
     private final CameraProvider cameraSystem;
     private final AssetResolver resolver;
-    private final java.util.Map<String, TextureRegion> tileRegions = new java.util.HashMap<>();
+    private final java.util.EnumMap<TileComponent.TileType, TextureRegion> tileRegions =
+            new java.util.EnumMap<>(TileComponent.TileType.class);
     private final TextureRegion overlayRegion;
     private final Rectangle viewBounds = new Rectangle();
     private final Vector2 tmpStart = new Vector2();
@@ -44,7 +45,7 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
             String ref = resolver.tileAsset(type.name());
             TextureRegion region = resourceLoader.findRegion(ref);
             if (region != null) {
-                tileRegions.put(type.name(), region);
+                tileRegions.put(type, region);
             }
         }
         this.overlayRegion = resourceLoader.findRegion("hoveredTile0");
@@ -84,7 +85,8 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                 CameraUtils.tileCoordsToWorldCoords(tile.getX(), tile.getY(), worldCoords);
 
                 if (!overlayOnly) {
-                    TextureRegion region = tileRegions.get(tile.getTileType());
+                    TileComponent.TileType type = TileComponent.TileType.valueOf(tile.getTileType());
+                    TextureRegion region = tileRegions.get(type);
                     if (region != null) {
                         spriteBatch.draw(region, worldCoords.x, worldCoords.y);
                     }

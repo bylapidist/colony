@@ -21,7 +21,8 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
     private final ResourceLoader resourceLoader;
     private final CameraProvider cameraSystem;
     private final AssetResolver resolver;
-    private final java.util.Map<String, TextureRegion> buildingRegions = new java.util.HashMap<>();
+    private final java.util.EnumMap<BuildingComponent.BuildingType, TextureRegion> buildingRegions =
+            new java.util.EnumMap<>(BuildingComponent.BuildingType.class);
     private final Rectangle viewBounds = new Rectangle();
     private final Vector2 worldCoords = new Vector2();
 
@@ -40,7 +41,7 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
             String ref = resolver.buildingAsset(type.name());
             TextureRegion region = resourceLoader.findRegion(ref);
             if (region != null) {
-                buildingRegions.put(type.name(), region);
+                buildingRegions.put(type, region);
             }
         }
     }
@@ -61,7 +62,9 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
                 continue;
             }
 
-            TextureRegion region = buildingRegions.get(building.getBuildingType());
+            BuildingComponent.BuildingType type =
+                    BuildingComponent.BuildingType.valueOf(building.getBuildingType());
+            TextureRegion region = buildingRegions.get(type);
             if (region != null) {
                 spriteBatch.draw(region, worldCoords.x, worldCoords.y);
             }
