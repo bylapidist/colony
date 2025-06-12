@@ -13,6 +13,7 @@ This page lists the default keyboard bindings and how to customize them in-game.
 | Gather | **H** | Order selected tiles to gather resources |
 | Build | **B** | Toggle building placement mode |
 | Chat | **T** | Open the chat input box |
+| Toggle Minimap | **M** | Show or hide the minimap |
 
 The defaults are defined in [`KeyBindings.java`](../core/src/main/java/net/lapidist/colony/settings/KeyBindings.java).
 
