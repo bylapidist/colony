@@ -10,6 +10,7 @@ import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.client.render.data.RenderTile;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.components.GameConstants;
+import net.lapidist.colony.components.maps.TileComponent;
 
 /**
  * Renders tile entities.
@@ -20,7 +21,8 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
     private final ResourceLoader resourceLoader;
     private final CameraProvider cameraSystem;
     private final AssetResolver resolver;
-    private final java.util.Map<String, TextureRegion> regionCache = new java.util.HashMap<>();
+    private final java.util.Map<String, TextureRegion> tileRegions = new java.util.HashMap<>();
+    private final TextureRegion overlayRegion;
     private boolean overlayOnly;
 
     public TileRenderer(
@@ -33,6 +35,15 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
         this.resourceLoader = resourceLoaderToSet;
         this.cameraSystem = cameraSystemToSet;
         this.resolver = resolverToSet;
+
+        for (TileComponent.TileType type : TileComponent.TileType.values()) {
+            String ref = resolver.tileAsset(type.name());
+            TextureRegion region = resourceLoader.findRegion(ref);
+            if (region != null) {
+                tileRegions.put(type.name(), region);
+            }
+        }
+        this.overlayRegion = resourceLoader.findRegion("hoveredTile0");
     }
 
     public void setOverlayOnly(final boolean overlay) {
@@ -69,21 +80,14 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                 CameraUtils.tileCoordsToWorldCoords(tile.getX(), tile.getY(), worldCoords);
 
                 if (!overlayOnly) {
-                    String ref = resolver.tileAsset(tile.getTileType());
-                    TextureRegion region = regionCache.computeIfAbsent(ref, resourceLoader::findRegion);
+                    TextureRegion region = tileRegions.get(tile.getTileType().toUpperCase(java.util.Locale.ROOT));
                     if (region != null) {
                         spriteBatch.draw(region, worldCoords.x, worldCoords.y);
                     }
                 }
 
-                if (tile.isSelected()) {
-                    TextureRegion overlay = regionCache.computeIfAbsent(
-                            "hoveredTile0",
-                            resourceLoader::findRegion
-                    );
-                    if (overlay != null) {
-                        spriteBatch.draw(overlay, worldCoords.x, worldCoords.y);
-                    }
+                if (tile.isSelected() && overlayRegion != null) {
+                    spriteBatch.draw(overlayRegion, worldCoords.x, worldCoords.y);
                 }
             }
         }

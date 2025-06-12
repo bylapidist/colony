@@ -38,6 +38,7 @@ public class TileRendererTest {
         when(camera.getCamera()).thenReturn(cam);
 
         TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver());
+        reset(loader);
 
         Array<RenderTile> tiles = new Array<>();
         RenderTile tile = RenderTile.builder()
@@ -91,6 +92,7 @@ public class TileRendererTest {
         when(camera.getCamera()).thenReturn(cam);
 
         TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver());
+        reset(loader);
 
         Array<RenderTile> tiles = new Array<>();
         RenderTile tile = RenderTile.builder()
@@ -111,7 +113,6 @@ public class TileRendererTest {
         renderer.render(map);
         renderer.render(map);
 
-        verify(loader, times(1)).findRegion("grass0");
-        verify(loader, times(1)).findRegion("hoveredTile0");
+        verifyNoInteractions(loader);
     }
 }
