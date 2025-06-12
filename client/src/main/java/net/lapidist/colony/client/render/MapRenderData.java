@@ -14,4 +14,7 @@ public interface MapRenderData {
 
     /** Returns the tile at the given map coordinates or {@code null} if none exists. */
     RenderTile getTile(int x, int y);
+
+    /** Returns the map version used to generate this data. */
+    int getVersion();
 }

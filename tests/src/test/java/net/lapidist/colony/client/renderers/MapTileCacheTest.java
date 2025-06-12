@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Matrix4;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.render.MapRenderDataBuilder;
+import net.lapidist.colony.client.render.SimpleMapRenderData;
 import net.lapidist.colony.client.systems.CameraProvider;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import net.lapidist.colony.components.maps.MapComponent;
@@ -90,6 +91,27 @@ public class MapTileCacheTest {
             order.verify(sprite).end();
             order.verify(batch).begin();
             order.verify(sprite).setProjectionMatrix(any(Matrix4.class));
+        }
+    }
+
+    @Test
+    public void recreatesCacheWhenVersionChanges() {
+        SimpleMapRenderData data = (SimpleMapRenderData) createData();
+        CameraProvider cam = mock(CameraProvider.class);
+        when(cam.getCamera()).thenReturn(new OrthographicCamera());
+        ResourceLoader loader = mock(ResourceLoader.class);
+        when(loader.findRegion(any())).thenReturn(new TextureRegion());
+        try (MockedConstruction<SpriteCache> cons = mockConstruction(SpriteCache.class,
+                (mock, ctx) -> {
+                    when(mock.getProjectionMatrix()).thenReturn(new Matrix4());
+                    when(mock.endCache()).thenReturn(0);
+                })) {
+            MapTileCache cache = new MapTileCache();
+            cache.ensureCache(loader, data, new DefaultAssetResolver(), cam);
+            assertEquals(1, cons.constructed().size());
+            data.setVersion(data.getVersion() + 1);
+            cache.ensureCache(loader, data, new DefaultAssetResolver(), cam);
+            assertEquals(2, cons.constructed().size());
         }
     }
 }

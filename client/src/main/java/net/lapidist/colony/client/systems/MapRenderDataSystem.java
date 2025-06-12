@@ -95,6 +95,8 @@ public final class MapRenderDataSystem extends BaseSystem {
                 }
             }
         }
+
+        data.setVersion(map.getVersion());
     }
 
     private static boolean tileChanged(final RenderTile old, final TileComponent tc, final ResourceComponent rc) {
