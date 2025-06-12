@@ -33,6 +33,8 @@ Each module contains its own `AGENTS.md` with extra notes.
 - Achieve **at least 80% line coverage** on new or modified code.
 - Run `./gradlew codeCoverageReport` and inspect `build/reports/jacoco` before opening a PR.
 - For new gameplay mechanisms, add a scenario test using `GameSimulation` in the `tests` module.
+- When modifying the rendering system, rerun the benchmarks described in `docs/performance.md` and compare the results
+  to the previous run. If rendering becomes slower you should rethink your changes.
 
 ## Save Format and Serialization
 When changing save formats or Kryo serialization:
