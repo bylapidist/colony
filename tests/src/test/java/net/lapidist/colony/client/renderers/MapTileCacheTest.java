@@ -66,7 +66,7 @@ public class MapTileCacheTest {
 
     @Test
     public void doesNotRecreateCacheWhenUnchanged() {
-        MapRenderData data = createData();
+        SimpleMapRenderData data = (SimpleMapRenderData) createData();
         CameraProvider cam = mock(CameraProvider.class);
         OrthographicCamera camera = new OrthographicCamera();
         ExtendViewport viewport = new ExtendViewport(VIEW_SIZE, VIEW_SIZE, camera);
@@ -91,7 +91,7 @@ public class MapTileCacheTest {
 
     @Test
     public void drawRestoresMatrix() {
-        MapRenderData data = createData();
+        SimpleMapRenderData data = (SimpleMapRenderData) createData();
         CameraProvider cam = mock(CameraProvider.class);
         OrthographicCamera camera = new OrthographicCamera();
         ExtendViewport viewport = new ExtendViewport(VIEW_SIZE, VIEW_SIZE, camera);
@@ -194,6 +194,40 @@ public class MapTileCacheTest {
             data.setVersion(data.getVersion() + 1);
             cache.ensureCache(loader, data, new DefaultAssetResolver(), cam);
             assertEquals(EXPECTED_CACHE_COUNT_AFTER_UPDATE, cons.constructed().size());
+        }
+    }
+
+    @Test
+    public void handlesNullMap() {
+        CameraProvider cam = mock(CameraProvider.class);
+        when(cam.getCamera()).thenReturn(new OrthographicCamera());
+        ResourceLoader loader = mock(ResourceLoader.class);
+        try (MockedConstruction<SpriteCache> cons = mockConstruction(SpriteCache.class)) {
+            MapTileCache cache = new MapTileCache();
+            cache.ensureCache(loader, null, new DefaultAssetResolver(), cam);
+            assertTrue(cons.constructed().isEmpty());
+        }
+    }
+
+    @Test
+    public void ignoreNullIndices() {
+        SimpleMapRenderData data = (SimpleMapRenderData) createData();
+        CameraProvider cam = mock(CameraProvider.class);
+        when(cam.getCamera()).thenReturn(new OrthographicCamera());
+        ResourceLoader loader = mock(ResourceLoader.class);
+        when(loader.findRegion(any())).thenReturn(new TextureRegion());
+        try (MockedConstruction<SpriteCache> cons = mockConstruction(SpriteCache.class,
+                (mock, ctx) -> {
+                    when(mock.getProjectionMatrix()).thenReturn(new Matrix4());
+                    when(mock.endCache()).thenReturn(0);
+                })) {
+            MapTileCache cache = new MapTileCache();
+            cache.ensureCache(loader, data, new DefaultAssetResolver(), cam);
+            assertEquals(1, cons.constructed().size());
+            cache.invalidateTiles(null);
+            data.setVersion(data.getVersion() + 1);
+            cache.ensureCache(loader, data, new DefaultAssetResolver(), cam);
+            assertEquals(1, cons.constructed().size());
         }
     }
 }
