@@ -56,7 +56,7 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
                 continue;
             }
 
-            TextureRegion region = buildingRegions.get(building.getBuildingType().toUpperCase(java.util.Locale.ROOT));
+            TextureRegion region = buildingRegions.get(building.getBuildingType());
             if (region != null) {
                 spriteBatch.draw(region, worldCoords.x, worldCoords.y);
             }

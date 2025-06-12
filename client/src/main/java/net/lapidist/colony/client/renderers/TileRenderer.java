@@ -80,7 +80,7 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                 CameraUtils.tileCoordsToWorldCoords(tile.getX(), tile.getY(), worldCoords);
 
                 if (!overlayOnly) {
-                    TextureRegion region = tileRegions.get(tile.getTileType().toUpperCase(java.util.Locale.ROOT));
+                    TextureRegion region = tileRegions.get(tile.getTileType());
                     if (region != null) {
                         spriteBatch.draw(region, worldCoords.x, worldCoords.y);
                     }

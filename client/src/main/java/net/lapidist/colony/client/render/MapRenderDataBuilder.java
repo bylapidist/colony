@@ -55,7 +55,7 @@ public final class MapRenderDataBuilder {
         return RenderTile.builder()
                 .x(tc.getX())
                 .y(tc.getY())
-                .tileType(tc.getTileType().toString())
+                .tileType(tc.getTileType().name())
                 .selected(tc.isSelected())
                 .wood(rc.getWood())
                 .stone(rc.getStone())
@@ -67,7 +67,7 @@ public final class MapRenderDataBuilder {
         return RenderBuilding.builder()
                 .x(bc.getX())
                 .y(bc.getY())
-                .buildingType(bc.getBuildingType().toString())
+                .buildingType(bc.getBuildingType().name())
                 .build();
     }
 
