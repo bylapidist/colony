@@ -43,6 +43,8 @@ public class TileRendererTest {
         RenderTile tile = RenderTile.builder()
                 .x(0)
                 .y(0)
+                .worldX(0f)
+                .worldY(0f)
                 .tileType("GRASS")
                 .selected(true)
                 .wood(0)
@@ -57,6 +59,14 @@ public class TileRendererTest {
 
         renderer.render(map);
 
-        verify(batch, times(2)).draw(any(TextureRegion.class), anyFloat(), anyFloat());
+        org.mockito.ArgumentCaptor<Float> xCap = org.mockito.ArgumentCaptor.forClass(Float.class);
+        org.mockito.ArgumentCaptor<Float> yCap = org.mockito.ArgumentCaptor.forClass(Float.class);
+        verify(batch, times(2)).draw(any(TextureRegion.class), xCap.capture(), yCap.capture());
+        java.util.List<Float> xs = xCap.getAllValues();
+        java.util.List<Float> ys = yCap.getAllValues();
+        org.junit.Assert.assertEquals(tile.getWorldX(), xs.get(0), 0f);
+        org.junit.Assert.assertEquals(tile.getWorldY(), ys.get(0), 0f);
+        org.junit.Assert.assertEquals(tile.getWorldX(), xs.get(1), 0f);
+        org.junit.Assert.assertEquals(tile.getWorldY(), ys.get(1), 0f);
     }
 }

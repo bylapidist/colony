@@ -44,5 +44,10 @@ public class MapRenderDataBuilderTest {
         assertEquals(1, tile.getWood());
         assertEquals(BUILDING_X, data.getBuildings().first().getX());
         assertEquals(tile, data.getTile(TILE_X, TILE_Y));
+        assertEquals(TILE_X * net.lapidist.colony.components.GameConstants.TILE_SIZE, tile.getWorldX(), 0f);
+        assertEquals(TILE_Y * net.lapidist.colony.components.GameConstants.TILE_SIZE, tile.getWorldY(), 0f);
+        var building = data.getBuildings().first();
+        assertEquals(BUILDING_X * net.lapidist.colony.components.GameConstants.TILE_SIZE, building.getWorldX(), 0f);
+        assertEquals(BUILDING_Y * net.lapidist.colony.components.GameConstants.TILE_SIZE, building.getWorldY(), 0f);
     }
 }

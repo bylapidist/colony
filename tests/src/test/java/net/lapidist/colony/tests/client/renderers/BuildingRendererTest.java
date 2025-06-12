@@ -32,12 +32,22 @@ public class BuildingRendererTest {
         CameraProvider camera = mock(CameraProvider.class);
         Viewport viewport = mock(Viewport.class);
         when(camera.getViewport()).thenReturn(viewport);
-        when(viewport.project(any(Vector3.class))).thenReturn(new Vector3());
+        doAnswer(inv -> {
+            Vector3 v = inv.getArgument(0);
+            v.set(0f, 0f, 0f);
+            return v;
+        }).when(viewport).project(any(Vector3.class));
 
         BuildingRenderer renderer = new BuildingRenderer(batch, loader, camera, new DefaultAssetResolver());
 
         Array<RenderBuilding> buildings = new Array<>();
-        RenderBuilding building = RenderBuilding.builder().x(0).y(0).buildingType("HOUSE").build();
+        RenderBuilding building = RenderBuilding.builder()
+                .x(1)
+                .y(2)
+                .worldX(1 * GameConstants.TILE_SIZE)
+                .worldY(2 * GameConstants.TILE_SIZE)
+                .buildingType("HOUSE")
+                .build();
         buildings.add(building);
 
         MapRenderData map = new SimpleMapRenderData(new Array<RenderTile>(), buildings,
@@ -45,6 +55,10 @@ public class BuildingRendererTest {
 
         renderer.render(map);
 
-        verify(batch).draw(eq(region), anyFloat(), anyFloat());
+        org.mockito.ArgumentCaptor<Float> xCap = org.mockito.ArgumentCaptor.forClass(Float.class);
+        org.mockito.ArgumentCaptor<Float> yCap = org.mockito.ArgumentCaptor.forClass(Float.class);
+        verify(batch).draw(eq(region), xCap.capture(), yCap.capture());
+        org.junit.Assert.assertEquals(building.getWorldX(), xCap.getValue(), 0f);
+        org.junit.Assert.assertEquals(building.getWorldY(), yCap.getValue(), 0f);
     }
 }

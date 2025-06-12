@@ -62,7 +62,7 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                     continue;
                 }
 
-                CameraUtils.tileCoordsToWorldCoords(tile.getX(), tile.getY(), worldCoords);
+                worldCoords.set(tile.getWorldX(), tile.getWorldY());
                 if (!CameraUtils.withinCameraView(cameraSystem.getViewport(), worldCoords, tmp)) {
                     continue;
                 }

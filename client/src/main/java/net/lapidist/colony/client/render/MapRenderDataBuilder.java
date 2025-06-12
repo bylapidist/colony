@@ -32,6 +32,8 @@ public final class MapRenderDataBuilder {
             RenderTile tile = RenderTile.builder()
                     .x(tc.getX())
                     .y(tc.getY())
+                    .worldX(tc.getX() * GameConstants.TILE_SIZE)
+                    .worldY(tc.getY() * GameConstants.TILE_SIZE)
                     .tileType(tc.getTileType().toString())
                     .selected(tc.isSelected())
                     .wood(rc.getWood())
@@ -53,6 +55,8 @@ public final class MapRenderDataBuilder {
             RenderBuilding building = RenderBuilding.builder()
                     .x(bc.getX())
                     .y(bc.getY())
+                    .worldX(bc.getX() * GameConstants.TILE_SIZE)
+                    .worldY(bc.getY() * GameConstants.TILE_SIZE)
                     .buildingType(bc.getBuildingType().toString())
                     .build();
             buildings.add(building);
