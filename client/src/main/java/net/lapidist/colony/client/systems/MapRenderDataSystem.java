@@ -93,6 +93,10 @@ public final class MapRenderDataSystem extends BaseSystem {
             MapRenderDataBuilder.updateTiles(map, world, data, modified);
         }
 
+        if (modified.size > 0) {
+            MapRenderDataBuilder.updateTiles(map, world, data, modified);
+        }
+
         Array<Entity> mapEntities = map.getEntities();
         Array<RenderBuilding> buildings = data.getBuildings();
         if (mapEntities.size != buildings.size) {
