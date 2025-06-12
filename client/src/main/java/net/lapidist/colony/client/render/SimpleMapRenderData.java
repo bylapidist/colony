@@ -11,6 +11,7 @@ public final class SimpleMapRenderData implements MapRenderData {
     private final Array<RenderTile> tiles;
     private final Array<RenderBuilding> buildings;
     private final RenderTile[][] tileGrid;
+    private int version;
 
     public SimpleMapRenderData(
             final Array<RenderTile> tilesToUse,
@@ -20,6 +21,7 @@ public final class SimpleMapRenderData implements MapRenderData {
         this.tiles = tilesToUse;
         this.buildings = buildingsToUse;
         this.tileGrid = grid;
+        this.version = 0;
     }
 
     @Override
@@ -38,6 +40,16 @@ public final class SimpleMapRenderData implements MapRenderData {
             return null;
         }
         return tileGrid[x][y];
+    }
+
+    @Override
+    public int getVersion() {
+        return version;
+    }
+
+    /** Sets the map version for this render data. */
+    public void setVersion(final int newVersion) {
+        this.version = newVersion;
     }
 
     /**

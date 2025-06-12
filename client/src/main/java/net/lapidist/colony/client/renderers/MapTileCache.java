@@ -23,6 +23,7 @@ final class MapTileCache implements Disposable {
     private final Array<SpriteCache> spriteCaches = new Array<>();
     private final IntArray cacheIds = new IntArray();
     private MapRenderData cachedData;
+    private int cachedVersion;
     private boolean invalidated = true;
 
     void invalidate() {
@@ -35,11 +36,15 @@ final class MapTileCache implements Disposable {
             final AssetResolver resolver,
             final CameraProvider camera
     ) {
-        if (!spriteCaches.isEmpty() && !invalidated && cachedData == map) {
+        if (!spriteCaches.isEmpty()
+                && !invalidated
+                && cachedData == map
+                && cachedVersion == map.getVersion()) {
             return;
         }
         dispose();
         cachedData = map;
+        cachedVersion = map != null ? map.getVersion() : -1;
         if (map == null) {
             return;
         }

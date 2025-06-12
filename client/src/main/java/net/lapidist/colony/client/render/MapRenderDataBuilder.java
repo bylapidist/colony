@@ -46,7 +46,9 @@ public final class MapRenderDataBuilder {
             buildings.add(building);
         }
 
-        return new SimpleMapRenderData(tiles, buildings, grid);
+        SimpleMapRenderData data = new SimpleMapRenderData(tiles, buildings, grid);
+        data.setVersion(map.getVersion());
+        return data;
     }
 
     public static RenderTile toTile(final TileComponent tc, final ResourceComponent rc) {
@@ -96,5 +98,7 @@ public final class MapRenderDataBuilder {
             RenderBuilding building = toBuilding(bc);
             buildings.add(building);
         }
+
+        data.setVersion(map.getVersion());
     }
 }
