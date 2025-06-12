@@ -13,4 +13,4 @@ This directory contains all guides for the Colony project. References are groupe
 - [Localization Guide](i18n.md)
 - [Configuration Guide](configuration.md)
 - [Contributing Guide](../CONTRIBUTING.md) – coding conventions and contribution process.
-- [Performance Notes](performance.md) – benchmarking of data structures used in networking.
+ - [Performance Notes](performance.md) – benchmarking of data structures and renderer performance. Update the numbers if reruns produce slower results.

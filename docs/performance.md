@@ -60,3 +60,5 @@ they can run without a display.
 
 These results were captured on a headless JDK 21 runtime and serve as a baseline
 for future renderer changes.
+When rerunning these benchmarks, record any updated scores here. If your new
+baseline is lower, update the table so performance regressions are visible.
