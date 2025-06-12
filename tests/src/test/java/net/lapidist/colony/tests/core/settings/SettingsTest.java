@@ -74,6 +74,7 @@ public class SettingsTest {
         graphics.setAntialiasingEnabled(true);
         graphics.setMipMapsEnabled(true);
         graphics.setRenderer("model");
+        graphics.setSpriteCacheEnabled(false);
         settings.save();
 
         Settings loaded = Settings.load();
@@ -82,5 +83,6 @@ public class SettingsTest {
         assertEquals(false, loaded.getGraphicsSettings().isAnisotropicFilteringEnabled());
         assertEquals(false, loaded.getGraphicsSettings().isShadersEnabled());
         assertEquals("model", loaded.getGraphicsSettings().getRenderer());
+        assertEquals(false, loaded.getGraphicsSettings().isSpriteCacheEnabled());
     }
 }

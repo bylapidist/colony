@@ -49,8 +49,9 @@ public final class SpriteMapRendererFactory implements MapRendererFactory {
 
     @Override
     public MapRenderer create(final World world) {
+        GraphicsSettings graphics;
         try {
-            GraphicsSettings graphics = Settings.load().getGraphicsSettings();
+            graphics = Settings.load().getGraphicsSettings();
             resourceLoader.loadTextures(fileLocation, atlasPath, graphics);
             while (!resourceLoader.update()) {
                 if (progressCallback != null) {
@@ -62,6 +63,7 @@ public final class SpriteMapRendererFactory implements MapRendererFactory {
             }
         } catch (IOException e) {
             // ignore loading errors in headless tests
+            graphics = new GraphicsSettings();
         }
         SpriteBatch batch = new SpriteBatch();
 
@@ -92,7 +94,8 @@ public final class SpriteMapRendererFactory implements MapRendererFactory {
                 resourceLoader,
                 tileRenderer,
                 buildingRenderer,
-                resourceRenderer
+                resourceRenderer,
+                graphics.isSpriteCacheEnabled()
         );
     }
 }

@@ -24,6 +24,7 @@ public class GraphicsSettingsTest {
         gs.setAnisotropicFilteringEnabled(true);
         gs.setShadersEnabled(true);
         gs.setRenderer("model");
+        gs.setSpriteCacheEnabled(false);
         gs.save(prefs);
         prefs.flush();
 
@@ -33,6 +34,7 @@ public class GraphicsSettingsTest {
         assertTrue(loaded.isAnisotropicFilteringEnabled());
         assertTrue(loaded.isShadersEnabled());
         assertEquals("model", loaded.getRenderer());
+        assertFalse(loaded.isSpriteCacheEnabled());
     }
 
     @Test
@@ -47,5 +49,6 @@ public class GraphicsSettingsTest {
         assertFalse(loaded.isAnisotropicFilteringEnabled());
         assertFalse(loaded.isShadersEnabled());
         assertEquals("sprite", loaded.getRenderer());
+        assertTrue(loaded.isSpriteCacheEnabled());
     }
 }
