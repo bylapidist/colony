@@ -41,6 +41,11 @@ public final class TileUpdateSystem extends BaseSystem {
                         var tc = tileMapper.get(t);
                         tc.setSelected(data.selected());
                         tc.setDirty(true);
+                        int index = mapComponent.getTiles().indexOf(t, true);
+                        var ds = world.getSystem(net.lapidist.colony.client.systems.MapRenderDataSystem.class);
+                        if (ds != null) {
+                            ds.addDirtyIndex(index);
+                        }
                         mapComponent.incrementVersion();
                     });
         }

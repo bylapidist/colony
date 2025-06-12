@@ -8,6 +8,7 @@ import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.PlayerInitSystem;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.client.systems.network.ResourceUpdateSystem;
+import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.resources.PlayerResourceComponent;
 import net.lapidist.colony.components.resources.ResourceComponent;
@@ -44,11 +45,13 @@ public class ResourceUpdateSystemTest {
 
         GameClient client = new GameClient();
         World world = new World(new WorldConfigurationBuilder()
-                .with(new MapLoadSystem(state), new PlayerInitSystem(), new ResourceUpdateSystem(client))
+                .with(new MapLoadSystem(state), new PlayerInitSystem(), new MapRenderDataSystem(),
+                        new ResourceUpdateSystem(client))
                 .build());
         world.process();
 
         client.injectResourceUpdate(new ResourceUpdateData(0, 0, UPDATED_WOOD, 0, 0));
+        world.process();
         world.process();
 
         com.artemis.utils.IntBag maps = world.getAspectSubscriptionManager()

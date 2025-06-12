@@ -147,6 +147,7 @@ public class MapRenderSystemTest {
                 .get(entity);
         tc.setSelected(true);
         tc.setDirty(true);
+        dataSystem.addDirtyIndex(0);
         map.incrementVersion();
 
         world.process();

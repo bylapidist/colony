@@ -89,6 +89,7 @@ public class MapRenderDataSystemTest {
                 .get(tile);
         tc.setSelected(true);
         tc.setDirty(true);
+        system.addDirtyIndex(0);
         map.incrementVersion();
         world.process();
         assertSame(firstData, system.getRenderData());
@@ -127,6 +128,7 @@ public class MapRenderDataSystemTest {
                 .get(entity);
         tc.setSelected(true);
         tc.setDirty(true);
+        system.addDirtyIndex(0);
         map.incrementVersion();
 
         world.process();

@@ -55,6 +55,11 @@ public final class ResourceUpdateSystem extends BaseSystem {
                         rc.setStone(data.stone());
                         rc.setFood(data.food());
                         rc.setDirty(true);
+                        int index = mapComponent.getTiles().indexOf(tile, true);
+                        var ds = world.getSystem(net.lapidist.colony.client.systems.MapRenderDataSystem.class);
+                        if (ds != null) {
+                            ds.addDirtyIndex(index);
+                        }
                         if (player != null) {
                             var pr = playerMapper.get(player);
                             if (deltaWood > 0) {
