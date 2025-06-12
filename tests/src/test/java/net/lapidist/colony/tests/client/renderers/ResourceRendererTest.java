@@ -26,6 +26,7 @@ public class ResourceRendererTest {
     private static final int WOOD = 1;
     private static final int STONE = 2;
     private static final int FOOD = 3;
+    private static final float OFFSET_Y = 8f;
 
     @Test
     public void rendersResourceTextWithoutErrors() {
@@ -80,6 +81,8 @@ public class ResourceRendererTest {
         RenderTile tile = RenderTile.builder()
                 .x(0)
                 .y(0)
+                .worldX(0f)
+                .worldY(0f)
                 .tileType("GRASS")
                 .selected(true)
                 .wood(WOOD)
@@ -97,7 +100,11 @@ public class ResourceRendererTest {
         ArgumentCaptor<CharSequence> captor = ArgumentCaptor.forClass(CharSequence.class);
         verify(layout).setText(eq(font), captor.capture());
         assertEquals(WOOD + "/" + STONE + "/" + FOOD, captor.getValue().toString());
-        verify(font).draw(eq(batch), eq(layout), anyFloat(), anyFloat());
+        org.mockito.ArgumentCaptor<Float> xCap = org.mockito.ArgumentCaptor.forClass(Float.class);
+        org.mockito.ArgumentCaptor<Float> yCap = org.mockito.ArgumentCaptor.forClass(Float.class);
+        verify(font).draw(eq(batch), eq(layout), xCap.capture(), yCap.capture());
+        org.junit.Assert.assertEquals(tile.getWorldX(), xCap.getValue(), 0f);
+        org.junit.Assert.assertEquals(tile.getWorldY() + OFFSET_Y, yCap.getValue(), 0f);
         renderer.dispose();
     }
 

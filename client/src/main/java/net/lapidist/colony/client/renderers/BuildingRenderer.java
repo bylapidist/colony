@@ -40,7 +40,7 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
         Vector3 tmp = new Vector3();
         for (int i = 0; i < entities.size; i++) {
             RenderBuilding building = entities.get(i);
-            CameraUtils.tileCoordsToWorldCoords(building.getX(), building.getY(), worldCoords);
+            worldCoords.set(building.getWorldX(), building.getWorldY());
 
             if (!CameraUtils.withinCameraView(cameraSystem.getViewport(), worldCoords, tmp)) {
                 continue;
