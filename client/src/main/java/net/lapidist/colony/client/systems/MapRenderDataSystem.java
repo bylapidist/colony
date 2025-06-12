@@ -26,7 +26,7 @@ public final class MapRenderDataSystem extends BaseSystem {
     private ComponentMapper<ResourceComponent> resourceMapper;
     private ComponentMapper<BuildingComponent> buildingMapper;
     private final IntArray selectedTileIndices = new IntArray();
-    private final IntArray modifiedIndices = new IntArray();
+    private final IntArray dirtyIndices = new IntArray();
 
     public MapRenderData getRenderData() {
         return renderData;
@@ -35,6 +35,11 @@ public final class MapRenderDataSystem extends BaseSystem {
     /** Returns the indices of currently selected tiles. */
     public IntArray getSelectedTileIndices() {
         return selectedTileIndices;
+    }
+
+    /** Queues a tile index to be refreshed on the next update. */
+    public void addDirtyIndex(final int index) {
+        dirtyIndices.add(index);
     }
 
     @Override
@@ -73,15 +78,13 @@ public final class MapRenderDataSystem extends BaseSystem {
     private void updateIncremental() {
         SimpleMapRenderData data = (SimpleMapRenderData) renderData;
 
-        modifiedIndices.clear();
         Array<Entity> mapTiles = map.getTiles();
-        for (int i = 0; i < mapTiles.size; i++) {
+        for (int j = 0; j < dirtyIndices.size; j++) {
+            int i = dirtyIndices.get(j);
             Entity entity = mapTiles.get(i);
             TileComponent tc = tileMapper.get(entity);
             ResourceComponent rc = resourceMapper.get(entity);
-            boolean dirty = false;
             if (tc.isDirty()) {
-                dirty = true;
                 int index = selectedTileIndices.indexOf(i);
                 if (tc.isSelected()) {
                     if (index == -1) {
@@ -93,17 +96,14 @@ public final class MapRenderDataSystem extends BaseSystem {
                 tc.setDirty(false);
             }
             if (rc.isDirty()) {
-                dirty = true;
                 rc.setDirty(false);
-            }
-            if (dirty) {
-                modifiedIndices.add(i);
             }
         }
 
-        if (modifiedIndices.size > 0) {
-            MapRenderDataBuilder.updateTiles(map, world, data, modifiedIndices);
+        if (dirtyIndices.size > 0) {
+            MapRenderDataBuilder.updateTiles(map, world, data, dirtyIndices);
         }
+        dirtyIndices.clear();
 
         Array<Entity> mapEntities = map.getEntities();
         Array<RenderBuilding> buildings = data.getBuildings();
