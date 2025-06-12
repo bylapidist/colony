@@ -4,6 +4,7 @@ import com.artemis.BaseSystem;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntArray;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.render.MapRenderDataBuilder;
 import net.lapidist.colony.client.render.SimpleMapRenderData;
@@ -64,6 +65,7 @@ public final class MapRenderDataSystem extends BaseSystem {
     private void updateIncremental() {
         SimpleMapRenderData data = (SimpleMapRenderData) renderData;
 
+        IntArray modified = new IntArray();
         Array<Entity> mapTiles = map.getTiles();
         for (int i = 0; i < mapTiles.size; i++) {
             Entity entity = mapTiles.get(i);
@@ -71,9 +73,12 @@ public final class MapRenderDataSystem extends BaseSystem {
             ResourceComponent rc = resourceMapper.get(entity);
             RenderTile old = data.getTiles().get(i);
             if (old == null || tileChanged(old, tc, rc)) {
-                RenderTile tile = MapRenderDataBuilder.toTile(tc, rc);
-                data.updateTile(i, tile);
+                modified.add(i);
             }
+        }
+
+        if (modified.size > 0) {
+            MapRenderDataBuilder.updateTiles(map, world, data, modified);
         }
 
         Array<Entity> mapEntities = map.getEntities();
