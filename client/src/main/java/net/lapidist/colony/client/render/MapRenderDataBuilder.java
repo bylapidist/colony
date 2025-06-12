@@ -72,23 +72,52 @@ public final class MapRenderDataBuilder {
     }
 
     /**
-     * Update an existing {@link SimpleMapRenderData} instance using the current state of the map.
-     * This avoids creating a new object every frame.
+     * Update an existing {@link SimpleMapRenderData} with new tile values.
+     * The provided indices list determines which tiles should be refreshed.
      */
-    public static void update(final MapComponent map, final World world, final SimpleMapRenderData data) {
+    public static void updateTiles(
+            final MapComponent map,
+            final World world,
+            final SimpleMapRenderData data,
+            final com.badlogic.gdx.utils.IntArray indices
+    ) {
         ComponentMapper<TileComponent> tileMapper = world.getMapper(TileComponent.class);
         ComponentMapper<ResourceComponent> resourceMapper = world.getMapper(ResourceComponent.class);
-        ComponentMapper<BuildingComponent> buildingMapper = world.getMapper(BuildingComponent.class);
 
         Array<Entity> mapTiles = map.getTiles();
-        for (int i = 0; i < mapTiles.size; i++) {
-            Entity entity = mapTiles.get(i);
-            TileComponent tc = tileMapper.get(entity);
-            ResourceComponent rc = resourceMapper.get(entity);
-            RenderTile tile = toTile(tc, rc);
-            data.updateTile(i, tile);
+        if (indices == null) {
+            for (int i = 0; i < mapTiles.size; i++) {
+                Entity entity = mapTiles.get(i);
+                TileComponent tc = tileMapper.get(entity);
+                ResourceComponent rc = resourceMapper.get(entity);
+                RenderTile tile = toTile(tc, rc);
+                data.updateTile(i, tile);
+            }
+        } else {
+            for (int j = 0; j < indices.size; j++) {
+                int i = indices.get(j);
+                if (i < 0 || i >= mapTiles.size) {
+                    continue;
+                }
+                Entity entity = mapTiles.get(i);
+                TileComponent tc = tileMapper.get(entity);
+                ResourceComponent rc = resourceMapper.get(entity);
+                RenderTile tile = toTile(tc, rc);
+                data.updateTile(i, tile);
+            }
         }
 
+        data.setVersion(map.getVersion());
+    }
+
+    /**
+     * Update all tiles and buildings of an existing {@link SimpleMapRenderData} instance.
+     * This method recreates every render element and should be used sparingly.
+     */
+    public static void update(final MapComponent map, final World world, final SimpleMapRenderData data) {
+        updateTiles(map, world, data, null);
+
+        ComponentMapper<BuildingComponent> buildingMapper = world.getMapper(BuildingComponent.class);
         Array<Entity> mapEntities = map.getEntities();
         Array<RenderBuilding> buildings = data.getBuildings();
         buildings.clear();
