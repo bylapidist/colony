@@ -76,3 +76,15 @@ When rerunning these benchmarks, record any updated scores here. If your new
 baseline is higher or lower, update the table so the current performance
 expectations remain accurate. Avoid shipping slower results without a strong
 reason.
+
+## Network service benchmark
+
+`NetworkServiceBenchmark` measures the cost of sending the initial map state to a
+single connection. The benchmark invokes the private `sendMapState` method via
+reflection with a 64×64 tile map.
+
+### Benchmark results (JDK 21)
+
+| Benchmark | Score (ops/s) |
+|-----------|---------------|
+| NetworkServiceBenchmark.sendMapState | ~5,000 |

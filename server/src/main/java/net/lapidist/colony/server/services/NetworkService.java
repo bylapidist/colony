@@ -79,11 +79,12 @@ public final class NetworkService {
             bucket.put(entry.getKey(), entry.getValue());
             if (bucket.size() == CHUNK_SIZE) {
                 connection.sendTCP(new MapChunk(index++, bucket));
-                bucket = new java.util.HashMap<>(CHUNK_SIZE);
+                bucket.clear();
             }
         }
         if (!bucket.isEmpty()) {
             connection.sendTCP(new MapChunk(index, bucket));
+            bucket.clear();
         }
         LOGGER.info("Sent map state in {} chunks to connection {}", chunkCount, connection.getID());
     }
