@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(GdxTestRunner.class)
@@ -34,5 +35,27 @@ public class MapUiBuilderTest {
         stage.keyDown(settings.getKeyBindings().getKey(KeyAction.CHAT));
 
         assertTrue(ui.getChatBox().isInputVisible());
+    }
+
+    @Test
+    public void togglesMinimapVisibility() {
+        Stage stage = new Stage(new ScreenViewport(), mock(Batch.class));
+        World world = new World(new WorldConfigurationBuilder().build());
+        GameClient client = mock(GameClient.class);
+        Colony colony = mock(Colony.class);
+        Settings settings = new Settings();
+        when(colony.getSettings()).thenReturn(settings);
+
+        MapUi ui = MapUiBuilder.build(stage, world, client, colony);
+
+        boolean initial = ui.getMinimapActor().isVisible();
+
+        stage.keyDown(settings.getKeyBindings().getKey(KeyAction.MINIMAP));
+
+        assertEquals(!initial, ui.getMinimapActor().isVisible());
+
+        stage.keyDown(settings.getKeyBindings().getKey(KeyAction.MINIMAP));
+
+        assertEquals(initial, ui.getMinimapActor().isVisible());
     }
 }
