@@ -16,25 +16,40 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
     private final TileRenderer tileRenderer;
     private final BuildingRenderer buildingRenderer;
     private final ResourceRenderer resourceRenderer;
+    private final MapTileCache tileCache = new MapTileCache();
+    private final AssetResolver resolver = new DefaultAssetResolver();
+    private final boolean cacheEnabled;
 
     public SpriteBatchMapRenderer(
             final SpriteBatch spriteBatchToSet,
             final ResourceLoader resourceLoaderToSet,
             final TileRenderer tileRendererToSet,
             final BuildingRenderer buildingRendererToSet,
-            final ResourceRenderer resourceRendererToSet
+            final ResourceRenderer resourceRendererToSet,
+            final boolean cacheEnabledToSet
     ) {
         this.spriteBatch = spriteBatchToSet;
         this.resourceLoader = resourceLoaderToSet;
         this.tileRenderer = tileRendererToSet;
         this.buildingRenderer = buildingRendererToSet;
         this.resourceRenderer = resourceRendererToSet;
+        this.cacheEnabled = cacheEnabledToSet;
     }
 
     @Override
     public void render(final MapRenderData map, final CameraProvider camera) {
         spriteBatch.setProjectionMatrix(camera.getCamera().combined);
+        if (cacheEnabled) {
+            tileCache.ensureCache(resourceLoader, map, resolver, camera);
+        }
         spriteBatch.begin();
+
+        if (cacheEnabled) {
+            tileCache.draw(spriteBatch);
+            tileRenderer.setOverlayOnly(true);
+        } else {
+            tileRenderer.setOverlayOnly(false);
+        }
 
         tileRenderer.render(map);
         buildingRenderer.render(map);
@@ -48,5 +63,6 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         resourceLoader.dispose();
         resourceRenderer.dispose();
         spriteBatch.dispose();
+        tileCache.dispose();
     }
 }

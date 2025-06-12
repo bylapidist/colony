@@ -57,6 +57,7 @@ public final class Settings {
                     gLoaded.isAnisotropicFilteringEnabled());
             settings.graphicsSettings.setShadersEnabled(gLoaded.isShadersEnabled());
             settings.graphicsSettings.setRenderer(gLoaded.getRenderer());
+            settings.graphicsSettings.setSpriteCacheEnabled(gLoaded.isSpriteCacheEnabled());
         }
         return settings;
     }
