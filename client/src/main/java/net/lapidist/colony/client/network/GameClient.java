@@ -46,11 +46,19 @@ public final class GameClient extends AbstractMessageEndpoint {
     private java.util.Map<TilePos, TileData> tileBuffer;
     private int expectedChunks;
     private int receivedChunks;
+    private java.util.function.Consumer<Float> loadProgressListener;
 
     private <T> Queue<T> registerQueue(final Class<T> type) {
         Queue<T> queue = new ConcurrentLinkedQueue<>();
         messageQueues.put(type, queue);
         return queue;
+    }
+
+    /**
+     * Register a listener that receives map loading progress between 0 and 1.
+     */
+    public void setLoadProgressListener(final java.util.function.Consumer<Float> listener) {
+        this.loadProgressListener = listener;
     }
 
     public GameClient() {
@@ -72,10 +80,16 @@ public final class GameClient extends AbstractMessageEndpoint {
                     tileBuffer = new java.util.HashMap<>();
                     expectedChunks = meta.chunkCount();
                     receivedChunks = 0;
+                    if (loadProgressListener != null) {
+                        loadProgressListener.accept(0f);
+                    }
                     if (expectedChunks == 0) {
                         mapState = mapBuilder.tiles(tileBuffer).build();
                         if (readyCallback != null) {
                             readyCallback.accept(mapState);
+                        }
+                        if (loadProgressListener != null) {
+                            loadProgressListener.accept(1f);
                         }
                     }
                 }),
@@ -83,10 +97,16 @@ public final class GameClient extends AbstractMessageEndpoint {
                     if (tileBuffer != null) {
                         tileBuffer.putAll(chunk.tiles());
                         receivedChunks++;
+                        if (loadProgressListener != null && expectedChunks > 0) {
+                            loadProgressListener.accept(receivedChunks / (float) expectedChunks);
+                        }
                         if (receivedChunks >= expectedChunks) {
                             mapState = mapBuilder.tiles(tileBuffer).build();
                             if (readyCallback != null) {
                                 readyCallback.accept(mapState);
+                            }
+                            if (loadProgressListener != null) {
+                                loadProgressListener.accept(1f);
                             }
                         }
                     }
