@@ -70,4 +70,40 @@ public class MapRenderDataSystemTest {
         assertTrue(system.getRenderData().getTiles().first().isSelected());
         world.dispose();
     }
+
+    @Test
+    public void onlyChangedTilesAreReplaced() {
+        MapState state = new MapState();
+        state.tiles().put(new TilePos(0, 0), TileData.builder()
+                .x(0).y(0).tileType("GRASS").passable(true)
+                .build());
+        state.tiles().put(new TilePos(1, 0), TileData.builder()
+                .x(1).y(0).tileType("GRASS").passable(true)
+                .build());
+
+        World world = new World(new WorldConfigurationBuilder()
+                .with(new MapInitSystem(new ProvidedMapStateProvider(state)),
+                        new MapRenderDataSystem())
+                .build());
+        world.process();
+
+        MapRenderDataSystem system = world.getSystem(MapRenderDataSystem.class);
+        var data = (net.lapidist.colony.client.render.SimpleMapRenderData) system.getRenderData();
+        var firstTile = data.getTiles().get(0);
+        var secondTile = data.getTiles().get(1);
+
+        var map = net.lapidist.colony.map.MapUtils.findMap(world).orElseThrow();
+        var entity = map.getTiles().first();
+        world.getMapper(net.lapidist.colony.components.maps.TileComponent.class)
+                .get(entity).setSelected(true);
+        map.incrementVersion();
+
+        world.process();
+
+        var updated = (net.lapidist.colony.client.render.SimpleMapRenderData) system.getRenderData();
+        assertNotSame(firstTile, updated.getTiles().get(0));
+        assertSame(secondTile, updated.getTiles().get(1));
+        assertTrue(updated.getTiles().get(0).isSelected());
+        world.dispose();
+    }
 }
