@@ -30,6 +30,10 @@ public final class CameraInputSystem extends BaseSystem {
         multiplexer.addProcessor(processor);
     }
 
+    public void addProcessor(final int index, final InputProcessor processor) {
+        multiplexer.addProcessor(index, processor);
+    }
+
     @Override
     public void initialize() {
         cameraSystem = world.getSystem(PlayerCameraSystem.class);

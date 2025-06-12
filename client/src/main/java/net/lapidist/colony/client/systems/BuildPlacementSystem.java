@@ -39,7 +39,7 @@ public final class BuildPlacementSystem extends BaseSystem {
         tileMapper = world.getMapper(TileComponent.class);
         map = MapUtils.findMap(world).orElse(null);
         buildingPlacementHandler = new BuildingPlacementHandler(client, cameraSystem);
-        cameraInputSystem.addProcessor(new GestureDetector(new BuildGestureListener()));
+        cameraInputSystem.addProcessor(0, new GestureDetector(new BuildGestureListener()));
     }
 
     @Override
