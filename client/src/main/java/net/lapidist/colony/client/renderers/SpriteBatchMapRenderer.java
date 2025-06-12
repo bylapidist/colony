@@ -36,6 +36,13 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         this.cacheEnabled = cacheEnabledToSet;
     }
 
+    /** Invalidate cache segments for the given tile indices. */
+    public void invalidateTiles(final com.badlogic.gdx.utils.IntArray indices) {
+        if (cacheEnabled) {
+            tileCache.invalidateTiles(indices);
+        }
+    }
+
     @Override
     public void render(final MapRenderData map, final CameraProvider camera) {
         spriteBatch.setProjectionMatrix(camera.getCamera().combined);

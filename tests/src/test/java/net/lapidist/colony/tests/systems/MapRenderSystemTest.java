@@ -13,6 +13,8 @@ import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.map.ProvidedMapStateProvider;
 import net.lapidist.colony.tests.GdxTestRunner;
+import net.lapidist.colony.client.renderers.SpriteBatchMapRenderer;
+import com.badlogic.gdx.utils.IntArray;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -156,6 +158,68 @@ public class MapRenderSystemTest {
         MapRenderData second = (MapRenderData) mapField.get(system);
         assertSame(first, second);
         assertTrue(second.getTiles().first().isSelected());
+        world.dispose();
+    }
+
+    @Test
+    public void passesInvalidIndicesToRenderer() throws Exception {
+        GL20 gl = Gdx.gl20;
+        Mockito.when(gl.glCreateShader(Mockito.anyInt())).thenReturn(1);
+        Mockito.when(gl.glCreateProgram()).thenReturn(1);
+        Mockito.doAnswer(inv -> {
+            java.nio.IntBuffer buf = (java.nio.IntBuffer) inv.getArguments()[2];
+            buf.put(0, 1);
+            return null;
+        }).when(gl).glGetShaderiv(Mockito.anyInt(), Mockito.anyInt(), Mockito.any());
+        Mockito.doAnswer(inv -> {
+            java.nio.IntBuffer buf = (java.nio.IntBuffer) inv.getArguments()[2];
+            buf.put(0, 1);
+            return null;
+        }).when(gl).glGetProgramiv(Mockito.anyInt(), Mockito.anyInt(), Mockito.any());
+        Mockito.when(gl.glGetShaderInfoLog(Mockito.anyInt())).thenReturn("");
+        Mockito.when(gl.glGetProgramInfoLog(Mockito.anyInt())).thenReturn("");
+        Mockito.doNothing().when(gl).glShaderSource(Mockito.anyInt(), Mockito.any());
+        Mockito.doNothing().when(gl).glCompileShader(Mockito.anyInt());
+        Mockito.doNothing().when(gl).glAttachShader(Mockito.anyInt(), Mockito.anyInt());
+        Mockito.doNothing().when(gl).glLinkProgram(Mockito.anyInt());
+        Mockito.doNothing().when(gl).glDeleteShader(Mockito.anyInt());
+        Mockito.doNothing().when(gl).glDeleteProgram(Mockito.anyInt());
+
+        MapState state = new MapState();
+        state.tiles().put(new TilePos(0, 0), TileData.builder()
+                .x(0).y(0).tileType("GRASS").passable(true)
+                .build());
+
+        MapRenderSystem renderSystem = new MapRenderSystem();
+        MapRenderDataSystem dataSystem = new MapRenderDataSystem();
+
+        World world = new World(new WorldConfigurationBuilder()
+                .with(
+                        renderSystem,
+                        new MapInitSystem(new ProvidedMapStateProvider(state)),
+                        dataSystem,
+                        new PlayerCameraSystem()
+                )
+                .build());
+
+        SpriteBatchMapRenderer renderer = Mockito.mock(SpriteBatchMapRenderer.class);
+        renderSystem.setMapRenderer(renderer);
+        renderSystem.setCameraProvider(world.getSystem(PlayerCameraSystem.class));
+
+        world.process();
+
+        var map = net.lapidist.colony.map.MapUtils.findMap(world).orElseThrow();
+        var tile = map.getTiles().first();
+        var tc = world.getMapper(net.lapidist.colony.components.maps.TileComponent.class)
+                .get(tile);
+        tc.setDirty(true);
+        dataSystem.addDirtyIndex(0);
+        map.incrementVersion();
+
+        world.process();
+        world.process();
+
+        Mockito.verify(renderer).invalidateTiles(Mockito.any(IntArray.class));
         world.dispose();
     }
 }

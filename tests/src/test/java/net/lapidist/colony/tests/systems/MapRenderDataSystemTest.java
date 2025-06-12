@@ -7,6 +7,7 @@ import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.map.ProvidedMapStateProvider;
 import org.junit.Test;
 
@@ -138,6 +139,37 @@ public class MapRenderDataSystemTest {
         assertSame(secondTile, updated.getTiles().get(1));
         assertTrue(updated.getTiles().get(0).isSelected());
         assertFalse(tc.isDirty());
+        world.dispose();
+    }
+
+    @Test
+    public void exposesUpdatedIndices() {
+        MapState state = new MapState();
+        state.tiles().put(new TilePos(0, 0), TileData.builder()
+                .x(0).y(0).tileType("GRASS").passable(true)
+                .build());
+
+        World world = new World(new WorldConfigurationBuilder()
+                .with(new MapInitSystem(new ProvidedMapStateProvider(state)),
+                        new MapRenderDataSystem())
+                .build());
+        world.process();
+
+        MapRenderDataSystem system = world.getSystem(MapRenderDataSystem.class);
+        var map = net.lapidist.colony.map.MapUtils.findMap(world).orElseThrow();
+        var tile = map.getTiles().first();
+        var tc = world.getMapper(TileComponent.class).get(tile);
+        tc.setSelected(true);
+        tc.setDirty(true);
+        system.addDirtyIndex(0);
+        map.incrementVersion();
+
+        world.process();
+
+        var indices = system.consumeUpdatedIndices();
+        assertEquals(1, indices.size);
+        assertEquals(0, indices.first());
+        assertEquals(0, system.consumeUpdatedIndices().size);
         world.dispose();
     }
 }
