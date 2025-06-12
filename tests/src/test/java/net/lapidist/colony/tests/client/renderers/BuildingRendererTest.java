@@ -3,8 +3,8 @@ package net.lapidist.colony.tests.client.renderers;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.Viewport;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import net.lapidist.colony.client.renderers.BuildingRenderer;
 import net.lapidist.colony.client.renderers.DefaultAssetResolver;
 import net.lapidist.colony.client.core.io.ResourceLoader;
@@ -22,6 +22,8 @@ import static org.mockito.Mockito.*;
 @RunWith(GdxTestRunner.class)
 public class BuildingRendererTest {
 
+    private static final int VIEW_SIZE = 32;
+
     @Test
     public void rendersBuildingTexture() {
         SpriteBatch batch = mock(SpriteBatch.class);
@@ -30,9 +32,12 @@ public class BuildingRendererTest {
         when(loader.findRegion(anyString())).thenReturn(region);
 
         CameraProvider camera = mock(CameraProvider.class);
-        Viewport viewport = mock(Viewport.class);
+        OrthographicCamera cam = new OrthographicCamera();
+        ExtendViewport viewport = new ExtendViewport(VIEW_SIZE, VIEW_SIZE, cam);
+        viewport.update(VIEW_SIZE, VIEW_SIZE, true);
+        cam.update();
+        when(camera.getCamera()).thenReturn(cam);
         when(camera.getViewport()).thenReturn(viewport);
-        when(viewport.project(any(Vector3.class))).thenReturn(new Vector3());
 
         BuildingRenderer renderer = new BuildingRenderer(batch, loader, camera, new DefaultAssetResolver());
         reset(loader);
@@ -57,9 +62,12 @@ public class BuildingRendererTest {
         when(loader.findRegion(anyString())).thenReturn(region);
 
         CameraProvider camera = mock(CameraProvider.class);
-        Viewport viewport = mock(Viewport.class);
+        OrthographicCamera cam = new OrthographicCamera();
+        ExtendViewport viewport = new ExtendViewport(VIEW_SIZE, VIEW_SIZE, cam);
+        viewport.update(VIEW_SIZE, VIEW_SIZE, true);
+        cam.update();
+        when(camera.getCamera()).thenReturn(cam);
         when(camera.getViewport()).thenReturn(viewport);
-        when(viewport.project(any(Vector3.class))).thenReturn(new Vector3());
 
         BuildingRenderer renderer = new BuildingRenderer(batch, loader, camera, new DefaultAssetResolver());
         reset(loader);

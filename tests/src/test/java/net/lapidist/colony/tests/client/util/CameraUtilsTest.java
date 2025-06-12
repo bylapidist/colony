@@ -3,7 +3,6 @@ package net.lapidist.colony.tests.client.util;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.components.GameConstants;
@@ -54,14 +53,19 @@ public class CameraUtilsTest {
         OrthographicCamera cam = new OrthographicCamera();
         ExtendViewport vp = new ExtendViewport(VIEW_WIDTH, VIEW_HEIGHT, cam);
         Vector2 out = new Vector2();
-        Vector3 tmp = new Vector3();
-
         Vector2 result = CameraUtils.screenToWorldCoords(vp, 0f, 0f, out);
         assertSame(out, result);
 
-        result = CameraUtils.worldToScreenCoords(vp, 0f, 0f, out, tmp);
+        result = CameraUtils.worldToScreenCoords(
+                vp,
+                0f,
+                0f,
+                out,
+                new com.badlogic.gdx.math.Vector3()
+        );
         assertSame(out, result);
 
-        assertTrue(CameraUtils.withinCameraView(vp, out, tmp));
+        Rectangle view = CameraUtils.getViewBounds(cam, vp, new Rectangle());
+        assertTrue(CameraUtils.isVisible(view, out.x, out.y));
     }
 }
