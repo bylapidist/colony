@@ -20,6 +20,7 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
     private final ResourceLoader resourceLoader;
     private final CameraProvider cameraSystem;
     private final AssetResolver resolver;
+    private final java.util.Map<String, TextureRegion> regionCache = new java.util.HashMap<>();
 
     public BuildingRenderer(
             final SpriteBatch spriteBatchToSet,
@@ -47,7 +48,7 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
             }
 
             String ref = resolver.buildingAsset(building.getBuildingType());
-            TextureRegion region = resourceLoader.findRegion(ref);
+            TextureRegion region = regionCache.computeIfAbsent(ref, resourceLoader::findRegion);
             if (region != null) {
                 spriteBatch.draw(region, worldCoords.x, worldCoords.y);
             }
