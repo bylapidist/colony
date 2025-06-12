@@ -85,6 +85,10 @@ public final class MapUiBuilder {
                     chatBox.showInput();
                     return true;
                 }
+                if (keycode == keyBindings.getKey(KeyAction.MINIMAP)) {
+                    minimapActor.setVisible(!minimapActor.isVisible());
+                    return true;
+                }
                 return false;
             }
         });
