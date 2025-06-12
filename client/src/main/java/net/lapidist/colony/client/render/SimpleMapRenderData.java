@@ -39,4 +39,21 @@ public final class SimpleMapRenderData implements MapRenderData {
         }
         return tileGrid[x][y];
     }
+
+    /**
+     * Update the tile at the given index and adjust the grid reference.
+     */
+    public void updateTile(final int index, final RenderTile tile) {
+        RenderTile old = tiles.get(index);
+        if (old != null
+                && old.getX() >= 0 && old.getY() >= 0
+                && old.getX() < tileGrid.length && old.getY() < tileGrid[0].length) {
+            tileGrid[old.getX()][old.getY()] = null;
+        }
+        tiles.set(index, tile);
+        if (tile.getX() >= 0 && tile.getY() >= 0
+                && tile.getX() < tileGrid.length && tile.getY() < tileGrid[0].length) {
+            tileGrid[tile.getX()][tile.getY()] = tile;
+        }
+    }
 }

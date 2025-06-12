@@ -7,6 +7,7 @@ import net.lapidist.colony.client.systems.MapRenderSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.client.systems.MapRenderDataSystem;
+import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
@@ -137,7 +138,8 @@ public class MapRenderSystemTest {
         MapRenderSystem system = world.getSystem(MapRenderSystem.class);
         Field mapField = MapRenderSystem.class.getDeclaredField("mapData");
         mapField.setAccessible(true);
-        Object first = mapField.get(system);
+        MapRenderData first = (MapRenderData) mapField.get(system);
+        assertFalse(first.getTiles().first().isSelected());
 
         var map = net.lapidist.colony.map.MapUtils.findMap(world).orElseThrow();
         var entity = map.getTiles().first();
@@ -148,8 +150,9 @@ public class MapRenderSystemTest {
         world.process();
         world.process();
 
-        Object second = mapField.get(system);
-        assertNotSame(first, second);
+        MapRenderData second = (MapRenderData) mapField.get(system);
+        assertSame(first, second);
+        assertTrue(second.getTiles().first().isSelected());
         world.dispose();
     }
 }
