@@ -29,15 +29,7 @@ public final class MapRenderDataBuilder {
             Entity entity = mapTiles.get(i);
             TileComponent tc = tileMapper.get(entity);
             ResourceComponent rc = resourceMapper.get(entity);
-            RenderTile tile = RenderTile.builder()
-                    .x(tc.getX())
-                    .y(tc.getY())
-                    .tileType(tc.getTileType().toString())
-                    .selected(tc.isSelected())
-                    .wood(rc.getWood())
-                    .stone(rc.getStone())
-                    .food(rc.getFood())
-                    .build();
+            RenderTile tile = toTile(tc, rc);
             tiles.add(tile);
             if (tc.getX() >= 0 && tc.getX() < GameConstants.MAP_WIDTH
                     && tc.getY() >= 0 && tc.getY() < GameConstants.MAP_HEIGHT) {
@@ -50,14 +42,59 @@ public final class MapRenderDataBuilder {
         for (int i = 0; i < mapEntities.size; i++) {
             Entity entity = mapEntities.get(i);
             BuildingComponent bc = buildingMapper.get(entity);
-            RenderBuilding building = RenderBuilding.builder()
-                    .x(bc.getX())
-                    .y(bc.getY())
-                    .buildingType(bc.getBuildingType().toString())
-                    .build();
+            RenderBuilding building = toBuilding(bc);
             buildings.add(building);
         }
 
         return new SimpleMapRenderData(tiles, buildings, grid);
+    }
+
+    public static RenderTile toTile(final TileComponent tc, final ResourceComponent rc) {
+        return RenderTile.builder()
+                .x(tc.getX())
+                .y(tc.getY())
+                .tileType(tc.getTileType().toString())
+                .selected(tc.isSelected())
+                .wood(rc.getWood())
+                .stone(rc.getStone())
+                .food(rc.getFood())
+                .build();
+    }
+
+    public static RenderBuilding toBuilding(final BuildingComponent bc) {
+        return RenderBuilding.builder()
+                .x(bc.getX())
+                .y(bc.getY())
+                .buildingType(bc.getBuildingType().toString())
+                .build();
+    }
+
+    /**
+     * Update an existing {@link SimpleMapRenderData} instance using the current state of the map.
+     * This avoids creating a new object every frame.
+     */
+    public static void update(final MapComponent map, final World world, final SimpleMapRenderData data) {
+        ComponentMapper<TileComponent> tileMapper = world.getMapper(TileComponent.class);
+        ComponentMapper<ResourceComponent> resourceMapper = world.getMapper(ResourceComponent.class);
+        ComponentMapper<BuildingComponent> buildingMapper = world.getMapper(BuildingComponent.class);
+
+        Array<Entity> mapTiles = map.getTiles();
+        for (int i = 0; i < mapTiles.size; i++) {
+            Entity entity = mapTiles.get(i);
+            TileComponent tc = tileMapper.get(entity);
+            ResourceComponent rc = resourceMapper.get(entity);
+            RenderTile tile = toTile(tc, rc);
+            data.updateTile(i, tile);
+        }
+
+        Array<Entity> mapEntities = map.getEntities();
+        Array<RenderBuilding> buildings = data.getBuildings();
+        buildings.clear();
+        for (int i = 0; i < mapEntities.size; i++) {
+            Entity entity = mapEntities.get(i);
+            BuildingComponent bc = buildingMapper.get(entity);
+            RenderBuilding building = toBuilding(bc);
+            buildings.add(building);
+        }
     }
 }

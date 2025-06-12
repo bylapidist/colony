@@ -5,6 +5,7 @@ import com.artemis.WorldConfigurationBuilder;
 import net.lapidist.colony.map.MapFactory;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.render.MapRenderDataBuilder;
+import net.lapidist.colony.client.render.SimpleMapRenderData;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
@@ -44,5 +45,26 @@ public class MapRenderDataBuilderTest {
         assertEquals(1, tile.getWood());
         assertEquals(BUILDING_X, data.getBuildings().first().getX());
         assertEquals(tile, data.getTile(TILE_X, TILE_Y));
+    }
+
+    @Test
+    public void updatesExistingRenderData() {
+        MapState state = new MapState();
+        state.tiles().put(new TilePos(0, 0), TileData.builder()
+                .x(0).y(0).tileType("GRASS").passable(true)
+                .build());
+
+        World world = new World(new WorldConfigurationBuilder().build());
+        MapComponent map = MapFactory.create(world, state).getComponent(MapComponent.class);
+
+        SimpleMapRenderData data = (SimpleMapRenderData) MapRenderDataBuilder.fromMap(map, world);
+
+        var tileEntity = map.getTiles().first();
+        world.getMapper(net.lapidist.colony.components.maps.TileComponent.class)
+                .get(tileEntity).setSelected(true);
+
+        MapRenderDataBuilder.update(map, world, data);
+
+        assertTrue(data.getTiles().first().isSelected());
     }
 }

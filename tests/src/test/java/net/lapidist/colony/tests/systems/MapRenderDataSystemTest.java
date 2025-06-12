@@ -58,13 +58,15 @@ public class MapRenderDataSystemTest {
                 .build());
         world.process();
         MapRenderDataSystem system = world.getSystem(MapRenderDataSystem.class);
-        assertFalse(system.getRenderData().getTiles().first().isSelected());
+        var firstData = system.getRenderData();
+        assertFalse(firstData.getTiles().first().isSelected());
         var map = net.lapidist.colony.map.MapUtils.findMap(world).orElseThrow();
         var tile = map.getTiles().first();
         world.getMapper(net.lapidist.colony.components.maps.TileComponent.class)
                 .get(tile).setSelected(true);
         map.incrementVersion();
         world.process();
+        assertSame(firstData, system.getRenderData());
         assertTrue(system.getRenderData().getTiles().first().isSelected());
         world.dispose();
     }
