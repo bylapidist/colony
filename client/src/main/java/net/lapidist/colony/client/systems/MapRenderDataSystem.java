@@ -27,6 +27,7 @@ public final class MapRenderDataSystem extends BaseSystem {
     private ComponentMapper<ResourceComponent> resourceMapper;
     private ComponentMapper<BuildingComponent> buildingMapper;
     private final IntArray selectedTileIndices = new IntArray();
+    private final IntArray modifiedIndices = new IntArray();
 
     public MapRenderData getRenderData() {
         return renderData;
@@ -73,7 +74,7 @@ public final class MapRenderDataSystem extends BaseSystem {
     private void updateIncremental() {
         SimpleMapRenderData data = (SimpleMapRenderData) renderData;
 
-        IntArray modified = new IntArray();
+        modifiedIndices.clear();
         Array<Entity> mapTiles = map.getTiles();
         selectedTileIndices.clear();
         for (int i = 0; i < mapTiles.size; i++) {
@@ -82,15 +83,15 @@ public final class MapRenderDataSystem extends BaseSystem {
             ResourceComponent rc = resourceMapper.get(entity);
             RenderTile old = data.getTiles().get(i);
             if (old == null || tileChanged(old, tc, rc)) {
-                modified.add(i);
+                modifiedIndices.add(i);
             }
             if (tc.isSelected()) {
                 selectedTileIndices.add(i);
             }
         }
 
-        if (modified.size > 0) {
-            MapRenderDataBuilder.updateTiles(map, world, data, modified);
+        if (modifiedIndices.size > 0) {
+            MapRenderDataBuilder.updateTiles(map, world, data, modifiedIndices);
         }
 
         Array<Entity> mapEntities = map.getEntities();

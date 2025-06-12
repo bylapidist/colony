@@ -22,6 +22,8 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
     private final CameraProvider cameraSystem;
     private final AssetResolver resolver;
     private final java.util.Map<String, TextureRegion> buildingRegions = new java.util.HashMap<>();
+    private final Vector2 worldCoords = new Vector2();
+    private final Vector3 tmp = new Vector3();
 
     public BuildingRenderer(
             final SpriteBatch spriteBatchToSet,
@@ -46,8 +48,6 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
     @Override
     public void render(final MapRenderData map) {
         Array<RenderBuilding> entities = map.getBuildings();
-        Vector2 worldCoords = new Vector2();
-        Vector3 tmp = new Vector3();
         for (int i = 0; i < entities.size; i++) {
             RenderBuilding building = entities.get(i);
             CameraUtils.tileCoordsToWorldCoords(building.getX(), building.getY(), worldCoords);

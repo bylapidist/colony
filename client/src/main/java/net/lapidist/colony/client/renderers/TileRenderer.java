@@ -23,6 +23,10 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
     private final AssetResolver resolver;
     private final java.util.Map<String, TextureRegion> tileRegions = new java.util.HashMap<>();
     private final TextureRegion overlayRegion;
+    private final Rectangle viewBounds = new Rectangle();
+    private final Vector2 tmpStart = new Vector2();
+    private final Vector2 tmpEnd = new Vector2();
+    private final Vector2 worldCoords = new Vector2();
     private boolean overlayOnly;
 
     public TileRenderer(
@@ -55,12 +59,13 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
         Rectangle view = CameraUtils.getViewBounds(
                 (com.badlogic.gdx.graphics.OrthographicCamera) cameraSystem.getCamera(),
                 (com.badlogic.gdx.utils.viewport.ExtendViewport) cameraSystem.getViewport(),
-                new Rectangle()
+                viewBounds
         );
-        Vector2 start = CameraUtils.worldCoordsToTileCoords((int) view.x, (int) view.y);
+        Vector2 start = CameraUtils.worldCoordsToTileCoords((int) view.x, (int) view.y, tmpStart);
         Vector2 end = CameraUtils.worldCoordsToTileCoords(
                 (int) (view.x + view.width),
-                (int) (view.y + view.height)
+                (int) (view.y + view.height),
+                tmpEnd
         );
 
         int startX = Math.max(0, (int) start.x - 1);
@@ -68,7 +73,6 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
         int endX = Math.min(GameConstants.MAP_WIDTH - 1, (int) end.x + 1);
         int endY = Math.min(GameConstants.MAP_HEIGHT - 1, (int) end.y + 1);
 
-        Vector2 worldCoords = new Vector2();
 
         for (int x = startX; x <= endX; x++) {
             for (int y = startY; y <= endY; y++) {

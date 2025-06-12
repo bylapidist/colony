@@ -25,6 +25,9 @@ final class MinimapCache implements Disposable {
 
     private final Array<SpriteCache> spriteCaches = new Array<>();
     private final IntArray cacheIds = new IntArray();
+    private final Matrix4 oldProj = new Matrix4();
+    private final Matrix4 oldTrans = new Matrix4();
+    private final Matrix4 transform = new Matrix4();
     private int cacheWidth;
     private int cacheHeight;
     private boolean invalidated = true;
@@ -89,13 +92,14 @@ final class MinimapCache implements Disposable {
         if (spriteCaches.isEmpty()) {
             return;
         }
-        Matrix4 oldProj = spriteCaches.first().getProjectionMatrix().cpy();
-        Matrix4 oldTrans = spriteCaches.first().getTransformMatrix().cpy();
+        oldProj.set(spriteCaches.first().getProjectionMatrix());
+        oldTrans.set(spriteCaches.first().getTransformMatrix());
         batch.end();
         for (int i = 0; i < spriteCaches.size; i++) {
             SpriteCache cache = spriteCaches.get(i);
             cache.setProjectionMatrix(batch.getProjectionMatrix());
-            cache.setTransformMatrix(new Matrix4().setToTranslation(x, y, 0));
+            transform.setToTranslation(x, y, 0);
+            cache.setTransformMatrix(transform);
             cache.begin();
             cache.draw(cacheIds.get(i));
             cache.end();
