@@ -59,4 +59,46 @@ public class TileRendererTest {
 
         verify(batch, times(2)).draw(any(TextureRegion.class), anyFloat(), anyFloat());
     }
+
+    @Test
+    public void cachesTextureRegions() {
+        SpriteBatch batch = mock(SpriteBatch.class);
+        ResourceLoader loader = mock(ResourceLoader.class);
+        TextureRegion region = mock(TextureRegion.class);
+        TextureRegion overlay = mock(TextureRegion.class);
+        when(loader.findRegion(anyString())).thenReturn(region);
+        when(loader.findRegion(eq("hoveredTile0"))).thenReturn(overlay);
+
+        CameraProvider camera = mock(CameraProvider.class);
+        com.badlogic.gdx.graphics.OrthographicCamera cam = new com.badlogic.gdx.graphics.OrthographicCamera();
+        com.badlogic.gdx.utils.viewport.ExtendViewport viewport =
+                new com.badlogic.gdx.utils.viewport.ExtendViewport(1f, 1f, cam);
+        cam.update();
+        when(camera.getViewport()).thenReturn(viewport);
+        when(camera.getCamera()).thenReturn(cam);
+
+        TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver());
+
+        Array<RenderTile> tiles = new Array<>();
+        RenderTile tile = RenderTile.builder()
+                .x(0)
+                .y(0)
+                .tileType("GRASS")
+                .selected(true)
+                .wood(0)
+                .stone(0)
+                .food(0)
+                .build();
+        tiles.add(tile);
+
+        RenderTile[][] grid = new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT];
+        grid[0][0] = tile;
+        MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);
+
+        renderer.render(map);
+        renderer.render(map);
+
+        verify(loader, times(1)).findRegion("grass0");
+        verify(loader, times(1)).findRegion("hoveredTile0");
+    }
 }
