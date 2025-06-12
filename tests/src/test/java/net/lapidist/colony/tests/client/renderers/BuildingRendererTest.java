@@ -35,6 +35,7 @@ public class BuildingRendererTest {
         when(viewport.project(any(Vector3.class))).thenReturn(new Vector3());
 
         BuildingRenderer renderer = new BuildingRenderer(batch, loader, camera, new DefaultAssetResolver());
+        reset(loader);
 
         Array<RenderBuilding> buildings = new Array<>();
         RenderBuilding building = RenderBuilding.builder().x(0).y(0).buildingType("HOUSE").build();
@@ -61,6 +62,7 @@ public class BuildingRendererTest {
         when(viewport.project(any(Vector3.class))).thenReturn(new Vector3());
 
         BuildingRenderer renderer = new BuildingRenderer(batch, loader, camera, new DefaultAssetResolver());
+        reset(loader);
 
         Array<RenderBuilding> buildings = new Array<>();
         RenderBuilding building = RenderBuilding.builder().x(0).y(0).buildingType("HOUSE").build();
@@ -72,6 +74,6 @@ public class BuildingRendererTest {
         renderer.render(map);
         renderer.render(map);
 
-        verify(loader, times(1)).findRegion("house0");
+        verifyNoInteractions(loader);
     }
 }

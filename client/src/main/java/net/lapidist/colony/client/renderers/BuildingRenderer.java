@@ -10,6 +10,7 @@ import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.client.render.data.RenderBuilding;
 import net.lapidist.colony.client.render.MapRenderData;
+import net.lapidist.colony.components.entities.BuildingComponent;
 
 /**
  * Renders building entities.
@@ -20,7 +21,7 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
     private final ResourceLoader resourceLoader;
     private final CameraProvider cameraSystem;
     private final AssetResolver resolver;
-    private final java.util.Map<String, TextureRegion> regionCache = new java.util.HashMap<>();
+    private final java.util.Map<String, TextureRegion> buildingRegions = new java.util.HashMap<>();
 
     public BuildingRenderer(
             final SpriteBatch spriteBatchToSet,
@@ -32,6 +33,14 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
         this.resourceLoader = resourceLoaderToSet;
         this.cameraSystem = cameraSystemToSet;
         this.resolver = resolverToSet;
+
+        for (BuildingComponent.BuildingType type : BuildingComponent.BuildingType.values()) {
+            String ref = resolver.buildingAsset(type.name());
+            TextureRegion region = resourceLoader.findRegion(ref);
+            if (region != null) {
+                buildingRegions.put(type.name(), region);
+            }
+        }
     }
 
     @Override
@@ -47,8 +56,7 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
                 continue;
             }
 
-            String ref = resolver.buildingAsset(building.getBuildingType());
-            TextureRegion region = regionCache.computeIfAbsent(ref, resourceLoader::findRegion);
+            TextureRegion region = buildingRegions.get(building.getBuildingType().toUpperCase(java.util.Locale.ROOT));
             if (region != null) {
                 spriteBatch.draw(region, worldCoords.x, worldCoords.y);
             }
