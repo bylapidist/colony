@@ -28,6 +28,7 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.map.MapFactory;
+import net.lapidist.colony.tests.GdxBenchmarkEnvironment;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Scope;
@@ -39,7 +40,7 @@ import org.mockito.MockedConstruction;
 import static org.mockito.Mockito.*;
 
 @State(Scope.Thread)
-public final class SpriteBatchRendererBenchmark {
+public class SpriteBatchRendererBenchmark {
 
     private static final int MAP_SIZE = 30;
 
@@ -52,7 +53,8 @@ public final class SpriteBatchRendererBenchmark {
     private MockedConstruction<SpriteCache> construction;
 
     @Setup(Level.Trial)
-    public void setUp() {
+    public final void setUp() {
+        GdxBenchmarkEnvironment.init();
         loader = mock(ResourceLoader.class);
         when(loader.findRegion(any())).thenReturn(new TextureRegion());
         resolver = new DefaultAssetResolver();
@@ -73,7 +75,7 @@ public final class SpriteBatchRendererBenchmark {
     }
 
     @TearDown(Level.Trial)
-    public void tearDown() {
+    public final void tearDown() {
         construction.close();
     }
 
@@ -116,12 +118,12 @@ public final class SpriteBatchRendererBenchmark {
     }
 
     @Benchmark
-    public void renderWithCache() {
+    public final void renderWithCache() {
         cachedRenderer.render(data, camera);
     }
 
     @Benchmark
-    public void renderWithoutCache() {
+    public final void renderWithoutCache() {
         plainRenderer.render(data, camera);
     }
 }
