@@ -26,8 +26,12 @@ public class ColonyTest {
     @Test
     public void startGameLaunchesServerAndClient() throws Exception {
         Colony colony = new Colony();
-        try (MockedConstruction<GameServer> serverCons = mockConstruction(GameServer.class);
-             MockedConstruction<GameClient> clientCons = mockConstruction(GameClient.class)) {
+        try (MockedConstruction<GameServer> serverCons =
+                     mockConstruction(GameServer.class);
+             MockedConstruction<GameClient> clientCons =
+                     mockConstruction(GameClient.class);
+             MockedConstruction<com.badlogic.gdx.graphics.g2d.SpriteBatch> batchCons =
+                     mockConstruction(com.badlogic.gdx.graphics.g2d.SpriteBatch.class)) {
             colony.startGame("test");
 
             GameServer server = serverCons.constructed().get(0);
@@ -40,9 +44,14 @@ public class ColonyTest {
     @Test
     public void returnToMainMenuStopsServerAndClientAndShowsMenu() throws Exception {
         Colony colony = new Colony();
-        try (MockedConstruction<GameServer> serverCons = mockConstruction(GameServer.class);
-             MockedConstruction<GameClient> clientCons = mockConstruction(GameClient.class);
-             MockedConstruction<MainMenuScreen> menuCons = mockConstruction(MainMenuScreen.class)) {
+        try (MockedConstruction<GameServer> serverCons =
+                     mockConstruction(GameServer.class);
+             MockedConstruction<GameClient> clientCons =
+                     mockConstruction(GameClient.class);
+             MockedConstruction<MainMenuScreen> menuCons =
+                     mockConstruction(MainMenuScreen.class);
+             MockedConstruction<com.badlogic.gdx.graphics.g2d.SpriteBatch> batchCons =
+                     mockConstruction(com.badlogic.gdx.graphics.g2d.SpriteBatch.class)) {
             colony.startGame("test");
             GameServer server = serverCons.constructed().get(0);
             GameClient client = clientCons.constructed().get(0);
@@ -91,8 +100,12 @@ public class ColonyTest {
     @Test
     public void disposeStopsActiveConnectionsAndEvents() throws Exception {
         Colony colony = new Colony();
-        try (MockedConstruction<GameServer> serverCons = mockConstruction(GameServer.class);
-             MockedConstruction<GameClient> clientCons = mockConstruction(GameClient.class)) {
+        try (MockedConstruction<GameServer> serverCons =
+                     mockConstruction(GameServer.class);
+             MockedConstruction<GameClient> clientCons =
+                     mockConstruction(GameClient.class);
+             MockedConstruction<com.badlogic.gdx.graphics.g2d.SpriteBatch> batchCons =
+                     mockConstruction(com.badlogic.gdx.graphics.g2d.SpriteBatch.class)) {
             colony.startGame("test");
             GameServer server = serverCons.constructed().get(0);
             GameClient client = clientCons.constructed().get(0);
