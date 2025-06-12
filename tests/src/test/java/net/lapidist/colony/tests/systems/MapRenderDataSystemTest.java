@@ -85,12 +85,15 @@ public class MapRenderDataSystemTest {
         assertFalse(firstData.getTiles().first().isSelected());
         var map = net.lapidist.colony.map.MapUtils.findMap(world).orElseThrow();
         var tile = map.getTiles().first();
-        world.getMapper(net.lapidist.colony.components.maps.TileComponent.class)
-                .get(tile).setSelected(true);
+        var tc = world.getMapper(net.lapidist.colony.components.maps.TileComponent.class)
+                .get(tile);
+        tc.setSelected(true);
+        tc.setDirty(true);
         map.incrementVersion();
         world.process();
         assertSame(firstData, system.getRenderData());
         assertTrue(system.getRenderData().getTiles().first().isSelected());
+        assertFalse(tc.isDirty());
         assertEquals(1, system.getSelectedTileIndices().size);
         assertEquals(0, system.getSelectedTileIndices().first());
         world.dispose();
@@ -120,8 +123,10 @@ public class MapRenderDataSystemTest {
 
         var map = net.lapidist.colony.map.MapUtils.findMap(world).orElseThrow();
         var entity = map.getTiles().first();
-        world.getMapper(net.lapidist.colony.components.maps.TileComponent.class)
-                .get(entity).setSelected(true);
+        var tc = world.getMapper(net.lapidist.colony.components.maps.TileComponent.class)
+                .get(entity);
+        tc.setSelected(true);
+        tc.setDirty(true);
         map.incrementVersion();
 
         world.process();
@@ -130,6 +135,7 @@ public class MapRenderDataSystemTest {
         assertNotSame(firstTile, updated.getTiles().get(0));
         assertSame(secondTile, updated.getTiles().get(1));
         assertTrue(updated.getTiles().get(0).isSelected());
+        assertFalse(tc.isDirty());
         world.dispose();
     }
 }

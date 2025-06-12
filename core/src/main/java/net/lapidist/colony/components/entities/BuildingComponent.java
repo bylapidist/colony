@@ -3,7 +3,7 @@ package net.lapidist.colony.components.entities;
 import net.lapidist.colony.components.AbstractBoundedComponent;
 import net.lapidist.colony.i18n.I18n;
 
-public class BuildingComponent extends AbstractBoundedComponent {
+public final class BuildingComponent extends AbstractBoundedComponent {
 
     public enum BuildingType {
         HOUSE("building.house"),
@@ -22,12 +22,21 @@ public class BuildingComponent extends AbstractBoundedComponent {
         }
     }
     private BuildingType buildingType;
+    private boolean dirty;
 
-    public final BuildingType getBuildingType() {
+    public BuildingType getBuildingType() {
         return buildingType;
     }
 
-    public final void setBuildingType(final BuildingType buildingTypeToSet) {
+    public boolean isDirty() {
+        return dirty;
+    }
+
+    public void setDirty(final boolean dirtyToSet) {
+        this.dirty = dirtyToSet;
+    }
+
+    public void setBuildingType(final BuildingType buildingTypeToSet) {
         this.buildingType = buildingTypeToSet;
     }
 }
