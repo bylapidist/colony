@@ -26,9 +26,15 @@ public final class MapRenderDataSystem extends BaseSystem {
     private ComponentMapper<TileComponent> tileMapper;
     private ComponentMapper<ResourceComponent> resourceMapper;
     private ComponentMapper<BuildingComponent> buildingMapper;
+    private final IntArray selectedTileIndices = new IntArray();
 
     public MapRenderData getRenderData() {
         return renderData;
+    }
+
+    /** Returns the indices of currently selected tiles. */
+    public IntArray getSelectedTileIndices() {
+        return selectedTileIndices;
     }
 
     @Override
@@ -40,6 +46,7 @@ public final class MapRenderDataSystem extends BaseSystem {
         if (map != null) {
             renderData = MapRenderDataBuilder.fromMap(map, world);
             lastVersion = map.getVersion();
+            rebuildSelectedIndices();
         }
     }
 
@@ -54,6 +61,7 @@ public final class MapRenderDataSystem extends BaseSystem {
         if (renderData == null) {
             renderData = MapRenderDataBuilder.fromMap(map, world);
             lastVersion = map.getVersion();
+            rebuildSelectedIndices();
             return;
         }
         if (map.getVersion() != lastVersion) {
@@ -67,6 +75,7 @@ public final class MapRenderDataSystem extends BaseSystem {
 
         IntArray modified = new IntArray();
         Array<Entity> mapTiles = map.getTiles();
+        selectedTileIndices.clear();
         for (int i = 0; i < mapTiles.size; i++) {
             Entity entity = mapTiles.get(i);
             TileComponent tc = tileMapper.get(entity);
@@ -74,6 +83,9 @@ public final class MapRenderDataSystem extends BaseSystem {
             RenderTile old = data.getTiles().get(i);
             if (old == null || tileChanged(old, tc, rc)) {
                 modified.add(i);
+            }
+            if (tc.isSelected()) {
+                selectedTileIndices.add(i);
             }
         }
 
@@ -118,5 +130,20 @@ public final class MapRenderDataSystem extends BaseSystem {
         return old.getX() != bc.getX()
                 || old.getY() != bc.getY()
                 || !old.getBuildingType().equals(bc.getBuildingType().toString());
+    }
+
+    private void rebuildSelectedIndices() {
+        if (map == null) {
+            selectedTileIndices.clear();
+            return;
+        }
+        selectedTileIndices.clear();
+        Array<Entity> mapTiles = map.getTiles();
+        for (int i = 0; i < mapTiles.size; i++) {
+            TileComponent tc = tileMapper.get(mapTiles.get(i));
+            if (tc.isSelected()) {
+                selectedTileIndices.add(i);
+            }
+        }
     }
 }

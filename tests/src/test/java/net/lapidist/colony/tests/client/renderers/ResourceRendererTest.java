@@ -13,6 +13,7 @@ import net.lapidist.colony.client.render.data.RenderTile;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.render.SimpleMapRenderData;
 import net.lapidist.colony.client.render.data.RenderBuilding;
+import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
@@ -35,7 +36,8 @@ public class ResourceRendererTest {
         when(camera.getViewport()).thenReturn(viewport);
         when(viewport.project(any(Vector3.class))).thenReturn(new Vector3());
 
-        ResourceRenderer renderer = new ResourceRenderer(batch, camera);
+        MapRenderDataSystem dataSystem = new MapRenderDataSystem();
+        ResourceRenderer renderer = new ResourceRenderer(batch, camera, dataSystem);
 
         Array<RenderTile> tiles = new Array<>();
         RenderTile tile = RenderTile.builder()
@@ -65,7 +67,9 @@ public class ResourceRendererTest {
         when(camera.getViewport()).thenReturn(viewport);
         when(viewport.project(any(Vector3.class))).thenReturn(new Vector3());
 
-        ResourceRenderer renderer = new ResourceRenderer(batch, camera);
+        MapRenderDataSystem dataSystem = new MapRenderDataSystem();
+        dataSystem.getSelectedTileIndices().add(0);
+        ResourceRenderer renderer = new ResourceRenderer(batch, camera, dataSystem);
 
         BitmapFont font = spy(new BitmapFont());
         GlyphLayout layout = spy(new GlyphLayout());
@@ -109,7 +113,8 @@ public class ResourceRendererTest {
         when(camera.getViewport()).thenReturn(viewport);
         when(viewport.project(any(Vector3.class))).thenReturn(new Vector3());
 
-        ResourceRenderer renderer = new ResourceRenderer(batch, camera);
+        MapRenderDataSystem dataSystem = new MapRenderDataSystem();
+        ResourceRenderer renderer = new ResourceRenderer(batch, camera, dataSystem);
 
         BitmapFont font = spy(new BitmapFont());
         java.lang.reflect.Field fontField = ResourceRenderer.class.getDeclaredField("font");
@@ -135,6 +140,50 @@ public class ResourceRendererTest {
         renderer.render(map2);
 
         verify(font, never()).draw(any(SpriteBatch.class), any(GlyphLayout.class), anyFloat(), anyFloat());
+        renderer.dispose();
+    }
+
+    @Test
+    public void doesNotIterateAllTiles() {
+        SpriteBatch batch = mock(SpriteBatch.class);
+        CameraProvider camera = mock(CameraProvider.class);
+        Viewport viewport = mock(Viewport.class);
+        when(camera.getViewport()).thenReturn(viewport);
+        when(viewport.project(any(Vector3.class))).thenReturn(new Vector3());
+
+        MapRenderDataSystem dataSystem = new MapRenderDataSystem();
+        dataSystem.getSelectedTileIndices().add(0);
+        ResourceRenderer renderer = new ResourceRenderer(batch, camera, dataSystem);
+
+        class GuardArray<T> extends Array<T> {
+            @Override
+            public T get(final int index) {
+                if (index > 0) {
+                    throw new AssertionError("accessed " + index);
+                }
+                return super.get(index);
+            }
+        }
+
+        GuardArray<RenderTile> tiles = new GuardArray<>();
+        final int tileCount = 3;
+        for (int i = 0; i < tileCount; i++) {
+            tiles.add(RenderTile.builder()
+                    .x(i)
+                    .y(0)
+                    .tileType("GRASS")
+                    .selected(i == 0)
+                    .wood(WOOD)
+                    .stone(STONE)
+                    .food(FOOD)
+                    .build());
+        }
+
+        RenderTile[][] grid = new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT];
+        grid[0][0] = tiles.first();
+        MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);
+
+        renderer.render(map);
         renderer.dispose();
     }
 }
