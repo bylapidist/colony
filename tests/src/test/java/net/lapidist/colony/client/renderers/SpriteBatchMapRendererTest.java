@@ -21,9 +21,10 @@ public class SpriteBatchMapRendererTest {
         TileRenderer tileRenderer = mock(TileRenderer.class);
         BuildingRenderer buildingRenderer = mock(BuildingRenderer.class);
         ResourceRenderer resourceRenderer = mock(ResourceRenderer.class);
+        PlayerRenderer playerRenderer = mock(PlayerRenderer.class);
 
         SpriteBatchMapRenderer renderer = new SpriteBatchMapRenderer(
-                batch, loader, tileRenderer, buildingRenderer, resourceRenderer, true);
+                batch, loader, tileRenderer, buildingRenderer, resourceRenderer, playerRenderer, true);
 
         Field cacheField = SpriteBatchMapRenderer.class.getDeclaredField("tileCache");
         cacheField.setAccessible(true);
@@ -43,9 +44,10 @@ public class SpriteBatchMapRendererTest {
         TileRenderer tileRenderer = mock(TileRenderer.class);
         BuildingRenderer buildingRenderer = mock(BuildingRenderer.class);
         ResourceRenderer resourceRenderer = mock(ResourceRenderer.class);
+        PlayerRenderer playerRenderer = mock(PlayerRenderer.class);
 
         SpriteBatchMapRenderer renderer = new SpriteBatchMapRenderer(
-                batch, loader, tileRenderer, buildingRenderer, resourceRenderer, false);
+                batch, loader, tileRenderer, buildingRenderer, resourceRenderer, playerRenderer, false);
 
         Field cacheField = SpriteBatchMapRenderer.class.getDeclaredField("tileCache");
         cacheField.setAccessible(true);

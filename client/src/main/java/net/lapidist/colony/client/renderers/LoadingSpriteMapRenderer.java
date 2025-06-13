@@ -65,6 +65,11 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
                     cameraSystem,
                     new DefaultAssetResolver()
             );
+            PlayerRenderer playerRenderer = new PlayerRenderer(
+                    spriteBatch,
+                    resourceLoader,
+                    world
+            );
             ResourceRenderer resourceRenderer = new ResourceRenderer(
                     spriteBatch,
                     cameraSystem,
@@ -76,6 +81,7 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
                     tileRenderer,
                     buildingRenderer,
                     resourceRenderer,
+                    playerRenderer,
                     cacheEnabled
             );
             if (progressCallback != null) {
