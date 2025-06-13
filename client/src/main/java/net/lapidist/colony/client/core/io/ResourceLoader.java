@@ -12,6 +12,8 @@ import java.io.IOException;
  */
 public interface ResourceLoader extends Disposable {
 
+    int POLL_MILLIS = 10;
+
     /**
      * Load texture regions from the given atlas.
      *
@@ -78,7 +80,12 @@ public interface ResourceLoader extends Disposable {
      */
     default void finishLoading() {
         while (!update()) {
-            Thread.yield();
+            try {
+                Thread.sleep(POLL_MILLIS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
         }
     }
 }

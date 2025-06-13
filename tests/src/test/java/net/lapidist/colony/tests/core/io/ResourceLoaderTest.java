@@ -16,6 +16,62 @@ import static org.junit.Assert.*;
 @RunWith(GdxTestRunner.class)
 public class ResourceLoaderTest {
 
+    private static final int LOADER_CALLS = 3;
+    private static final float HALF_PROGRESS = 0.5f;
+
+    private static final class DummyBlockingLoader implements ResourceLoader {
+        private int calls;
+        private boolean loaded;
+
+        @Override
+        public void loadTextures(
+                final FileLocation location,
+                final String path,
+                final GraphicsSettings settings
+        ) {
+            // start load
+        }
+
+        @Override
+        public void loadTextures(final FileLocation location, final String path) {
+            // start load
+        }
+
+        @Override
+        public boolean isLoaded() {
+            return loaded;
+        }
+
+        @Override
+        public com.badlogic.gdx.graphics.g2d.TextureAtlas getAtlas() {
+            return null;
+        }
+
+        @Override
+        public com.badlogic.gdx.graphics.g2d.TextureRegion findRegion(final String name) {
+            return null;
+        }
+
+        @Override
+        public boolean update() {
+            calls++;
+            if (calls < LOADER_CALLS) {
+                return false;
+            }
+            loaded = true;
+            return true;
+        }
+
+        @Override
+        public float getProgress() {
+            return loaded ? 1f : HALF_PROGRESS;
+        }
+
+        @Override
+        public void dispose() {
+        }
+    }
+
     @Test
     public final void testLoadsResources() throws IOException {
         ResourceLoader resourceLoader = new TextureAtlasResourceLoader();
@@ -59,5 +115,15 @@ public class ResourceLoaderTest {
         assertEquals(0f, loader.getProgress(), 0f);
         assertFalse(loader.isLoaded());
         assertNull(loader.findRegion("missing"));
+    }
+
+    @Test
+    public void finishLoadingWaitsUntilReady() {
+        DummyBlockingLoader loader = new DummyBlockingLoader();
+
+        loader.finishLoading();
+
+        assertTrue(loader.isLoaded());
+        assertEquals(LOADER_CALLS, loader.calls);
     }
 }
