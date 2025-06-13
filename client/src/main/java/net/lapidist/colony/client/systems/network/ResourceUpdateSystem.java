@@ -45,6 +45,15 @@ public final class ResourceUpdateSystem extends BaseSystem {
         ResourceUpdateData update;
         while ((update = client.poll(ResourceUpdateData.class)) != null) {
             final ResourceUpdateData data = update;
+            if (data.x() == -1 && data.y() == -1) {
+                if (player != null) {
+                    var pr = playerMapper.get(player);
+                    pr.setWood(data.wood());
+                    pr.setStone(data.stone());
+                    pr.setFood(data.food());
+                }
+                continue;
+            }
             var found = MapUtils.findTile(mapComponent, data.x(), data.y())
                     .map(tile -> {
                         ResourceComponent rc = resourceMapper.get(tile);
@@ -76,12 +85,6 @@ public final class ResourceUpdateSystem extends BaseSystem {
                         return true;
                     })
                     .orElse(false);
-            if (!found && player != null && data.x() == -1 && data.y() == -1) {
-                var pr = playerMapper.get(player);
-                pr.setWood(data.wood());
-                pr.setStone(data.stone());
-                pr.setFood(data.food());
-            }
         }
     }
 }
