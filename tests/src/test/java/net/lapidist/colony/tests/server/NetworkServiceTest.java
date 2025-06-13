@@ -33,7 +33,6 @@ public class NetworkServiceTest {
         Connection connection = mock(Connection.class);
         listener.connected(connection);
         verify(connection).sendTCP(isA(MapMetadata.class));
-        verify(connection, atLeastOnce()).sendTCP(isA(MapChunk.class));
     }
 
     @Test

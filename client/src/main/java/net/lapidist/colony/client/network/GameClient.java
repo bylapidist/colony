@@ -13,6 +13,8 @@ import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.ChunkPos;
 import net.lapidist.colony.map.MapChunkData;
+import net.lapidist.colony.components.state.MapChunkRequest;
+import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.chat.ChatMessage;
 import net.lapidist.colony.serialization.KryoRegistry;
 import net.lapidist.colony.network.AbstractMessageEndpoint;
@@ -100,18 +102,15 @@ public final class GameClient extends AbstractMessageEndpoint {
                     if (loadProgressListener != null) {
                         loadProgressListener.accept(0f);
                     }
-                    if (expectedChunks == 0) {
-                        mapState = mapBuilder.chunks(buildChunks(tileBuffer)).build();
-                        if (readyCallback != null) {
-                            readyCallback.accept(mapState);
+                    int chunkWidth = (int) Math.ceil(GameConstants.MAP_WIDTH / (double) MapChunkData.CHUNK_SIZE);
+                    int chunkHeight = (int) Math.ceil(GameConstants.MAP_HEIGHT / (double) MapChunkData.CHUNK_SIZE);
+                    for (int x = 0; x < chunkWidth; x++) {
+                        for (int y = 0; y < chunkHeight; y++) {
+                            send(new MapChunkRequest(x, y));
                         }
-                        if (loadProgressListener != null) {
-                            loadProgressListener.accept(1f);
-                        }
-                    } else {
-                        if (loadMessageListener != null) {
-                            loadMessageListener.accept(net.lapidist.colony.i18n.I18n.get("loading.chunks"));
-                        }
+                    }
+                    if (loadMessageListener != null) {
+                        loadMessageListener.accept(net.lapidist.colony.i18n.I18n.get("loading.chunks"));
                     }
                 }),
                 new MapChunkHandler(this::handleChunk),

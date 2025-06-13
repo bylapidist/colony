@@ -16,6 +16,7 @@ public final class ChunkLoadSystem extends BaseSystem {
     private final GameClient client;
     private PlayerCameraSystem cameraSystem;
     private final Rectangle view = new Rectangle();
+    private boolean requestedInitial;
 
     public ChunkLoadSystem(final GameClient clientToUse) {
         this.client = clientToUse;
@@ -37,6 +38,12 @@ public final class ChunkLoadSystem extends BaseSystem {
         MapState state = client.getMapState();
         if (state == null) {
             return;
+        }
+        if (!requestedInitial && state.playerPos() != null) {
+            int cx = Math.floorDiv(state.playerPos().x(), MapChunkData.CHUNK_SIZE);
+            int cy = Math.floorDiv(state.playerPos().y(), MapChunkData.CHUNK_SIZE);
+            client.send(new MapChunkRequest(cx, cy));
+            requestedInitial = true;
         }
         view.set(cameraSystem.getViewBounds());
         int centerX = Math.round(view.x + view.width / 2f) / GameConstants.TILE_SIZE;
