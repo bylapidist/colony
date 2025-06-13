@@ -16,6 +16,8 @@ import net.lapidist.colony.client.ui.MinimapActor;
 import net.lapidist.colony.client.ui.ChatBox;
 import net.lapidist.colony.client.ui.PlayerResourcesActor;
 import net.lapidist.colony.client.network.GameClient;
+import net.lapidist.colony.client.systems.BuildPlacementSystem;
+import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.i18n.I18n;
 import net.lapidist.colony.settings.KeyBindings;
 import net.lapidist.colony.settings.GraphicsSettings;
@@ -60,6 +62,15 @@ public final class MapUiBuilder {
         stage.addActor(chatTable);
 
         TextButton menuButton = new TextButton(I18n.get("map.menu"), skin);
+        menuButton.setName("menuButton");
+        TextButton buildButton = new TextButton(I18n.get("map.build"), skin);
+        buildButton.setName("buildButton");
+        TextButton removeButton = new TextButton(I18n.get("map.remove"), skin);
+        removeButton.setName("removeButton");
+        TextButton mapButton = new TextButton(I18n.get("map.map"), skin);
+        mapButton.setName("mapButton");
+        TextButton minimapButton = new TextButton(I18n.get("map.minimap"), skin);
+        minimapButton.setName("minimapButton");
         GraphicsSettings graphics = colony.getSettings().getGraphicsSettings();
         MinimapActor minimapActor = new MinimapActor(world, graphics);
         ChatBox chatBox = new ChatBox(skin, client);
@@ -72,7 +83,50 @@ public final class MapUiBuilder {
             }
         });
 
+        BuildPlacementSystem buildSystem = world.getSystem(BuildPlacementSystem.class);
+        PlayerCameraSystem cameraSystem = world.getSystem(PlayerCameraSystem.class);
+
+        buildButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                boolean enabled = !buildSystem.isBuildMode();
+                buildSystem.setBuildMode(enabled);
+                if (enabled) {
+                    buildSystem.setRemoveMode(false);
+                }
+            }
+        });
+
+        removeButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                boolean enabled = !buildSystem.isRemoveMode();
+                buildSystem.setRemoveMode(enabled);
+                if (enabled) {
+                    buildSystem.setBuildMode(false);
+                }
+            }
+        });
+
+        mapButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                cameraSystem.toggleMode();
+            }
+        });
+
+        minimapButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                minimapActor.setVisible(!minimapActor.isVisible());
+            }
+        });
+
         table.add(menuButton).pad(PADDING).left().top();
+        table.add(buildButton).pad(PADDING).left().top();
+        table.add(removeButton).pad(PADDING).left().top();
+        table.add(mapButton).pad(PADDING).left().top();
+        table.add(minimapButton).pad(PADDING).left().top();
         table.add(resourcesActor).pad(PADDING).expandX().left().top();
         table.add(minimapActor).pad(PADDING).right().top();
         table.row();

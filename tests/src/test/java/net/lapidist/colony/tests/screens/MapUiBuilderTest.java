@@ -11,7 +11,11 @@ import net.lapidist.colony.client.screens.MapUi;
 import net.lapidist.colony.client.screens.MapUiBuilder;
 import net.lapidist.colony.settings.KeyAction;
 import net.lapidist.colony.settings.Settings;
+import net.lapidist.colony.client.systems.BuildPlacementSystem;
+import net.lapidist.colony.client.systems.CameraInputSystem;
+import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.tests.GdxTestRunner;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -57,5 +61,31 @@ public class MapUiBuilderTest {
         stage.keyDown(settings.getKeyBindings().getKey(KeyAction.MINIMAP));
 
         assertEquals(initial, ui.getMinimapActor().isVisible());
+    }
+
+    @Test
+    public void buildButtonEnablesBuildMode() {
+        Stage stage = new Stage(new ScreenViewport(), mock(Batch.class));
+        BuildPlacementSystem buildSystem = new BuildPlacementSystem(
+                mock(GameClient.class),
+                new Settings().getKeyBindings()
+        );
+        World world = new World(new WorldConfigurationBuilder()
+                .with(
+                        new PlayerCameraSystem(),
+                        new CameraInputSystem(new Settings().getKeyBindings()),
+                        buildSystem
+                )
+                .build());
+        GameClient client = mock(GameClient.class);
+        Colony colony = mock(Colony.class);
+        Settings settings = new Settings();
+        when(colony.getSettings()).thenReturn(settings);
+
+        MapUi ui = MapUiBuilder.build(stage, world, client, colony);
+
+        TextButton buildButton = stage.getRoot().findActor("buildButton");
+        buildButton.toggle();
+        assertTrue(buildSystem.isBuildMode());
     }
 }
