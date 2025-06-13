@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.util.function.Consumer;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class MessageDispatcherTest {
@@ -48,5 +49,16 @@ public class MessageDispatcherTest {
         dispatcher.dispatch(new DerivedMessage());
 
         assertTrue(handler.handled());
+    }
+
+    @Test
+    public void ignoresUnregisteredMessage() {
+        MessageDispatcher dispatcher = new MessageDispatcher();
+        RecordingHandler<BaseMessage> handler = new RecordingHandler<>();
+        dispatcher.register(BaseMessage.class, handler);
+
+        dispatcher.dispatch(new Object());
+
+        assertFalse(handler.handled());
     }
 }
