@@ -140,12 +140,12 @@ public final class GameClient extends AbstractMessageEndpoint {
     }
 
     @Override
-    public void start() throws IOException, InterruptedException {
+    public void start() throws IOException {
         start(ms -> {
         });
     }
 
-    public void start(final Consumer<MapState> callback) throws IOException, InterruptedException {
+    public void start(final Consumer<MapState> callback) throws IOException {
         this.readyCallback = callback;
         connect();
     }
