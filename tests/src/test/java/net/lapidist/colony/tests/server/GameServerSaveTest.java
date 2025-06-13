@@ -94,17 +94,17 @@ public class GameServerSaveTest {
         GameServer first = new GameServer(cfg);
         first.start();
         TilePos pos = new TilePos(0, 0);
-        TileData modified = first.getMapState().tiles().get(pos)
+        TileData modified = first.getMapState().getTile(pos.x(), pos.y())
                 .toBuilder()
                 .selected(true)
                 .build();
-        first.getMapState().tiles().put(pos, modified);
+        first.getMapState().putTile(modified);
         GameStateIO.save(first.getMapState(), Paths.get().getAutosave("save-test"));
         first.stop();
 
         GameServer second = new GameServer(cfg);
         second.start();
-        boolean loaded = second.getMapState().tiles().get(new TilePos(0, 0)).selected();
+        boolean loaded = second.getMapState().getTile(0, 0).selected();
         second.stop();
 
         assertTrue(loaded);

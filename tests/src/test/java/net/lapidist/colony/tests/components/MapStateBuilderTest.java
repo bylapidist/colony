@@ -4,6 +4,9 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
 import org.junit.Test;
 
+import net.lapidist.colony.components.state.ChunkPos;
+import net.lapidist.colony.map.MapChunkData;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,5 +30,18 @@ public class MapStateBuilderTest {
         assertEquals("s", state.saveName());
         assertEquals("a", state.autosaveName());
         assertEquals("d", state.description());
+    }
+
+    @Test
+    public void builderRetainsChunks() {
+        MapChunkData chunk = new MapChunkData(0, 0);
+        HashMap<ChunkPos, MapChunkData> chunks = new HashMap<>();
+        chunks.put(new ChunkPos(0, 0), chunk);
+
+        MapState state = MapState.builder()
+                .chunks(chunks)
+                .build();
+
+        assertSame(chunk, state.chunks().get(new ChunkPos(0, 0)));
     }
 }

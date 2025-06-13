@@ -15,7 +15,6 @@ import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.map.MapUtils;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
@@ -30,7 +29,7 @@ public class TileSelectionHandlerSelectedTilesTest {
     @Test
     public void maintainsSelectedTileList() {
         MapState state = new MapState();
-        state.tiles().put(new TilePos(0, 0), TileData.builder()
+        state.putTile(TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .build());
 

@@ -10,7 +10,6 @@ import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.map.ProvidedMapStateProvider;
 import net.lapidist.colony.tests.GdxTestRunner;
 import net.lapidist.colony.client.renderers.SpriteBatchMapRenderer;
@@ -59,7 +58,7 @@ public class MapRenderSystemTest {
                 .tileType("GRASS")
                 .passable(true)
                 .build();
-        state.tiles().put(new TilePos(0, 0), tile);
+        state.putTile(tile);
 
         MapRenderSystem renderSystem = new MapRenderSystem();
 
@@ -118,7 +117,7 @@ public class MapRenderSystemTest {
                 .tileType("GRASS")
                 .passable(true)
                 .build();
-        state.tiles().put(new TilePos(0, 0), tile);
+        state.putTile(tile);
 
         MapRenderSystem renderSystem = new MapRenderSystem();
         MapRenderDataSystem dataSystem = new MapRenderDataSystem();
@@ -186,7 +185,7 @@ public class MapRenderSystemTest {
         Mockito.doNothing().when(gl).glDeleteProgram(Mockito.anyInt());
 
         MapState state = new MapState();
-        state.tiles().put(new TilePos(0, 0), TileData.builder()
+        state.putTile(TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .build());
 

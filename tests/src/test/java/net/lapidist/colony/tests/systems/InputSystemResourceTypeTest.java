@@ -15,7 +15,6 @@ import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.components.resources.ResourceType;
 import net.lapidist.colony.components.state.ResourceGatherRequestData;
 import net.lapidist.colony.settings.KeyAction;
@@ -35,7 +34,7 @@ public class InputSystemResourceTypeTest {
     public void gatherKeyUsesTileResourceType() {
         MapState state = new MapState();
         ResourceData res = new ResourceData(0, 2, 1);
-        state.tiles().put(new TilePos(0, 0), TileData.builder()
+        state.putTile(TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .selected(true)
                 .resources(res)
@@ -75,7 +74,7 @@ public class InputSystemResourceTypeTest {
                 .passable(true)
                 .resources(res)
                 .build();
-        state.tiles().put(new TilePos(0, 0), tile);
+        state.putTile(tile);
 
         GameClient client = mock(GameClient.class);
         KeyBindings keys = new KeyBindings();

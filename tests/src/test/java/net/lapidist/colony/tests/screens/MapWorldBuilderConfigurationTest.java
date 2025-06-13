@@ -20,7 +20,6 @@ import net.lapidist.colony.components.resources.PlayerResourceComponent;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.map.ProvidedMapStateProvider;
 import net.lapidist.colony.settings.KeyBindings;
 import net.lapidist.colony.tests.GdxTestRunner;
@@ -69,7 +68,7 @@ public class MapWorldBuilderConfigurationTest {
     @Test
     public void builderRegistersMapSystems() {
         MapState state = new MapState();
-        state.tiles().put(new TilePos(0, 0), TileData.builder()
+        state.putTile(TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .build());
         Batch batch = mock(Batch.class);

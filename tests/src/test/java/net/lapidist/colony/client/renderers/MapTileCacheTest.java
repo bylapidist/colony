@@ -18,7 +18,6 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.map.MapFactory;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
@@ -39,7 +38,7 @@ public class MapTileCacheTest {
 
     private MapRenderData createData() {
         MapState state = new MapState();
-        state.tiles().put(new TilePos(0, 0), TileData.builder()
+        state.putTile(TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .build());
         World world = new World(new WorldConfigurationBuilder().build());
@@ -53,7 +52,7 @@ public class MapTileCacheTest {
         MapState state = new MapState();
         int total = LARGE_TILE_COUNT;
         for (int i = 0; i < total; i++) {
-            state.tiles().put(new TilePos(i, 0), TileData.builder()
+            state.putTile(TileData.builder()
                     .x(i).y(0).tileType("GRASS").passable(true)
                     .build());
         }

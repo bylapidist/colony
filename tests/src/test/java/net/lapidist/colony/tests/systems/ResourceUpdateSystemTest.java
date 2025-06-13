@@ -16,7 +16,6 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.state.ResourceUpdateData;
 import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,7 +40,7 @@ public class ResourceUpdateSystemTest {
                 .passable(true)
                 .resources(res)
                 .build();
-        state.tiles().put(new TilePos(0, 0), tile);
+        state.putTile(tile);
 
         GameClient client = new GameClient();
         World world = new World(new WorldConfigurationBuilder()

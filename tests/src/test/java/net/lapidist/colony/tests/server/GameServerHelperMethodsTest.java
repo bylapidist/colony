@@ -3,7 +3,6 @@ package net.lapidist.colony.tests.server;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
 import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.io.Paths;
 import com.esotericsoftware.kryonet.Server;
@@ -62,6 +61,6 @@ public class GameServerHelperMethodsTest {
         Method dispatch = method(GameServer.class.getSuperclass(), "dispatch", Object.class);
         dispatch.invoke(server, new TileSelectionData(0, 0, true));
         MapState state = server.getMapState();
-        assertTrue(state.tiles().get(new TilePos(0, 0)).selected());
+        assertTrue(state.getTile(0, 0).selected());
     }
 }

@@ -2,6 +2,7 @@ package net.lapidist.colony.tests.map;
 
 import net.lapidist.colony.map.MapChunkData;
 import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.TilePos;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -34,5 +35,15 @@ public class MapChunkDataTest {
         MapChunkData a = new MapChunkData(SEED_TWO);
         MapChunkData b = new MapChunkData(SEED_TWO);
         assertEquals(a.getTile(SAMPLE_X, SAMPLE_Y).tileType(), b.getTile(SAMPLE_X, SAMPLE_Y).tileType());
+    }
+
+    @Test
+    public void retrievingTileAddsToMap() {
+        MapChunkData chunk = new MapChunkData(SEED_ONE);
+        assertFalse(chunk.isGenerated());
+        TileData tile = chunk.getTile(1, 2);
+        assertSame(tile, chunk.getTiles().get(new TilePos(1, 2)));
+        assertFalse(chunk.isGenerated());
+        assertEquals(1, chunk.getTiles().size());
     }
 }
