@@ -5,7 +5,6 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.state.ResourceUpdateData;
 import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.components.entities.BuildingComponent.BuildingType;
 import net.lapidist.colony.events.Events;
 import net.lapidist.colony.server.events.BuildingPlacedEvent;
@@ -46,7 +45,7 @@ public final class BuildCommandHandler implements CommandHandler<BuildCommand> {
     @Override
     public void handle(final BuildCommand command) {
         MapState state = stateSupplier.get();
-        TileData tile = state.tiles().get(new TilePos(command.x(), command.y()));
+        TileData tile = state.getTile(command.x(), command.y());
         boolean occupied = state.buildings().stream()
                 .anyMatch(b -> b.x() == command.x() && b.y() == command.y());
         if (tile == null || occupied) {

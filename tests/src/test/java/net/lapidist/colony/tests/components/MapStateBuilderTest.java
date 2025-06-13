@@ -18,7 +18,7 @@ public class MapStateBuilderTest {
                 .saveName("s")
                 .autosaveName("a")
                 .description("d")
-                .tiles(new HashMap<>())
+                .chunks(new HashMap<>())
                 .buildings(List.of())
                 .playerResources(new ResourceData());
         MapState state = builder.build();

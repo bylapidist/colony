@@ -5,6 +5,7 @@ import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.state.ResourceUpdateData;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.map.MapChunkData;
 import net.lapidist.colony.server.services.NetworkService;
 
 import java.util.function.Supplier;
@@ -31,8 +32,8 @@ public final class GatherCommandHandler implements CommandHandler<GatherCommand>
     @Override
     public void handle(final GatherCommand command) {
         MapState state = stateSupplier.get();
+        TileData tile = state.getTile(command.x(), command.y());
         TilePos pos = new TilePos(command.x(), command.y());
-        TileData tile = state.tiles().get(pos);
         if (tile == null) {
             return;
         }
@@ -45,7 +46,11 @@ public final class GatherCommandHandler implements CommandHandler<GatherCommand>
             default -> updated = res;
         }
         TileData newTile = tile.toBuilder().resources(updated).build();
-        state.tiles().put(pos, newTile);
+        int chunkX = Math.floorDiv(command.x(), MapChunkData.CHUNK_SIZE);
+        int chunkY = Math.floorDiv(command.y(), MapChunkData.CHUNK_SIZE);
+        int localX = Math.floorMod(command.x(), MapChunkData.CHUNK_SIZE);
+        int localY = Math.floorMod(command.y(), MapChunkData.CHUNK_SIZE);
+        state.getOrCreateChunk(chunkX, chunkY).getTiles().put(new TilePos(localX, localY), newTile);
         ResourceData player = state.playerResources();
         ResourceData newPlayer = new ResourceData(
                 player.wood() + (res.wood() - updated.wood()),

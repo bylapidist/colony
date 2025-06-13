@@ -37,29 +37,32 @@ public final class MapFactory {
         Map<TilePos, Entity> tileMap = new HashMap<>();
         Array<Entity> entities = new Array<>();
 
-        for (Map.Entry<TilePos, TileData> entry : state.tiles().entrySet()) {
-            TileData td = entry.getValue();
-            Entity tile = world.createEntity();
-            TileComponent tileComponent = new TileComponent();
-            tileComponent.setTileType(TileComponent.TileType.valueOf(td.tileType()));
-            tileComponent.setPassable(td.passable());
-            tileComponent.setSelected(td.selected());
-            tileComponent.setHeight(GameConstants.TILE_SIZE);
-            tileComponent.setWidth(GameConstants.TILE_SIZE);
-            tileComponent.setX(td.x());
-            tileComponent.setY(td.y());
-            tile.edit().add(tileComponent);
+        for (var chunkEntry : state.chunks().entrySet()) {
+            for (Map.Entry<TilePos, TileData> entry : chunkEntry.getValue().getTiles().entrySet()) {
+                TileData td = entry.getValue();
+                Entity tile = world.createEntity();
+                TileComponent tileComponent = new TileComponent();
+                tileComponent.setTileType(TileComponent.TileType.valueOf(td.tileType()));
+                tileComponent.setPassable(td.passable());
+                tileComponent.setSelected(td.selected());
+                tileComponent.setHeight(GameConstants.TILE_SIZE);
+                tileComponent.setWidth(GameConstants.TILE_SIZE);
+                tileComponent.setX(td.x());
+                tileComponent.setY(td.y());
+                tile.edit().add(tileComponent);
 
-            ResourceComponent rc = new ResourceComponent();
-            if (td.resources() != null) {
-                rc.setWood(td.resources().wood());
-                rc.setStone(td.resources().stone());
-                rc.setFood(td.resources().food());
+
+                ResourceComponent rc = new ResourceComponent();
+                if (td.resources() != null) {
+                    rc.setWood(td.resources().wood());
+                    rc.setStone(td.resources().stone());
+                    rc.setFood(td.resources().food());
+                }
+                tile.edit().add(rc);
+
+                tiles.add(tile);
+                tileMap.put(new TilePos(td.x(), td.y()), tile);
             }
-            tile.edit().add(rc);
-
-            tiles.add(tile);
-            tileMap.put(entry.getKey(), tile);
         }
 
         for (BuildingData bd : state.buildings()) {
