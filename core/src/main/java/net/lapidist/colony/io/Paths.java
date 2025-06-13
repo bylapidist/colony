@@ -69,4 +69,8 @@ public final class Paths {
     public void deleteAutosave(final String saveName) throws IOException {
         service.deleteAutosave(saveName);
     }
+
+    public Path getModsFolder() throws IOException {
+        return service.getModsFolder();
+    }
 }

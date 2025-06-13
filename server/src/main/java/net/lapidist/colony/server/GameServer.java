@@ -5,6 +5,8 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.config.ColonyConfig;
 import net.lapidist.colony.events.Events;
 import net.lapidist.colony.serialization.KryoRegistry;
+import net.lapidist.colony.mod.GameMod;
+import net.lapidist.colony.mod.ModLoader;
 import net.lapidist.colony.network.AbstractMessageEndpoint;
 import net.lapidist.colony.network.MessageHandler;
 import net.lapidist.colony.io.Paths;
@@ -54,6 +56,7 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     private MapState mapState;
     private Iterable<MessageHandler<?>> handlers;
     private Iterable<CommandHandler<?>> commandHandlers;
+    private java.util.List<GameMod> mods;
 
     public GameServer(final GameServerConfig config) {
         this(config, null, null);
@@ -88,6 +91,10 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     public void start() throws IOException, InterruptedException {
         initKryo();
         Events.init(new EventSystem());
+        mods = new ModLoader(Paths.get()).loadMods();
+        for (GameMod mod : mods) {
+            mod.init();
+        }
         loadMapState();
         startNetwork();
         registerDefaultHandlers();
@@ -158,6 +165,11 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         resourceProductionService.stop();
         autosaveService.stop();
         networkService.stop();
+        if (mods != null) {
+            for (GameMod mod : mods) {
+                mod.dispose();
+            }
+        }
         LOGGER.info("Server stopped");
         Events.dispose();
     }
