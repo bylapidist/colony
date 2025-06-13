@@ -63,4 +63,46 @@ public class GameServerBuildBroadcastTest {
         server.stop();
         Thread.sleep(WAIT_MS);
     }
+
+    @Test
+    public void serverBroadcastsFarmPlacement() throws Exception {
+        MapGenerator gen = (w, h) -> {
+            MapState state = new DefaultMapGenerator().generate(w, h);
+            return state.toBuilder().playerResources(new ResourceData(2, 0, 0)).build();
+        };
+        GameServerConfig config = GameServerConfig.builder()
+                .saveName("farm-broadcast")
+                .mapGenerator(gen)
+                .build();
+        net.lapidist.colony.io.Paths.get().deleteAutosave("farm-broadcast");
+        GameServer server = new GameServer(config);
+        server.start();
+
+        GameClient clientA = new GameClient();
+        CountDownLatch latchA = new CountDownLatch(1);
+        clientA.start(state -> latchA.countDown());
+        GameClient clientB = new GameClient();
+        CountDownLatch latchB = new CountDownLatch(1);
+        clientB.start(state -> latchB.countDown());
+        latchA.await(1, TimeUnit.SECONDS);
+        latchB.await(1, TimeUnit.SECONDS);
+
+        BuildingPlacementData data = new BuildingPlacementData(0, 0, "FARM");
+        clientA.sendBuildRequest(data);
+
+        Thread.sleep(WAIT_MS);
+
+        BuildingData update = clientB.poll(BuildingData.class);
+        assertNotNull(update);
+        assertEquals(data.x(), update.x());
+        assertEquals(data.y(), update.y());
+        ResourceUpdateData res = clientB.poll(ResourceUpdateData.class);
+        assertNotNull(res);
+        assertEquals(0, res.wood());
+
+        clientA.stop();
+        clientB.stop();
+        server.stop();
+        Thread.sleep(WAIT_MS);
+    }
 }

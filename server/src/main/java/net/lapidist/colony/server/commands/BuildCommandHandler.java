@@ -22,7 +22,8 @@ public final class BuildCommandHandler implements CommandHandler<BuildCommand> {
     private static final Map<BuildingType, ResourceData> COSTS = Map.of(
             BuildingType.HOUSE, new ResourceData(1, 0, 0),
             BuildingType.MARKET, new ResourceData(5, 2, 0),
-            BuildingType.FACTORY, new ResourceData(10, 5, 0)
+            BuildingType.FACTORY, new ResourceData(10, 5, 0),
+            BuildingType.FARM, new ResourceData(2, 0, 0)
     );
 
     private final Supplier<MapState> stateSupplier;
