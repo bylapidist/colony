@@ -21,9 +21,11 @@ public class DefaultAssetResolverAssetsTest {
         assertEquals("house0", resolver.buildingAsset("house"));
         assertEquals("house0", resolver.buildingAsset("MARKET"));
         assertEquals("house0", resolver.buildingAsset("FACTORY"));
+        assertEquals("house0", resolver.buildingAsset("FARM"));
         assertEquals("house0", resolver.buildingAsset(null));
         assertEquals("house0", resolver.buildingAsset("invalid"));
         assertTrue(resolver.hasBuildingAsset("HOUSE"));
+        assertTrue(resolver.hasBuildingAsset("FARM"));
         assertFalse(resolver.hasBuildingAsset("invalid"));
     }
 }

@@ -16,4 +16,12 @@ public class BuildingTypeTest {
         I18n.setLocale(Locale.FRENCH);
         assertEquals("Maison", BuildingComponent.BuildingType.HOUSE.toString());
     }
+
+    @Test
+    public void enumContainsFarm() {
+        assertEquals(
+                BuildingComponent.BuildingType.FARM,
+                BuildingComponent.BuildingType.valueOf("FARM")
+        );
+    }
 }
