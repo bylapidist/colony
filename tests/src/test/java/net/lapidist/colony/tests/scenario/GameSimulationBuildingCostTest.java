@@ -1,14 +1,14 @@
 package net.lapidist.colony.tests.scenario;
 
 import net.lapidist.colony.client.network.GameClient;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.resources.PlayerResourceComponent;
 import net.lapidist.colony.components.state.BuildingPlacementData;
-import net.lapidist.colony.components.entities.BuildingComponent;
+import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.ResourceData;
+import net.lapidist.colony.map.DefaultMapGenerator;
+import net.lapidist.colony.map.MapGenerator;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
-import net.lapidist.colony.components.state.ResourceData;
-import net.lapidist.colony.map.MapGenerator;
-import net.lapidist.colony.map.DefaultMapGenerator;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,24 +16,24 @@ import org.junit.runner.RunWith;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(GdxTestRunner.class)
-public class GameSimulationBuildingUpdateTest {
+public class GameSimulationBuildingCostTest {
 
     private static final int WAIT_MS = 200;
 
     @Test
-    public void serverUpdatesAppliedToClientWorld() throws Exception {
+    public void buildingConsumesPlayerResources() throws Exception {
         MapGenerator gen = (w, h) -> {
-            MapState s = new DefaultMapGenerator().generate(w, h);
-            return s.toBuilder().playerResources(new ResourceData(1, 0, 0)).build();
+            MapState state = new DefaultMapGenerator().generate(w, h);
+            return state.toBuilder().playerResources(new ResourceData(1, 0, 0)).build();
         };
         GameServerConfig config = GameServerConfig.builder()
-                .saveName("scenario-build")
+                .saveName("scenario-build-cost")
                 .mapGenerator(gen)
                 .build();
-        net.lapidist.colony.io.Paths.get().deleteAutosave("scenario-build");
+        net.lapidist.colony.io.Paths.get().deleteAutosave("scenario-build-cost");
         GameServer server = new GameServer(config);
         server.start();
 
@@ -55,22 +55,12 @@ public class GameSimulationBuildingUpdateTest {
         Thread.sleep(WAIT_MS);
         sim.step();
 
-        var world = sim.getWorld();
-        var maps = world.getAspectSubscriptionManager()
-                .get(com.artemis.Aspect.all(net.lapidist.colony.components.maps.MapComponent.class))
+        var players = sim.getWorld().getAspectSubscriptionManager()
+                .get(com.artemis.Aspect.all(PlayerResourceComponent.class))
                 .getEntities();
-        var map = world.getEntity(maps.get(0));
-        var mapComponent = world.getMapper(net.lapidist.colony.components.maps.MapComponent.class).get(map);
-        boolean found = false;
-        for (int i = 0; i < mapComponent.getEntities().size; i++) {
-            var building = mapComponent.getEntities().get(i);
-            var bc = world.getMapper(BuildingComponent.class).get(building);
-            if (bc.getX() == 0 && bc.getY() == 0) {
-                found = true;
-                break;
-            }
-        }
-        assertTrue(found);
+        var prc = sim.getWorld().getMapper(PlayerResourceComponent.class)
+                .get(sim.getWorld().getEntity(players.get(0)));
+        assertEquals(0, prc.getWood());
 
         sender.stop();
         receiver.stop();

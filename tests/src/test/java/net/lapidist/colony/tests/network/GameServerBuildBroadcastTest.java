@@ -5,6 +5,11 @@ import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.BuildingPlacementData;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
+import net.lapidist.colony.map.DefaultMapGenerator;
+import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.ResourceData;
+import net.lapidist.colony.map.MapGenerator;
+import net.lapidist.colony.components.state.ResourceUpdateData;
 import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
@@ -19,8 +24,13 @@ public class GameServerBuildBroadcastTest {
 
     @Test
     public void serverBroadcastsBuildingPlacement() throws Exception {
+        MapGenerator gen = (w, h) -> {
+            MapState state = new DefaultMapGenerator().generate(w, h);
+            return state.toBuilder().playerResources(new ResourceData(1, 0, 0)).build();
+        };
         GameServerConfig config = GameServerConfig.builder()
                 .saveName("build-broadcast")
+                .mapGenerator(gen)
                 .build();
         net.lapidist.colony.io.Paths.get().deleteAutosave("build-broadcast");
         GameServer server = new GameServer(config);
@@ -44,6 +54,9 @@ public class GameServerBuildBroadcastTest {
         assertNotNull(update);
         assertEquals(data.x(), update.x());
         assertEquals(data.y(), update.y());
+        ResourceUpdateData res = clientB.poll(ResourceUpdateData.class);
+        assertNotNull(res);
+        assertEquals(0, res.wood());
 
         clientA.stop();
         clientB.stop();

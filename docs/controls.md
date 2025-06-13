@@ -17,6 +17,8 @@ This page lists the default keyboard bindings and how to customize them in-game.
 
 The defaults are defined in [`KeyBindings.java`](../core/src/main/java/net/lapidist/colony/settings/KeyBindings.java).
 
+Placing a building consumes resources. Houses cost **1 wood**, markets cost **5 wood and 2 stone**, and factories require **10 wood and 5 stone**. If you don't have enough resources the build request is ignored.
+
 ## Changing bindings
 
 1. Launch the game and open the **Settings** menu from the main screen.
