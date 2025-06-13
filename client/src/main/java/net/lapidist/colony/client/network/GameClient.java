@@ -6,6 +6,7 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.BuildingPlacementData;
+import net.lapidist.colony.components.state.BuildingRemovalData;
 import net.lapidist.colony.components.state.ResourceGatherRequestData;
 import net.lapidist.colony.components.state.ResourceUpdateData;
 import net.lapidist.colony.components.state.TilePos;
@@ -65,6 +66,7 @@ public final class GameClient extends AbstractMessageEndpoint {
     public GameClient() {
         Queue<TileSelectionData> tileUpdates = registerQueue(TileSelectionData.class);
         Queue<BuildingData> buildingUpdates = registerQueue(BuildingData.class);
+        Queue<BuildingRemovalData> buildingRemovals = registerQueue(BuildingRemovalData.class);
         Queue<ChatMessage> chatMessages = registerQueue(ChatMessage.class);
         Queue<ResourceUpdateData> resourceUpdates = registerQueue(ResourceUpdateData.class);
 
@@ -114,6 +116,7 @@ public final class GameClient extends AbstractMessageEndpoint {
                 }),
                 new QueueingMessageHandler<>(TileSelectionData.class, messageQueues),
                 new QueueingMessageHandler<>(BuildingData.class, messageQueues),
+                new QueueingMessageHandler<>(BuildingRemovalData.class, messageQueues),
                 new QueueingMessageHandler<>(ChatMessage.class, messageQueues),
                 new ResourceUpdateHandler(messageQueues, () -> mapState, ms -> mapState = ms)
         );
@@ -183,6 +186,11 @@ public final class GameClient extends AbstractMessageEndpoint {
     }
 
     @SuppressWarnings("unchecked")
+    public void injectBuildingRemoval(final BuildingRemovalData data) {
+        ((Queue<BuildingRemovalData>) messageQueues.get(BuildingRemovalData.class)).add(data);
+    }
+
+    @SuppressWarnings("unchecked")
     public void injectResourceUpdate(final ResourceUpdateData data) {
         ((Queue<ResourceUpdateData>) messageQueues.get(ResourceUpdateData.class)).add(data);
     }
@@ -193,6 +201,10 @@ public final class GameClient extends AbstractMessageEndpoint {
     }
 
     public void sendBuildRequest(final BuildingPlacementData data) {
+        send(data);
+    }
+
+    public void sendRemoveBuildingRequest(final BuildingRemovalData data) {
         send(data);
     }
 

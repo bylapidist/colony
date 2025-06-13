@@ -11,6 +11,7 @@ import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.map.MapGenerator;
 import net.lapidist.colony.server.handlers.TileSelectionRequestHandler;
 import net.lapidist.colony.server.handlers.BuildingPlacementRequestHandler;
+import net.lapidist.colony.server.handlers.BuildingRemovalRequestHandler;
 import net.lapidist.colony.server.handlers.ChatMessageHandler;
 import net.lapidist.colony.server.handlers.ResourceGatherRequestHandler;
 import net.lapidist.colony.server.commands.CommandBus;
@@ -18,6 +19,7 @@ import net.lapidist.colony.server.commands.CommandHandler;
 import net.lapidist.colony.server.commands.TileSelectionCommandHandler;
 import net.lapidist.colony.server.commands.BuildCommandHandler;
 import net.lapidist.colony.server.commands.GatherCommandHandler;
+import net.lapidist.colony.server.commands.RemoveBuildingCommandHandler;
 import net.lapidist.colony.server.services.AutosaveService;
 import net.lapidist.colony.server.services.MapService;
 import net.lapidist.colony.server.services.NetworkService;
@@ -102,7 +104,8 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
             commandHandlers = java.util.List.of(
                     new TileSelectionCommandHandler(() -> mapState, networkService),
                     new BuildCommandHandler(() -> mapState, s -> mapState = s, networkService),
-                    new GatherCommandHandler(() -> mapState, s -> mapState = s, networkService)
+                    new GatherCommandHandler(() -> mapState, s -> mapState = s, networkService),
+                    new RemoveBuildingCommandHandler(() -> mapState, s -> mapState = s, networkService)
             );
         }
         commandBus.registerHandlers(commandHandlers);
@@ -111,6 +114,7 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
             handlers = java.util.List.of(
                     new TileSelectionRequestHandler(commandBus),
                     new BuildingPlacementRequestHandler(commandBus),
+                    new BuildingRemovalRequestHandler(commandBus),
                     new ChatMessageHandler(networkService, commandBus),
                     new ResourceGatherRequestHandler(commandBus)
             );

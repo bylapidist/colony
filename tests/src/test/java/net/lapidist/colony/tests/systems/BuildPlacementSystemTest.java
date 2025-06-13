@@ -46,6 +46,24 @@ public class BuildPlacementSystemTest {
     }
 
     @Test
+    public void removeKeyTogglesMode() {
+        GameClient client = mock(GameClient.class);
+        KeyBindings keys = new KeyBindings();
+        BuildPlacementSystem system = new BuildPlacementSystem(client, keys);
+        World world = new World(new WorldConfigurationBuilder()
+                .with(new PlayerCameraSystem(), new CameraInputSystem(keys), system)
+                .build());
+
+        Input input = mock(Input.class);
+        Gdx.input = input;
+        when(input.isKeyJustPressed(keys.getKey(KeyAction.REMOVE))).thenReturn(true);
+
+        world.process();
+
+        assertTrue(system.isRemoveMode());
+    }
+
+    @Test
     public void tapPlacesBuildingWhenEnabled() {
         MapState state = new MapState();
         TileData tile = TileData.builder()
@@ -75,5 +93,37 @@ public class BuildPlacementSystemTest {
         system.tap(screen.x, screen.y);
 
         verify(client).sendBuildRequest(any());
+    }
+
+    @Test
+    public void tapRemovesBuildingWhenEnabled() {
+        MapState state = new MapState();
+        state.buildings().add(new net.lapidist.colony.components.state.BuildingData(0, 0, "HOUSE"));
+        state.tiles().put(new TilePos(0, 0), TileData.builder()
+                .x(0).y(0).tileType("GRASS").passable(true)
+                .build());
+
+        GameClient client = mock(GameClient.class);
+        KeyBindings keys = new KeyBindings();
+        BuildPlacementSystem system = new BuildPlacementSystem(client, keys);
+        World world = new World(new WorldConfigurationBuilder()
+                .with(new MapLoadSystem(state), new PlayerCameraSystem(), new CameraInputSystem(keys), system)
+                .build());
+        world.process();
+
+        system.setRemoveMode(true);
+
+        PlayerCameraSystem camera = world.getSystem(PlayerCameraSystem.class);
+        ((com.badlogic.gdx.graphics.OrthographicCamera) camera.getCamera()).position.set(
+                GameConstants.TILE_SIZE / 2f,
+                GameConstants.TILE_SIZE / 2f,
+                0f
+        );
+        camera.getCamera().update();
+
+        Vector2 screen = CameraUtils.worldToScreenCoords(camera.getViewport(), 0, 0);
+        system.tap(screen.x, screen.y);
+
+        verify(client).sendRemoveBuildingRequest(any());
     }
 }

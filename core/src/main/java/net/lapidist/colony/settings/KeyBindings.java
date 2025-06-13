@@ -19,6 +19,7 @@ public final class KeyBindings {
             KeyAction.MOVE_RIGHT, Input.Keys.D,
             KeyAction.GATHER, Input.Keys.H,
             KeyAction.BUILD, Input.Keys.B,
+            KeyAction.REMOVE, Input.Keys.R,
             KeyAction.CHAT, Input.Keys.T,
             KeyAction.MINIMAP, Input.Keys.M
     );
