@@ -21,6 +21,7 @@ import net.lapidist.colony.client.renderers.DefaultAssetResolver;
 import net.lapidist.colony.client.renderers.ResourceRenderer;
 import net.lapidist.colony.client.renderers.SpriteBatchMapRenderer;
 import net.lapidist.colony.client.renderers.TileRenderer;
+import net.lapidist.colony.client.renderers.PlayerRenderer;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.maps.MapComponent;
@@ -63,10 +64,11 @@ public class SpriteBatchRendererBenchmark {
         TileRenderer tileRenderer = new TileRenderer(batch, loader, camera, resolver);
         BuildingRenderer buildingRenderer = new BuildingRenderer(batch, loader, camera, resolver);
         ResourceRenderer resourceRenderer = mock(ResourceRenderer.class);
+        PlayerRenderer playerRenderer = mock(PlayerRenderer.class);
         cachedRenderer = new SpriteBatchMapRenderer(
-                batch, loader, tileRenderer, buildingRenderer, resourceRenderer, true);
+                batch, loader, tileRenderer, buildingRenderer, resourceRenderer, playerRenderer, true);
         plainRenderer = new SpriteBatchMapRenderer(
-                batch, loader, tileRenderer, buildingRenderer, resourceRenderer, false);
+                batch, loader, tileRenderer, buildingRenderer, resourceRenderer, playerRenderer, false);
         data = createData(MAP_SIZE, MAP_SIZE);
         construction = mockConstruction(SpriteCache.class, (mock, ctx) -> {
             when(mock.getProjectionMatrix()).thenReturn(new Matrix4());

@@ -16,6 +16,7 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
     private final TileRenderer tileRenderer;
     private final BuildingRenderer buildingRenderer;
     private final ResourceRenderer resourceRenderer;
+    private final PlayerRenderer playerRenderer;
     private final MapTileCache tileCache = new MapTileCache();
     private final AssetResolver resolver = new DefaultAssetResolver();
     private final boolean cacheEnabled;
@@ -26,6 +27,7 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
             final TileRenderer tileRendererToSet,
             final BuildingRenderer buildingRendererToSet,
             final ResourceRenderer resourceRendererToSet,
+            final PlayerRenderer playerRendererToSet,
             final boolean cacheEnabledToSet
     ) {
         this.spriteBatch = spriteBatchToSet;
@@ -33,6 +35,7 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         this.tileRenderer = tileRendererToSet;
         this.buildingRenderer = buildingRendererToSet;
         this.resourceRenderer = resourceRendererToSet;
+        this.playerRenderer = playerRendererToSet;
         this.cacheEnabled = cacheEnabledToSet;
     }
 
@@ -61,6 +64,7 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         tileRenderer.render(map);
         buildingRenderer.render(map);
         resourceRenderer.render(map);
+        playerRenderer.render(map);
 
         spriteBatch.end();
     }
@@ -69,6 +73,7 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
     public void dispose() {
         resourceLoader.dispose();
         resourceRenderer.dispose();
+        playerRenderer.dispose();
         spriteBatch.dispose();
         tileCache.dispose();
     }
