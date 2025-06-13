@@ -6,6 +6,7 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.server.services.NetworkService;
+import net.lapidist.colony.components.state.ChunkPos;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Scope;
@@ -24,7 +25,8 @@ public class NetworkServiceBenchmark {
     private NetworkService service;
     private Connection connection;
     private MapState state;
-    private Method sendMapState;
+    private Method sendMapMetadata;
+    private Method sendChunk;
 
     @Setup(Level.Trial)
     public final void setUp() throws Exception {
@@ -32,8 +34,16 @@ public class NetworkServiceBenchmark {
         service = new NetworkService(server, 1, 2);
         connection = mock(Connection.class);
         state = createState(MAP_SIZE, MAP_SIZE);
-        sendMapState = NetworkService.class.getDeclaredMethod("sendMapState", Connection.class, MapState.class);
-        sendMapState.setAccessible(true);
+        sendMapMetadata = NetworkService.class.getDeclaredMethod("sendMapMetadata", Connection.class, MapState.class);
+        sendMapMetadata.setAccessible(true);
+        sendChunk = NetworkService.class.getDeclaredMethod(
+                "sendChunk",
+                Connection.class,
+                MapState.class,
+                int.class,
+                int.class
+        );
+        sendChunk.setAccessible(true);
     }
 
     private static MapState createState(final int width, final int height) {
@@ -50,6 +60,10 @@ public class NetworkServiceBenchmark {
 
     @Benchmark
     public final void sendMapState() throws Exception {
-        sendMapState.invoke(service, connection, state);
+        sendMapMetadata.invoke(service, connection, state);
+        for (var entry : state.chunks().entrySet()) {
+            ChunkPos pos = entry.getKey();
+            sendChunk.invoke(service, connection, state, pos.x(), pos.y());
+        }
     }
 }

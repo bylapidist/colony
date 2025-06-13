@@ -80,8 +80,8 @@ reason.
 ## Network service benchmark
 
 `NetworkServiceBenchmark` measures the cost of sending the initial map state to a
-single connection. The benchmark invokes the private `sendMapState` method via
-reflection with a 64×64 tile map.
+single connection. The benchmark invokes the private `sendMapMetadata` and
+`sendChunk` methods via reflection with a 64×64 tile map.
 
 ### Benchmark results (JDK 21)
 
