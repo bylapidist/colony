@@ -19,13 +19,25 @@ public final class MapChunkData {
 
     private final Map<TilePos, TileData> tiles = new HashMap<>();
     private final PerlinNoise noise;
+    private final int baseX;
+    private final int baseY;
 
     public MapChunkData() {
-        this(new Random().nextLong());
+        this(new Random().nextLong(), 0, 0);
     }
 
     public MapChunkData(final long seed) {
+        this(seed, 0, 0);
+    }
+
+    public MapChunkData(final int chunkX, final int chunkY) {
+        this(new Random().nextLong(), chunkX, chunkY);
+    }
+
+    public MapChunkData(final long seed, final int chunkX, final int chunkY) {
         this.noise = new PerlinNoise(seed);
+        this.baseX = chunkX * CHUNK_SIZE;
+        this.baseY = chunkY * CHUNK_SIZE;
     }
 
     /**
@@ -41,11 +53,13 @@ public final class MapChunkData {
     }
 
     private TileData createTile(final int x, final int y) {
-        double value = noise.noise(x * NOISE_SCALE, y * NOISE_SCALE);
+        int worldX = baseX + x;
+        int worldY = baseY + y;
+        double value = noise.noise(worldX * NOISE_SCALE, worldY * NOISE_SCALE);
         String type = value > 0 ? "GRASS" : "DIRT";
         return TileData.builder()
-                .x(x)
-                .y(y)
+                .x(worldX)
+                .y(worldY)
                 .tileType(type)
                 .passable(true)
                 .build();

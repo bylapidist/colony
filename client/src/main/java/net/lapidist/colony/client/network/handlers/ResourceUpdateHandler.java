@@ -5,6 +5,7 @@ import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.state.ResourceUpdateData;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.map.MapChunkData;
 import net.lapidist.colony.network.AbstractMessageHandler;
 
 import java.util.Map;
@@ -45,12 +46,16 @@ public final class ResourceUpdateHandler extends AbstractMessageHandler<Resource
             stateConsumer.accept(updated);
         } else {
             TilePos pos = new TilePos(message.x(), message.y());
-            TileData tile = state.tiles().get(pos);
+            TileData tile = state.getTile(pos.x(), pos.y());
             if (tile != null) {
                 TileData newTile = tile.toBuilder()
                         .resources(new ResourceData(message.wood(), message.stone(), message.food()))
                         .build();
-                state.tiles().put(pos, newTile);
+                int chunkX = Math.floorDiv(pos.x(), MapChunkData.CHUNK_SIZE);
+                int chunkY = Math.floorDiv(pos.y(), MapChunkData.CHUNK_SIZE);
+                int localX = Math.floorMod(pos.x(), MapChunkData.CHUNK_SIZE);
+                int localY = Math.floorMod(pos.y(), MapChunkData.CHUNK_SIZE);
+                state.getOrCreateChunk(chunkX, chunkY).getTiles().put(new TilePos(localX, localY), newTile);
             }
         }
     }

@@ -54,7 +54,9 @@ public final class NetworkService {
     }
 
     private void sendMapState(final Connection connection, final MapState state) {
-        int totalTiles = state.tiles().size();
+        int totalTiles = state.chunks().values().stream()
+                .mapToInt(c -> c.getTiles().size())
+                .sum();
         int chunkCount = (int) Math.ceil(totalTiles / (double) CHUNK_SIZE);
         MapMetadata meta = new MapMetadata(
                 state.version(),
@@ -75,16 +77,18 @@ public final class NetworkService {
 
         int index = 0;
         java.util.Map<TilePos, TileData> bucket = new java.util.HashMap<>(CHUNK_SIZE);
-        for (var entry : state.tiles().entrySet()) {
-            bucket.put(entry.getKey(), entry.getValue());
-            if (bucket.size() == CHUNK_SIZE) {
-                connection.sendTCP(new MapChunk(index++, bucket));
-                bucket.clear();
+        for (var chunkEntry : state.chunks().entrySet()) {
+            for (var entry : chunkEntry.getValue().getTiles().entrySet()) {
+                TileData td = entry.getValue();
+                bucket.put(new TilePos(td.x(), td.y()), td);
+                if (bucket.size() == CHUNK_SIZE) {
+                    connection.sendTCP(new MapChunk(index++, bucket));
+                    bucket = new java.util.HashMap<>(CHUNK_SIZE);
+                }
             }
         }
         if (!bucket.isEmpty()) {
             connection.sendTCP(new MapChunk(index, bucket));
-            bucket.clear();
         }
         LOGGER.info("Sent map state in {} chunks to connection {}", chunkCount, connection.getID());
     }

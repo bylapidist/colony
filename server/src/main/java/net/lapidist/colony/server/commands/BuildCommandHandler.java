@@ -46,7 +46,7 @@ public final class BuildCommandHandler implements CommandHandler<BuildCommand> {
     @Override
     public void handle(final BuildCommand command) {
         MapState state = stateSupplier.get();
-        TileData tile = state.tiles().get(new TilePos(command.x(), command.y()));
+        TileData tile = state.getTile(command.x(), command.y());
         boolean occupied = state.buildings().stream()
                 .anyMatch(b -> b.x() == command.x() && b.y() == command.y());
         if (tile == null || occupied) {

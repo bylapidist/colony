@@ -11,6 +11,8 @@ import net.lapidist.colony.components.state.ResourceGatherRequestData;
 import net.lapidist.colony.components.state.ResourceUpdateData;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.ChunkPos;
+import net.lapidist.colony.map.MapChunkData;
 import net.lapidist.colony.chat.ChatMessage;
 import net.lapidist.colony.serialization.KryoRegistry;
 import net.lapidist.colony.network.AbstractMessageEndpoint;
@@ -87,7 +89,7 @@ public final class GameClient extends AbstractMessageEndpoint {
                         loadProgressListener.accept(0f);
                     }
                     if (expectedChunks == 0) {
-                        mapState = mapBuilder.tiles(tileBuffer).build();
+                        mapState = mapBuilder.chunks(buildChunks(tileBuffer)).build();
                         if (readyCallback != null) {
                             readyCallback.accept(mapState);
                         }
@@ -104,7 +106,7 @@ public final class GameClient extends AbstractMessageEndpoint {
                             loadProgressListener.accept(receivedChunks / (float) expectedChunks);
                         }
                         if (receivedChunks >= expectedChunks) {
-                            mapState = mapBuilder.tiles(tileBuffer).build();
+                            mapState = mapBuilder.chunks(buildChunks(tileBuffer)).build();
                             if (readyCallback != null) {
                                 readyCallback.accept(mapState);
                             }
@@ -160,6 +162,21 @@ public final class GameClient extends AbstractMessageEndpoint {
 
     public int getPlayerId() {
         return playerId;
+    }
+
+    private static java.util.Map<ChunkPos, MapChunkData> buildChunks(final java.util.Map<TilePos, TileData> tiles) {
+        java.util.Map<ChunkPos, MapChunkData> chunks = new java.util.HashMap<>();
+        for (var entry : tiles.entrySet()) {
+            TilePos pos = entry.getKey();
+            TileData data = entry.getValue();
+            int chunkX = Math.floorDiv(pos.x(), MapChunkData.CHUNK_SIZE);
+            int chunkY = Math.floorDiv(pos.y(), MapChunkData.CHUNK_SIZE);
+            int localX = Math.floorMod(pos.x(), MapChunkData.CHUNK_SIZE);
+            int localY = Math.floorMod(pos.y(), MapChunkData.CHUNK_SIZE);
+            MapChunkData chunk = chunks.computeIfAbsent(new ChunkPos(chunkX, chunkY), p -> new MapChunkData(chunkX, chunkY));
+            chunk.getTiles().put(new TilePos(localX, localY), data);
+        }
+        return chunks;
     }
 
     /**

@@ -4,6 +4,7 @@ import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.map.MapChunkData;
 import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.i18n.I18n;
 
@@ -33,7 +34,12 @@ public final class DefaultMapGenerator implements MapGenerator {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 String type = noise.noise(x * NOISE_SCALE, y * NOISE_SCALE) > 0 ? "GRASS" : "DIRT";
-                state.tiles().put(new TilePos(x, y), createTile(x, y, type));
+                int chunkX = Math.floorDiv(x, MapChunkData.CHUNK_SIZE);
+                int chunkY = Math.floorDiv(y, MapChunkData.CHUNK_SIZE);
+                int localX = Math.floorMod(x, MapChunkData.CHUNK_SIZE);
+                int localY = Math.floorMod(y, MapChunkData.CHUNK_SIZE);
+                MapChunkData chunk = state.getOrCreateChunk(chunkX, chunkY);
+                chunk.getTiles().put(new TilePos(localX, localY), createTile(x, y, type));
             }
         }
 

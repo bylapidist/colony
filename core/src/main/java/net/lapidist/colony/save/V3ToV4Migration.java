@@ -4,6 +4,7 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.map.MapChunkData;
 
 /** Migration from save version 3 to version 4 adding resource data. */
 public final class V3ToV4Migration implements MapStateMigration {
@@ -22,13 +23,16 @@ public final class V3ToV4Migration implements MapStateMigration {
 
     @Override
     public MapState apply(final MapState state) {
-        for (TilePos pos : state.tiles().keySet()) {
-            TileData tile = state.tiles().get(pos);
-            if (tile.resources() == null) {
-                TileData updated = tile.toBuilder()
-                        .resources(new ResourceData(DEFAULT_WOOD, DEFAULT_STONE, DEFAULT_FOOD))
-                        .build();
-                state.tiles().put(pos, updated);
+        for (var chunkEntry : state.chunks().entrySet()) {
+            MapChunkData chunk = chunkEntry.getValue();
+            for (TilePos pos : chunk.getTiles().keySet()) {
+                TileData tile = chunk.getTiles().get(pos);
+                if (tile.resources() == null) {
+                    TileData updated = tile.toBuilder()
+                            .resources(new ResourceData(DEFAULT_WOOD, DEFAULT_STONE, DEFAULT_FOOD))
+                            .build();
+                    chunk.getTiles().put(pos, updated);
+                }
             }
         }
         return state.toBuilder().version(toVersion()).build();
