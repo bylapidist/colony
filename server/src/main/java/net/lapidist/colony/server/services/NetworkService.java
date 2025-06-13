@@ -25,7 +25,6 @@ public final class NetworkService {
     private final Server server;
     private final int tcpPort;
     private final int udpPort;
-    private static final int CHUNK_SIZE = MapChunkData.CHUNK_SIZE * MapChunkData.CHUNK_SIZE;
 
     public NetworkService(final Server serverToUse, final int tcp, final int udp) {
         this.server = serverToUse;
@@ -49,7 +48,15 @@ public final class NetworkService {
             @Override
             public void connected(final Connection connection) {
                 LOGGER.info("Connection established: {}", connection.getID());
-                sendMapState(connection, mapState);
+                sendMapMetadata(connection, mapState);
+                int index = 0;
+                for (var entry : mapState.chunks().entrySet()) {
+                    int chunkX = entry.getKey().x();
+                    int chunkY = entry.getKey().y();
+                    sendChunk(connection, mapState, chunkX, chunkY);
+                    index++;
+                }
+                LOGGER.info("Sent map state in {} chunks to connection {}", index, connection.getID());
             }
         });
     }
@@ -68,7 +75,7 @@ public final class NetworkService {
         return new MapChunk(index, chunkX, chunkY, tiles);
     }
 
-    private void sendMapState(final Connection connection, final MapState state) {
+    private void sendMapMetadata(final Connection connection, final MapState state) {
         int chunkCount = state.chunks().size();
         MapMetadata meta = new MapMetadata(
                 state.version(),
@@ -81,18 +88,12 @@ public final class NetworkService {
                 chunkCount
         );
         connection.sendTCP(meta);
+        LOGGER.info("Sent map metadata with {} chunks to connection {}", chunkCount, connection.getID());
+    }
 
-        if (chunkCount == 0) {
-            LOGGER.info("Sent map metadata with no tiles to connection {}", connection.getID());
-            return;
-        }
-        int index = 0;
-        for (var entry : state.chunks().entrySet()) {
-            int chunkX = entry.getKey().x();
-            int chunkY = entry.getKey().y();
-            connection.sendTCP(toChunkMessage(index++, chunkX, chunkY, entry.getValue()));
-        }
-        LOGGER.info("Sent map state in {} chunks to connection {}", chunkCount, connection.getID());
+    public void sendChunk(final Connection connection, final MapState state, final int chunkX, final int chunkY) {
+        MapChunkData chunk = state.getOrCreateChunk(chunkX, chunkY);
+        connection.sendTCP(toChunkMessage(0, chunkX, chunkY, chunk));
     }
 
     public void stop() {

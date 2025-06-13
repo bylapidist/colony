@@ -49,7 +49,9 @@ public final class Colony extends Game {
             server.start();
             client = new GameClient();
             LoadingScreen loading = new LoadingScreen();
+            loading.setMessage(I18n.get("loading.connect"));
             client.setLoadProgressListener(p -> Gdx.app.postRunnable(() -> loading.setProgress(p)));
+            client.setLoadMessageListener(msg -> Gdx.app.postRunnable(() -> loading.setMessage(msg)));
             setScreen(loading);
             client.start(state ->
                     Gdx.app.postRunnable(() -> setScreen(new MapScreen(this, state, client))));

@@ -52,6 +52,7 @@ public final class GameClient extends AbstractMessageEndpoint {
     private int expectedChunks;
     private int receivedChunks;
     private java.util.function.Consumer<Float> loadProgressListener;
+    private java.util.function.Consumer<String> loadMessageListener;
 
     private <T> Queue<T> registerQueue(final Class<T> type) {
         Queue<T> queue = new ConcurrentLinkedQueue<>();
@@ -66,6 +67,13 @@ public final class GameClient extends AbstractMessageEndpoint {
         this.loadProgressListener = listener;
     }
 
+    /**
+     * Register a listener that receives textual loading status updates.
+     */
+    public void setLoadMessageListener(final java.util.function.Consumer<String> listener) {
+        this.loadMessageListener = listener;
+    }
+
     public GameClient() {
         Queue<TileSelectionData> tileUpdates = registerQueue(TileSelectionData.class);
         Queue<BuildingData> buildingUpdates = registerQueue(BuildingData.class);
@@ -75,6 +83,9 @@ public final class GameClient extends AbstractMessageEndpoint {
 
         this.handlers = java.util.List.of(
                 new MapMetadataHandler(meta -> {
+                    if (loadMessageListener != null) {
+                        loadMessageListener.accept(net.lapidist.colony.i18n.I18n.get("loading.metadata"));
+                    }
                     mapBuilder = MapState.builder()
                             .version(meta.version())
                             .name(meta.name())
@@ -97,6 +108,10 @@ public final class GameClient extends AbstractMessageEndpoint {
                         if (loadProgressListener != null) {
                             loadProgressListener.accept(1f);
                         }
+                    } else {
+                        if (loadMessageListener != null) {
+                            loadMessageListener.accept(net.lapidist.colony.i18n.I18n.get("loading.chunks"));
+                        }
                     }
                 }),
                 new MapChunkHandler(this::handleChunk),
@@ -116,6 +131,9 @@ public final class GameClient extends AbstractMessageEndpoint {
         KryoRegistry.register(client.getKryo());
         client.start();
         LOGGER.info("Connecting to server...");
+        if (loadMessageListener != null) {
+            loadMessageListener.accept(net.lapidist.colony.i18n.I18n.get("loading.connect"));
+        }
 
         registerHandlers(handlers);
 
