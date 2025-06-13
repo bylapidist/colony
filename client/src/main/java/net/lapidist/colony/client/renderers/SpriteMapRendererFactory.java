@@ -9,6 +9,8 @@ import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.settings.GraphicsSettings;
 import net.lapidist.colony.settings.Settings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -16,6 +18,8 @@ import java.io.IOException;
  * Factory that loads textures and creates sprite batch based renderers for the map system.
  */
 public final class SpriteMapRendererFactory implements MapRendererFactory {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SpriteMapRendererFactory.class);
 
     private final FileLocation fileLocation;
     private final String atlasPath;
@@ -53,6 +57,7 @@ public final class SpriteMapRendererFactory implements MapRendererFactory {
             graphics = Settings.load().getGraphicsSettings();
             resourceLoader.loadTextures(fileLocation, atlasPath, graphics);
         } catch (IOException e) {
+            LOGGER.warn("Failed to load textures from {}", atlasPath, e);
             // ignore loading errors in headless tests
             graphics = new GraphicsSettings();
         }
