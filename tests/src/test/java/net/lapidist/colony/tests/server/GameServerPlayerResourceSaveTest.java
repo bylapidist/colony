@@ -2,7 +2,6 @@ package net.lapidist.colony.tests.server;
 
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.state.ResourceGatherRequestData;
-import net.lapidist.colony.components.resources.ResourceType;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
 import net.lapidist.colony.io.Paths;
@@ -32,7 +31,7 @@ public class GameServerPlayerResourceSaveTest {
         client.start(state -> latch.countDown());
         latch.await(1, TimeUnit.SECONDS);
 
-        client.sendGatherRequest(new ResourceGatherRequestData(0, 0, ResourceType.WOOD));
+        client.sendGatherRequest(new ResourceGatherRequestData(0, 0, "WOOD"));
         Thread.sleep(WAIT_MS);
 
         client.stop();

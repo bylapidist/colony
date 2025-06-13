@@ -6,7 +6,6 @@ import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.state.ResourceUpdateData;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
-import net.lapidist.colony.components.entities.BuildingComponent.BuildingType;
 import net.lapidist.colony.events.Events;
 import net.lapidist.colony.server.events.BuildingPlacedEvent;
 import net.lapidist.colony.server.services.NetworkService;
@@ -19,10 +18,10 @@ import java.util.function.Supplier;
  * Applies a {@link BuildCommand} to the game state and broadcasts the change.
  */
 public final class BuildCommandHandler implements CommandHandler<BuildCommand> {
-    private static final Map<BuildingType, ResourceData> COSTS = Map.of(
-            BuildingType.HOUSE, new ResourceData(1, 0, 0),
-            BuildingType.MARKET, new ResourceData(5, 2, 0),
-            BuildingType.FACTORY, new ResourceData(10, 5, 0)
+    private static final Map<String, ResourceData> COSTS = Map.of(
+            "HOUSE", new ResourceData(1, 0, 0),
+            "MARKET", new ResourceData(5, 2, 0),
+            "FACTORY", new ResourceData(10, 5, 0)
     );
 
     private final Supplier<MapState> stateSupplier;
@@ -58,7 +57,7 @@ public final class BuildCommandHandler implements CommandHandler<BuildCommand> {
                 || player.food() < cost.food()) {
             return;
         }
-        BuildingData building = new BuildingData(command.x(), command.y(), command.type().name());
+        BuildingData building = new BuildingData(command.x(), command.y(), command.type());
         state.buildings().add(building);
         ResourceData newResources = new ResourceData(
                 player.wood() - cost.wood(),
@@ -69,10 +68,9 @@ public final class BuildCommandHandler implements CommandHandler<BuildCommand> {
                 .playerResources(newResources)
                 .build();
         stateConsumer.accept(updated);
-        Events.dispatch(new BuildingPlacedEvent(command.x(), command.y(), command.type().name()));
+        Events.dispatch(new BuildingPlacedEvent(command.x(), command.y(), command.type()));
         networkService.broadcast(building);
         networkService.broadcast(new ResourceUpdateData(-1, -1,
                 newResources.wood(), newResources.stone(), newResources.food()));
     }
-
 }

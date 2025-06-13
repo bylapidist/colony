@@ -1,0 +1,12 @@
+{
+  "buildings": [
+    {"id": "HOUSE", "key": "building.house"},
+    {"id": "MARKET", "key": "building.market"},
+    {"id": "FACTORY", "key": "building.factory"}
+  ],
+  "resources": [
+    {"id": "WOOD"},
+    {"id": "STONE"},
+    {"id": "FOOD"}
+  ]
+}

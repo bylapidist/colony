@@ -18,7 +18,6 @@ import net.lapidist.colony.client.systems.input.ScrollInputProcessor;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.state.ResourceGatherRequestData;
-import net.lapidist.colony.components.resources.ResourceType;
 import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.map.MapUtils;
 import com.artemis.ComponentMapper;
@@ -111,7 +110,7 @@ public final class InputSystem extends BaseSystem {
                 var tile = selectedTiles.get(i);
                 TileComponent tc = tileMapper.get(tile);
                 var rc = resourceMapper.get(tile);
-                ResourceType type = getResourceType(rc);
+                String type = getResourceType(rc);
                 if (type != null) {
                     ResourceGatherRequestData msg = new ResourceGatherRequestData(
                             tc.getX(), tc.getY(), type);
@@ -140,7 +139,7 @@ public final class InputSystem extends BaseSystem {
                     .ifPresent(tile -> {
                         TileComponent tc = tileMapper.get(tile);
                         var rc = resourceMapper.get(tile);
-                        ResourceType type = getResourceType(rc);
+                        String type = getResourceType(rc);
                         if (type != null) {
                             ResourceGatherRequestData msg = new ResourceGatherRequestData(
                                     tc.getX(), tc.getY(), type);
@@ -161,13 +160,13 @@ public final class InputSystem extends BaseSystem {
         return gestureHandler.zoom(initialDistance, distance);
     }
 
-    private ResourceType getResourceType(final net.lapidist.colony.components.resources.ResourceComponent rc) {
+    private String getResourceType(final net.lapidist.colony.components.resources.ResourceComponent rc) {
         if (rc.getWood() > 0) {
-            return ResourceType.WOOD;
+            return "WOOD";
         } else if (rc.getStone() > 0) {
-            return ResourceType.STONE;
+            return "STONE";
         } else if (rc.getFood() > 0) {
-            return ResourceType.FOOD;
+            return "FOOD";
         }
         return null;
     }

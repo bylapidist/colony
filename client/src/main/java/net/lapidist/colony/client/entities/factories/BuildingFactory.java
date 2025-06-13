@@ -25,7 +25,7 @@ public final class BuildingFactory {
      */
     public static Entity create(
             final World world,
-            final BuildingComponent.BuildingType buildingType,
+            final String buildingType,
             final Vector2 coords
     ) {
         BuildingComponent buildingComponent = new BuildingComponent();

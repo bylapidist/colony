@@ -59,7 +59,6 @@ public final class SerializationRegistrar {
             BuildingData.class,
             BuildingPlacementData.class,
             ResourceData.class,
-            net.lapidist.colony.components.resources.ResourceType.class,
             ResourceGatherRequestData.class,
             ResourceUpdateData.class,
             MapMetadata.class,
