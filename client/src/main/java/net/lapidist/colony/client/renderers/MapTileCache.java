@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.BooleanArray;
 import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.client.core.io.ResourceLoader;
+import net.lapidist.colony.client.TileRotationUtil;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.render.data.RenderTile;
 import net.lapidist.colony.client.systems.CameraProvider;
@@ -120,7 +121,19 @@ final class MapTileCache implements Disposable {
                 maxY = Math.max(maxY, worldY + GameConstants.TILE_SIZE);
 
                 if (region != null) {
-                    cache.add(region, worldX, worldY);
+                    float rotation = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
+                    cache.add(
+                            region,
+                            worldX,
+                            worldY,
+                            region.getRegionWidth() / 2f,
+                            region.getRegionHeight() / 2f,
+                            region.getRegionWidth(),
+                            region.getRegionHeight(),
+                            1f,
+                            1f,
+                            rotation
+                    );
                 }
             }
 
@@ -168,7 +181,19 @@ final class MapTileCache implements Disposable {
                 maxY = Math.max(maxY, worldY + GameConstants.TILE_SIZE);
 
                 if (region != null) {
-                    cache.add(region, worldX, worldY);
+                    float rotation = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
+                    cache.add(
+                            region,
+                            worldX,
+                            worldY,
+                            region.getRegionWidth() / 2f,
+                            region.getRegionHeight() / 2f,
+                            region.getRegionWidth(),
+                            region.getRegionHeight(),
+                            1f,
+                            1f,
+                            rotation
+                    );
                 }
             }
 
