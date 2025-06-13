@@ -21,7 +21,8 @@ public final class KeyBindings {
             KeyAction.BUILD, Input.Keys.B,
             KeyAction.REMOVE, Input.Keys.R,
             KeyAction.CHAT, Input.Keys.T,
-            KeyAction.MINIMAP, Input.Keys.M
+            KeyAction.MINIMAP, Input.Keys.M,
+            KeyAction.TOGGLE_CAMERA, Input.Keys.F
     );
 
     private final EnumMap<KeyAction, Integer> bindings = new EnumMap<>(KeyAction.class);

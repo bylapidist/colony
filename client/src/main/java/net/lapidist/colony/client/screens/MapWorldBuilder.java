@@ -15,6 +15,7 @@ import net.lapidist.colony.client.systems.SelectionSystem;
 import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.MapRenderSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
+import net.lapidist.colony.client.systems.PlayerMovementSystem;
 import net.lapidist.colony.client.systems.UISystem;
 import net.lapidist.colony.client.systems.network.TileUpdateSystem;
 import net.lapidist.colony.client.systems.network.BuildingUpdateSystem;
@@ -113,6 +114,7 @@ public final class MapWorldBuilder {
         cameraInputSystem.addProcessor(stage);
         SelectionSystem selectionSystem = new SelectionSystem(client, keyBindings);
         BuildPlacementSystem buildPlacementSystem = new BuildPlacementSystem(client, keyBindings);
+        PlayerMovementSystem movementSystem = new PlayerMovementSystem(keyBindings);
 
         WorldConfigurationBuilder builder = new WorldConfigurationBuilder()
                 .with(
@@ -122,6 +124,7 @@ public final class MapWorldBuilder {
                         selectionSystem,
                         buildPlacementSystem,
                         new PlayerInitSystem(playerResources),
+                        movementSystem,
                         new TileUpdateSystem(client),
                         new BuildingUpdateSystem(client),
                         new ResourceUpdateSystem(client),

@@ -9,6 +9,7 @@ import net.lapidist.colony.client.systems.input.GestureInputHandler;
 import net.lapidist.colony.client.systems.input.KeyboardInputHandler;
 import net.lapidist.colony.client.systems.input.ScrollInputProcessor;
 import net.lapidist.colony.settings.KeyBindings;
+import net.lapidist.colony.settings.KeyAction;
 
 /**
  * Handles camera input via gestures and keyboard.
@@ -47,6 +48,9 @@ public final class CameraInputSystem extends BaseSystem {
 
     @Override
     protected void processSystem() {
+        if (Gdx.input.isKeyJustPressed(keyBindings.getKey(KeyAction.TOGGLE_CAMERA))) {
+            cameraSystem.toggleMode();
+        }
         keyboardHandler.handleKeyboardInput(world.getDelta());
         keyboardHandler.clampCameraPosition();
         cameraSystem.getCamera().update();

@@ -12,6 +12,7 @@ import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.CameraInputSystem;
 import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
+import net.lapidist.colony.client.systems.PlayerMovementSystem;
 import net.lapidist.colony.client.systems.SelectionSystem;
 import net.lapidist.colony.client.systems.PlayerInitSystem;
 import net.lapidist.colony.client.systems.MapRenderSystem;
@@ -56,6 +57,7 @@ public class MapWorldBuilderConfigurationTest {
             assertNotNull(world.getSystem(CameraInputSystem.class));
             assertNotNull(world.getSystem(SelectionSystem.class));
             assertNotNull(world.getSystem(BuildPlacementSystem.class));
+            assertNotNull(world.getSystem(PlayerMovementSystem.class));
             assertNotNull(world.getSystem(PlayerInitSystem.class));
             assertNotNull(world.getSystem(MapRenderSystem.class));
             assertNull(world.getSystem(MapInitSystem.class));
@@ -87,6 +89,7 @@ public class MapWorldBuilderConfigurationTest {
 
             assertNotNull(world.getSystem(MapInitSystem.class));
             assertNotNull(world.getSystem(PlayerCameraSystem.class));
+            assertNotNull(world.getSystem(PlayerMovementSystem.class));
             assertNotNull(world.getSystem(MapRenderDataSystem.class));
             assertEquals(1, world.getAspectSubscriptionManager()
                     .get(Aspect.all(PlayerResourceComponent.class))

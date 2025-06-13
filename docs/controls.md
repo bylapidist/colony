@@ -14,6 +14,7 @@ This page lists the default keyboard bindings and how to customize them in-game.
 | Build | **B** | Toggle building placement mode |
 | Chat | **T** | Open the chat input box |
 | Toggle Minimap | **M** | Show or hide the minimap |
+| Toggle Camera | **F** | Switch between map overview and player camera |
 
 The defaults are defined in [`KeyBindings.java`](../core/src/main/java/net/lapidist/colony/settings/KeyBindings.java).
 

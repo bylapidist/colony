@@ -9,10 +9,21 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import net.lapidist.colony.client.util.CameraUtils;
+import net.lapidist.colony.components.entities.PlayerComponent;
+import com.artemis.ComponentMapper;
+import com.artemis.Entity;
 
 public final class PlayerCameraSystem extends BaseSystem implements CameraProvider {
 
+    public enum Mode { MAP_OVERVIEW, PLAYER }
+
+    private static final float PLAYER_MAX_ZOOM = 1.5f;
+
     private final Rectangle viewBounds = new Rectangle();
+
+    private Mode mode = Mode.MAP_OVERVIEW;
+    private ComponentMapper<PlayerComponent> playerMapper;
+    private Entity player;
 
     private OrthographicCamera camera;
 
@@ -26,6 +37,17 @@ public final class PlayerCameraSystem extends BaseSystem implements CameraProvid
         moveCameraToWorldCoords(getWorldCenter());
 
         viewport.apply();
+    }
+
+    @Override
+    public void initialize() {
+        playerMapper = world.getMapper(PlayerComponent.class);
+        var players = world.getAspectSubscriptionManager()
+                .get(com.artemis.Aspect.all(PlayerComponent.class))
+                .getEntities();
+        if (players.size() > 0) {
+            player = world.getEntity(players.get(0));
+        }
     }
 
     public boolean withinCameraView(final Vector2 worldCoords) {
@@ -112,6 +134,18 @@ public final class PlayerCameraSystem extends BaseSystem implements CameraProvid
 
     @Override
     protected void processSystem() {
+        if (player == null) {
+            var players = world.getAspectSubscriptionManager()
+                    .get(com.artemis.Aspect.all(PlayerComponent.class))
+                    .getEntities();
+            if (players.size() > 0) {
+                player = world.getEntity(players.get(0));
+            }
+        }
+        if (mode == Mode.PLAYER && player != null) {
+            PlayerComponent pc = playerMapper.get(player);
+            camera.position.set(pc.getX(), pc.getY(), 0);
+        }
         camera.update();
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
@@ -143,5 +177,21 @@ public final class PlayerCameraSystem extends BaseSystem implements CameraProvid
      */
     public Rectangle getViewBounds() {
         return CameraUtils.getViewBounds(camera, viewport, viewBounds);
+    }
+
+    public void toggleMode() {
+        mode = mode == Mode.MAP_OVERVIEW ? Mode.PLAYER : Mode.MAP_OVERVIEW;
+    }
+
+    public Mode getMode() {
+        return mode;
+    }
+
+    public boolean isPlayerMode() {
+        return mode == Mode.PLAYER;
+    }
+
+    public float getMaxZoom() {
+        return mode == Mode.PLAYER ? PLAYER_MAX_ZOOM : 2f;
     }
 }
