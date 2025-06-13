@@ -12,18 +12,23 @@ import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.render.MapRenderDataBuilder;
 import net.lapidist.colony.client.render.SimpleMapRenderData;
+import net.lapidist.colony.client.render.data.RenderTile;
+import net.lapidist.colony.client.render.data.RenderBuilding;
+import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.client.systems.CameraProvider;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.map.MapFactory;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockedConstruction;
 import org.mockito.InOrder;
+import org.mockito.ArgumentCaptor;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -61,6 +66,26 @@ public class MapTileCacheTest {
         ComponentMapper<MapComponent> mapMapper = world.getMapper(MapComponent.class);
         world.process();
         return MapRenderDataBuilder.fromMap(mapMapper.get(map), world);
+    }
+
+    private MapRenderData createManualData() {
+        Array<RenderTile> tiles = new Array<>();
+        RenderTile tile1 = RenderTile.builder()
+                .x(0).y(0).tileType("GRASS")
+                .selected(false)
+                .wood(0).stone(0).food(0)
+                .build();
+        tiles.add(tile1);
+        RenderTile tile2 = RenderTile.builder()
+                .x(1).y(0).tileType("GRASS")
+                .selected(false)
+                .wood(0).stone(0).food(0)
+                .build();
+        tiles.add(tile2);
+        RenderTile[][] grid = new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT];
+        grid[0][0] = tile1;
+        grid[1][0] = tile2;
+        return new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);
     }
 
     @Test
@@ -248,6 +273,39 @@ public class MapTileCacheTest {
             assertEquals(1, cons.constructed().size());
             cache.ensureCache(loader, data2, new DefaultAssetResolver(), cam);
             assertEquals(2, cons.constructed().size());
+        }
+    }
+
+    @Test
+    public void cachesTilesWithRotation() {
+        MapRenderData data = createManualData();
+
+        CameraProvider cam = mock(CameraProvider.class);
+        when(cam.getCamera()).thenReturn(new OrthographicCamera());
+        ResourceLoader loader = mock(ResourceLoader.class);
+        TextureRegion region = new TextureRegion();
+        when(loader.findRegion(any())).thenReturn(region);
+        try (MockedConstruction<SpriteCache> cons = mockConstruction(SpriteCache.class,
+                (mock, ctx) -> {
+                    when(mock.getProjectionMatrix()).thenReturn(new Matrix4());
+                    when(mock.endCache()).thenReturn(0);
+                })) {
+            MapTileCache cache = new MapTileCache();
+            cache.ensureCache(loader, data, new DefaultAssetResolver(), cam);
+            SpriteCache sprite = cons.constructed().get(0);
+            ArgumentCaptor<Float> rotCap = ArgumentCaptor.forClass(Float.class);
+            verify(sprite, times(2))
+                    .add(
+                            eq(region),
+                            anyFloat(), anyFloat(),
+                            anyFloat(), anyFloat(),
+                            anyFloat(), anyFloat(),
+                            anyFloat(), anyFloat(),
+                            rotCap.capture()
+                    );
+            java.util.List<Float> values = rotCap.getAllValues();
+            assertEquals(2, values.size());
+            assertNotEquals(values.get(0), values.get(1));
         }
     }
 }
