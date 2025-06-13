@@ -1,5 +1,7 @@
 package net.lapidist.colony.server.commands;
 
+import net.lapidist.colony.components.resources.ResourceType;
+
 /**
  * Command representing a resource gather request.
  *
@@ -7,5 +9,5 @@ package net.lapidist.colony.server.commands;
  * @param y            tile y coordinate
  * @param resourceType type of resource to gather
  */
-public record GatherCommand(int x, int y, String resourceType) implements ServerCommand {
+public record GatherCommand(int x, int y, ResourceType resourceType) implements ServerCommand {
 }

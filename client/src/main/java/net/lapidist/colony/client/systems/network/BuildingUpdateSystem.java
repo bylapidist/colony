@@ -36,7 +36,7 @@ public final class BuildingUpdateSystem extends BaseSystem {
             world.createEntity();
             var entity = BuildingFactory.create(
                     world,
-                    update.buildingType(),
+                    BuildingComponent.BuildingType.valueOf(update.buildingType()),
                     new Vector2(update.x(), update.y())
             );
             buildingMapper.get(entity).setDirty(true);

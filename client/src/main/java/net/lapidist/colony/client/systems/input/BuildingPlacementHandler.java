@@ -6,6 +6,7 @@ import net.lapidist.colony.map.MapUtils;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.util.CameraUtils;
+import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.state.BuildingPlacementData;
@@ -42,7 +43,7 @@ public final class BuildingPlacementHandler {
                     BuildingPlacementData msg = new BuildingPlacementData(
                             tc.getX(),
                             tc.getY(),
-                            "HOUSE"
+                            BuildingComponent.BuildingType.HOUSE.name()
                     );
                     client.sendBuildRequest(msg);
                     return true;

@@ -3,9 +3,7 @@ package net.lapidist.colony.tests.client.entities.factories;
 import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.Gdx;
 import net.lapidist.colony.client.entities.factories.BuildingFactory;
-import net.lapidist.colony.mod.PrototypeManager;
 import net.lapidist.colony.components.entities.BuildingComponent;
 import org.junit.Test;
 
@@ -18,11 +16,10 @@ public class BuildingFactoryTest {
     @Test
     public void createSetsBuildingType() {
         World world = new World(new WorldConfigurationBuilder().build());
-        PrototypeManager.load(Gdx.files.internal("sample-mod.json"));
-        var entity = BuildingFactory.create(world, "HOUSE", new Vector2(X, Y));
+        var entity = BuildingFactory.create(world, BuildingComponent.BuildingType.HOUSE, new Vector2(X, Y));
         BuildingComponent comp = entity.getComponent(BuildingComponent.class);
 
-        assertEquals("HOUSE", comp.getBuildingType());
+        assertEquals(BuildingComponent.BuildingType.HOUSE, comp.getBuildingType());
         assertEquals(X, comp.getX());
         assertEquals(Y, comp.getY());
         world.dispose();

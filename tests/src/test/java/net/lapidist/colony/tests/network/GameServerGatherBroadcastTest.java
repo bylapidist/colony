@@ -3,6 +3,7 @@ package net.lapidist.colony.tests.network;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.state.ResourceGatherRequestData;
 import net.lapidist.colony.components.state.ResourceUpdateData;
+import net.lapidist.colony.components.resources.ResourceType;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
 import org.junit.Test;
@@ -35,7 +36,7 @@ public class GameServerGatherBroadcastTest {
         latchA.await(1, TimeUnit.SECONDS);
         latchB.await(1, TimeUnit.SECONDS);
 
-        ResourceGatherRequestData data = new ResourceGatherRequestData(0, 0, "WOOD");
+        ResourceGatherRequestData data = new ResourceGatherRequestData(0, 0, ResourceType.WOOD);
         clientA.sendGatherRequest(data);
 
         Thread.sleep(WAIT_MS);

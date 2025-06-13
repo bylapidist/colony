@@ -1,5 +1,6 @@
 package net.lapidist.colony.server.handlers;
 
+import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.components.state.BuildingPlacementData;
 import net.lapidist.colony.server.commands.BuildCommand;
 import net.lapidist.colony.server.commands.CommandBus;
@@ -21,7 +22,7 @@ public final class BuildingPlacementRequestHandler extends AbstractMessageHandle
         commandBus.dispatch(new BuildCommand(
                 data.x(),
                 data.y(),
-                data.buildingType()
+                BuildingComponent.BuildingType.valueOf(data.buildingType())
         ));
     }
 }

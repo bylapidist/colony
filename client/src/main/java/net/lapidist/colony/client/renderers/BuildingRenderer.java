@@ -10,7 +10,7 @@ import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.client.render.data.RenderBuilding;
 import net.lapidist.colony.client.render.MapRenderData;
-import net.lapidist.colony.mod.PrototypeManager;
+import net.lapidist.colony.components.entities.BuildingComponent;
 
 /**
  * Renders building entities.
@@ -21,7 +21,8 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
     private final ResourceLoader resourceLoader;
     private final CameraProvider cameraSystem;
     private final AssetResolver resolver;
-    private final java.util.HashMap<String, TextureRegion> buildingRegions = new java.util.HashMap<>();
+    private final java.util.EnumMap<BuildingComponent.BuildingType, TextureRegion> buildingRegions =
+            new java.util.EnumMap<>(BuildingComponent.BuildingType.class);
     private final Rectangle viewBounds = new Rectangle();
     private final Vector2 worldCoords = new Vector2();
 
@@ -36,11 +37,11 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
         this.cameraSystem = cameraSystemToSet;
         this.resolver = resolverToSet;
 
-        for (var type : PrototypeManager.buildings()) {
-            String ref = resolver.buildingAsset(type.id());
+        for (BuildingComponent.BuildingType type : BuildingComponent.BuildingType.values()) {
+            String ref = resolver.buildingAsset(type.name());
             TextureRegion region = resourceLoader.findRegion(ref);
             if (region != null) {
-                buildingRegions.put(type.id(), region);
+                buildingRegions.put(type, region);
             }
         }
     }
@@ -61,7 +62,9 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
                 continue;
             }
 
-            TextureRegion region = buildingRegions.get(building.getBuildingType());
+            BuildingComponent.BuildingType type =
+                    BuildingComponent.BuildingType.valueOf(building.getBuildingType());
+            TextureRegion region = buildingRegions.get(type);
             if (region != null) {
                 spriteBatch.draw(region, worldCoords.x, worldCoords.y);
             }
