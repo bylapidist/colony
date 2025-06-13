@@ -22,13 +22,24 @@ public final class MessageDispatcher {
     }
 
     /**
-     * Dispatches the supplied message to the registered handler if present.
+     * Dispatches the supplied message to the registered handler if present. The
+     * dispatcher first checks for an exact type match and then searches for any
+     * handler whose registered type is assignable from the message class.
      *
      * @param message the message to dispatch
      */
     @SuppressWarnings("unchecked")
     public <T> void dispatch(final T message) {
-        Consumer<T> handler = (Consumer<T>) handlers.get(message.getClass());
+        Class<?> messageType = message.getClass();
+        Consumer<T> handler = (Consumer<T>) handlers.get(messageType);
+        if (handler == null) {
+            for (Map.Entry<Class<?>, Consumer<?>> entry : handlers.entrySet()) {
+                if (entry.getKey().isAssignableFrom(messageType)) {
+                    handler = (Consumer<T>) entry.getValue();
+                    break;
+                }
+            }
+        }
         if (handler != null) {
             handler.accept(message);
         }
