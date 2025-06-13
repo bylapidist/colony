@@ -2,6 +2,8 @@ package net.lapidist.colony.client.renderers;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Rectangle;
 import net.lapidist.colony.client.core.io.ResourceLoader;
@@ -24,6 +26,9 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
     private final java.util.EnumMap<TileComponent.TileType, TextureRegion> tileRegions =
             new java.util.EnumMap<>(TileComponent.TileType.class);
     private final TextureRegion overlayRegion;
+    private final BitmapFont font = new BitmapFont();
+    private final GlyphLayout layout = new GlyphLayout();
+    private static final float LABEL_OFFSET_Y = 8f;
     private final Rectangle viewBounds = new Rectangle();
     private final Vector2 tmpStart = new Vector2();
     private final Vector2 tmpEnd = new Vector2();
@@ -89,6 +94,10 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                     TextureRegion region = tileRegions.get(type);
                     if (region != null) {
                         spriteBatch.draw(region, worldCoords.x, worldCoords.y);
+                    }
+                    if (!resolver.hasTileAsset(type.name())) {
+                        layout.setText(font, type.name());
+                        font.draw(spriteBatch, layout, worldCoords.x, worldCoords.y + LABEL_OFFSET_Y);
                     }
                 }
 

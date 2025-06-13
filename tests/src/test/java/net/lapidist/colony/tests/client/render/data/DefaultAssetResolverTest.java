@@ -15,11 +15,15 @@ public class DefaultAssetResolverTest {
         assertEquals("dirt0", resolver.tileAsset("EMPTY"));
         assertEquals("dirt0", resolver.tileAsset(null));
         assertEquals("dirt0", resolver.tileAsset("invalid"));
+        assertTrue(resolver.hasTileAsset("GRASS"));
+        assertFalse(resolver.hasTileAsset("invalid"));
         assertEquals("house0", resolver.buildingAsset("HOUSE"));
         assertEquals("house0", resolver.buildingAsset("house"));
         assertEquals("house0", resolver.buildingAsset("MARKET"));
         assertEquals("house0", resolver.buildingAsset("FACTORY"));
         assertEquals("house0", resolver.buildingAsset(null));
         assertEquals("house0", resolver.buildingAsset("invalid"));
+        assertTrue(resolver.hasBuildingAsset("HOUSE"));
+        assertFalse(resolver.hasBuildingAsset("invalid"));
     }
 }

@@ -31,11 +31,27 @@ public final class DefaultAssetResolver implements AssetResolver {
     }
 
     @Override
+    public boolean hasTileAsset(final String type) {
+        if (type == null) {
+            return false;
+        }
+        return TILE_ASSETS.containsKey(type.toUpperCase(Locale.ROOT));
+    }
+
+    @Override
     public String buildingAsset(final String type) {
         if (type == null) {
             return "house0";
         }
         String asset = BUILDING_ASSETS.get(type.toUpperCase(Locale.ROOT));
         return asset != null ? asset : "house0";
+    }
+
+    @Override
+    public boolean hasBuildingAsset(final String type) {
+        if (type == null) {
+            return false;
+        }
+        return BUILDING_ASSETS.containsKey(type.toUpperCase(Locale.ROOT));
     }
 }
