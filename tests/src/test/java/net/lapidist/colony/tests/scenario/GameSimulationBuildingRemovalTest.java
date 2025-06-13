@@ -5,7 +5,7 @@ import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.BuildingRemovalData;
 import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.map.DefaultMapGenerator;
+import net.lapidist.colony.map.ChunkedMapGenerator;
 import net.lapidist.colony.map.MapGenerator;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
@@ -26,7 +26,7 @@ public class GameSimulationBuildingRemovalTest {
     @Test
     public void buildingRemovalIsBroadcastAndApplied() throws Exception {
         MapGenerator gen = (w, h) -> {
-            MapState state = new DefaultMapGenerator().generate(w, h);
+            MapState state = new ChunkedMapGenerator().generate(w, h);
             state.buildings().clear();
             state.buildings().add(new BuildingData(0, 0, "HOUSE"));
             return state;

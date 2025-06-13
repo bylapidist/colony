@@ -37,9 +37,9 @@ public final class MapFactory {
         Map<TilePos, Entity> tileMap = new HashMap<>();
         Array<Entity> entities = new Array<>();
 
-        for (var chunkEntry : state.chunks().entrySet()) {
-            for (Map.Entry<TilePos, TileData> entry : chunkEntry.getValue().getTiles().entrySet()) {
-                TileData td = entry.getValue();
+        for (int x = 0; x < GameConstants.MAP_WIDTH; x++) {
+            for (int y = 0; y < GameConstants.MAP_HEIGHT; y++) {
+                TileData td = state.getTile(x, y);
                 Entity tile = world.createEntity();
                 TileComponent tileComponent = new TileComponent();
                 tileComponent.setTileType(TileComponent.TileType.valueOf(td.tileType()));

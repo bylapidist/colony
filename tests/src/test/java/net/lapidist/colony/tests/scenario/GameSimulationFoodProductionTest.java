@@ -6,7 +6,7 @@ import net.lapidist.colony.components.resources.PlayerResourceComponent;
 import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
-import net.lapidist.colony.map.DefaultMapGenerator;
+import net.lapidist.colony.map.ChunkedMapGenerator;
 import net.lapidist.colony.map.MapGenerator;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
@@ -29,7 +29,7 @@ public class GameSimulationFoodProductionTest {
     @Test
     public void foodIncreasesFromServerProduction() throws Exception {
         MapGenerator gen = (w, h) -> {
-            MapState s = new DefaultMapGenerator().generate(w, h);
+            MapState s = new ChunkedMapGenerator().generate(w, h);
             s.buildings().add(new BuildingData(0, 0, BuildingType.FARM.name()));
             return s.toBuilder().playerResources(new ResourceData()).build();
         };

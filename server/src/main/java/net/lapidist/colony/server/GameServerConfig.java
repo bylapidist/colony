@@ -1,7 +1,7 @@
 package net.lapidist.colony.server;
 
 import net.lapidist.colony.config.ColonyConfig;
-import net.lapidist.colony.map.DefaultMapGenerator;
+import net.lapidist.colony.map.ChunkedMapGenerator;
 import net.lapidist.colony.map.MapGenerator;
 
 /**
@@ -14,7 +14,7 @@ public final class GameServerConfig {
 
     private String saveName = DEFAULT_SAVE_NAME;
     private long autosaveInterval = DEFAULT_INTERVAL;
-    private MapGenerator mapGenerator = new DefaultMapGenerator();
+    private MapGenerator mapGenerator = new ChunkedMapGenerator();
 
     public String getSaveName() {
         return saveName;

@@ -36,7 +36,11 @@ public class MapRenderDataBuilderTest {
         MapComponent map = MapFactory.create(world, state).getComponent(MapComponent.class);
 
         MapRenderData data = MapRenderDataBuilder.fromMap(map, world);
-        assertEquals(1, data.getTiles().size);
+        assertEquals(
+                net.lapidist.colony.components.GameConstants.MAP_WIDTH
+                        * net.lapidist.colony.components.GameConstants.MAP_HEIGHT,
+                data.getTiles().size
+        );
         assertEquals(1, data.getBuildings().size);
 
         var tile = data.getTiles().first();

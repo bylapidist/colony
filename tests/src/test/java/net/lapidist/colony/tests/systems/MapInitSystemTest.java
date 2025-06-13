@@ -10,7 +10,7 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.map.GeneratedMapStateProvider;
 import net.lapidist.colony.map.ProvidedMapStateProvider;
-import net.lapidist.colony.map.DefaultMapGenerator;
+import net.lapidist.colony.map.ChunkedMapGenerator;
 import net.lapidist.colony.map.MapFactory;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.resources.ResourceComponent;
@@ -45,13 +45,17 @@ public class MapInitSystemTest {
                 .getEntities();
         assertEquals(1, maps.size());
         MapComponent map = world.getMapper(MapComponent.class).get(maps.get(0));
-        assertEquals(1, map.getTileMap().size());
+        assertEquals(
+                net.lapidist.colony.components.GameConstants.MAP_WIDTH
+                        * net.lapidist.colony.components.GameConstants.MAP_HEIGHT,
+                map.getTileMap().size()
+        );
     }
 
     @Test
     public void generatesStateWithGenerator() {
         World world = new World(new WorldConfigurationBuilder()
-                .with(new MapInitSystem(new GeneratedMapStateProvider(new DefaultMapGenerator(), 1, 1)))
+                .with(new MapInitSystem(new GeneratedMapStateProvider(new ChunkedMapGenerator(), 1, 1)))
                 .build());
         world.process();
 

@@ -32,9 +32,9 @@ import static org.mockito.Mockito.*;
 public class MapTileCacheTest {
 
     private static final float VIEW_SIZE = 64f;
-    private static final float FAR_POS = 100f;
+    private static final float FAR_POS = 2000f;
     private static final int LARGE_TILE_COUNT = 8200;
-    private static final int EXPECTED_CACHE_COUNT_AFTER_UPDATE = 3;
+    private static final int EXPECTED_CACHE_COUNT_AFTER_UPDATE = 2;
 
     private MapRenderData createData() {
         MapState state = new MapState();
@@ -187,7 +187,7 @@ public class MapTileCacheTest {
                 })) {
             MapTileCache cache = new MapTileCache();
             cache.ensureCache(loader, data, new DefaultAssetResolver(), cam);
-            assertEquals(2, cons.constructed().size());
+            assertEquals(1, cons.constructed().size());
             com.badlogic.gdx.utils.IntArray indices = new com.badlogic.gdx.utils.IntArray(new int[] {0});
             cache.invalidateTiles(indices);
             data.setVersion(data.getVersion() + 1);
