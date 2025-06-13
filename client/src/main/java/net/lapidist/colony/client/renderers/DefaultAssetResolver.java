@@ -20,6 +20,7 @@ public final class DefaultAssetResolver implements AssetResolver {
         BUILDING_ASSETS.put(BuildingComponent.BuildingType.HOUSE.name(), "house0");
         BUILDING_ASSETS.put(BuildingComponent.BuildingType.MARKET.name(), "house0");
         BUILDING_ASSETS.put(BuildingComponent.BuildingType.FACTORY.name(), "house0");
+        BUILDING_ASSETS.put(BuildingComponent.BuildingType.FARM.name(), "house0");
     }
     @Override
     public String tileAsset(final String type) {

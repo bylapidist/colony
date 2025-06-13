@@ -8,7 +8,8 @@ public final class BuildingComponent extends AbstractBoundedComponent {
     public enum BuildingType {
         HOUSE("building.house"),
         MARKET("building.market"),
-        FACTORY("building.factory");
+        FACTORY("building.factory"),
+        FARM("building.farm");
 
         private final String key;
 
