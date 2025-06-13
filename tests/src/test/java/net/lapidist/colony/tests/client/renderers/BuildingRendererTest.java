@@ -2,11 +2,14 @@ package net.lapidist.colony.tests.client.renderers;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import net.lapidist.colony.client.renderers.BuildingRenderer;
 import net.lapidist.colony.client.renderers.DefaultAssetResolver;
+import net.lapidist.colony.client.renderers.AssetResolver;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.render.data.RenderBuilding;
@@ -83,5 +86,47 @@ public class BuildingRendererTest {
         renderer.render(map);
 
         verifyNoInteractions(loader);
+    }
+
+    @Test
+    public void drawsLabelWhenAssetMissing() throws Exception {
+        SpriteBatch batch = mock(SpriteBatch.class);
+        ResourceLoader loader = mock(ResourceLoader.class);
+        TextureRegion region = mock(TextureRegion.class);
+        when(loader.findRegion(anyString())).thenReturn(region);
+
+        CameraProvider camera = mock(CameraProvider.class);
+        OrthographicCamera cam = new OrthographicCamera();
+        ExtendViewport viewport = new ExtendViewport(VIEW_SIZE, VIEW_SIZE, cam);
+        viewport.update(VIEW_SIZE, VIEW_SIZE, true);
+        cam.update();
+        when(camera.getCamera()).thenReturn(cam);
+        when(camera.getViewport()).thenReturn(viewport);
+
+        AssetResolver resolver = mock(AssetResolver.class);
+        when(resolver.buildingAsset(anyString())).thenReturn("house0");
+        when(resolver.hasBuildingAsset(anyString())).thenReturn(false);
+
+        BuildingRenderer renderer = new BuildingRenderer(batch, loader, camera, resolver);
+
+        java.lang.reflect.Field fontField = BuildingRenderer.class.getDeclaredField("font");
+        fontField.setAccessible(true);
+        BitmapFont font = spy(new BitmapFont());
+        fontField.set(renderer, font);
+        java.lang.reflect.Field layoutField = BuildingRenderer.class.getDeclaredField("layout");
+        layoutField.setAccessible(true);
+        GlyphLayout layout = spy(new GlyphLayout());
+        layoutField.set(renderer, layout);
+
+        Array<RenderBuilding> buildings = new Array<>();
+        RenderBuilding building = RenderBuilding.builder().x(0).y(0).buildingType("HOUSE").build();
+        buildings.add(building);
+
+        MapRenderData map = new SimpleMapRenderData(new Array<RenderTile>(), buildings,
+                new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT]);
+
+        renderer.render(map);
+
+        verify(font).draw(eq(batch), eq(layout), anyFloat(), anyFloat());
     }
 }

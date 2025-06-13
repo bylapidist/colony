@@ -2,6 +2,8 @@ package net.lapidist.colony.client.renderers;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -23,6 +25,9 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
     private final AssetResolver resolver;
     private final java.util.EnumMap<BuildingComponent.BuildingType, TextureRegion> buildingRegions =
             new java.util.EnumMap<>(BuildingComponent.BuildingType.class);
+    private final BitmapFont font = new BitmapFont();
+    private final GlyphLayout layout = new GlyphLayout();
+    private static final float LABEL_OFFSET_Y = 8f;
     private final Rectangle viewBounds = new Rectangle();
     private final Vector2 worldCoords = new Vector2();
 
@@ -67,6 +72,10 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
             TextureRegion region = buildingRegions.get(type);
             if (region != null) {
                 spriteBatch.draw(region, worldCoords.x, worldCoords.y);
+            }
+            if (!resolver.hasBuildingAsset(type.name())) {
+                layout.setText(font, type.name());
+                font.draw(spriteBatch, layout, worldCoords.x, worldCoords.y + LABEL_OFFSET_Y);
             }
         }
     }
