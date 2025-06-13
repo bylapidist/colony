@@ -46,7 +46,7 @@ public final class TileSelectionHandler {
         Vector2 worldCoords = CameraUtils.screenToWorldCoords(cameraSystem.getViewport(), x, y);
         Vector2 tileCoords = CameraUtils.worldCoordsToTileCoords(worldCoords);
 
-        return MapUtils.findTile(map, (int) tileCoords.x, (int) tileCoords.y, tileMapper)
+        return MapUtils.findTile(map, (int) tileCoords.x, (int) tileCoords.y)
                 .map(tile -> {
                     TileComponent tileComponent = tileMapper.get(tile);
                     boolean newState = !tileComponent.isSelected();

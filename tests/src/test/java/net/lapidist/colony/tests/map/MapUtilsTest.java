@@ -8,8 +8,6 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.map.MapUtils;
-import net.lapidist.colony.components.maps.TileComponent;
-import com.artemis.ComponentMapper;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -64,9 +62,7 @@ public class MapUtilsTest {
 
         MapComponent map = MapUtils.findMap(world).orElse(null);
         assertNotNull(map);
-        ComponentMapper<TileComponent> mapper = world.getMapper(TileComponent.class);
-
-        assertTrue(MapUtils.findTile(map, 1, 2, mapper).isPresent());
-        assertTrue(MapUtils.findTile(map, 0, 0, mapper).isEmpty());
+        assertTrue(MapUtils.findTile(map, 1, 2).isPresent());
+        assertTrue(MapUtils.findTile(map, 0, 0).isEmpty());
     }
 }

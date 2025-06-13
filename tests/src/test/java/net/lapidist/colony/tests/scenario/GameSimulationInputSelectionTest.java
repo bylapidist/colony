@@ -66,8 +66,7 @@ public class GameSimulationInputSelectionTest {
             var tileOpt = MapUtils.findTile(
                     mapComponent,
                     0,
-                    0,
-                    sim.getWorld().getMapper(TileComponent.class)
+                    0
             );
             TileComponent tile = tileOpt.map(
                     t -> sim.getWorld().getMapper(TileComponent.class).get(t)

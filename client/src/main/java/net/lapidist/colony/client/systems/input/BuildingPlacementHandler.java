@@ -37,7 +37,7 @@ public final class BuildingPlacementHandler {
         Vector2 worldCoords = CameraUtils.screenToWorldCoords(cameraSystem.getViewport(), x, y);
         Vector2 tileCoords = CameraUtils.worldCoordsToTileCoords(worldCoords);
 
-        return MapUtils.findTile(map, (int) tileCoords.x, (int) tileCoords.y, tileMapper)
+        return MapUtils.findTile(map, (int) tileCoords.x, (int) tileCoords.y)
                 .map(tile -> {
                     TileComponent tc = tileMapper.get(tile);
                     BuildingPlacementData msg = new BuildingPlacementData(

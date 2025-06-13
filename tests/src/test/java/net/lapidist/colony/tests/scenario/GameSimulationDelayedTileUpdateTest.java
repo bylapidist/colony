@@ -78,8 +78,7 @@ public class GameSimulationDelayedTileUpdateTest {
         return MapUtils.findTile(
                 mapComponent,
                 0,
-                0,
-                sim.getWorld().getMapper(TileComponent.class)
+                0
         ).map(t -> sim.getWorld().getMapper(TileComponent.class).get(t))
                 .orElse(null);
     }

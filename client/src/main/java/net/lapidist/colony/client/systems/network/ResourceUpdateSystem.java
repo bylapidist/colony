@@ -45,7 +45,7 @@ public final class ResourceUpdateSystem extends BaseSystem {
         ResourceUpdateData update;
         while ((update = client.poll(ResourceUpdateData.class)) != null) {
             final ResourceUpdateData data = update;
-            var found = MapUtils.findTile(mapComponent, data.x(), data.y(), tileMapper)
+            var found = MapUtils.findTile(mapComponent, data.x(), data.y())
                     .map(tile -> {
                         ResourceComponent rc = resourceMapper.get(tile);
                         int deltaWood = rc.getWood() - data.wood();

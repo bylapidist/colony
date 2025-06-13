@@ -36,7 +36,7 @@ public final class TileUpdateSystem extends BaseSystem {
         TileSelectionData update;
         while ((update = client.poll(TileSelectionData.class)) != null) {
             final TileSelectionData data = update;
-                    MapUtils.findTile(mapComponent, data.x(), data.y(), tileMapper)
+                    MapUtils.findTile(mapComponent, data.x(), data.y())
                     .ifPresent(t -> {
                         var tc = tileMapper.get(t);
                         tc.setSelected(data.selected());
