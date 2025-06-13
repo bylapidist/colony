@@ -56,7 +56,7 @@ public final class SerializationRegistrar {
     }
 
     /** Precomputed registration hash for quick access. */
-    public static final int REGISTRATION_HASH = -1185973674;
+    public static final int REGISTRATION_HASH = -1119370346;
 
     private static final Class<?>[] REGISTERED_TYPES = {
             TileData.class,

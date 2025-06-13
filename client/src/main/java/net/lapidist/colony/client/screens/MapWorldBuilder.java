@@ -17,6 +17,7 @@ import net.lapidist.colony.client.systems.MapRenderSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.PlayerMovementSystem;
 import net.lapidist.colony.client.systems.UISystem;
+import net.lapidist.colony.client.systems.ChunkLoadSystem;
 import net.lapidist.colony.client.systems.network.TileUpdateSystem;
 import net.lapidist.colony.client.systems.network.BuildingUpdateSystem;
 import net.lapidist.colony.client.systems.network.ResourceUpdateSystem;
@@ -131,6 +132,7 @@ public final class MapWorldBuilder {
                         new TileUpdateSystem(client),
                         new BuildingUpdateSystem(client),
                         new ResourceUpdateSystem(client),
+                        new ChunkLoadSystem(client),
                         new MapRenderSystem(),
                         new UISystem(stage)
                 );

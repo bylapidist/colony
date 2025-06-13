@@ -23,6 +23,7 @@ import net.lapidist.colony.client.network.handlers.MapMetadataHandler;
 import net.lapidist.colony.client.network.handlers.MapChunkHandler;
 import net.lapidist.colony.client.network.handlers.QueueingMessageHandler;
 import net.lapidist.colony.client.network.handlers.ResourceUpdateHandler;
+import net.lapidist.colony.components.state.MapChunk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,24 +99,7 @@ public final class GameClient extends AbstractMessageEndpoint {
                         }
                     }
                 }),
-                new MapChunkHandler(chunk -> {
-                    if (tileBuffer != null) {
-                        tileBuffer.putAll(chunk.tiles());
-                        receivedChunks++;
-                        if (loadProgressListener != null && expectedChunks > 0) {
-                            loadProgressListener.accept(receivedChunks / (float) expectedChunks);
-                        }
-                        if (receivedChunks >= expectedChunks) {
-                            mapState = mapBuilder.chunks(buildChunks(tileBuffer)).build();
-                            if (readyCallback != null) {
-                                readyCallback.accept(mapState);
-                            }
-                            if (loadProgressListener != null) {
-                                loadProgressListener.accept(1f);
-                            }
-                        }
-                    }
-                }),
+                new MapChunkHandler(this::handleChunk),
                 new QueueingMessageHandler<>(TileSelectionData.class, messageQueues),
                 new QueueingMessageHandler<>(BuildingData.class, messageQueues),
                 new QueueingMessageHandler<>(BuildingRemovalData.class, messageQueues),
@@ -178,6 +162,41 @@ public final class GameClient extends AbstractMessageEndpoint {
             chunk.getTiles().put(new TilePos(localX, localY), data);
         }
         return chunks;
+    }
+
+    private void handleChunk(final MapChunk chunk) {
+        if (tileBuffer != null) {
+            tileBuffer.putAll(chunk.tiles());
+            receivedChunks++;
+            if (loadProgressListener != null && expectedChunks > 0) {
+                loadProgressListener.accept(receivedChunks / (float) expectedChunks);
+            }
+            if (receivedChunks >= expectedChunks) {
+                mapState = mapBuilder.chunks(buildChunks(tileBuffer)).build();
+                if (readyCallback != null) {
+                    readyCallback.accept(mapState);
+                }
+                if (loadProgressListener != null) {
+                    loadProgressListener.accept(1f);
+                }
+            }
+            return;
+        }
+        if (mapState == null) {
+            return;
+        }
+        ChunkPos posKey = new ChunkPos(chunk.chunkX(), chunk.chunkY());
+        MapChunkData data = mapState.chunks().get(posKey);
+        if (data == null) {
+            data = new MapChunkData(chunk.chunkX(), chunk.chunkY());
+            mapState.chunks().put(posKey, data);
+        }
+        for (var entry : chunk.tiles().entrySet()) {
+            TileData td = entry.getValue();
+            int localX = Math.floorMod(td.x(), MapChunkData.CHUNK_SIZE);
+            int localY = Math.floorMod(td.y(), MapChunkData.CHUNK_SIZE);
+            data.getTiles().put(new TilePos(localX, localY), td);
+        }
     }
 
     /**
