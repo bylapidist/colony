@@ -13,7 +13,6 @@ import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.map.MapUtils;
 import net.lapidist.colony.settings.KeyBindings;
 import net.lapidist.colony.tests.GdxTestRunner;
@@ -32,7 +31,7 @@ public class BuildPlacementWithSelectionSystemTest {
         TileData tile = TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .build();
-        state.tiles().put(new TilePos(0, 0), tile);
+        state.putTile(tile);
 
         GameClient client = mock(GameClient.class);
         KeyBindings keys = new KeyBindings();

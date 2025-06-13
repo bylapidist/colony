@@ -12,7 +12,6 @@ import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +30,7 @@ public class InputSystemInitOrderTest {
                 .tileType("GRASS")
                 .passable(true)
                 .build();
-        state.tiles().put(new TilePos(0, 0), tile);
+        state.putTile(tile);
 
         GameClient client = mock(GameClient.class);
         World world = new World(new WorldConfigurationBuilder()

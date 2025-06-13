@@ -13,7 +13,6 @@ import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
@@ -33,7 +32,7 @@ public class TileUpdateSystemTest {
                 .tileType("GRASS")
                 .passable(true)
                 .build();
-        state.tiles().put(new TilePos(0, 0), tile);
+        state.putTile(tile);
 
         GameClient client = new GameClient();
         World world = new World(new WorldConfigurationBuilder()

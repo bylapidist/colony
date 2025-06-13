@@ -6,7 +6,6 @@ import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.tests.GdxTestRunner;
 import net.lapidist.colony.client.core.io.TextureAtlasResourceLoader;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -39,7 +38,7 @@ public class MinimapActorTest {
                 .tileType("GRASS")
                 .passable(true)
                 .build();
-        state.tiles().put(new TilePos(0, 0), tile);
+        state.putTile(tile);
 
         World world = new World(new WorldConfigurationBuilder()
                 .with(new MapLoadSystem(state), new PlayerCameraSystem())
@@ -53,7 +52,7 @@ public class MinimapActorTest {
     @Test
     public void overlayRenderedAndCacheInvalidated() throws Exception {
         MapState state = new MapState();
-        state.tiles().put(new TilePos(0, 0), TileData.builder()
+        state.putTile(TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .build());
 

@@ -7,7 +7,6 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.MapMetadata;
 import net.lapidist.colony.components.state.MapChunk;
 import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.server.services.NetworkService;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -21,7 +20,7 @@ public class NetworkServiceTest {
         Server server = mock(Server.class);
         NetworkService service = new NetworkService(server, 1, 2);
         MapState state = new MapState();
-        state.tiles().put(new TilePos(0, 0), new TileData());
+        state.putTile(new TileData());
 
         service.start(state, o -> { });
 

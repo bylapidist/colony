@@ -2,7 +2,6 @@ package net.lapidist.colony.tests.server;
 
 import net.lapidist.colony.chat.ChatMessage;
 import net.lapidist.colony.client.network.GameClient;
-import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
 import net.lapidist.colony.server.events.TileSelectionEvent;
@@ -44,7 +43,7 @@ public class GameServerChatCommandTest {
         Thread.sleep(WAIT_MS);
         Events.update();
 
-        assertTrue(server.getMapState().tiles().get(new TilePos(0, 0)).selected());
+        assertTrue(server.getMapState().getTile(0, 0).selected());
         assertTrue(handled);
 
         client.stop();

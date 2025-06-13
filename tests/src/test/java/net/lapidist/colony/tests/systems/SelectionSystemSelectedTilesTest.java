@@ -12,7 +12,6 @@ import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.settings.KeyAction;
 import net.lapidist.colony.settings.KeyBindings;
 import net.lapidist.colony.tests.GdxTestRunner;
@@ -31,12 +30,12 @@ public class SelectionSystemSelectedTilesTest {
     public void gatherKeyUsesSelectedTiles() {
         MapState state = new MapState();
         ResourceData res = new ResourceData(INITIAL_WOOD, 0, 0);
-        state.tiles().put(new TilePos(0, 0), TileData.builder()
+        state.putTile(TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .selected(true)
                 .resources(res)
                 .build());
-        state.tiles().put(new TilePos(1, 0), TileData.builder()
+        state.putTile(TileData.builder()
                 .x(1).y(0).tileType("GRASS").passable(true)
                 .resources(res)
                 .build());

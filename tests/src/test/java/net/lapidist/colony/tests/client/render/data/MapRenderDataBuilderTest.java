@@ -10,7 +10,6 @@ import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TilePos;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -27,7 +26,7 @@ public class MapRenderDataBuilderTest {
     @Test
     public void convertsMapToRenderObjects() {
         MapState state = new MapState();
-        state.tiles().put(new TilePos(TILE_X, TILE_Y), TileData.builder()
+        state.putTile(TileData.builder()
                 .x(TILE_X).y(TILE_Y).tileType("GRASS").passable(true)
                 .resources(new net.lapidist.colony.components.state.ResourceData(WOOD, STONE, FOOD))
                 .build());
@@ -50,7 +49,7 @@ public class MapRenderDataBuilderTest {
     @Test
     public void updatesExistingRenderData() {
         MapState state = new MapState();
-        state.tiles().put(new TilePos(0, 0), TileData.builder()
+        state.putTile(TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .build());
 

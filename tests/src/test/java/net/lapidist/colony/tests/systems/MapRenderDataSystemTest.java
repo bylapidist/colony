@@ -6,7 +6,6 @@ import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.map.ProvidedMapStateProvider;
 import org.junit.Test;
@@ -29,7 +28,7 @@ public class MapRenderDataSystemTest {
     @Test
     public void populatesRenderDataFromMap() {
         MapState state = new MapState();
-        state.tiles().put(new TilePos(0, 0), TileData.builder()
+        state.putTile(TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .build());
 
@@ -50,10 +49,10 @@ public class MapRenderDataSystemTest {
     @Test
     public void tracksSelectedTileIndices() {
         MapState state = new MapState();
-        state.tiles().put(new TilePos(0, 0), TileData.builder()
+        state.putTile(TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true).selected(true)
                 .build());
-        state.tiles().put(new TilePos(1, 0), TileData.builder()
+        state.putTile(TileData.builder()
                 .x(1).y(0).tileType("GRASS").passable(true)
                 .build());
 
@@ -73,7 +72,7 @@ public class MapRenderDataSystemTest {
     @Test
     public void updatesWhenMapChanges() {
         MapState state = new MapState();
-        state.tiles().put(new TilePos(0, 0), TileData.builder()
+        state.putTile(TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .build());
         World world = new World(new WorldConfigurationBuilder()
@@ -105,10 +104,10 @@ public class MapRenderDataSystemTest {
     @Test
     public void onlyChangedTilesAreReplaced() {
         MapState state = new MapState();
-        state.tiles().put(new TilePos(0, 0), TileData.builder()
+        state.putTile(TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .build());
-        state.tiles().put(new TilePos(1, 0), TileData.builder()
+        state.putTile(TileData.builder()
                 .x(1).y(0).tileType("GRASS").passable(true)
                 .build());
 
@@ -145,7 +144,7 @@ public class MapRenderDataSystemTest {
     @Test
     public void exposesUpdatedIndices() {
         MapState state = new MapState();
-        state.tiles().put(new TilePos(0, 0), TileData.builder()
+        state.putTile(TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .build());
 
