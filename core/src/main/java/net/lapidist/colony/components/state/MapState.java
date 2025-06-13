@@ -22,7 +22,8 @@ public record MapState(
         Map<ChunkPos, MapChunkData> chunks,
         List<BuildingData> buildings,
         ResourceData playerResources,
-        PlayerPosition playerPos
+        PlayerPosition playerPos,
+        CameraPosition cameraPos
 ) {
     public static final int CURRENT_VERSION = SaveVersion.CURRENT.number();
 
@@ -36,7 +37,8 @@ public record MapState(
                 new HashMap<>(),
                 new ArrayList<>(),
                 new ResourceData(),
-                new PlayerPosition(GameConstants.MAP_WIDTH / 2, GameConstants.MAP_HEIGHT / 2)
+                new PlayerPosition(GameConstants.MAP_WIDTH / 2, GameConstants.MAP_HEIGHT / 2),
+                new CameraPosition(GameConstants.MAP_WIDTH / 2f, GameConstants.MAP_HEIGHT / 2f)
         );
     }
 
@@ -121,6 +123,7 @@ public record MapState(
         private List<BuildingData> buildings;
         private ResourceData playerResources;
         private PlayerPosition playerPos;
+        private CameraPosition cameraPos;
 
         private Builder() {
             this(new MapState());
@@ -136,6 +139,7 @@ public record MapState(
             this.buildings = state.buildings;
             this.playerResources = state.playerResources;
             this.playerPos = state.playerPos;
+            this.cameraPos = state.cameraPos;
         }
 
         public Builder version(final int newVersion) {
@@ -183,6 +187,11 @@ public record MapState(
             return this;
         }
 
+        public Builder cameraPos(final CameraPosition newCameraPos) {
+            this.cameraPos = newCameraPos;
+            return this;
+        }
+
         public MapState build() {
             return new MapState(
                     version,
@@ -193,7 +202,8 @@ public record MapState(
                     chunks,
                     buildings,
                     playerResources,
-                    playerPos
+                    playerPos,
+                    cameraPos
             );
         }
     }

@@ -54,7 +54,8 @@ public class MapWorldBuilderConfigurationTest {
             World world = MapWorldBuilder.build(
                     MapWorldBuilder.baseBuilder(client, stage, keys),
                     null,
-                    new net.lapidist.colony.settings.Settings()
+                    new net.lapidist.colony.settings.Settings(),
+                    null
             );
 
             assertNotNull(world.getSystem(CameraInputSystem.class));
@@ -86,7 +87,8 @@ public class MapWorldBuilderConfigurationTest {
             World world = MapWorldBuilder.build(
                     MapWorldBuilder.builder(new ProvidedMapStateProvider(state), client, stage, keys),
                     null,
-                    new net.lapidist.colony.settings.Settings()
+                    new net.lapidist.colony.settings.Settings(),
+                    null
             );
             world.process();
 
@@ -118,7 +120,8 @@ public class MapWorldBuilderConfigurationTest {
             World world = MapWorldBuilder.build(
                     MapWorldBuilder.builder(state, client, stage, keys),
                     null,
-                    new net.lapidist.colony.settings.Settings()
+                    new net.lapidist.colony.settings.Settings(),
+                    null
             );
             world.process();
 
@@ -153,7 +156,8 @@ public class MapWorldBuilderConfigurationTest {
             World world = MapWorldBuilder.build(
                     MapWorldBuilder.builder(state, client, stage, keys),
                     null,
-                    new net.lapidist.colony.settings.Settings()
+                    new net.lapidist.colony.settings.Settings(),
+                    null
             );
             world.process();
 
@@ -174,7 +178,7 @@ public class MapWorldBuilderConfigurationTest {
     public void selectsCameraSystemFromSettings() {
         net.lapidist.colony.settings.Settings settings = new net.lapidist.colony.settings.Settings();
         settings.getGraphicsSettings().setRenderer("sprite");
-        World world = MapWorldBuilder.build(new com.artemis.WorldConfigurationBuilder(), null, settings);
+        World world = MapWorldBuilder.build(new com.artemis.WorldConfigurationBuilder(), null, settings, null);
         assertNotNull(world.getSystem(PlayerCameraSystem.class));
         world.dispose();
     }
