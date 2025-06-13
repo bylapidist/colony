@@ -10,6 +10,7 @@ public enum KeyAction {
     MOVE_RIGHT("moveRight"),
     GATHER("gather"),
     BUILD("build"),
+    REMOVE("remove"),
     CHAT("chat"),
     MINIMAP("minimap");
 
