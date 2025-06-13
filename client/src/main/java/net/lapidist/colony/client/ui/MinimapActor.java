@@ -17,6 +17,8 @@ import net.lapidist.colony.settings.GraphicsSettings;
 import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // Helper classes to reduce branching
 
@@ -28,6 +30,7 @@ import java.io.IOException;
 public final class MinimapActor extends Actor implements Disposable {
 
     private static final int DEFAULT_SIZE = 128;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MinimapActor.class);
 
     private final World world;
     private final ResourceLoader resourceLoader = new TextureAtlasResourceLoader();
@@ -105,6 +108,7 @@ public final class MinimapActor extends Actor implements Disposable {
             resourceLoader.loadTextures(FileLocation.INTERNAL, "textures/textures.atlas", graphicsSettings);
             resourceLoader.finishLoading();
         } catch (IOException e) {
+            LOGGER.warn("Failed to load minimap textures", e);
             // ignore loading errors in headless tests
         }
         mapWidthWorld = -1;

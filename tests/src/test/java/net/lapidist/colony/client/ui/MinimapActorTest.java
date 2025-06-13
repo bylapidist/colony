@@ -8,6 +8,7 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.tests.GdxTestRunner;
+import net.lapidist.colony.client.core.io.TextureAtlasResourceLoader;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -16,6 +17,12 @@ import org.junit.runner.RunWith;
 import org.mockito.MockedConstruction;
 
 import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
+import org.slf4j.LoggerFactory;
 
 /**
  * Basic tests for {@link MinimapActor}.
@@ -97,6 +104,31 @@ public class MinimapActorTest {
             stage.dispose();
 
             verify(outline).dispose();
+        }
+    }
+
+    @Test
+    public void logsWarningWhenTextureLoadFails() throws Exception {
+        try (MockedConstruction<TextureAtlasResourceLoader> mocked =
+                mockConstruction(TextureAtlasResourceLoader.class, (mock, ctx) ->
+                        doThrow(new java.io.IOException("fail")).when(mock)
+                                .loadTextures(any(), any(), any()))) {
+            Logger logger = (Logger) LoggerFactory.getLogger(MinimapActor.class);
+            ListAppender<ILoggingEvent> appender = new ListAppender<>();
+            appender.start();
+            logger.addAppender(appender);
+
+            World world = new World(new WorldConfigurationBuilder()
+                    .with(new MapLoadSystem(new MapState()), new PlayerCameraSystem())
+                    .build());
+            world.process();
+
+            MinimapActor actor = new MinimapActor(world);
+            actor.dispose();
+
+            logger.detachAppender(appender);
+            assertEquals(1, appender.list.size());
+            assertEquals(Level.WARN, appender.list.get(0).getLevel());
         }
     }
 }

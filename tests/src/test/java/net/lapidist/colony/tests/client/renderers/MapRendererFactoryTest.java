@@ -13,7 +13,12 @@ import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockedConstruction;
-import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.*;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.*;
 
@@ -208,5 +213,37 @@ public class MapRendererFactoryTest {
             ((com.badlogic.gdx.utils.Disposable) renderer).dispose();
         }
         world.dispose();
+    }
+
+    @Test
+    public void logsWarningWhenTextureLoadFails() throws Exception {
+        ResourceLoader loader = mock(ResourceLoader.class);
+        doThrow(new java.io.IOException("fail"))
+                .when(loader).loadTextures(any(), any(), any());
+
+        Logger logger = (Logger) LoggerFactory.getLogger(SpriteMapRendererFactory.class);
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
+
+        World world = new World(new WorldConfigurationBuilder()
+                .with(new PlayerCameraSystem())
+                .build());
+        try (MockedConstruction<SpriteBatch> ignored =
+                mockConstruction(SpriteBatch.class)) {
+            MapRendererFactory factory = new SpriteMapRendererFactory(
+                    loader,
+                    FileLocation.INTERNAL,
+                    "textures/missing.atlas"
+            );
+            MapRenderer renderer = factory.create(world);
+
+            assertNotNull(renderer);
+        }
+        world.dispose();
+
+        logger.detachAppender(appender);
+        assertEquals(1, appender.list.size());
+        assertEquals(Level.WARN, appender.list.get(0).getLevel());
     }
 }
