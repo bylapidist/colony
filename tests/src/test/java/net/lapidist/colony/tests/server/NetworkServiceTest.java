@@ -19,7 +19,7 @@ public class NetworkServiceTest {
     @Test
     public void startBindsServerAndSendsStateOnConnect() throws Exception {
         Server server = mock(Server.class);
-        NetworkService service = new NetworkService(server, 1, 2);
+        NetworkService service = new NetworkService(server, 1, 2, null);
         MapState state = new MapState();
         state.tiles().put(new TilePos(0, 0), new TileData());
 
@@ -40,7 +40,7 @@ public class NetworkServiceTest {
     @Test
     public void broadcastUsesServerSend() {
         Server server = mock(Server.class);
-        NetworkService service = new NetworkService(server, 1, 2);
+        NetworkService service = new NetworkService(server, 1, 2, null);
         Object message = new Object();
 
         service.broadcast(message);
@@ -51,7 +51,7 @@ public class NetworkServiceTest {
     @Test
     public void stopStopsServer() {
         Server server = mock(Server.class);
-        NetworkService service = new NetworkService(server, 1, 2);
+        NetworkService service = new NetworkService(server, 1, 2, null);
 
         service.stop();
 

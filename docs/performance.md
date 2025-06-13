@@ -87,7 +87,7 @@ reflection with a 64×64 tile map.
 
 | Benchmark | Score (ops/s) |
 |-----------|---------------|
-| NetworkServiceBenchmark.sendMapState | ~5,000 |
+| NetworkServiceBenchmark.sendMapState | ~5,100 |
 
 ## Minimap cache performance
 

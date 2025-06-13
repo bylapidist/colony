@@ -7,7 +7,7 @@ import net.lapidist.colony.components.state.MapChunk;
 import net.lapidist.colony.components.state.MapMetadata;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.network.DispatchListener;
+import net.lapidist.colony.components.state.ChunkRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,12 +24,14 @@ public final class NetworkService {
     private final Server server;
     private final int tcpPort;
     private final int udpPort;
+    private final MapService mapService;
     private static final int CHUNK_SIZE = 1024;
 
-    public NetworkService(final Server serverToUse, final int tcp, final int udp) {
+    public NetworkService(final Server serverToUse, final int tcp, final int udp, final MapService service) {
         this.server = serverToUse;
         this.tcpPort = tcp;
         this.udpPort = udp;
+        this.mapService = service;
     }
 
     /**
@@ -44,11 +46,20 @@ public final class NetworkService {
         LOGGER.info("Server started on TCP {} UDP {}", tcpPort, udpPort);
         server.bind(tcpPort, udpPort);
 
-        server.addListener(new DispatchListener(dispatcher) {
+        server.addListener(new com.esotericsoftware.kryonet.Listener() {
             @Override
             public void connected(final Connection connection) {
                 LOGGER.info("Connection established: {}", connection.getID());
                 sendMapState(connection, mapState);
+            }
+
+            @Override
+            public void received(final Connection connection, final Object object) {
+                dispatcher.accept(object);
+                if (object instanceof ChunkRequest req) {
+                    MapChunk chunk = mapService.loadChunk(req.chunkX(), req.chunkY());
+                    connection.sendTCP(chunk);
+                }
             }
         });
     }
@@ -78,12 +89,12 @@ public final class NetworkService {
         for (var entry : state.tiles().entrySet()) {
             bucket.put(entry.getKey(), entry.getValue());
             if (bucket.size() == CHUNK_SIZE) {
-                connection.sendTCP(new MapChunk(index++, bucket));
+                connection.sendTCP(new MapChunk(index++, 0, bucket));
                 bucket.clear();
             }
         }
         if (!bucket.isEmpty()) {
-            connection.sendTCP(new MapChunk(index, bucket));
+            connection.sendTCP(new MapChunk(index, 0, bucket));
             bucket.clear();
         }
         LOGGER.info("Sent map state in {} chunks to connection {}", chunkCount, connection.getID());

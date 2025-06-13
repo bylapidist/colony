@@ -216,6 +216,13 @@ public final class GameClient extends AbstractMessageEndpoint {
         send(message);
     }
 
+    /**
+     * Request a map chunk from the server.
+     */
+    public void requestChunk(final int chunkX, final int chunkY) {
+        send(new net.lapidist.colony.components.state.ChunkRequest(chunkX, chunkY));
+    }
+
     @Override
     public void send(final Object message) {
         client.sendTCP(message);

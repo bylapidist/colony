@@ -29,7 +29,7 @@ public class NetworkServiceBenchmark {
     @Setup(Level.Trial)
     public final void setUp() throws Exception {
         Server server = mock(Server.class);
-        service = new NetworkService(server, 1, 2);
+        service = new NetworkService(server, 1, 2, null);
         connection = mock(Connection.class);
         state = createState(MAP_SIZE, MAP_SIZE);
         sendMapState = NetworkService.class.getDeclaredMethod("sendMapState", Connection.class, MapState.class);

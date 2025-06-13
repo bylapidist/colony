@@ -26,6 +26,7 @@ import net.lapidist.colony.server.services.AutosaveService;
 import net.lapidist.colony.server.services.MapService;
 import net.lapidist.colony.server.services.NetworkService;
 import net.lapidist.colony.server.services.ResourceProductionService;
+import net.lapidist.colony.map.chunk.PerlinChunkGenerator;
 import net.mostlyoriginal.api.event.common.EventSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,8 +76,8 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         this.mapGenerator = config.getMapGenerator();
         this.handlers = handlersToUse;
         this.commandHandlers = commandHandlersToUse;
-        this.mapService = new MapService(mapGenerator, saveName);
-        this.networkService = new NetworkService(server, TCP_PORT, UDP_PORT);
+        this.mapService = new MapService(mapGenerator, new PerlinChunkGenerator(), saveName);
+        this.networkService = new NetworkService(server, TCP_PORT, UDP_PORT, mapService);
         this.autosaveService = new AutosaveService(autosaveInterval, saveName, () -> mapState);
         this.resourceProductionService = new ResourceProductionService(
                 autosaveInterval,
