@@ -1,30 +1,13 @@
 package net.lapidist.colony.components.entities;
 
 import net.lapidist.colony.components.AbstractBoundedComponent;
-import net.lapidist.colony.i18n.I18n;
 
+/** Component storing the id of a building type. */
 public final class BuildingComponent extends AbstractBoundedComponent {
-
-    public enum BuildingType {
-        HOUSE("building.house"),
-        MARKET("building.market"),
-        FACTORY("building.factory");
-
-        private final String key;
-
-        BuildingType(final String keyToSet) {
-            this.key = keyToSet;
-        }
-
-        @Override
-        public String toString() {
-            return I18n.get(key);
-        }
-    }
-    private BuildingType buildingType;
+    private String buildingType;
     private boolean dirty;
 
-    public BuildingType getBuildingType() {
+    public String getBuildingType() {
         return buildingType;
     }
 
@@ -36,7 +19,7 @@ public final class BuildingComponent extends AbstractBoundedComponent {
         this.dirty = dirtyToSet;
     }
 
-    public void setBuildingType(final BuildingType buildingTypeToSet) {
+    public void setBuildingType(final String buildingTypeToSet) {
         this.buildingType = buildingTypeToSet;
     }
 }

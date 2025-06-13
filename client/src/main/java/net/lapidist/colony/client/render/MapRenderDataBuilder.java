@@ -67,7 +67,7 @@ public final class MapRenderDataBuilder {
         return RenderBuilding.builder()
                 .x(bc.getX())
                 .y(bc.getY())
-                .buildingType(bc.getBuildingType().name())
+                .buildingType(bc.getBuildingType())
                 .build();
     }
 

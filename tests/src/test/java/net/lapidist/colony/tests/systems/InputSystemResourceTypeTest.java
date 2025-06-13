@@ -16,7 +16,6 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
-import net.lapidist.colony.components.resources.ResourceType;
 import net.lapidist.colony.components.state.ResourceGatherRequestData;
 import net.lapidist.colony.settings.KeyAction;
 import net.lapidist.colony.settings.KeyBindings;
@@ -61,7 +60,7 @@ public class InputSystemResourceTypeTest {
         ArgumentCaptor<ResourceGatherRequestData> captor =
                 ArgumentCaptor.forClass(ResourceGatherRequestData.class);
         verify(client).sendGatherRequest(captor.capture());
-        assertEquals(ResourceType.STONE, captor.getValue().resourceType());
+        assertEquals("STONE", captor.getValue().resourceType());
     }
 
     @Test
@@ -100,6 +99,6 @@ public class InputSystemResourceTypeTest {
         ArgumentCaptor<ResourceGatherRequestData> captor =
                 ArgumentCaptor.forClass(ResourceGatherRequestData.class);
         verify(client).sendGatherRequest(captor.capture());
-        assertEquals(ResourceType.WOOD, captor.getValue().resourceType());
+        assertEquals("WOOD", captor.getValue().resourceType());
     }
 }

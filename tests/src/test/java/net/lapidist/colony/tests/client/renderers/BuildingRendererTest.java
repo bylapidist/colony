@@ -5,8 +5,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.Gdx;
 import net.lapidist.colony.client.renderers.BuildingRenderer;
 import net.lapidist.colony.client.renderers.DefaultAssetResolver;
+import net.lapidist.colony.mod.PrototypeManager;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.render.data.RenderBuilding;
@@ -26,6 +28,7 @@ public class BuildingRendererTest {
 
     @Test
     public void rendersBuildingTexture() {
+        PrototypeManager.load(Gdx.files.internal("sample-mod.json"));
         SpriteBatch batch = mock(SpriteBatch.class);
         ResourceLoader loader = mock(ResourceLoader.class);
         TextureRegion region = mock(TextureRegion.class);
@@ -56,6 +59,7 @@ public class BuildingRendererTest {
 
     @Test
     public void cachesTextureRegions() {
+        PrototypeManager.load(Gdx.files.internal("sample-mod.json"));
         SpriteBatch batch = mock(SpriteBatch.class);
         ResourceLoader loader = mock(ResourceLoader.class);
         TextureRegion region = mock(TextureRegion.class);
