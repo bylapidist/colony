@@ -17,6 +17,7 @@ import net.lapidist.colony.components.state.MapChunk;
 import net.lapidist.colony.components.state.MapChunkRequest;
 import net.lapidist.colony.save.SaveData;
 import net.lapidist.colony.components.state.PlayerPosition;
+import net.lapidist.colony.components.state.CameraPosition;
 
 /**
  * Registers all serializable classes with a given Kryo instance.
@@ -56,7 +57,7 @@ public final class SerializationRegistrar {
     }
 
     /** Precomputed registration hash for quick access. */
-    public static final int REGISTRATION_HASH = -1119370346;
+    public static final int REGISTRATION_HASH = 403491417;
 
     private static final Class<?>[] REGISTERED_TYPES = {
             TileData.class,
@@ -77,6 +78,7 @@ public final class SerializationRegistrar {
             TilePos.class,
             net.lapidist.colony.chat.ChatMessage.class,
             PlayerPosition.class,
-            SaveData.class
+            SaveData.class,
+            CameraPosition.class
     };
 }

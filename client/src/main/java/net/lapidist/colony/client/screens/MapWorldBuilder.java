@@ -66,7 +66,7 @@ public final class MapWorldBuilder {
             final KeyBindings keyBindings,
             final ResourceData playerResources
     ) {
-        return createBuilder(client, stage, keyBindings, null, playerResources, null);
+        return createBuilder(client, stage, keyBindings, null, playerResources, null, null);
     }
 
     /**
@@ -84,7 +84,7 @@ public final class MapWorldBuilder {
             final Stage stage,
             final KeyBindings keyBindings
     ) {
-        return createBuilder(client, stage, keyBindings, provider, new ResourceData(), null);
+        return createBuilder(client, stage, keyBindings, provider, new ResourceData(), null, null);
     }
 
     /**
@@ -102,7 +102,8 @@ public final class MapWorldBuilder {
                 keyBindings,
                 new ProvidedMapStateProvider(state),
                 state.playerResources(),
-                state.playerPos()
+                state.playerPos(),
+                state.cameraPos()
         );
     }
 
@@ -112,7 +113,8 @@ public final class MapWorldBuilder {
             final KeyBindings keyBindings,
             final MapStateProvider provider,
             final ResourceData playerResources,
-            final PlayerPosition playerPos
+            final PlayerPosition playerPos,
+            final net.lapidist.colony.components.state.CameraPosition cameraPos
     ) {
         CameraInputSystem cameraInputSystem = new CameraInputSystem(keyBindings);
         cameraInputSystem.addProcessor(stage);
@@ -157,7 +159,8 @@ public final class MapWorldBuilder {
     public static World build(
             final WorldConfigurationBuilder builder,
             final MapRendererFactory factory,
-            final Settings settings
+            final Settings settings,
+            final net.lapidist.colony.components.state.CameraPosition cameraPos
     ) {
         MapRendererFactory actualFactory = factory;
         if (actualFactory == null) {
@@ -171,6 +174,11 @@ public final class MapWorldBuilder {
             MapRenderer renderer = actualFactory.create(world);
             renderSystem.setMapRenderer(renderer);
             renderSystem.setCameraProvider(world.getSystem(PlayerCameraSystem.class));
+        }
+        PlayerCameraSystem cameraSystem = world.getSystem(PlayerCameraSystem.class);
+        if (cameraSystem != null && cameraPos != null) {
+            cameraSystem.getCamera().position.set(cameraPos.x(), cameraPos.y(), 0);
+            cameraSystem.getCamera().update();
         }
         Events.init(world.getSystem(EventSystem.class));
         return world;

@@ -56,6 +56,7 @@ public final class MapService {
         MapState state = mapGenerator.generate(width, height);
         return state.toBuilder()
                 .playerPos(new PlayerPosition(width / 2, height / 2))
+                .cameraPos(new net.lapidist.colony.components.state.CameraPosition(width / 2f, height / 2f))
                 .build();
     }
 }

@@ -46,7 +46,7 @@ public class MapScreenTest {
             worldStatic.when(() -> MapWorldBuilder.builder(eq(state), eq(client),
                     any(Stage.class), eq(settings.getKeyBindings())))
                     .thenReturn(new WorldConfigurationBuilder());
-            worldStatic.when(() -> MapWorldBuilder.build(any(), isNull(), eq(settings)))
+            worldStatic.when(() -> MapWorldBuilder.build(any(), isNull(), eq(settings), any()))
                     .thenReturn(world);
             uiStatic.when(() -> MapUiBuilder.build(any(Stage.class), eq(world), eq(client), eq(colony)))
                     .thenAnswer(inv -> new MapUi(
