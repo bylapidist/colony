@@ -45,8 +45,8 @@ public final class ResourceUpdateSystem extends BaseSystem {
         ResourceUpdateData update;
         while ((update = client.poll(ResourceUpdateData.class)) != null) {
             final ResourceUpdateData data = update;
-            MapUtils.findTile(mapComponent, data.x(), data.y(), tileMapper)
-                    .ifPresent(tile -> {
+            var found = MapUtils.findTile(mapComponent, data.x(), data.y(), tileMapper)
+                    .map(tile -> {
                         ResourceComponent rc = resourceMapper.get(tile);
                         int deltaWood = rc.getWood() - data.wood();
                         int deltaStone = rc.getStone() - data.stone();
@@ -73,7 +73,15 @@ public final class ResourceUpdateSystem extends BaseSystem {
                             }
                         }
                         mapComponent.incrementVersion();
-                    });
+                        return true;
+                    })
+                    .orElse(false);
+            if (!found && player != null && data.x() == -1 && data.y() == -1) {
+                var pr = playerMapper.get(player);
+                pr.setWood(data.wood());
+                pr.setStone(data.stone());
+                pr.setFood(data.food());
+            }
         }
     }
 }

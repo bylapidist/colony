@@ -19,6 +19,7 @@ import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.client.network.handlers.MapMetadataHandler;
 import net.lapidist.colony.client.network.handlers.MapChunkHandler;
 import net.lapidist.colony.client.network.handlers.QueueingMessageHandler;
+import net.lapidist.colony.client.network.handlers.ResourceUpdateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -114,7 +115,7 @@ public final class GameClient extends AbstractMessageEndpoint {
                 new QueueingMessageHandler<>(TileSelectionData.class, messageQueues),
                 new QueueingMessageHandler<>(BuildingData.class, messageQueues),
                 new QueueingMessageHandler<>(ChatMessage.class, messageQueues),
-                new QueueingMessageHandler<>(ResourceUpdateData.class, messageQueues)
+                new ResourceUpdateHandler(messageQueues, () -> mapState, ms -> mapState = ms)
         );
     }
 

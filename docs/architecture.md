@@ -42,6 +42,22 @@ sequenceDiagram
 
 For a detailed walkthrough see [networking.md](networking.md).
 
+## Building Costs
+
+The server validates every placement request against the player's available
+resources stored in `MapState.playerResources`. Each building type has a fixed
+cost:
+
+| Building | Cost |
+|----------|------|
+| House    | 1 wood |
+| Market   | 5 wood, 2 stone |
+| Factory  | 10 wood, 5 stone |
+
+If the player lacks the required resources the request is ignored. When a
+building is placed the server deducts the cost, updates `playerResources` and
+broadcasts a `ResourceUpdateData` so clients stay in sync.
+
 ## Render Abstraction
 
 Rendering code is decoupled from map creation through the `MapRendererFactory`

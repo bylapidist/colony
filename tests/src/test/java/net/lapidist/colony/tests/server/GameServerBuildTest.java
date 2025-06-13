@@ -4,6 +4,10 @@ import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.state.BuildingPlacementData;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
+import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.ResourceData;
+import net.lapidist.colony.map.DefaultMapGenerator;
+import net.lapidist.colony.map.MapGenerator;
 import net.lapidist.colony.events.Events;
 import net.lapidist.colony.server.events.BuildingPlacedEvent;
 import net.mostlyoriginal.api.event.common.Subscribe;
@@ -26,8 +30,13 @@ public class GameServerBuildTest {
 
     @Test
     public void buildingPlacementUpdatesServerState() throws Exception {
+        MapGenerator gen = (w, h) -> {
+            MapState state = new DefaultMapGenerator().generate(w, h);
+            return state.toBuilder().playerResources(new ResourceData(1, 0, 0)).build();
+        };
         GameServerConfig config = GameServerConfig.builder()
                 .saveName("build-test")
+                .mapGenerator(gen)
                 .build();
         net.lapidist.colony.io.Paths.get().deleteAutosave("build-test");
         GameServer server = new GameServer(config);
