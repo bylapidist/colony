@@ -179,6 +179,8 @@ public final class GameClient extends AbstractMessageEndpoint {
                 if (loadProgressListener != null) {
                     loadProgressListener.accept(1f);
                 }
+                tileBuffer = null;
+                mapBuilder = null;
             }
             return;
         }
