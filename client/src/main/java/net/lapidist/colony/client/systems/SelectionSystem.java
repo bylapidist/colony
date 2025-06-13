@@ -98,7 +98,7 @@ public final class SelectionSystem extends BaseSystem {
         boolean result = tileSelectionHandler.handleTap(x, y, map, tileMapper);
         var worldCoords = CameraUtils.screenToWorldCoords(cameraSystem.getViewport(), x, y);
         var tileCoords = CameraUtils.worldCoordsToTileCoords(worldCoords);
-        MapUtils.findTile(map, (int) tileCoords.x, (int) tileCoords.y, tileMapper)
+        MapUtils.findTile(map, (int) tileCoords.x, (int) tileCoords.y)
                 .ifPresent(tile -> {
                     TileComponent tc = tileMapper.get(tile);
                     ResourceComponent rc = resourceMapper.get(tile);

@@ -136,7 +136,7 @@ public final class InputSystem extends BaseSystem {
             Vector2 worldCoords = CameraUtils.screenToWorldCoords(
                     cameraSystem.getViewport(), x, y);
             Vector2 tileCoords = CameraUtils.worldCoordsToTileCoords(worldCoords);
-            MapUtils.findTile(map, (int) tileCoords.x, (int) tileCoords.y, tileMapper)
+            MapUtils.findTile(map, (int) tileCoords.x, (int) tileCoords.y)
                     .ifPresent(tile -> {
                         TileComponent tc = tileMapper.get(tile);
                         var rc = resourceMapper.get(tile);
