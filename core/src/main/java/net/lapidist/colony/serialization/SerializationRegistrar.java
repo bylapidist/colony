@@ -14,6 +14,7 @@ import net.lapidist.colony.components.state.ResourceGatherRequestData;
 import net.lapidist.colony.components.state.ResourceUpdateData;
 import net.lapidist.colony.components.state.MapMetadata;
 import net.lapidist.colony.components.state.MapChunk;
+import net.lapidist.colony.components.state.MapChunkRequest;
 import net.lapidist.colony.save.SaveData;
 
 /**
@@ -54,7 +55,7 @@ public final class SerializationRegistrar {
     }
 
     /** Precomputed registration hash for quick access. */
-    public static final int REGISTRATION_HASH = 1025588104;
+    public static final int REGISTRATION_HASH = -522251697;
 
     private static final Class<?>[] REGISTERED_TYPES = {
             TileData.class,
@@ -69,6 +70,7 @@ public final class SerializationRegistrar {
             ResourceUpdateData.class,
             MapMetadata.class,
             MapChunk.class,
+            MapChunkRequest.class,
             net.lapidist.colony.components.state.ChunkPos.class,
             net.lapidist.colony.map.MapChunkData.class,
             TilePos.class,

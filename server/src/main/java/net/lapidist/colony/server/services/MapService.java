@@ -4,6 +4,7 @@ import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.map.MapGenerator;
+import net.lapidist.colony.map.MapChunkData;
 import net.lapidist.colony.server.io.GameStateIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,9 +48,10 @@ public final class MapService {
     }
 
     private MapState generateMap() {
-        return mapGenerator.generate(
-                GameConstants.MAP_WIDTH,
-                GameConstants.MAP_HEIGHT
-        );
+        int width = (int) Math.ceil(GameConstants.MAP_WIDTH / (double) MapChunkData.CHUNK_SIZE)
+                * MapChunkData.CHUNK_SIZE;
+        int height = (int) Math.ceil(GameConstants.MAP_HEIGHT / (double) MapChunkData.CHUNK_SIZE)
+                * MapChunkData.CHUNK_SIZE;
+        return mapGenerator.generate(width, height);
     }
 }
