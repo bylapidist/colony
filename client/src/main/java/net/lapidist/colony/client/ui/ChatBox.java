@@ -25,6 +25,12 @@ public final class ChatBox extends Table {
         log = new TextArea("", skin);
         log.setDisabled(true);
         log.setPrefRows(PREF_ROWS);
+        // Remove background graphics to avoid drawing a border line
+        TextField.TextFieldStyle logStyle = new TextField.TextFieldStyle(log.getStyle());
+        logStyle.background = null;
+        logStyle.disabledBackground = null;
+        logStyle.focusedBackground = null;
+        log.setStyle(logStyle);
         input = new TextField("", skin);
         input.setVisible(false);
         input.setMessageText(I18n.get("chat.placeholder"));
