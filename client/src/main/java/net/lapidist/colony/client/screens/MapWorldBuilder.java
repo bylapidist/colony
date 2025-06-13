@@ -25,6 +25,7 @@ import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.client.systems.PlayerInitSystem;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
+import net.lapidist.colony.components.state.PlayerPosition;
 import net.lapidist.colony.map.MapStateProvider;
 import net.lapidist.colony.map.ProvidedMapStateProvider;
 import net.lapidist.colony.events.Events;
@@ -64,7 +65,7 @@ public final class MapWorldBuilder {
             final KeyBindings keyBindings,
             final ResourceData playerResources
     ) {
-        return createBuilder(client, stage, keyBindings, null, playerResources);
+        return createBuilder(client, stage, keyBindings, null, playerResources, null);
     }
 
     /**
@@ -82,7 +83,7 @@ public final class MapWorldBuilder {
             final Stage stage,
             final KeyBindings keyBindings
     ) {
-        return createBuilder(client, stage, keyBindings, provider, new ResourceData());
+        return createBuilder(client, stage, keyBindings, provider, new ResourceData(), null);
     }
 
     /**
@@ -99,7 +100,8 @@ public final class MapWorldBuilder {
                 stage,
                 keyBindings,
                 new ProvidedMapStateProvider(state),
-                state.playerResources()
+                state.playerResources(),
+                state.playerPos()
         );
     }
 
@@ -108,7 +110,8 @@ public final class MapWorldBuilder {
             final Stage stage,
             final KeyBindings keyBindings,
             final MapStateProvider provider,
-            final ResourceData playerResources
+            final ResourceData playerResources,
+            final PlayerPosition playerPos
     ) {
         CameraInputSystem cameraInputSystem = new CameraInputSystem(keyBindings);
         cameraInputSystem.addProcessor(stage);
@@ -123,7 +126,7 @@ public final class MapWorldBuilder {
                         cameraInputSystem,
                         selectionSystem,
                         buildPlacementSystem,
-                        new PlayerInitSystem(playerResources),
+                        new PlayerInitSystem(playerResources, playerPos),
                         movementSystem,
                         new TileUpdateSystem(client),
                         new BuildingUpdateSystem(client),

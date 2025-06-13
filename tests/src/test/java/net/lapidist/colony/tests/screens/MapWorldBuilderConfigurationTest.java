@@ -18,9 +18,12 @@ import net.lapidist.colony.client.systems.PlayerInitSystem;
 import net.lapidist.colony.client.systems.MapRenderSystem;
 import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.components.resources.PlayerResourceComponent;
+import net.lapidist.colony.components.entities.PlayerComponent;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.PlayerPosition;
+import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.map.ProvidedMapStateProvider;
 import net.lapidist.colony.settings.KeyBindings;
 import net.lapidist.colony.tests.GdxTestRunner;
@@ -127,6 +130,41 @@ public class MapWorldBuilderConfigurationTest {
             assertEquals(WOOD, comp.getWood());
             assertEquals(STONE, comp.getStone());
             assertEquals(FOOD, comp.getFood());
+
+            world.dispose();
+        }
+    }
+
+    @Test
+    public void builderFromStateUsesPlayerPosition() {
+        final int x = 2;
+        final int y = 3;
+        PlayerPosition pos = new PlayerPosition(x, y);
+        MapState state = MapState.builder()
+                .playerPos(pos)
+                .build();
+        Batch batch = mock(Batch.class);
+        when(batch.getTransformMatrix()).thenReturn(new com.badlogic.gdx.math.Matrix4());
+        when(batch.getProjectionMatrix()).thenReturn(new com.badlogic.gdx.math.Matrix4());
+        Stage stage = new Stage(new ScreenViewport(), batch);
+        GameClient client = mock(GameClient.class);
+        KeyBindings keys = new KeyBindings();
+        try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
+            World world = MapWorldBuilder.build(
+                    MapWorldBuilder.builder(state, client, stage, keys),
+                    null,
+                    new net.lapidist.colony.settings.Settings()
+            );
+            world.process();
+
+            var players = world.getAspectSubscriptionManager()
+                    .get(Aspect.all(PlayerComponent.class))
+                    .getEntities();
+            var pc = world.getMapper(PlayerComponent.class)
+                    .get(world.getEntity(players.get(0)));
+            final float epsilon = 0.01f;
+            assertEquals(x * GameConstants.TILE_SIZE, pc.getX(), epsilon);
+            assertEquals(y * GameConstants.TILE_SIZE, pc.getY(), epsilon);
 
             world.dispose();
         }
