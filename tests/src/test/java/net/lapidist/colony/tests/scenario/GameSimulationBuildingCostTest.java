@@ -67,4 +67,49 @@ public class GameSimulationBuildingCostTest {
         server.stop();
         Thread.sleep(WAIT_MS);
     }
+
+    @Test
+    public void farmPlacementConsumesPlayerResources() throws Exception {
+        MapGenerator gen = (w, h) -> {
+            MapState state = new DefaultMapGenerator().generate(w, h);
+            return state.toBuilder().playerResources(new ResourceData(2, 0, 0)).build();
+        };
+        GameServerConfig config = GameServerConfig.builder()
+                .saveName("scenario-farm-cost")
+                .mapGenerator(gen)
+                .build();
+        net.lapidist.colony.io.Paths.get().deleteAutosave("scenario-farm-cost");
+        GameServer server = new GameServer(config);
+        server.start();
+
+        GameClient sender = new GameClient();
+        CountDownLatch latchSender = new CountDownLatch(1);
+        sender.start(state -> latchSender.countDown());
+        GameClient receiver = new GameClient();
+        CountDownLatch latchReceiver = new CountDownLatch(1);
+        receiver.start(state -> latchReceiver.countDown());
+        latchSender.await(1, TimeUnit.SECONDS);
+        latchReceiver.await(1, TimeUnit.SECONDS);
+
+        MapState state = receiver.getMapState();
+        GameSimulation sim = new GameSimulation(state, receiver);
+
+        BuildingPlacementData data = new BuildingPlacementData(0, 0, "FARM");
+        sender.sendBuildRequest(data);
+
+        Thread.sleep(WAIT_MS);
+        sim.step();
+
+        var players = sim.getWorld().getAspectSubscriptionManager()
+                .get(com.artemis.Aspect.all(PlayerResourceComponent.class))
+                .getEntities();
+        var prc = sim.getWorld().getMapper(PlayerResourceComponent.class)
+                .get(sim.getWorld().getEntity(players.get(0)));
+        assertEquals(0, prc.getWood());
+
+        sender.stop();
+        receiver.stop();
+        server.stop();
+        Thread.sleep(WAIT_MS);
+    }
 }
