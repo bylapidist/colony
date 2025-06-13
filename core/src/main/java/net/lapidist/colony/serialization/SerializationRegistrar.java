@@ -66,6 +66,8 @@ public final class SerializationRegistrar {
             ResourceUpdateData.class,
             MapMetadata.class,
             MapChunk.class,
+            net.lapidist.colony.components.state.ChunkPos.class,
+            net.lapidist.colony.map.MapChunkData.class,
             TilePos.class,
             net.lapidist.colony.chat.ChatMessage.class,
             SaveData.class
