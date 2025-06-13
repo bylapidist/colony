@@ -38,7 +38,7 @@ Each module contains its own `AGENTS.md` with extra notes.
     `docs/performance.md` with the new numbers so future runs have an accurate baseline.
 
 ## Save Format and Serialization
-When changing save formats or Kryo serialization:
+Whenever creating a PR, add a new save version and migration. Every PR must have a new save migration, unless they only change documentation.
 1. Add the next constant in `SaveVersion`.
 2. Implement migration logic in `SaveMigrator`.
 3. Add tests covering the migration.
