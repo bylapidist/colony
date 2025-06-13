@@ -73,8 +73,15 @@ public class TileRendererTest {
 
         renderer.render(map);
 
-        int expectedDraws = tiles.size + 1;
-        verify(batch, times(expectedDraws)).draw(any(TextureRegion.class), anyFloat(), anyFloat());
+        verify(batch).draw(any(TextureRegion.class), anyFloat(), anyFloat());
+        verify(batch, times(tiles.size))
+                .draw(
+                        any(TextureRegion.class),
+                        anyFloat(), anyFloat(),
+                        anyFloat(), anyFloat(),
+                        anyFloat(), anyFloat(),
+                        anyFloat(), anyFloat(),
+                        anyFloat());
     }
 
     @Test
