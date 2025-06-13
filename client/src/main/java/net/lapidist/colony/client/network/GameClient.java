@@ -173,7 +173,8 @@ public final class GameClient extends AbstractMessageEndpoint {
             int chunkY = Math.floorDiv(pos.y(), MapChunkData.CHUNK_SIZE);
             int localX = Math.floorMod(pos.x(), MapChunkData.CHUNK_SIZE);
             int localY = Math.floorMod(pos.y(), MapChunkData.CHUNK_SIZE);
-            MapChunkData chunk = chunks.computeIfAbsent(new ChunkPos(chunkX, chunkY), p -> new MapChunkData(chunkX, chunkY));
+            ChunkPos posKey = new ChunkPos(chunkX, chunkY);
+            MapChunkData chunk = chunks.computeIfAbsent(posKey, p -> new MapChunkData(chunkX, chunkY));
             chunk.getTiles().put(new TilePos(localX, localY), data);
         }
         return chunks;

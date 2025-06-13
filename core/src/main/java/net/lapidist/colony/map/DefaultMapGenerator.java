@@ -4,7 +4,6 @@ import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
-import net.lapidist.colony.map.MapChunkData;
 import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.i18n.I18n;
 

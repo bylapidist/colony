@@ -4,7 +4,6 @@ import net.lapidist.colony.serialization.KryoType;
 import net.lapidist.colony.save.SaveVersion;
 
 import net.lapidist.colony.map.MapChunkData;
-import net.lapidist.colony.components.state.ChunkPos;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,7 +70,7 @@ public record MapState(
         return new TileMapView();
     }
 
-    private class TileMapView extends java.util.AbstractMap<TilePos, TileData> {
+    private final class TileMapView extends java.util.AbstractMap<TilePos, TileData> {
         @Override
         public TileData get(final Object key) {
             if (key instanceof TilePos pos) {
