@@ -8,6 +8,7 @@ import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.state.BuildingData;
+import net.lapidist.colony.components.state.BuildingRemovalData;
 import net.lapidist.colony.map.MapUtils;
 
 /**
@@ -42,6 +43,19 @@ public final class BuildingUpdateSystem extends BaseSystem {
             buildingMapper.get(entity).setDirty(true);
             map.addEntity(entity);
             map.incrementVersion();
+        }
+
+        BuildingRemovalData removal;
+        while ((removal = client.poll(BuildingRemovalData.class)) != null) {
+            for (int i = 0; i < map.getEntities().size; i++) {
+                var entity = map.getEntities().get(i);
+                BuildingComponent bc = buildingMapper.get(entity);
+                if (bc.getX() == removal.x() && bc.getY() == removal.y()) {
+                    map.removeEntity(entity);
+                    entity.deleteFromWorld();
+                    break;
+                }
+            }
         }
     }
 }
