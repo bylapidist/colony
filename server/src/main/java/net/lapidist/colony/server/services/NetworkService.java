@@ -54,13 +54,18 @@ public final class NetworkService {
         });
     }
 
-    private MapChunk toChunkMessage(final int index, final MapChunkData chunk) {
+    private MapChunk toChunkMessage(
+            final int index,
+            final int chunkX,
+            final int chunkY,
+            final MapChunkData chunk
+    ) {
         java.util.Map<TilePos, TileData> tiles = new java.util.HashMap<>(chunk.getTiles().size());
         for (var entry : chunk.getTiles().entrySet()) {
             TileData td = entry.getValue();
             tiles.put(new TilePos(td.x(), td.y()), td);
         }
-        return new MapChunk(index, tiles);
+        return new MapChunk(index, chunkX, chunkY, tiles);
     }
 
     private void sendMapState(final Connection connection, final MapState state) {
@@ -83,7 +88,9 @@ public final class NetworkService {
         }
         int index = 0;
         for (var entry : state.chunks().entrySet()) {
-            connection.sendTCP(toChunkMessage(index++, entry.getValue()));
+            int chunkX = entry.getKey().x();
+            int chunkY = entry.getKey().y();
+            connection.sendTCP(toChunkMessage(index++, chunkX, chunkY, entry.getValue()));
         }
         LOGGER.info("Sent map state in {} chunks to connection {}", chunkCount, connection.getID());
     }
@@ -98,6 +105,6 @@ public final class NetworkService {
 
     public void broadcastChunk(final MapState state, final int chunkX, final int chunkY) {
         MapChunkData chunk = state.getOrCreateChunk(chunkX, chunkY);
-        server.sendToAllTCP(toChunkMessage(0, chunk));
+        server.sendToAllTCP(toChunkMessage(0, chunkX, chunkY, chunk));
     }
 }
