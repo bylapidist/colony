@@ -8,7 +8,7 @@ import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
 import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.map.MapGenerator;
-import net.lapidist.colony.map.DefaultMapGenerator;
+import net.lapidist.colony.map.ChunkedMapGenerator;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,7 @@ public class GameSimulationBuildingUpdateTest {
     @Test
     public void serverUpdatesAppliedToClientWorld() throws Exception {
         MapGenerator gen = (w, h) -> {
-            MapState s = new DefaultMapGenerator().generate(w, h);
+            MapState s = new ChunkedMapGenerator().generate(w, h);
             return s.toBuilder().playerResources(new ResourceData(1, 0, 0)).build();
         };
         GameServerConfig config = GameServerConfig.builder()

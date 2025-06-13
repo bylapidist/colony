@@ -6,7 +6,7 @@ import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
-import net.lapidist.colony.map.DefaultMapGenerator;
+import net.lapidist.colony.map.ChunkedMapGenerator;
 import net.lapidist.colony.map.MapGenerator;
 import net.lapidist.colony.events.Events;
 import net.lapidist.colony.server.events.BuildingPlacedEvent;
@@ -31,7 +31,7 @@ public class GameServerBuildTest {
     @Test
     public void buildingPlacementUpdatesServerState() throws Exception {
         MapGenerator gen = (w, h) -> {
-            MapState state = new DefaultMapGenerator().generate(w, h);
+            MapState state = new ChunkedMapGenerator().generate(w, h);
             return state.toBuilder().playerResources(new ResourceData(1, 0, 0)).build();
         };
         GameServerConfig config = GameServerConfig.builder()
