@@ -18,6 +18,10 @@ import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import java.util.List;
+
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(GdxTestRunner.class)
@@ -177,5 +181,71 @@ public class TileRendererTest {
         renderer.render(map);
 
         verify(font).draw(eq(batch), eq(layout), anyFloat(), anyFloat());
+    }
+
+    @Test
+    public void rotatesTilesIndividually() {
+        SpriteBatch batch = mock(SpriteBatch.class);
+        ResourceLoader loader = mock(ResourceLoader.class);
+        TextureRegion region = mock(TextureRegion.class);
+        TextureRegion overlay = mock(TextureRegion.class);
+        when(loader.findRegion(anyString())).thenReturn(region);
+        when(loader.findRegion(eq("hoveredTile0"))).thenReturn(overlay);
+
+        CameraProvider camera = mock(CameraProvider.class);
+        com.badlogic.gdx.graphics.OrthographicCamera cam = new com.badlogic.gdx.graphics.OrthographicCamera();
+        com.badlogic.gdx.utils.viewport.ExtendViewport viewport =
+                new com.badlogic.gdx.utils.viewport.ExtendViewport(1f, 1f, cam);
+        cam.update();
+        when(camera.getViewport()).thenReturn(viewport);
+        when(camera.getCamera()).thenReturn(cam);
+
+        TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver());
+        reset(loader);
+
+        Array<RenderTile> tiles = new Array<>();
+        RenderTile tile1 = RenderTile.builder()
+                .x(0)
+                .y(0)
+                .tileType("GRASS")
+                .selected(false)
+                .wood(0)
+                .stone(0)
+                .food(0)
+                .build();
+        tiles.add(tile1);
+
+        RenderTile tile2 = RenderTile.builder()
+                .x(1)
+                .y(0)
+                .tileType("GRASS")
+                .selected(false)
+                .wood(0)
+                .stone(0)
+                .food(0)
+                .build();
+        tiles.add(tile2);
+
+        RenderTile[][] grid = new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT];
+        grid[0][0] = tile1;
+        grid[1][0] = tile2;
+        MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);
+
+        renderer.render(map);
+
+        ArgumentCaptor<Float> rotCaptor = ArgumentCaptor.forClass(Float.class);
+        verify(batch, times(2))
+                .draw(
+                        eq(region),
+                        anyFloat(), anyFloat(),
+                        anyFloat(), anyFloat(),
+                        anyFloat(), anyFloat(),
+                        anyFloat(), anyFloat(),
+                        rotCaptor.capture()
+                );
+
+        List<Float> values = rotCaptor.getAllValues();
+        assertEquals(2, values.size());
+        assertNotEquals(values.get(0), values.get(1));
     }
 }

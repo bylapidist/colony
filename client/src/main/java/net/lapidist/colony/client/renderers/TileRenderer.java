@@ -37,6 +37,10 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
     private static final float ROTATION_ANGLE = 90f;
     private static final int ROTATION_SEED_X = 31;
     private static final int ROTATION_SEED_Y = 17;
+    private static final int HASH_SHIFT_1 = 16;
+    private static final int HASH_SHIFT_2 = 13;
+    private static final int HASH_MULT_1 = 0x85ebca6b;
+    private static final int HASH_MULT_2 = 0xc2b2ae35;
     private boolean overlayOnly;
 
     public TileRenderer(
@@ -61,7 +65,11 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
     }
 
     private static float rotationFor(final int x, final int y) {
-        int index = (x * ROTATION_SEED_X + y * ROTATION_SEED_Y) & (ROTATION_STEPS - 1);
+        int hash = x * ROTATION_SEED_X ^ y * ROTATION_SEED_Y;
+        hash = (hash ^ (hash >>> HASH_SHIFT_1)) * HASH_MULT_1;
+        hash = (hash ^ (hash >>> HASH_SHIFT_2)) * HASH_MULT_2;
+        hash ^= (hash >>> HASH_SHIFT_1);
+        int index = hash & (ROTATION_STEPS - 1);
         return index * ROTATION_ANGLE;
     }
 
