@@ -1,4 +1,10 @@
 package net.lapidist.colony.components.resources;
 
-/** Prototype describing a resource type loaded from mods. */
-public record ResourceType(String id) { }
+/**
+ * Enumerates supported resource types.
+ */
+public enum ResourceType {
+    WOOD,
+    STONE,
+    FOOD
+}
