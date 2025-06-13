@@ -24,7 +24,6 @@ public class ChunkLoadSystemTest {
     @Test
     public void requestsMissingChunksNearCamera() {
         MapState state = new MapState();
-        state.getOrCreateChunk(0, 0);
         GameClient client = Mockito.mock(GameClient.class);
         Mockito.when(client.getMapState()).thenReturn(state);
 
@@ -33,6 +32,9 @@ public class ChunkLoadSystemTest {
                 .with(new MapLoadSystem(state), new PlayerCameraSystem(), system)
                 .build());
         world.process();
+
+        // initial request for the player's starting chunk
+        verify(client, Mockito.atLeastOnce()).send(Mockito.eq(new MapChunkRequest(0, 0)));
 
         PlayerCameraSystem camera = world.getSystem(PlayerCameraSystem.class);
         final float offset = 10f;

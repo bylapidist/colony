@@ -49,14 +49,6 @@ public final class NetworkService {
             public void connected(final Connection connection) {
                 LOGGER.info("Connection established: {}", connection.getID());
                 sendMapMetadata(connection, mapState);
-                int index = 0;
-                for (var entry : mapState.chunks().entrySet()) {
-                    int chunkX = entry.getKey().x();
-                    int chunkY = entry.getKey().y();
-                    sendChunk(connection, mapState, chunkX, chunkY);
-                    index++;
-                }
-                LOGGER.info("Sent map state in {} chunks to connection {}", index, connection.getID());
             }
         });
     }
