@@ -179,6 +179,10 @@ public final class GameClient extends AbstractMessageEndpoint {
                 if (loadProgressListener != null) {
                     loadProgressListener.accept(1f);
                 }
+                // Switch to incremental chunk handling after the initial load
+                tileBuffer = null;
+                mapBuilder = null;
+                readyCallback = null;
             }
             return;
         }
