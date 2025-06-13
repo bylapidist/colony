@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -35,6 +36,7 @@ public final class KeybindsScreen extends BaseScreen {
         this.colony = game;
         KeyBindings bindings = game.getSettings().getKeyBindings();
         Table root = getRoot();
+        Table list = new Table();
 
         for (KeyAction action : KeyAction.values()) {
             String label = I18n.get("keybind." + action.getI18nKey());
@@ -47,8 +49,12 @@ public final class KeybindsScreen extends BaseScreen {
                     btn.setText(label + ": ?");
                 }
             });
-            root.add(btn).row();
+            list.add(btn).row();
         }
+
+        ScrollPane scroll = new ScrollPane(list, getSkin());
+        scroll.setScrollingDisabled(true, false);
+        root.add(scroll).expand().fill().row();
 
         TextButton reset = new TextButton(I18n.get("common.reset"), getSkin());
         TextButton back = new TextButton(I18n.get("common.back"), getSkin());
