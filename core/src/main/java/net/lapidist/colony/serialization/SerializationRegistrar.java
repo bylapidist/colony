@@ -53,6 +53,9 @@ public final class SerializationRegistrar {
         return builder.toString().hashCode();
     }
 
+    /** Precomputed registration hash for quick access. */
+    public static final int REGISTRATION_HASH = 1025588104;
+
     private static final Class<?>[] REGISTERED_TYPES = {
             TileData.class,
             TileSelectionData.class,
