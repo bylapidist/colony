@@ -16,6 +16,7 @@ import net.lapidist.colony.server.handlers.BuildingPlacementRequestHandler;
 import net.lapidist.colony.server.handlers.BuildingRemovalRequestHandler;
 import net.lapidist.colony.server.handlers.ChatMessageHandler;
 import net.lapidist.colony.server.handlers.ResourceGatherRequestHandler;
+import net.lapidist.colony.server.handlers.MapChunkRequestHandler;
 import net.lapidist.colony.server.commands.CommandBus;
 import net.lapidist.colony.server.commands.CommandHandler;
 import net.lapidist.colony.server.commands.TileSelectionCommandHandler;
@@ -132,7 +133,8 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
                     new BuildingPlacementRequestHandler(commandBus),
                     new BuildingRemovalRequestHandler(commandBus),
                     new ChatMessageHandler(networkService, commandBus),
-                    new ResourceGatherRequestHandler(commandBus)
+                    new ResourceGatherRequestHandler(commandBus),
+                    new MapChunkRequestHandler(() -> mapState, networkService)
             );
         }
         registerHandlers(handlers);

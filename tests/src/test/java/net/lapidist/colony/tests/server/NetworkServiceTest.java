@@ -48,6 +48,18 @@ public class NetworkServiceTest {
     }
 
     @Test
+    public void broadcastChunkSendsData() {
+        Server server = mock(Server.class);
+        NetworkService service = new NetworkService(server, 1, 2);
+        MapState state = new MapState();
+        state.putTile(new TileData());
+
+        service.broadcastChunk(state, 0, 0);
+
+        verify(server).sendToAllTCP(isA(MapChunk.class));
+    }
+
+    @Test
     public void stopStopsServer() {
         Server server = mock(Server.class);
         NetworkService service = new NetworkService(server, 1, 2);

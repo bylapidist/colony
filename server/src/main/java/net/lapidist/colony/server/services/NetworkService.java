@@ -7,6 +7,7 @@ import net.lapidist.colony.components.state.MapChunk;
 import net.lapidist.colony.components.state.MapMetadata;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.map.MapChunkData;
 import net.lapidist.colony.network.DispatchListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,7 @@ public final class NetworkService {
     private final Server server;
     private final int tcpPort;
     private final int udpPort;
-    private static final int CHUNK_SIZE = 1024;
+    private static final int CHUNK_SIZE = MapChunkData.CHUNK_SIZE * MapChunkData.CHUNK_SIZE;
 
     public NetworkService(final Server serverToUse, final int tcp, final int udp) {
         this.server = serverToUse;
@@ -53,11 +54,17 @@ public final class NetworkService {
         });
     }
 
+    private MapChunk toChunkMessage(final int index, final MapChunkData chunk) {
+        java.util.Map<TilePos, TileData> tiles = new java.util.HashMap<>(chunk.getTiles().size());
+        for (var entry : chunk.getTiles().entrySet()) {
+            TileData td = entry.getValue();
+            tiles.put(new TilePos(td.x(), td.y()), td);
+        }
+        return new MapChunk(index, tiles);
+    }
+
     private void sendMapState(final Connection connection, final MapState state) {
-        int totalTiles = state.chunks().values().stream()
-                .mapToInt(c -> c.getTiles().size())
-                .sum();
-        int chunkCount = (int) Math.ceil(totalTiles / (double) CHUNK_SIZE);
+        int chunkCount = state.chunks().size();
         MapMetadata meta = new MapMetadata(
                 state.version(),
                 state.name(),
@@ -70,25 +77,13 @@ public final class NetworkService {
         );
         connection.sendTCP(meta);
 
-        if (totalTiles == 0) {
+        if (chunkCount == 0) {
             LOGGER.info("Sent map metadata with no tiles to connection {}", connection.getID());
             return;
         }
-
         int index = 0;
-        java.util.Map<TilePos, TileData> bucket = new java.util.HashMap<>(CHUNK_SIZE);
-        for (var chunkEntry : state.chunks().entrySet()) {
-            for (var entry : chunkEntry.getValue().getTiles().entrySet()) {
-                TileData td = entry.getValue();
-                bucket.put(new TilePos(td.x(), td.y()), td);
-                if (bucket.size() == CHUNK_SIZE) {
-                    connection.sendTCP(new MapChunk(index++, bucket));
-                    bucket = new java.util.HashMap<>(CHUNK_SIZE);
-                }
-            }
-        }
-        if (!bucket.isEmpty()) {
-            connection.sendTCP(new MapChunk(index, bucket));
+        for (var entry : state.chunks().entrySet()) {
+            connection.sendTCP(toChunkMessage(index++, entry.getValue()));
         }
         LOGGER.info("Sent map state in {} chunks to connection {}", chunkCount, connection.getID());
     }
@@ -99,5 +94,10 @@ public final class NetworkService {
 
     public void broadcast(final Object message) {
         server.sendToAllTCP(message);
+    }
+
+    public void broadcastChunk(final MapState state, final int chunkX, final int chunkY) {
+        MapChunkData chunk = state.getOrCreateChunk(chunkX, chunkY);
+        server.sendToAllTCP(toChunkMessage(0, chunk));
     }
 }
