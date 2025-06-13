@@ -33,6 +33,10 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
     private final Vector2 tmpStart = new Vector2();
     private final Vector2 tmpEnd = new Vector2();
     private final Vector2 worldCoords = new Vector2();
+    private static final int ROTATION_STEPS = 4;
+    private static final float ROTATION_ANGLE = 90f;
+    private static final int ROTATION_SEED_X = 31;
+    private static final int ROTATION_SEED_Y = 17;
     private boolean overlayOnly;
 
     public TileRenderer(
@@ -54,6 +58,11 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
             }
         }
         this.overlayRegion = resourceLoader.findRegion("hoveredTile0");
+    }
+
+    private static float rotationFor(final int x, final int y) {
+        int index = (x * ROTATION_SEED_X + y * ROTATION_SEED_Y) & (ROTATION_STEPS - 1);
+        return index * ROTATION_ANGLE;
     }
 
     public void setOverlayOnly(final boolean overlay) {
@@ -93,7 +102,23 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                     TileComponent.TileType type = TileComponent.TileType.valueOf(tile.getTileType());
                     TextureRegion region = tileRegions.get(type);
                     if (region != null) {
-                        spriteBatch.draw(region, worldCoords.x, worldCoords.y);
+                        if (type == TileComponent.TileType.GRASS || type == TileComponent.TileType.DIRT) {
+                            float rotation = rotationFor(tile.getX(), tile.getY());
+                            spriteBatch.draw(
+                                    region,
+                                    worldCoords.x,
+                                    worldCoords.y,
+                                    region.getRegionWidth() / 2f,
+                                    region.getRegionHeight() / 2f,
+                                    region.getRegionWidth(),
+                                    region.getRegionHeight(),
+                                    1f,
+                                    1f,
+                                    rotation
+                            );
+                        } else {
+                            spriteBatch.draw(region, worldCoords.x, worldCoords.y);
+                        }
                     }
                     if (!resolver.hasTileAsset(type.name())) {
                         layout.setText(font, type.name());
