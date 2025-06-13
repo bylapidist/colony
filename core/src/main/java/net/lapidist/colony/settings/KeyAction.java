@@ -12,7 +12,8 @@ public enum KeyAction {
     BUILD("build"),
     REMOVE("remove"),
     CHAT("chat"),
-    MINIMAP("minimap");
+    MINIMAP("minimap"),
+    TOGGLE_CAMERA("toggleCamera");
 
     private final String i18nKey;
 

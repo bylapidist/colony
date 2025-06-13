@@ -51,6 +51,7 @@ public final class GameSimulation {
                         new SelectionSystem(client, keys),
                         new BuildPlacementSystem(client, keys),
                         new net.lapidist.colony.client.systems.PlayerInitSystem(),
+                        new net.lapidist.colony.client.systems.PlayerMovementSystem(keys),
                         new TileUpdateSystem(client),
                         new BuildingUpdateSystem(client),
                         new ResourceUpdateSystem(client)

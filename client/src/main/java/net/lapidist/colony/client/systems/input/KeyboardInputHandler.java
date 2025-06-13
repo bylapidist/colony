@@ -29,6 +29,9 @@ public final class KeyboardInputHandler {
     }
 
     public void handleKeyboardInput(final float deltaTime) {
+        if (cameraSystem.isPlayerMode()) {
+            return;
+        }
         final float moveAmount = CAMERA_SPEED * deltaTime;
         final Vector3 position = cameraSystem.getCamera().position;
 
@@ -47,6 +50,9 @@ public final class KeyboardInputHandler {
     }
 
     public void clampCameraPosition() {
+        if (cameraSystem.isPlayerMode()) {
+            return;
+        }
         final Vector3 position = cameraSystem.getCamera().position;
         final float mapWidth = GameConstants.MAP_WIDTH * GameConstants.TILE_SIZE;
         final float mapHeight = GameConstants.MAP_HEIGHT * GameConstants.TILE_SIZE;
