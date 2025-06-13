@@ -6,6 +6,7 @@ import net.lapidist.colony.client.screens.MainMenuScreen;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.tests.GdxTestRunner;
 import net.lapidist.colony.client.events.GameInitEvent;
+import net.lapidist.colony.mod.ModLoader;
 import net.lapidist.colony.events.Events;
 import net.mostlyoriginal.api.event.common.EventSystem;
 import net.mostlyoriginal.api.event.common.Subscribe;
@@ -70,6 +71,9 @@ public class ColonyTest {
         try (MockedStatic<Paths> pathsStatic = mockStatic(Paths.class);
              MockedStatic<Settings> settingsStatic = mockStatic(Settings.class);
              MockedStatic<I18n> i18nStatic = mockStatic(I18n.class);
+             MockedConstruction<ModLoader> loaderCons =
+                     mockConstruction(ModLoader.class, (m, c) ->
+                             when(m.loadMods()).thenReturn(java.util.List.of()));
              MockedConstruction<MainMenuScreen> menuCons = mockConstruction(MainMenuScreen.class)) {
             Settings settings = new Settings();
             settingsStatic.when(Settings::load).thenReturn(settings);

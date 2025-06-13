@@ -47,6 +47,8 @@ abstract class AbstractPathService implements PathService {
 
         FileHandle saveFolder = getSaveFolder();
         ensureExists(saveFolder);
+        FileHandle modsFolder = getGameFolder().child("mods");
+        ensureExists(modsFolder);
     }
 
     @Override
@@ -99,5 +101,13 @@ abstract class AbstractPathService implements PathService {
         if (file.exists()) {
             file.delete();
         }
+    }
+
+    @Override
+    public Path getModsFolder() throws IOException {
+        createGameFoldersIfNotExists();
+        FileHandle folder = getGameFolder().child("mods");
+        ensureExists(folder);
+        return folder.file().toPath();
     }
 }

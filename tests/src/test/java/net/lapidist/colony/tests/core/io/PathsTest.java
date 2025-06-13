@@ -91,4 +91,16 @@ public class PathsTest {
         assertEquals(expected, actual);
         verify(service).getLastAutosaveMarker();
     }
+
+    @Test
+    public void delegatesGetModsFolder() throws Exception {
+        PathService service = mock(PathService.class);
+        Path expected = java.nio.file.Paths.get("mods");
+        when(service.getModsFolder()).thenReturn(expected);
+        Paths paths = new Paths(service);
+
+        Path actual = paths.getModsFolder();
+        assertEquals(expected, actual);
+        verify(service).getModsFolder();
+    }
 }

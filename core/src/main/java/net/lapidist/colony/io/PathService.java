@@ -23,4 +23,6 @@ public interface PathService {
     List<String> listAutosaves() throws IOException;
 
     void deleteAutosave(String saveName) throws IOException;
+
+    Path getModsFolder() throws IOException;
 }
