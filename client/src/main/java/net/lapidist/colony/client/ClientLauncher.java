@@ -32,6 +32,7 @@ public final class ClientLauncher {
         config.setTitle(Constants.NAME + " " + Constants.VERSION);
         config.setWindowedMode(Constants.WIDTH, Constants.HEIGHT);
         config.setIdleFPS(Constants.TARGET_FPS);
+        config.setForegroundFPS(Constants.TARGET_FPS);
         config.setHdpiMode(HdpiMode.Logical);
 
         com.badlogic.gdx.Preferences prefs;

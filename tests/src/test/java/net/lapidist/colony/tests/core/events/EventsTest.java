@@ -61,6 +61,7 @@ public class EventsTest {
     @Test
     public void testDispatchLogsEventString() {
         Logger logger = (Logger) LoggerFactory.getLogger(Events.class);
+        logger.setLevel(ch.qos.logback.classic.Level.DEBUG);
         ListAppender<ILoggingEvent> appender = new ListAppender<>();
         appender.start();
         logger.addAppender(appender);
