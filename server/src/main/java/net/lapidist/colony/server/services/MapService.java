@@ -2,6 +2,7 @@ package net.lapidist.colony.server.services;
 
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.PlayerPosition;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.map.MapGenerator;
 import net.lapidist.colony.map.MapChunkData;
@@ -52,6 +53,9 @@ public final class MapService {
                 * MapChunkData.CHUNK_SIZE;
         int height = (int) Math.ceil(GameConstants.MAP_HEIGHT / (double) MapChunkData.CHUNK_SIZE)
                 * MapChunkData.CHUNK_SIZE;
-        return mapGenerator.generate(width, height);
+        MapState state = mapGenerator.generate(width, height);
+        return state.toBuilder()
+                .playerPos(new PlayerPosition(width / 2, height / 2))
+                .build();
     }
 }

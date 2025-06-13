@@ -2,6 +2,7 @@ package net.lapidist.colony.components.state;
 
 import net.lapidist.colony.serialization.KryoType;
 import net.lapidist.colony.save.SaveVersion;
+import net.lapidist.colony.components.GameConstants;
 
 import net.lapidist.colony.map.MapChunkData;
 
@@ -20,7 +21,8 @@ public record MapState(
         String description,
         Map<ChunkPos, MapChunkData> chunks,
         List<BuildingData> buildings,
-        ResourceData playerResources
+        ResourceData playerResources,
+        PlayerPosition playerPos
 ) {
     public static final int CURRENT_VERSION = SaveVersion.CURRENT.number();
 
@@ -33,7 +35,8 @@ public record MapState(
                 null,
                 new HashMap<>(),
                 new ArrayList<>(),
-                new ResourceData()
+                new ResourceData(),
+                new PlayerPosition(GameConstants.MAP_WIDTH / 2, GameConstants.MAP_HEIGHT / 2)
         );
     }
 
@@ -117,6 +120,7 @@ public record MapState(
         private Map<ChunkPos, MapChunkData> chunks;
         private List<BuildingData> buildings;
         private ResourceData playerResources;
+        private PlayerPosition playerPos;
 
         private Builder() {
             this(new MapState());
@@ -131,6 +135,7 @@ public record MapState(
             this.chunks = state.chunks;
             this.buildings = state.buildings;
             this.playerResources = state.playerResources;
+            this.playerPos = state.playerPos;
         }
 
         public Builder version(final int newVersion) {
@@ -173,8 +178,23 @@ public record MapState(
             return this;
         }
 
+        public Builder playerPos(final PlayerPosition newPos) {
+            this.playerPos = newPos;
+            return this;
+        }
+
         public MapState build() {
-            return new MapState(version, name, saveName, autosaveName, description, chunks, buildings, playerResources);
+            return new MapState(
+                    version,
+                    name,
+                    saveName,
+                    autosaveName,
+                    description,
+                    chunks,
+                    buildings,
+                    playerResources,
+                    playerPos
+            );
         }
     }
 }
