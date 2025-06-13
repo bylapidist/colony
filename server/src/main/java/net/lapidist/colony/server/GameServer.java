@@ -23,6 +23,7 @@ import net.lapidist.colony.server.commands.RemoveBuildingCommandHandler;
 import net.lapidist.colony.server.services.AutosaveService;
 import net.lapidist.colony.server.services.MapService;
 import net.lapidist.colony.server.services.NetworkService;
+import net.lapidist.colony.server.services.ResourceProductionService;
 import net.mostlyoriginal.api.event.common.EventSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +47,7 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     private final String saveName;
     private final MapGenerator mapGenerator;
     private AutosaveService autosaveService;
+    private ResourceProductionService resourceProductionService;
     private MapService mapService;
     private NetworkService networkService;
     private CommandBus commandBus;
@@ -73,6 +75,12 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         this.mapService = new MapService(mapGenerator, saveName);
         this.networkService = new NetworkService(server, TCP_PORT, UDP_PORT);
         this.autosaveService = new AutosaveService(autosaveInterval, saveName, () -> mapState);
+        this.resourceProductionService = new ResourceProductionService(
+                autosaveInterval,
+                () -> mapState,
+                s -> mapState = s,
+                networkService
+        );
         this.commandBus = new CommandBus();
     }
 
@@ -84,6 +92,7 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         startNetwork();
         registerDefaultHandlers();
         autosaveService.start();
+        resourceProductionService.start();
     }
 
     private void initKryo() {
@@ -146,6 +155,7 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
 
     @Override
     public void stop() {
+        resourceProductionService.stop();
         autosaveService.stop();
         networkService.stop();
         LOGGER.info("Server stopped");
