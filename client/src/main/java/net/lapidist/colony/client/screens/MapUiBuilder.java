@@ -72,7 +72,7 @@ public final class MapUiBuilder {
         TextButton minimapButton = new TextButton(I18n.get("map.minimap"), skin);
         minimapButton.setName("minimapButton");
         GraphicsSettings graphics = colony.getSettings().getGraphicsSettings();
-        MinimapActor minimapActor = new MinimapActor(world, graphics);
+        MinimapActor minimapActor = new MinimapActor(world, graphics, client);
         ChatBox chatBox = new ChatBox(skin, client);
         PlayerResourcesActor resourcesActor = new PlayerResourcesActor(skin, world);
 

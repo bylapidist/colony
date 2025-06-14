@@ -19,6 +19,7 @@ import net.lapidist.colony.map.MapUtils;
  * Maintains the {@link MapRenderData} used for rendering.
  */
 public final class MapRenderDataSystem extends BaseSystem {
+    private final net.lapidist.colony.client.network.GameClient client;
     private MapRenderData renderData;
     private MapComponent map;
     private int lastVersion;
@@ -28,6 +29,18 @@ public final class MapRenderDataSystem extends BaseSystem {
     private final IntArray selectedTileIndices = new IntArray();
     private final IntArray dirtyIndices = new IntArray();
     private final IntArray updatedIndices = new IntArray();
+
+    public net.lapidist.colony.client.network.GameClient getClient() {
+        return client;
+    }
+
+    public MapRenderDataSystem() {
+        this(null);
+    }
+
+    public MapRenderDataSystem(final net.lapidist.colony.client.network.GameClient clientToUse) {
+        this.client = clientToUse;
+    }
 
     public MapRenderData getRenderData() {
         return renderData;
@@ -57,7 +70,13 @@ public final class MapRenderDataSystem extends BaseSystem {
         buildingMapper = world.getMapper(BuildingComponent.class);
         map = MapUtils.findMap(world).orElse(null);
         if (map != null) {
-            renderData = MapRenderDataBuilder.fromMap(map, world);
+            int width = client != null
+                    ? client.getMapWidth()
+                    : net.lapidist.colony.components.GameConstants.MAP_WIDTH;
+            int height = client != null
+                    ? client.getMapHeight()
+                    : net.lapidist.colony.components.GameConstants.MAP_HEIGHT;
+            renderData = MapRenderDataBuilder.fromMap(map, world, width, height);
             lastVersion = map.getVersion();
             rebuildSelectedIndices();
         }
@@ -72,7 +91,13 @@ public final class MapRenderDataSystem extends BaseSystem {
             }
         }
         if (renderData == null) {
-            renderData = MapRenderDataBuilder.fromMap(map, world);
+            int width = client != null
+                    ? client.getMapWidth()
+                    : net.lapidist.colony.components.GameConstants.MAP_WIDTH;
+            int height = client != null
+                    ? client.getMapHeight()
+                    : net.lapidist.colony.components.GameConstants.MAP_HEIGHT;
+            renderData = MapRenderDataBuilder.fromMap(map, world, width, height);
             lastVersion = map.getVersion();
             rebuildSelectedIndices();
             return;

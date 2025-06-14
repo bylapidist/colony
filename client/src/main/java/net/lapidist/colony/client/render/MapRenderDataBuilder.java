@@ -18,12 +18,21 @@ public final class MapRenderDataBuilder {
     }
 
     public static MapRenderData fromMap(final MapComponent map, final World world) {
+        return fromMap(map, world, GameConstants.MAP_WIDTH, GameConstants.MAP_HEIGHT);
+    }
+
+    public static MapRenderData fromMap(
+            final MapComponent map,
+            final World world,
+            final int width,
+            final int height
+    ) {
         ComponentMapper<TileComponent> tileMapper = world.getMapper(TileComponent.class);
         ComponentMapper<ResourceComponent> resourceMapper = world.getMapper(ResourceComponent.class);
         ComponentMapper<BuildingComponent> buildingMapper = world.getMapper(BuildingComponent.class);
 
         Array<RenderTile> tiles = new Array<>();
-        RenderTile[][] grid = new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT];
+        RenderTile[][] grid = new RenderTile[width][height];
         Array<Entity> mapTiles = map.getTiles();
         for (int i = 0; i < mapTiles.size; i++) {
             Entity entity = mapTiles.get(i);
@@ -31,8 +40,8 @@ public final class MapRenderDataBuilder {
             ResourceComponent rc = resourceMapper.get(entity);
             RenderTile tile = toTile(tc, rc);
             tiles.add(tile);
-            if (tc.getX() >= 0 && tc.getX() < GameConstants.MAP_WIDTH
-                    && tc.getY() >= 0 && tc.getY() < GameConstants.MAP_HEIGHT) {
+            if (tc.getX() >= 0 && tc.getX() < width
+                    && tc.getY() >= 0 && tc.getY() < height) {
                 grid[tc.getX()][tc.getY()] = tile;
             }
         }

@@ -19,6 +19,7 @@ import net.lapidist.colony.components.maps.TileComponent;
  * Renders tile entities.
  */
 public final class TileRenderer implements EntityRenderer<RenderTile> {
+    private final net.lapidist.colony.client.network.GameClient client;
 
     private final SpriteBatch spriteBatch;
     private final ResourceLoader resourceLoader;
@@ -40,8 +41,10 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
             final SpriteBatch spriteBatchToSet,
             final ResourceLoader resourceLoaderToSet,
             final CameraProvider cameraSystemToSet,
-            final AssetResolver resolverToSet
+            final AssetResolver resolverToSet,
+            final net.lapidist.colony.client.network.GameClient clientToUse
     ) {
+        this.client = clientToUse;
         this.spriteBatch = spriteBatchToSet;
         this.resourceLoader = resourceLoaderToSet;
         this.cameraSystem = cameraSystemToSet;
@@ -76,10 +79,13 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                 tmpEnd
         );
 
+        int mapWidth = client != null ? client.getMapWidth() : GameConstants.MAP_WIDTH;
+        int mapHeight = client != null ? client.getMapHeight() : GameConstants.MAP_HEIGHT;
+
         int startX = Math.max(0, (int) start.x - 1);
         int startY = Math.max(0, (int) start.y - 1);
-        int endX = Math.min(GameConstants.MAP_WIDTH - 1, (int) end.x + 1);
-        int endY = Math.min(GameConstants.MAP_HEIGHT - 1, (int) end.y + 1);
+        int endX = Math.min(mapWidth - 1, (int) end.x + 1);
+        int endY = Math.min(mapHeight - 1, (int) end.y + 1);
 
 
         for (int x = startX; x <= endX; x++) {

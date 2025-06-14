@@ -120,11 +120,15 @@ public final class CameraUtils {
         return !(tmp.x > Gdx.graphics.getWidth() || tmp.y > Gdx.graphics.getHeight());
     }
 
-    public static Vector2 getWorldCenter() {
+    public static Vector2 getWorldCenter(final int mapWidth, final int mapHeight) {
         return new Vector2(
-                (GameConstants.TILE_SIZE * GameConstants.MAP_WIDTH + GameConstants.TILE_SIZE) / 2f,
-                (GameConstants.TILE_SIZE * GameConstants.MAP_HEIGHT + GameConstants.TILE_SIZE) / 2f
+                (GameConstants.TILE_SIZE * mapWidth + GameConstants.TILE_SIZE) / 2f,
+                (GameConstants.TILE_SIZE * mapHeight + GameConstants.TILE_SIZE) / 2f
         );
+    }
+
+    public static Vector2 getWorldCenter() {
+        return getWorldCenter(GameConstants.MAP_WIDTH, GameConstants.MAP_HEIGHT);
     }
 
     public static Rectangle getViewBounds(

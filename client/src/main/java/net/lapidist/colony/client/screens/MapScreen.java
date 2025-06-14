@@ -30,6 +30,10 @@ public final class MapScreen implements Screen {
                 colony.getSettings(),
                 state.cameraPos()
         );
+        var cameraSystem = world.getSystem(net.lapidist.colony.client.systems.PlayerCameraSystem.class);
+        if (cameraSystem != null) {
+            cameraSystem.setClient(client);
+        }
         MapUi ui = MapUiBuilder.build(stage, world, client, colony);
         minimapActor = ui.getMinimapActor();
         events = new MapScreenEventHandler();
