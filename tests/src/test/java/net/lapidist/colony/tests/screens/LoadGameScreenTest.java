@@ -1,6 +1,7 @@
 package net.lapidist.colony.tests.screens;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -30,6 +31,12 @@ public class LoadGameScreenTest {
         return (Table) f.get(screen);
     }
 
+    private static Table getList(final LoadGameScreen screen) throws Exception {
+        Table root = getRoot(screen);
+        ScrollPane scroll = (ScrollPane) root.getChildren().first();
+        return (Table) scroll.getActor();
+    }
+
     @Test
     public void backButtonReturnsToMainMenu() throws Exception {
         Colony colony = mock(Colony.class);
@@ -53,9 +60,9 @@ public class LoadGameScreenTest {
         Colony colony = mock(Colony.class);
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             LoadGameScreen screen = new LoadGameScreen(colony);
-            Table root = getRoot(screen);
+            Table list = getList(screen);
             Table row = null;
-            for (com.badlogic.gdx.scenes.scene2d.Actor child : root.getChildren()) {
+            for (com.badlogic.gdx.scenes.scene2d.Actor child : list.getChildren()) {
                 if (child instanceof Table t) {
                     TextButton btn = (TextButton) t.getChildren().first();
                     if (save.equals(btn.getText().toString())) {

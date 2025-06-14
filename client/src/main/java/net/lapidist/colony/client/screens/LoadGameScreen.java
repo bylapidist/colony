@@ -2,6 +2,8 @@ package net.lapidist.colony.client.screens;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -20,6 +22,8 @@ public final class LoadGameScreen extends BaseScreen {
     public LoadGameScreen(final Colony game) {
         this.colony = game;
 
+        Table list = new Table();
+
         List<String> saves = listSaves();
         for (String save : saves) {
             TextButton loadButton = new TextButton(save, getSkin());
@@ -27,7 +31,7 @@ public final class LoadGameScreen extends BaseScreen {
             Table row = new Table();
             row.add(loadButton).padRight(PADDING);
             row.add(deleteButton);
-            getRoot().add(row).row();
+            list.add(row).row();
 
             loadButton.addListener(new ChangeListener() {
                 @Override
@@ -59,6 +63,14 @@ public final class LoadGameScreen extends BaseScreen {
                 }
             });
         }
+
+        if (saves.isEmpty()) {
+            list.add(new Label(I18n.get("loadGame.none"), getSkin())).row();
+        }
+
+        ScrollPane scroll = new ScrollPane(list, getSkin());
+        scroll.setScrollingDisabled(true, false);
+        getRoot().add(scroll).expand().fill().row();
 
         TextButton backButton = new TextButton(I18n.get("common.back"), getSkin());
         getRoot().add(backButton).row();
