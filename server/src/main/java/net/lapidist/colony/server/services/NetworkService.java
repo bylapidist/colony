@@ -91,7 +91,12 @@ public final class NetworkService {
                 chunkCount
         );
         connection.sendTCP(meta);
-        LOGGER.info("Sent map metadata with {} chunks to connection {}", chunkCount, connection.getID());
+        LOGGER.info(
+                "Sent map metadata with {} chunks to connection {}: {}",
+                chunkCount,
+                connection.getID(),
+                meta
+        );
     }
 
     private void sendInitialChunks(final Connection connection, final MapState state) {
