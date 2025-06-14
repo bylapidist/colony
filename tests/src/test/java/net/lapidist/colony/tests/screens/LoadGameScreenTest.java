@@ -9,6 +9,8 @@ import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.client.screens.LoadGameScreen;
 import net.lapidist.colony.client.screens.MainMenuScreen;
 import net.lapidist.colony.io.Paths;
+import net.lapidist.colony.server.io.GameStateIO;
+import net.lapidist.colony.components.state.MapState;
 import org.mockito.MockedConstruction;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
@@ -53,9 +55,18 @@ public class LoadGameScreenTest {
     @Test
     public void loadButtonStartsGame() throws Exception {
         String save = "test-" + UUID.randomUUID();
-        Path folder = Path.of(System.getProperty("user.home"), ".colony", "saves");
+        Path folder = Path.of(
+                System.getProperty("user.home"),
+                ".colony",
+                "saves"
+        );
         Files.createDirectories(folder);
-        Files.createFile(folder.resolve(save + Paths.AUTOSAVE_SUFFIX));
+        final int size = 60;
+        MapState state = MapState.builder()
+                .width(size)
+                .height(size)
+                .build();
+        GameStateIO.save(state, folder.resolve(save + Paths.AUTOSAVE_SUFFIX));
 
         Colony colony = mock(Colony.class);
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
@@ -74,7 +85,7 @@ public class LoadGameScreenTest {
             TextButton load = (TextButton) row.getChildren().get(0);
             load.fire(new ChangeListener.ChangeEvent());
 
-            verify(colony).startGame(save);
+            verify(colony).startGame(save, size, size);
             Files.deleteIfExists(folder.resolve(save + Paths.AUTOSAVE_SUFFIX));
             screen.dispose();
         }

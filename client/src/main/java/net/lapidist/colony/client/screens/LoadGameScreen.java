@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import net.lapidist.colony.i18n.I18n;
 import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.io.Paths;
+import net.lapidist.colony.server.io.GameStateIO;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,7 +37,12 @@ public final class LoadGameScreen extends BaseScreen {
             loadButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(final ChangeEvent event, final Actor actor) {
-                    colony.startGame(save);
+                    try {
+                        var meta = GameStateIO.readMetadata(Paths.get().getAutosave(save));
+                        colony.startGame(save, meta.width(), meta.height());
+                    } catch (IOException e) {
+                        colony.startGame(save);
+                    }
                 }
             });
 
