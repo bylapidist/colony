@@ -28,7 +28,7 @@ public class GameSimulationBuildingRemovalTest {
         MapGenerator gen = (w, h) -> {
             MapState state = new ChunkedMapGenerator().generate(w, h);
             state.buildings().clear();
-            state.buildings().add(new BuildingData(0, 0, "HOUSE"));
+            state.buildings().add(new BuildingData(0, 0, "house"));
             return state;
         };
         GameServerConfig config = GameServerConfig.builder()

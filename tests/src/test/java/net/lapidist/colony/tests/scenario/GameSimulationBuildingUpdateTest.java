@@ -49,7 +49,7 @@ public class GameSimulationBuildingUpdateTest {
         MapState state = receiver.getMapState();
         GameSimulation sim = new GameSimulation(state, receiver);
 
-        BuildingPlacementData data = new BuildingPlacementData(0, 0, "HOUSE");
+        BuildingPlacementData data = new BuildingPlacementData(0, 0, "house");
         sender.sendBuildRequest(data);
 
         Thread.sleep(WAIT_MS);

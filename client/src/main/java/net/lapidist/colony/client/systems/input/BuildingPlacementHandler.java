@@ -42,7 +42,7 @@ public final class BuildingPlacementHandler {
                     BuildingPlacementData msg = new BuildingPlacementData(
                             tc.getX(),
                             tc.getY(),
-                            "HOUSE"
+                            "house"
                     );
                     client.sendBuildRequest(msg);
                     return true;

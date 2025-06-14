@@ -15,7 +15,7 @@ public class BaseDefinitionsModTest {
 
         assertNotNull(Registries.tiles().get("GRASS"));
         assertNotNull(Registries.tiles().get("DIRT"));
-        assertNotNull(Registries.buildings().get("HOUSE"));
-        assertNotNull(Registries.buildings().get("FARM"));
+        assertNotNull(Registries.buildings().get("house"));
+        assertNotNull(Registries.buildings().get("farm"));
     }
 }

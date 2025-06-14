@@ -25,7 +25,7 @@ public class RegistryTest {
         BuildingRegistry registry = new BuildingRegistry();
         BuildingDefinition def = new BuildingDefinition("house", "House", "house0");
         registry.register(def);
-        assertEquals(def, registry.get("HOUSE"));
+        assertEquals(def, registry.get("house"));
     }
 
     @Test

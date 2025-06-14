@@ -5,7 +5,7 @@ package net.lapidist.colony.server.commands;
  *
  * @param x    tile x coordinate
  * @param y    tile y coordinate
- * @param type building type
+ * @param buildingId building identifier
  */
-public record BuildCommand(int x, int y, String type) implements ServerCommand {
+public record BuildCommand(int x, int y, String buildingId) implements ServerCommand {
 }

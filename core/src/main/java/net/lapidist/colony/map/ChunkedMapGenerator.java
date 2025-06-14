@@ -42,7 +42,7 @@ public final class ChunkedMapGenerator implements MapGenerator {
         }
 
         // generate a starting building in the middle
-        BuildingData building = new BuildingData(width / 2, height / 2, "HOUSE");
+        BuildingData building = new BuildingData(width / 2, height / 2, "house");
         state.buildings().add(building);
 
         // prepopulate resources when tiles are first accessed

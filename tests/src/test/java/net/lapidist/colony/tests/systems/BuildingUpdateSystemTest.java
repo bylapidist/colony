@@ -40,7 +40,7 @@ public class BuildingUpdateSystemTest {
 
         world.process();
 
-        BuildingData data = new BuildingData(0, 0, "HOUSE");
+        BuildingData data = new BuildingData(0, 0, "house");
         client.injectBuildingUpdate(data);
 
         world.process();

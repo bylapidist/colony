@@ -97,7 +97,7 @@ public class BuildPlacementSystemTest {
     @Test
     public void tapRemovesBuildingWhenEnabled() {
         MapState state = new MapState();
-        state.buildings().add(new net.lapidist.colony.components.state.BuildingData(0, 0, "HOUSE"));
+        state.buildings().add(new net.lapidist.colony.components.state.BuildingData(0, 0, "house"));
         state.putTile(TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .build());

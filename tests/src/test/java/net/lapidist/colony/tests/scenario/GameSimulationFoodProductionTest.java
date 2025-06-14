@@ -29,7 +29,7 @@ public class GameSimulationFoodProductionTest {
     public void foodIncreasesFromServerProduction() throws Exception {
         MapGenerator gen = (w, h) -> {
             MapState s = new ChunkedMapGenerator().generate(w, h);
-            s.buildings().add(new BuildingData(0, 0, "FARM"));
+            s.buildings().add(new BuildingData(0, 0, "farm"));
             return s.toBuilder().playerResources(new ResourceData()).build();
         };
         GameServerConfig config = GameServerConfig.builder()

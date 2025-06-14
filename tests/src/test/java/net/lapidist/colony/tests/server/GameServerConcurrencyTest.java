@@ -39,7 +39,7 @@ public class GameServerConcurrencyTest {
             client.start(state -> latch.countDown());
             latch.await(1, TimeUnit.SECONDS);
 
-        client.sendBuildRequest(new BuildingPlacementData(0, 0, "HOUSE"));
+        client.sendBuildRequest(new BuildingPlacementData(0, 0, "house"));
         Thread.sleep(WAIT_MS);
 
         assertTrue(server.getMapState().buildings().stream()

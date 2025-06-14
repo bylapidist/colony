@@ -102,9 +102,9 @@ public class ServerEventsTest {
     public void testBuildingPlacedEventToString() {
         final int x = 1;
         final int y = 2;
-        BuildingPlacedEvent event = new BuildingPlacedEvent(x, y, "HOUSE");
+        BuildingPlacedEvent event = new BuildingPlacedEvent(x, y, "house");
         assertEquals(
-                String.format("BuildingPlacedEvent(x=%d, y=%d, buildingType=HOUSE)", x, y),
+                String.format("BuildingPlacedEvent(x=%d, y=%d, buildingType=house)", x, y),
                 event.toString()
         );
     }

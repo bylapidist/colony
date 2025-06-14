@@ -19,15 +19,15 @@ public class DefaultAssetResolverTest {
         assertEquals("dirt0", resolver.tileAsset("invalid"));
         assertTrue(resolver.hasTileAsset("GRASS"));
         assertFalse(resolver.hasTileAsset("invalid"));
-        assertEquals("house0", resolver.buildingAsset("HOUSE"));
         assertEquals("house0", resolver.buildingAsset("house"));
-        assertEquals("house0", resolver.buildingAsset("MARKET"));
-        assertEquals("house0", resolver.buildingAsset("FACTORY"));
-        assertEquals("house0", resolver.buildingAsset("FARM"));
+        assertEquals("house0", resolver.buildingAsset("house"));
+        assertEquals("house0", resolver.buildingAsset("market"));
+        assertEquals("house0", resolver.buildingAsset("factory"));
+        assertEquals("house0", resolver.buildingAsset("farm"));
         assertEquals("house0", resolver.buildingAsset(null));
         assertEquals("house0", resolver.buildingAsset("invalid"));
-        assertTrue(resolver.hasBuildingAsset("HOUSE"));
-        assertTrue(resolver.hasBuildingAsset("FARM"));
+        assertTrue(resolver.hasBuildingAsset("house"));
+        assertTrue(resolver.hasBuildingAsset("farm"));
         assertFalse(resolver.hasBuildingAsset("invalid"));
     }
 }

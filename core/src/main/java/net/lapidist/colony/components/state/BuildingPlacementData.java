@@ -7,8 +7,8 @@ import net.lapidist.colony.serialization.KryoType;
  *
  * @param x            tile x coordinate
  * @param y            tile y coordinate
- * @param buildingType building type identifier
+ * @param buildingId building identifier
  */
 @KryoType
-public record BuildingPlacementData(int x, int y, String buildingType) {
+public record BuildingPlacementData(int x, int y, String buildingId) {
 }
