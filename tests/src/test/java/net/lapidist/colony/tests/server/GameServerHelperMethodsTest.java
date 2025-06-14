@@ -57,7 +57,7 @@ public class GameServerHelperMethodsTest {
         Paths.get().deleteAutosave(name);
         GameServer server = new GameServer(GameServerConfig.builder().saveName(name).build());
         method(GameServer.class, "loadMapState").invoke(server);
-        method(GameServer.class, "registerDefaultHandlers").invoke(server);
+        server.registerDefaultHandlers();
         Method dispatch = method(GameServer.class.getSuperclass(), "dispatch", Object.class);
         dispatch.invoke(server, new TileSelectionData(0, 0, true));
         MapState state = server.getMapState();

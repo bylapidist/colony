@@ -1,1 +1,2 @@
-net.lapidist.colony.server.mod.CoreServerMod
+net.lapidist.colony.base.BaseServicesMod
+net.lapidist.colony.base.BaseCommandsMod
