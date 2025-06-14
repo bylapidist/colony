@@ -73,6 +73,8 @@ public class GameSimulationSpawnNetworkTest {
                         settings,
                         client.getMapState().cameraPos()
                 );
+                PlayerCameraSystem camera = world.getSystem(PlayerCameraSystem.class);
+                camera.toggleMode();
                 world.process();
 
                 IntBag players = world.getAspectSubscriptionManager()
@@ -83,7 +85,6 @@ public class GameSimulationSpawnNetworkTest {
                 final float epsilon = 0.01f;
                 assertEquals(px * net.lapidist.colony.components.GameConstants.TILE_SIZE, pc.getX(), epsilon);
                 assertEquals(py * net.lapidist.colony.components.GameConstants.TILE_SIZE, pc.getY(), epsilon);
-                PlayerCameraSystem camera = world.getSystem(PlayerCameraSystem.class);
                 assertEquals(camX, camera.getCamera().position.x, epsilon);
                 assertEquals(camY, camera.getCamera().position.y, epsilon);
                 world.dispose();

@@ -74,10 +74,15 @@ public class MapUiButtonStateTest {
     public void mapAndMinimapButtonsToggleStates() {
         Stage stage = new Stage(new ScreenViewport(), mock(Batch.class));
         Settings settings = new Settings();
+        BuildPlacementSystem buildSystem = new BuildPlacementSystem(
+                mock(GameClient.class),
+                settings.getKeyBindings()
+        );
         World world = new World(new WorldConfigurationBuilder()
                 .with(
                         new PlayerCameraSystem(),
-                        new CameraInputSystem(settings.getKeyBindings())
+                        new CameraInputSystem(settings.getKeyBindings()),
+                        buildSystem
                 )
                 .build());
         GameClient client = mock(GameClient.class);
@@ -90,13 +95,16 @@ public class MapUiButtonStateTest {
         TextButton mapButton = stage.getRoot().findActor("mapButton");
         TextButton minimapButton = stage.getRoot().findActor("minimapButton");
 
-        // toggle map view
-        mapButton.toggle();
         assertEquals(PlayerCameraSystem.Mode.PLAYER, cameraSystem.getMode());
         assertFalse(mapButton.isChecked());
+
+        // toggle map view
         mapButton.toggle();
         assertEquals(PlayerCameraSystem.Mode.MAP_OVERVIEW, cameraSystem.getMode());
         assertTrue(mapButton.isChecked());
+        mapButton.toggle();
+        assertEquals(PlayerCameraSystem.Mode.PLAYER, cameraSystem.getMode());
+        assertFalse(mapButton.isChecked());
 
         // toggle minimap visibility
         boolean initial = ui.getMinimapActor().isVisible();
@@ -150,5 +158,48 @@ public class MapUiButtonStateTest {
 
         assertTrue(removeButton.isChecked());
         assertFalse(buildButton.isChecked());
+    }
+
+    @Test
+    public void cameraHotkeyUpdatesMapButton() {
+        Stage stage = new Stage(new ScreenViewport(), mock(Batch.class));
+        Settings settings = new Settings();
+        BuildPlacementSystem buildSystem = new BuildPlacementSystem(
+                mock(GameClient.class),
+                settings.getKeyBindings()
+        );
+        World world = new World(new WorldConfigurationBuilder()
+                .with(
+                        new PlayerCameraSystem(),
+                        new CameraInputSystem(settings.getKeyBindings()),
+                        buildSystem
+                )
+                .build());
+        GameClient client = mock(GameClient.class);
+        Colony colony = mock(Colony.class);
+        when(colony.getSettings()).thenReturn(settings);
+
+        MapUiBuilder.build(stage, world, client, colony);
+
+        TextButton mapButton = stage.getRoot().findActor("mapButton");
+        PlayerCameraSystem cameraSystem = world.getSystem(PlayerCameraSystem.class);
+
+        Input input = mock(Input.class);
+        Gdx.input = input;
+
+        when(input.isKeyJustPressed(settings.getKeyBindings().getKey(KeyAction.TOGGLE_CAMERA))).thenReturn(true);
+        world.process();
+        stage.act(0f);
+
+        assertEquals(PlayerCameraSystem.Mode.MAP_OVERVIEW, cameraSystem.getMode());
+        assertTrue(mapButton.isChecked());
+
+        reset(input);
+        when(input.isKeyJustPressed(settings.getKeyBindings().getKey(KeyAction.TOGGLE_CAMERA))).thenReturn(true);
+        world.process();
+        stage.act(0f);
+
+        assertEquals(PlayerCameraSystem.Mode.PLAYER, cameraSystem.getMode());
+        assertFalse(mapButton.isChecked());
     }
 }

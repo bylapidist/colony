@@ -152,6 +152,9 @@ public final class MapUiBuilder {
 
         stage.addActor(new ShortcutUpdater(keyBindings, buildButton, removeButton, mapButton, minimapButton));
         stage.addActor(new ModeUpdater(buildSystem, buildButton, removeButton));
+        if (cameraSystem != null) {
+            stage.addActor(new CameraModeUpdater(cameraSystem, mapButton));
+        }
 
         AutosaveLabel savingLabel = new AutosaveLabel(skin);
         Table savingTable = new Table();
@@ -238,6 +241,30 @@ public final class MapUiBuilder {
             setButtonText(remove, "map.remove", removeKey);
             setButtonText(map, "map.map", mapKey);
             setButtonText(minimap, "map.minimap", minimapKey);
+        }
+    }
+
+    private static final class CameraModeUpdater extends Actor {
+        private final PlayerCameraSystem cameraSystem;
+        private final TextButton mapButton;
+
+        CameraModeUpdater(
+                final PlayerCameraSystem systemToUse,
+                final TextButton buttonToUse
+        ) {
+            this.cameraSystem = systemToUse;
+            this.mapButton = buttonToUse;
+        }
+
+        @Override
+        public void act(final float delta) {
+            super.act(delta);
+            boolean overview = cameraSystem.getMode() == PlayerCameraSystem.Mode.MAP_OVERVIEW;
+            if (mapButton.isChecked() != overview) {
+                mapButton.setProgrammaticChangeEvents(false);
+                mapButton.setChecked(overview);
+                mapButton.setProgrammaticChangeEvents(true);
+            }
         }
     }
 

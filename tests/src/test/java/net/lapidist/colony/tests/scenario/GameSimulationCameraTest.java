@@ -29,6 +29,7 @@ public class GameSimulationCameraTest {
         state.putTile(tile);
 
         GameSimulation sim = new GameSimulation(state);
+        sim.getCamera().toggleMode();
         float startX = sim.getCamera().getCamera().position.x;
         float startY = sim.getCamera().getCamera().position.y;
 
