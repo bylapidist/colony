@@ -35,7 +35,10 @@ import net.lapidist.colony.settings.KeyBindings;
 import net.mostlyoriginal.api.event.common.EventSystem;
 
 /**
- * Builds the {@link World} used by {@link MapScreen}.
+ * Utility for constructing the {@link World} instance used by {@link MapScreen}.
+ * <p>
+ * The builder methods create {@link WorldConfigurationBuilder} instances pre
+ * configured with all client systems required for the main map screen.
  */
 public final class MapWorldBuilder {
 
@@ -61,13 +64,26 @@ public final class MapWorldBuilder {
         return baseBuilder(client, stage, keyBindings, new ResourceData());
     }
 
+    /**
+     * Variant of {@link #baseBuilder(GameClient, Stage, KeyBindings)} that also
+     * specifies the initial player resources.
+     *
+     * @param client          game client for network updates
+     * @param stage           stage used by the UI system
+     * @param keyBindings     input bindings for the player
+     * @param playerResources resources available to the player at start
+     * @return configured builder instance
+     */
     public static WorldConfigurationBuilder baseBuilder(
             final GameClient client,
             final Stage stage,
             final KeyBindings keyBindings,
             final ResourceData playerResources
     ) {
-        return createBuilder(client, stage, keyBindings, null, playerResources, null, null);
+        MapState state = MapState.builder()
+                .playerResources(playerResources)
+                .build();
+        return createBuilder(client, stage, keyBindings, null, state);
     }
 
     /**
@@ -85,7 +101,7 @@ public final class MapWorldBuilder {
             final Stage stage,
             final KeyBindings keyBindings
     ) {
-        return createBuilder(client, stage, keyBindings, provider, new ResourceData(), null, null);
+        return createBuilder(client, stage, keyBindings, provider, new MapState());
     }
 
     /**
@@ -102,9 +118,7 @@ public final class MapWorldBuilder {
                 stage,
                 keyBindings,
                 new ProvidedMapStateProvider(state),
-                state.playerResources(),
-                state.playerPos(),
-                state.cameraPos()
+                state
         );
     }
 
@@ -113,10 +127,11 @@ public final class MapWorldBuilder {
             final Stage stage,
             final KeyBindings keyBindings,
             final MapStateProvider provider,
-            final ResourceData playerResources,
-            final PlayerPosition playerPos,
-            final net.lapidist.colony.components.state.CameraPosition cameraPos
+            final MapState state
     ) {
+        ResourceData playerResources = state.playerResources();
+        PlayerPosition playerPos = state.playerPos();
+        net.lapidist.colony.components.state.CameraPosition cameraPos = state.cameraPos();
         CameraInputSystem cameraInputSystem = new CameraInputSystem(client, keyBindings);
         cameraInputSystem.addProcessor(stage);
         SelectionSystem selectionSystem = new SelectionSystem(client, keyBindings);
