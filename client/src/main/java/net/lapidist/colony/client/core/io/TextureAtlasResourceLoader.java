@@ -4,6 +4,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GLTexture;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.assets.loaders.TextureAtlasLoader;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import net.lapidist.colony.settings.GraphicsSettings;
 
@@ -43,7 +44,22 @@ public final class TextureAtlasResourceLoader implements ResourceLoader {
         }
 
         assetManager = new AssetManager(fileLocation.getResolver());
-        assetManager.load(atlasPath, TextureAtlas.class);
+        TextureAtlasLoader.TextureAtlasParameter parameter = null;
+        if (graphicsSettings != null && graphicsSettings.isMipMapsEnabled()) {
+            parameter = new TextureAtlasLoader.TextureAtlasParameter();
+            try {
+                java.lang.reflect.Field field = parameter.getClass().getField("genMipMaps");
+                field.setBoolean(parameter, true);
+            } catch (NoSuchFieldException | IllegalAccessException ignore) {
+                try {
+                    java.lang.reflect.Field field = parameter.getClass().getField("useMipMaps");
+                    field.setBoolean(parameter, true);
+                } catch (NoSuchFieldException | IllegalAccessException ignored) {
+                    // Field not present on this LibGDX version
+                }
+            }
+        }
+        assetManager.load(atlasPath, TextureAtlas.class, parameter);
         pendingAtlasPath = atlasPath;
         pendingSettings = graphicsSettings;
         loaded = false;
@@ -80,6 +96,17 @@ public final class TextureAtlasResourceLoader implements ResourceLoader {
                 Texture.TextureFilter magFilter = Texture.TextureFilter.Linear;
                 for (Texture texture : atlas.getTextures()) {
                     texture.setFilter(minFilter, magFilter);
+                    if (pendingSettings.isMipMapsEnabled() && !texture.getTextureData().useMipMaps()) {
+                        try {
+                            java.lang.reflect.Field field =
+                                    texture.getTextureData().getClass().getDeclaredField("useMipMaps");
+                            field.setAccessible(true);
+                            field.setBoolean(texture.getTextureData(), true);
+                            texture.load(texture.getTextureData());
+                        } catch (NoSuchFieldException | IllegalAccessException ignored) {
+                            // ignore when field missing
+                        }
+                    }
                     if (pendingSettings.isAnisotropicFilteringEnabled()) {
                         texture.setAnisotropicFilter(GLTexture.getMaxAnisotropicFilterLevel());
                     }
