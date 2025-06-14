@@ -140,22 +140,13 @@ public final class MapUiBuilder {
             }
         });
 
-        Table topRow = new Table();
-        topRow.add(menuButton).pad(PADDING).left().top();
-        topRow.add(resourcesActor).pad(PADDING).expandX().left().top();
-        topRow.add(minimapActor).pad(PADDING).right().top();
-
-        Table leftColumn = new Table();
-        leftColumn.top().left();
-        leftColumn.add(buildButton).pad(PADDING).left().top().row();
-        leftColumn.add(removeButton).pad(PADDING).left().top().row();
-        leftColumn.add(mapButton).pad(PADDING).left().top().row();
-        leftColumn.add(minimapButton).pad(PADDING).left().top();
-
-        table.add(topRow).growX();
-        table.row();
-        table.add(leftColumn).left().top();
-
+        table.add(menuButton).pad(PADDING).left().top();
+        table.add(buildButton).pad(PADDING).left().top();
+        table.add(removeButton).pad(PADDING).left().top();
+        table.add(mapButton).pad(PADDING).left().top();
+        table.add(minimapButton).pad(PADDING).left().top();
+        table.add(resourcesActor).pad(PADDING).expandX().left().top();
+        table.add(minimapActor).pad(PADDING).right().top();
         table.row();
         chatTable.add(chatBox).pad(PADDING).growX();
 
