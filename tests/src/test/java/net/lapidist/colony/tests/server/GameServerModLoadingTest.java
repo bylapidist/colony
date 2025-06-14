@@ -53,6 +53,7 @@ public class GameServerModLoadingTest {
             assertTrue(loaded.stream().anyMatch(m -> "base-autosave".equals(m.metadata().id())));
             assertTrue(loaded.stream().anyMatch(m -> "base-resource-production".equals(m.metadata().id())));
             assertTrue(loaded.stream().anyMatch(m -> "base-handlers".equals(m.metadata().id())));
+            assertTrue(loaded.stream().anyMatch(m -> "base-resources".equals(m.metadata().id())));
             assertTrue(loaded.stream().anyMatch(m -> "base-definitions".equals(m.metadata().id())));
             assertTrue(loaded.stream().anyMatch(m -> "stub".equals(m.metadata().id())));
             assertTrue(server.isRunning());
