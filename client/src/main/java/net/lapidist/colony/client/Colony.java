@@ -38,13 +38,17 @@ public final class Colony extends Game {
         setScreen(new MainMenuScreen(this));
     }
 
-    public void startGame(final String saveName) {
+    public void startGame(final String saveName, final int width, final int height) {
         try {
             if (server != null) {
                 server.stop();
             }
             server = new GameServer(
-                    GameServerConfig.builder().saveName(saveName).build()
+                    GameServerConfig.builder()
+                            .saveName(saveName)
+                            .mapWidth(width)
+                            .mapHeight(height)
+                            .build()
             );
             server.start();
             client = new GameClient();
@@ -58,6 +62,10 @@ public final class Colony extends Game {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void startGame(final String saveName) {
+        startGame(saveName, ColonyConfig.get().getInt("game.mapWidth"), ColonyConfig.get().getInt("game.mapHeight"));
     }
 
     public void startGame() {

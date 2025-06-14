@@ -93,15 +93,17 @@ public final class GameClient extends AbstractMessageEndpoint {
                             .autosaveName(meta.autosaveName())
                             .description(meta.description())
                             .buildings(new java.util.ArrayList<>(meta.buildings()))
-                            .playerResources(meta.playerResources());
+                            .playerResources(meta.playerResources())
+                            .width(meta.width())
+                            .height(meta.height());
                     tileBuffer = new java.util.HashMap<>();
                     expectedChunks = meta.chunkCount();
                     receivedChunks = 0;
                     if (loadProgressListener != null) {
                         loadProgressListener.accept(0f);
                     }
-                    int chunkWidth = (int) Math.ceil(GameConstants.MAP_WIDTH / (double) MapChunkData.CHUNK_SIZE);
-                    int chunkHeight = (int) Math.ceil(GameConstants.MAP_HEIGHT / (double) MapChunkData.CHUNK_SIZE);
+                    int chunkWidth = (int) Math.ceil(meta.width() / (double) MapChunkData.CHUNK_SIZE);
+                    int chunkHeight = (int) Math.ceil(meta.height() / (double) MapChunkData.CHUNK_SIZE);
                     for (int x = 0; x < chunkWidth; x++) {
                         for (int y = 0; y < chunkHeight; y++) {
                             send(new MapChunkRequest(x, y));

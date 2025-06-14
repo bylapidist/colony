@@ -86,7 +86,9 @@ public final class NetworkService {
                 state.description(),
                 state.buildings(),
                 state.playerResources(),
-                chunkCount
+                chunkCount,
+                state.width(),
+                state.height()
         );
         connection.sendTCP(meta);
         LOGGER.info("Sent map metadata with {} chunks to connection {}", chunkCount, connection.getID());

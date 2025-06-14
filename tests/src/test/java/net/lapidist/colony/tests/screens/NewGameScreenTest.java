@@ -22,8 +22,8 @@ import static org.mockito.Mockito.*;
 public class NewGameScreenTest {
 
     private static final int NAME_FIELD_INDEX = 1;
-    private static final int START_BUTTON_INDEX = 2;
-    private static final int BACK_BUTTON_INDEX = 3;
+    private static final int START_BUTTON_INDEX = 7;
+    private static final int BACK_BUTTON_INDEX = 8;
 
     private static Table getRoot(final NewGameScreen screen) throws Exception {
         Field f = screen.getClass().getSuperclass().getDeclaredField("root");
@@ -41,7 +41,11 @@ public class NewGameScreenTest {
             TextButton start = (TextButton) root.getChildren().get(START_BUTTON_INDEX);
             field.setText("mysave");
             start.fire(new ChangeListener.ChangeEvent());
-            verify(colony).startGame("mysave");
+            verify(colony).startGame(
+                    "mysave",
+                    net.lapidist.colony.map.MapSize.SMALL.width(),
+                    net.lapidist.colony.map.MapSize.SMALL.height()
+            );
             screen.dispose();
         }
     }

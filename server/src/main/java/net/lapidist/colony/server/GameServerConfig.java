@@ -15,6 +15,8 @@ public final class GameServerConfig {
     private String saveName = DEFAULT_SAVE_NAME;
     private long autosaveInterval = DEFAULT_INTERVAL;
     private MapGenerator mapGenerator = new ChunkedMapGenerator();
+    private int mapWidth = net.lapidist.colony.components.GameConstants.MAP_WIDTH;
+    private int mapHeight = net.lapidist.colony.components.GameConstants.MAP_HEIGHT;
 
     public String getSaveName() {
         return saveName;
@@ -26,6 +28,14 @@ public final class GameServerConfig {
 
     public MapGenerator getMapGenerator() {
         return mapGenerator;
+    }
+
+    public int getMapWidth() {
+        return mapWidth;
+    }
+
+    public int getMapHeight() {
+        return mapHeight;
     }
 
     public static Builder builder() {
@@ -47,6 +57,16 @@ public final class GameServerConfig {
 
         public Builder mapGenerator(final MapGenerator generator) {
             config.mapGenerator = generator;
+            return this;
+        }
+
+        public Builder mapWidth(final int width) {
+            config.mapWidth = width;
+            return this;
+        }
+
+        public Builder mapHeight(final int height) {
+            config.mapHeight = height;
             return this;
         }
 

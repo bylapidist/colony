@@ -23,7 +23,9 @@ public record MapState(
         List<BuildingData> buildings,
         ResourceData playerResources,
         PlayerPosition playerPos,
-        CameraPosition cameraPos
+        CameraPosition cameraPos,
+        int width,
+        int height
 ) {
     public static final int CURRENT_VERSION = SaveVersion.CURRENT.number();
 
@@ -38,7 +40,9 @@ public record MapState(
                 new ArrayList<>(),
                 new ResourceData(),
                 new PlayerPosition(GameConstants.MAP_WIDTH / 2, GameConstants.MAP_HEIGHT / 2),
-                new CameraPosition(GameConstants.MAP_WIDTH / 2f, GameConstants.MAP_HEIGHT / 2f)
+                new CameraPosition(GameConstants.MAP_WIDTH / 2f, GameConstants.MAP_HEIGHT / 2f),
+                GameConstants.MAP_WIDTH,
+                GameConstants.MAP_HEIGHT
         );
     }
 
@@ -124,6 +128,8 @@ public record MapState(
         private ResourceData playerResources;
         private PlayerPosition playerPos;
         private CameraPosition cameraPos;
+        private int width;
+        private int height;
 
         private Builder() {
             this(new MapState());
@@ -140,6 +146,8 @@ public record MapState(
             this.playerResources = state.playerResources;
             this.playerPos = state.playerPos;
             this.cameraPos = state.cameraPos;
+            this.width = state.width;
+            this.height = state.height;
         }
 
         public Builder version(final int newVersion) {
@@ -192,6 +200,16 @@ public record MapState(
             return this;
         }
 
+        public Builder width(final int newWidth) {
+            this.width = newWidth;
+            return this;
+        }
+
+        public Builder height(final int newHeight) {
+            this.height = newHeight;
+            return this;
+        }
+
         public MapState build() {
             return new MapState(
                     version,
@@ -203,7 +221,9 @@ public record MapState(
                     buildings,
                     playerResources,
                     playerPos,
-                    cameraPos
+                    cameraPos,
+                    width,
+                    height
             );
         }
     }

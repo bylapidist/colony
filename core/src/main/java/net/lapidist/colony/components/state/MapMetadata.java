@@ -16,5 +16,7 @@ public record MapMetadata(
         String description,
         List<BuildingData> buildings,
         ResourceData playerResources,
-        int chunkCount
+        int chunkCount,
+        int width,
+        int height
 ) { }

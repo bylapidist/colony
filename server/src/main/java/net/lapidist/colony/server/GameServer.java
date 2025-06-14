@@ -74,7 +74,7 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         this.mapGenerator = config.getMapGenerator();
         this.handlers = handlersToUse;
         this.commandHandlers = commandHandlersToUse;
-        this.mapService = new MapService(mapGenerator, saveName);
+        this.mapService = new MapService(mapGenerator, config.getMapWidth(), config.getMapHeight(), saveName);
         this.networkService = new NetworkService(server, TCP_PORT, UDP_PORT);
         this.autosaveService = new AutosaveService(autosaveInterval, saveName, () -> mapState);
         this.resourceProductionService = new ResourceProductionService(
