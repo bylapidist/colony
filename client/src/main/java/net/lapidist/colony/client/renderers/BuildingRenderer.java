@@ -12,6 +12,8 @@ import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.client.render.data.RenderBuilding;
 import net.lapidist.colony.client.render.MapRenderData;
+import net.lapidist.colony.registry.BuildingDefinition;
+import net.lapidist.colony.registry.Registries;
 
 /**
  * Renders building entities.
@@ -40,11 +42,11 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
         this.cameraSystem = cameraSystemToSet;
         this.resolver = resolverToSet;
 
-        for (String type : new String[]{"HOUSE", "MARKET", "FACTORY", "FARM"}) {
-            String ref = resolver.buildingAsset(type);
+        for (BuildingDefinition def : Registries.buildings().all()) {
+            String ref = resolver.buildingAsset(def.id());
             TextureRegion region = resourceLoader.findRegion(ref);
             if (region != null) {
-                buildingRegions.put(type, region);
+                buildingRegions.put(def.id().toUpperCase(java.util.Locale.ROOT), region);
             }
         }
     }
@@ -66,7 +68,7 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
             }
 
             String type = building.getBuildingType();
-            TextureRegion region = buildingRegions.get(type);
+            TextureRegion region = buildingRegions.get(type.toUpperCase(java.util.Locale.ROOT));
             if (region != null) {
                 spriteBatch.draw(region, worldCoords.x, worldCoords.y);
             }

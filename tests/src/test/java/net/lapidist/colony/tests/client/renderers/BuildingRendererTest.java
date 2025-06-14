@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import net.lapidist.colony.client.renderers.BuildingRenderer;
 import net.lapidist.colony.client.renderers.DefaultAssetResolver;
 import net.lapidist.colony.client.renderers.AssetResolver;
+import net.lapidist.colony.base.BaseDefinitionsMod;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.render.data.RenderBuilding;
@@ -33,6 +34,8 @@ public class BuildingRendererTest {
         ResourceLoader loader = mock(ResourceLoader.class);
         TextureRegion region = mock(TextureRegion.class);
         when(loader.findRegion(anyString())).thenReturn(region);
+
+        new BaseDefinitionsMod().init();
 
         CameraProvider camera = mock(CameraProvider.class);
         OrthographicCamera cam = new OrthographicCamera();
@@ -63,6 +66,8 @@ public class BuildingRendererTest {
         ResourceLoader loader = mock(ResourceLoader.class);
         TextureRegion region = mock(TextureRegion.class);
         when(loader.findRegion(anyString())).thenReturn(region);
+
+        new BaseDefinitionsMod().init();
 
         CameraProvider camera = mock(CameraProvider.class);
         OrthographicCamera cam = new OrthographicCamera();
