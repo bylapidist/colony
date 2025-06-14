@@ -40,7 +40,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-
+/**
+ * Handles all network communication with a {@link GameServer} instance.
+ * <p>
+ * The client is responsible for receiving world updates, queuing messages for
+ * later processing and loading the initial map state.
+ */
 public final class GameClient extends AbstractMessageEndpoint {
     // Increase buffers to handle large serialized map data.
     // Size is configured via game.networkBufferSize.
@@ -108,6 +113,9 @@ public final class GameClient extends AbstractMessageEndpoint {
         this.loadMessageListener = listener;
     }
 
+    /**
+     * Creates a new client instance with default message handlers.
+     */
     public GameClient() {
         Queue<TileSelectionData> tileUpdates = registerQueue(TileSelectionData.class);
         Queue<BuildingData> buildingUpdates = registerQueue(BuildingData.class);
@@ -158,6 +166,11 @@ public final class GameClient extends AbstractMessageEndpoint {
         );
     }
 
+    /**
+     * Creates a new client using the supplied network message handlers.
+     *
+     * @param handlersToUse handlers that should be registered when the client starts
+     */
     public GameClient(final Iterable<MessageHandler<?>> handlersToUse) {
         this.handlers = handlersToUse;
     }
@@ -183,29 +196,57 @@ public final class GameClient extends AbstractMessageEndpoint {
     }
 
     @Override
+    /**
+     * Starts the client and connects to the local {@link GameServer} using
+     * the default callback.
+     *
+     * @throws IOException if the connection cannot be established
+     */
     public void start() throws IOException {
         start(ms -> {
         });
     }
 
+    /**
+     * Start the client and register a callback invoked once the initial map is loaded.
+     *
+     * @param callback called when the map has finished loading
+     * @throws IOException if network connection fails
+     */
     public void start(final Consumer<MapState> callback) throws IOException {
         this.readyCallback = callback;
         connect();
         startRequestExecutor();
     }
 
+    /**
+     * Get the current map state managed by the client.
+     *
+     * @return loaded map state or {@code null} if not yet available
+     */
     public MapState getMapState() {
         return mapState;
     }
 
+    /**
+     * ID assigned by the server for this player.
+     *
+     * @return player ID or {@code -1} when not connected
+     */
     public int getPlayerId() {
         return playerId;
     }
 
+    /**
+     * Width of the loaded map in tiles.
+     */
     public int getMapWidth() {
         return mapWidth;
     }
 
+    /**
+     * Height of the loaded map in tiles.
+     */
     public int getMapHeight() {
         return mapHeight;
     }
@@ -279,6 +320,13 @@ public final class GameClient extends AbstractMessageEndpoint {
         return client.isConnected();
     }
 
+    /**
+     * Retrieve the next queued message of the given type.
+     *
+     * @param type message class to poll
+     * @param <T>  message type
+     * @return the next message or {@code null} if none are queued
+     */
     @SuppressWarnings("unchecked")
     public <T> T poll(final Class<T> type) {
         Queue<T> queue = (Queue<T>) messageQueues.get(type);
@@ -312,54 +360,87 @@ public final class GameClient extends AbstractMessageEndpoint {
         processChunkRequestQueue(CHUNK_REQUEST_BATCH_SIZE);
     }
 
+    /**
+     * Inject a tile selection update into the local message queue.
+     */
     @SuppressWarnings("unchecked")
     public void injectTileSelectionUpdate(final TileSelectionData data) {
         ((Queue<TileSelectionData>) messageQueues.get(TileSelectionData.class)).add(data);
     }
 
+    /**
+     * Inject a building update into the local message queue.
+     */
     @SuppressWarnings("unchecked")
     public void injectBuildingUpdate(final BuildingData data) {
         ((Queue<BuildingData>) messageQueues.get(BuildingData.class)).add(data);
     }
 
+    /**
+     * Inject a building removal message into the local message queue.
+     */
     @SuppressWarnings("unchecked")
     public void injectBuildingRemoval(final BuildingRemovalData data) {
         ((Queue<BuildingRemovalData>) messageQueues.get(BuildingRemovalData.class)).add(data);
     }
 
+    /**
+     * Inject a resource update into the local message queue.
+     */
     @SuppressWarnings("unchecked")
     public void injectResourceUpdate(final ResourceUpdateData data) {
         ((Queue<ResourceUpdateData>) messageQueues.get(ResourceUpdateData.class)).add(data);
     }
 
 
+    /**
+     * Send a tile selection update request to the server.
+     */
     public void sendTileSelectionRequest(final TileSelectionData data) {
         send(data);
     }
 
+    /**
+     * Send a building placement request to the server.
+     */
     public void sendBuildRequest(final BuildingPlacementData data) {
         send(data);
     }
 
+    /**
+     * Send a building removal request to the server.
+     */
     public void sendRemoveBuildingRequest(final BuildingRemovalData data) {
         send(data);
     }
 
+    /**
+     * Send a resource gather request to the server.
+     */
     public void sendGatherRequest(final ResourceGatherRequestData data) {
         send(data);
     }
 
+    /**
+     * Send a chat message to the server.
+     */
     public void sendChatMessage(final ChatMessage message) {
         send(message);
     }
 
     @Override
+    /**
+     * Send a raw message to the server using TCP.
+     */
     public void send(final Object message) {
         client.sendTCP(message);
     }
 
 
     @Override
+    /**
+     * Stop the network client and shut down background tasks.
+     */
     public void stop() {
         stopRequestExecutor();
         client.stop();

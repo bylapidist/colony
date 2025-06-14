@@ -35,7 +35,10 @@ import net.lapidist.colony.settings.KeyBindings;
 import net.mostlyoriginal.api.event.common.EventSystem;
 
 /**
- * Builds the {@link World} used by {@link MapScreen}.
+ * Utility for constructing the {@link World} instance used by {@link MapScreen}.
+ * <p>
+ * The builder methods create {@link WorldConfigurationBuilder} instances pre
+ * configured with all client systems required for the main map screen.
  */
 public final class MapWorldBuilder {
 
@@ -61,6 +64,16 @@ public final class MapWorldBuilder {
         return baseBuilder(client, stage, keyBindings, new ResourceData());
     }
 
+    /**
+     * Variant of {@link #baseBuilder(GameClient, Stage, KeyBindings)} that also
+     * specifies the initial player resources.
+     *
+     * @param client          game client for network updates
+     * @param stage           stage used by the UI system
+     * @param keyBindings     input bindings for the player
+     * @param playerResources resources available to the player at start
+     * @return configured builder instance
+     */
     public static WorldConfigurationBuilder baseBuilder(
             final GameClient client,
             final Stage stage,
