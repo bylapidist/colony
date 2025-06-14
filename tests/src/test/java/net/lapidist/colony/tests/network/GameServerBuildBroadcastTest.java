@@ -36,30 +36,28 @@ public class GameServerBuildBroadcastTest {
         GameServer server = new GameServer(config);
         server.start();
 
-        GameClient clientA = new GameClient();
-        CountDownLatch latchA = new CountDownLatch(1);
-        clientA.start(state -> latchA.countDown());
-        GameClient clientB = new GameClient();
-        CountDownLatch latchB = new CountDownLatch(1);
-        clientB.start(state -> latchB.countDown());
-        latchA.await(1, TimeUnit.SECONDS);
-        latchB.await(1, TimeUnit.SECONDS);
+        try (GameClient clientA = new GameClient();
+             GameClient clientB = new GameClient()) {
+            CountDownLatch latchA = new CountDownLatch(1);
+            clientA.start(state -> latchA.countDown());
+            CountDownLatch latchB = new CountDownLatch(1);
+            clientB.start(state -> latchB.countDown());
+            latchA.await(1, TimeUnit.SECONDS);
+            latchB.await(1, TimeUnit.SECONDS);
 
-        BuildingPlacementData data = new BuildingPlacementData(0, 0, "HOUSE");
-        clientA.sendBuildRequest(data);
+            BuildingPlacementData data = new BuildingPlacementData(0, 0, "HOUSE");
+            clientA.sendBuildRequest(data);
 
-        Thread.sleep(WAIT_MS);
+            Thread.sleep(WAIT_MS);
 
-        BuildingData update = clientB.poll(BuildingData.class);
-        assertNotNull(update);
-        assertEquals(data.x(), update.x());
-        assertEquals(data.y(), update.y());
-        ResourceUpdateData res = clientB.poll(ResourceUpdateData.class);
-        assertNotNull(res);
-        assertEquals(0, res.wood());
-
-        clientA.stop();
-        clientB.stop();
+            BuildingData update = clientB.poll(BuildingData.class);
+            assertNotNull(update);
+            assertEquals(data.x(), update.x());
+            assertEquals(data.y(), update.y());
+            ResourceUpdateData res = clientB.poll(ResourceUpdateData.class);
+            assertNotNull(res);
+            assertEquals(0, res.wood());
+        }
         server.stop();
         Thread.sleep(WAIT_MS);
     }
@@ -78,30 +76,28 @@ public class GameServerBuildBroadcastTest {
         GameServer server = new GameServer(config);
         server.start();
 
-        GameClient clientA = new GameClient();
-        CountDownLatch latchA = new CountDownLatch(1);
-        clientA.start(state -> latchA.countDown());
-        GameClient clientB = new GameClient();
-        CountDownLatch latchB = new CountDownLatch(1);
-        clientB.start(state -> latchB.countDown());
-        latchA.await(1, TimeUnit.SECONDS);
-        latchB.await(1, TimeUnit.SECONDS);
+        try (GameClient clientA = new GameClient();
+             GameClient clientB = new GameClient()) {
+            CountDownLatch latchA = new CountDownLatch(1);
+            clientA.start(state -> latchA.countDown());
+            CountDownLatch latchB = new CountDownLatch(1);
+            clientB.start(state -> latchB.countDown());
+            latchA.await(1, TimeUnit.SECONDS);
+            latchB.await(1, TimeUnit.SECONDS);
 
-        BuildingPlacementData data = new BuildingPlacementData(0, 0, "FARM");
-        clientA.sendBuildRequest(data);
+            BuildingPlacementData data = new BuildingPlacementData(0, 0, "FARM");
+            clientA.sendBuildRequest(data);
 
-        Thread.sleep(WAIT_MS);
+            Thread.sleep(WAIT_MS);
 
-        BuildingData update = clientB.poll(BuildingData.class);
-        assertNotNull(update);
-        assertEquals(data.x(), update.x());
-        assertEquals(data.y(), update.y());
-        ResourceUpdateData res = clientB.poll(ResourceUpdateData.class);
-        assertNotNull(res);
-        assertEquals(0, res.wood());
-
-        clientA.stop();
-        clientB.stop();
+            BuildingData update = clientB.poll(BuildingData.class);
+            assertNotNull(update);
+            assertEquals(data.x(), update.x());
+            assertEquals(data.y(), update.y());
+            ResourceUpdateData res = clientB.poll(ResourceUpdateData.class);
+            assertNotNull(res);
+            assertEquals(0, res.wood());
+        }
         server.stop();
         Thread.sleep(WAIT_MS);
     }

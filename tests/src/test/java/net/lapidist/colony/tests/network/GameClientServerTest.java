@@ -16,15 +16,14 @@ public class GameClientServerTest {
         GameServer server = new GameServer(GameServerConfig.builder().build());
         server.start();
 
-        GameClient client = new GameClient();
-        CountDownLatch latch = new CountDownLatch(1);
-        client.start(state -> latch.countDown());
-        latch.await(1, TimeUnit.SECONDS);
+        try (GameClient client = new GameClient()) {
+            CountDownLatch latch = new CountDownLatch(1);
+            client.start(state -> latch.countDown());
+            latch.await(1, TimeUnit.SECONDS);
 
-        assertNotNull(client.getMapState());
-        assertNotNull(server.getMapState());
-
-        client.stop();
+            assertNotNull(client.getMapState());
+            assertNotNull(server.getMapState());
+        }
         server.stop();
     }
 
@@ -33,20 +32,19 @@ public class GameClientServerTest {
         GameServer server = new GameServer(GameServerConfig.builder().build());
         server.start();
 
-        GameClient client = new GameClient();
-        client.start();
+        try (GameClient client = new GameClient()) {
+            client.start();
 
-        final int maxAttempts = 20;
-        final int delayMs = 50;
-        int attempts = 0;
-        while (client.getMapState() == null && attempts < maxAttempts) {
-            Thread.sleep(delayMs);
-            attempts++;
+            final int maxAttempts = 20;
+            final int delayMs = 50;
+            int attempts = 0;
+            while (client.getMapState() == null && attempts < maxAttempts) {
+                Thread.sleep(delayMs);
+                attempts++;
+            }
+
+            assertNotNull(client.getMapState());
         }
-
-        assertNotNull(client.getMapState());
-
-        client.stop();
         server.stop();
     }
 }

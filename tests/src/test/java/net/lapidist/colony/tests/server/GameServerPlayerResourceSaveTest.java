@@ -27,15 +27,15 @@ public class GameServerPlayerResourceSaveTest {
         GameServer server = new GameServer(config);
         server.start();
 
-        GameClient client = new GameClient();
-        CountDownLatch latch = new CountDownLatch(1);
-        client.start(state -> latch.countDown());
-        latch.await(1, TimeUnit.SECONDS);
+        try (GameClient client = new GameClient()) {
+            CountDownLatch latch = new CountDownLatch(1);
+            client.start(state -> latch.countDown());
+            latch.await(1, TimeUnit.SECONDS);
 
-        client.sendGatherRequest(new ResourceGatherRequestData(0, 0, ResourceType.WOOD));
-        Thread.sleep(WAIT_MS);
+            client.sendGatherRequest(new ResourceGatherRequestData(0, 0, ResourceType.WOOD));
+            Thread.sleep(WAIT_MS);
 
-        client.stop();
+        }
         server.stop();
 
         GameServer server2 = new GameServer(config);

@@ -37,33 +37,31 @@ public class GameSimulationBuildingCostTest {
         GameServer server = new GameServer(config);
         server.start();
 
-        GameClient sender = new GameClient();
-        CountDownLatch latchSender = new CountDownLatch(1);
-        sender.start(state -> latchSender.countDown());
-        GameClient receiver = new GameClient();
-        CountDownLatch latchReceiver = new CountDownLatch(1);
-        receiver.start(state -> latchReceiver.countDown());
-        latchSender.await(1, TimeUnit.SECONDS);
-        latchReceiver.await(1, TimeUnit.SECONDS);
+        try (GameClient sender = new GameClient();
+             GameClient receiver = new GameClient()) {
+            CountDownLatch latchSender = new CountDownLatch(1);
+            sender.start(state -> latchSender.countDown());
+            CountDownLatch latchReceiver = new CountDownLatch(1);
+            receiver.start(state -> latchReceiver.countDown());
+            latchSender.await(1, TimeUnit.SECONDS);
+            latchReceiver.await(1, TimeUnit.SECONDS);
 
-        MapState state = receiver.getMapState();
-        GameSimulation sim = new GameSimulation(state, receiver);
+            MapState state = receiver.getMapState();
+            GameSimulation sim = new GameSimulation(state, receiver);
 
-        BuildingPlacementData data = new BuildingPlacementData(0, 0, "HOUSE");
-        sender.sendBuildRequest(data);
+            BuildingPlacementData data = new BuildingPlacementData(0, 0, "HOUSE");
+            sender.sendBuildRequest(data);
 
-        Thread.sleep(WAIT_MS);
-        sim.step();
+            Thread.sleep(WAIT_MS);
+            sim.step();
 
-        var players = sim.getWorld().getAspectSubscriptionManager()
-                .get(com.artemis.Aspect.all(PlayerResourceComponent.class))
-                .getEntities();
-        var prc = sim.getWorld().getMapper(PlayerResourceComponent.class)
-                .get(sim.getWorld().getEntity(players.get(0)));
-        assertEquals(0, prc.getWood());
-
-        sender.stop();
-        receiver.stop();
+            var players = sim.getWorld().getAspectSubscriptionManager()
+                    .get(com.artemis.Aspect.all(PlayerResourceComponent.class))
+                    .getEntities();
+            var prc = sim.getWorld().getMapper(PlayerResourceComponent.class)
+                    .get(sim.getWorld().getEntity(players.get(0)));
+            assertEquals(0, prc.getWood());
+        }
         server.stop();
         Thread.sleep(WAIT_MS);
     }
@@ -82,33 +80,31 @@ public class GameSimulationBuildingCostTest {
         GameServer server = new GameServer(config);
         server.start();
 
-        GameClient sender = new GameClient();
-        CountDownLatch latchSender = new CountDownLatch(1);
-        sender.start(state -> latchSender.countDown());
-        GameClient receiver = new GameClient();
-        CountDownLatch latchReceiver = new CountDownLatch(1);
-        receiver.start(state -> latchReceiver.countDown());
-        latchSender.await(1, TimeUnit.SECONDS);
-        latchReceiver.await(1, TimeUnit.SECONDS);
+        try (GameClient sender = new GameClient();
+             GameClient receiver = new GameClient()) {
+            CountDownLatch latchSender = new CountDownLatch(1);
+            sender.start(state -> latchSender.countDown());
+            CountDownLatch latchReceiver = new CountDownLatch(1);
+            receiver.start(state -> latchReceiver.countDown());
+            latchSender.await(1, TimeUnit.SECONDS);
+            latchReceiver.await(1, TimeUnit.SECONDS);
 
-        MapState state = receiver.getMapState();
-        GameSimulation sim = new GameSimulation(state, receiver);
+            MapState state = receiver.getMapState();
+            GameSimulation sim = new GameSimulation(state, receiver);
 
-        BuildingPlacementData data = new BuildingPlacementData(0, 0, "FARM");
-        sender.sendBuildRequest(data);
+            BuildingPlacementData data = new BuildingPlacementData(0, 0, "FARM");
+            sender.sendBuildRequest(data);
 
-        Thread.sleep(WAIT_MS);
-        sim.step();
+            Thread.sleep(WAIT_MS);
+            sim.step();
 
-        var players = sim.getWorld().getAspectSubscriptionManager()
-                .get(com.artemis.Aspect.all(PlayerResourceComponent.class))
-                .getEntities();
-        var prc = sim.getWorld().getMapper(PlayerResourceComponent.class)
-                .get(sim.getWorld().getEntity(players.get(0)));
-        assertEquals(0, prc.getWood());
-
-        sender.stop();
-        receiver.stop();
+            var players = sim.getWorld().getAspectSubscriptionManager()
+                    .get(com.artemis.Aspect.all(PlayerResourceComponent.class))
+                    .getEntities();
+            var prc = sim.getWorld().getMapper(PlayerResourceComponent.class)
+                    .get(sim.getWorld().getEntity(players.get(0)));
+            assertEquals(0, prc.getWood());
+        }
         server.stop();
         Thread.sleep(WAIT_MS);
     }

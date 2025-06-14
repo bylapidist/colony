@@ -105,7 +105,7 @@ public class ColonyTest {
 
             colony.returnToMainMenu();
 
-            verify(client).stop();
+            verify(client).close();
             verify(server).stop();
             assertSame(menuCons.constructed().get(0), colony.getScreen());
         }
@@ -173,7 +173,7 @@ public class ColonyTest {
 
             colony.dispose();
 
-            verify(client).stop();
+            verify(client).close();
             verify(server).stop();
             assertNull(Events.getInstance());
         }

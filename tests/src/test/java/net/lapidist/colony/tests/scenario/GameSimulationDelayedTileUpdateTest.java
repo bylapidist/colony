@@ -38,12 +38,11 @@ public class GameSimulationDelayedTileUpdateTest {
         GameServer server = new GameServer(config);
         server.start();
 
-        GameClient client = new GameClient();
-        CountDownLatch latch = new CountDownLatch(1);
-        client.start(state -> latch.countDown());
-        latch.await(1, TimeUnit.SECONDS);
+        try (GameClient client = new GameClient()) {
+            CountDownLatch latch = new CountDownLatch(1);
+            client.start(state -> latch.countDown());
+            latch.await(1, TimeUnit.SECONDS);
 
-        try {
             MapState state = client.getMapState();
             GameSimulation sim = new GameSimulation(state, client);
 
@@ -62,8 +61,8 @@ public class GameSimulationDelayedTileUpdateTest {
 
             tile = findTile(sim);
             assertTrue(tile.isSelected());
-        } finally {
-            client.stop();
+        }
+        finally {
             server.stop();
         }
     }

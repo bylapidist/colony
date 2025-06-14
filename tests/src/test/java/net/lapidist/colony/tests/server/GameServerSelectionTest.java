@@ -33,21 +33,20 @@ public class GameServerSelectionTest {
         server.start();
         Events.getInstance().registerEvents(this);
 
-        GameClient client = new GameClient();
-        CountDownLatch latch = new CountDownLatch(1);
-        client.start(state -> latch.countDown());
-        latch.await(1, TimeUnit.SECONDS);
+        try (GameClient client = new GameClient()) {
+            CountDownLatch latch = new CountDownLatch(1);
+            client.start(state -> latch.countDown());
+            latch.await(1, TimeUnit.SECONDS);
 
         TileSelectionData data = new TileSelectionData(0, 0, true);
 
-        client.sendTileSelectionRequest(data);
-        Thread.sleep(WAIT_MS);
-        Events.update();
+            client.sendTileSelectionRequest(data);
+            Thread.sleep(WAIT_MS);
+            Events.update();
 
-        assertTrue(server.getMapState().getTile(0, 0).selected());
-        assertTrue(handled);
-
-        client.stop();
+            assertTrue(server.getMapState().getTile(0, 0).selected());
+            assertTrue(handled);
+        }
         server.stop();
     }
 }

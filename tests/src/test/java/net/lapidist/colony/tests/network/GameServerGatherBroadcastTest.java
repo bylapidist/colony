@@ -27,27 +27,25 @@ public class GameServerGatherBroadcastTest {
         GameServer server = new GameServer(config);
         server.start();
 
-        GameClient clientA = new GameClient();
-        CountDownLatch latchA = new CountDownLatch(1);
-        clientA.start(state -> latchA.countDown());
-        GameClient clientB = new GameClient();
-        CountDownLatch latchB = new CountDownLatch(1);
-        clientB.start(state -> latchB.countDown());
-        latchA.await(1, TimeUnit.SECONDS);
-        latchB.await(1, TimeUnit.SECONDS);
+        try (GameClient clientA = new GameClient();
+             GameClient clientB = new GameClient()) {
+            CountDownLatch latchA = new CountDownLatch(1);
+            clientA.start(state -> latchA.countDown());
+            CountDownLatch latchB = new CountDownLatch(1);
+            clientB.start(state -> latchB.countDown());
+            latchA.await(1, TimeUnit.SECONDS);
+            latchB.await(1, TimeUnit.SECONDS);
 
-        ResourceGatherRequestData data = new ResourceGatherRequestData(0, 0, ResourceType.WOOD);
-        clientA.sendGatherRequest(data);
+            ResourceGatherRequestData data = new ResourceGatherRequestData(0, 0, ResourceType.WOOD);
+            clientA.sendGatherRequest(data);
 
-        Thread.sleep(WAIT_MS);
+            Thread.sleep(WAIT_MS);
 
-        ResourceUpdateData update = clientB.poll(ResourceUpdateData.class);
-        assertNotNull(update);
-        assertEquals(0, update.x());
-        assertEquals(0, update.y());
-
-        clientA.stop();
-        clientB.stop();
+            ResourceUpdateData update = clientB.poll(ResourceUpdateData.class);
+            assertNotNull(update);
+            assertEquals(0, update.x());
+            assertEquals(0, update.y());
+        }
         server.stop();
     }
 }

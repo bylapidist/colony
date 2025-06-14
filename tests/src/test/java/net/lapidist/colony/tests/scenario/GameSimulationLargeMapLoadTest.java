@@ -25,17 +25,15 @@ public class GameSimulationLargeMapLoadTest {
                 .build());
         server.start();
 
-        GameClient client = new GameClient();
-        CountDownLatch latch = new CountDownLatch(1);
-        client.start(state -> latch.countDown());
-        latch.await(2, TimeUnit.SECONDS);
+        try (GameClient client = new GameClient()) {
+            CountDownLatch latch = new CountDownLatch(1);
+            client.start(state -> latch.countDown());
+            latch.await(2, TimeUnit.SECONDS);
 
-        assertTrue(client.isConnected());
-        MapState state = client.getMapState();
-        assertNotNull(state);
-
-
-        client.stop();
+            assertTrue(client.isConnected());
+            MapState state = client.getMapState();
+            assertNotNull(state);
+        }
         server.stop();
     }
 }

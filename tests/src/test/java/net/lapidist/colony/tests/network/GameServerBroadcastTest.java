@@ -24,28 +24,26 @@ public class GameServerBroadcastTest {
         GameServer server = new GameServer(config);
         server.start();
 
-        GameClient clientA = new GameClient();
-        CountDownLatch latchA = new CountDownLatch(1);
-        clientA.start(state -> latchA.countDown());
-        GameClient clientB = new GameClient();
-        CountDownLatch latchB = new CountDownLatch(1);
-        clientB.start(state -> latchB.countDown());
-        latchA.await(1, TimeUnit.SECONDS);
-        latchB.await(1, TimeUnit.SECONDS);
+        try (GameClient clientA = new GameClient();
+             GameClient clientB = new GameClient()) {
+            CountDownLatch latchA = new CountDownLatch(1);
+            clientA.start(state -> latchA.countDown());
+            CountDownLatch latchB = new CountDownLatch(1);
+            clientB.start(state -> latchB.countDown());
+            latchA.await(1, TimeUnit.SECONDS);
+            latchB.await(1, TimeUnit.SECONDS);
 
-        TileSelectionData data = new TileSelectionData(0, 0, true);
-        clientA.sendTileSelectionRequest(data);
+            TileSelectionData data = new TileSelectionData(0, 0, true);
+            clientA.sendTileSelectionRequest(data);
 
-        Thread.sleep(WAIT_MS);
+            Thread.sleep(WAIT_MS);
 
-        TileSelectionData update = clientB.poll(TileSelectionData.class);
-        assertNotNull(update);
-        assertEquals(data.selected(), update.selected());
-        assertEquals(data.x(), update.x());
-        assertEquals(data.y(), update.y());
-
-        clientA.stop();
-        clientB.stop();
+            TileSelectionData update = clientB.poll(TileSelectionData.class);
+            assertNotNull(update);
+            assertEquals(data.selected(), update.selected());
+            assertEquals(data.x(), update.x());
+            assertEquals(data.y(), update.y());
+        }
         server.stop();
     }
 }

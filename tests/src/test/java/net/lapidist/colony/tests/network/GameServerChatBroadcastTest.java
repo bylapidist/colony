@@ -25,25 +25,23 @@ public class GameServerChatBroadcastTest {
         GameServer server = new GameServer(config);
         server.start();
 
-        GameClient clientA = new GameClient();
-        CountDownLatch latchA = new CountDownLatch(1);
-        clientA.start(state -> latchA.countDown());
-        GameClient clientB = new GameClient();
-        CountDownLatch latchB = new CountDownLatch(1);
-        clientB.start(state -> latchB.countDown());
-        latchA.await(1, TimeUnit.SECONDS);
-        latchB.await(1, TimeUnit.SECONDS);
+        try (GameClient clientA = new GameClient();
+             GameClient clientB = new GameClient()) {
+            CountDownLatch latchA = new CountDownLatch(1);
+            clientA.start(state -> latchA.countDown());
+            CountDownLatch latchB = new CountDownLatch(1);
+            clientB.start(state -> latchB.countDown());
+            latchA.await(1, TimeUnit.SECONDS);
+            latchB.await(1, TimeUnit.SECONDS);
 
-        ChatMessage msg = new ChatMessage("hello");
-        clientA.sendChatMessage(msg);
-        Thread.sleep(WAIT_MS);
+            ChatMessage msg = new ChatMessage("hello");
+            clientA.sendChatMessage(msg);
+            Thread.sleep(WAIT_MS);
 
-        ChatMessage received = clientB.poll(ChatMessage.class);
-        assertNotNull(received);
-        assertEquals(msg.text(), received.text());
-
-        clientA.stop();
-        clientB.stop();
+            ChatMessage received = clientB.poll(ChatMessage.class);
+            assertNotNull(received);
+            assertEquals(msg.text(), received.text());
+        }
         server.stop();
     }
 }

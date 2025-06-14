@@ -31,7 +31,7 @@ public final class Colony extends Game {
 
     public void returnToMainMenu() {
         if (client != null) {
-            client.stop();
+            client.close();
             client = null;
         }
         if (server != null) {
@@ -119,7 +119,7 @@ public final class Colony extends Game {
     @Override
     public void dispose() {
         if (client != null) {
-            client.stop();
+            client.close();
         }
         if (server != null) {
             server.stop();

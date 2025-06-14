@@ -29,10 +29,10 @@ public class GameSimulationMapLoadNetworkTest {
         GameServer server = new GameServer(GameServerConfig.builder().build());
         server.start();
 
-        GameClient client = new GameClient();
-        CountDownLatch latch = new CountDownLatch(1);
-        client.start(state -> latch.countDown());
-        latch.await(1, TimeUnit.SECONDS);
+        try (GameClient client = new GameClient()) {
+            CountDownLatch latch = new CountDownLatch(1);
+            client.start(state -> latch.countDown());
+            latch.await(1, TimeUnit.SECONDS);
 
         assertTrue(client.isConnected());
         MapState state = client.getMapState();
@@ -41,8 +41,8 @@ public class GameSimulationMapLoadNetworkTest {
         assertEquals(MapState.DEFAULT_WIDTH, client.getMapWidth());
         assertEquals(MapState.DEFAULT_HEIGHT, client.getMapHeight());
 
-        GameSimulation sim = new GameSimulation(state, client);
-        sim.step();
+            GameSimulation sim = new GameSimulation(state, client);
+            sim.step();
 
         IntBag maps = sim.getWorld().getAspectSubscriptionManager()
                 .get(Aspect.all(MapComponent.class))
@@ -50,10 +50,9 @@ public class GameSimulationMapLoadNetworkTest {
         assertEquals(1, maps.size());
 
         Entity map = sim.getWorld().getEntity(maps.get(0));
-        MapComponent mapComponent = sim.getWorld().getMapper(MapComponent.class).get(map);
-        assertFalse(mapComponent.getTiles().isEmpty());
-
-        client.stop();
+            MapComponent mapComponent = sim.getWorld().getMapper(MapComponent.class).get(map);
+            assertFalse(mapComponent.getTiles().isEmpty());
+        }
         server.stop();
     }
 }

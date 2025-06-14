@@ -41,7 +41,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 
-public final class GameClient extends AbstractMessageEndpoint {
+public final class GameClient extends AbstractMessageEndpoint implements AutoCloseable {
     // Increase buffers to handle large serialized map data.
     // Size is configured via game.networkBufferSize.
     private static final Logger LOGGER = LoggerFactory.getLogger(GameClient.class);
@@ -364,5 +364,10 @@ public final class GameClient extends AbstractMessageEndpoint {
         stopRequestExecutor();
         client.stop();
         LOGGER.info("Client stopped");
+    }
+
+    @Override
+    public void close() {
+        stop();
     }
 }

@@ -39,12 +39,11 @@ public class GameSimulationInputSelectionTest {
         GameServer server = new GameServer(config);
         server.start();
 
-        GameClient client = new GameClient();
-        CountDownLatch latch = new CountDownLatch(1);
-        client.start(state -> latch.countDown());
-        latch.await(1, TimeUnit.SECONDS);
+        try (GameClient client = new GameClient()) {
+            CountDownLatch latch = new CountDownLatch(1);
+            client.start(state -> latch.countDown());
+            latch.await(1, TimeUnit.SECONDS);
 
-        try {
             MapState state = client.getMapState();
             GameSimulation sim = new GameSimulation(state, client);
 
@@ -72,8 +71,8 @@ public class GameSimulationInputSelectionTest {
                     t -> sim.getWorld().getMapper(TileComponent.class).get(t)
             ).orElse(null);
             assertTrue(tile != null && tile.isSelected());
-        } finally {
-            client.stop();
+        }
+        finally {
             server.stop();
         }
     }

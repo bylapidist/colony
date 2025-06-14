@@ -23,23 +23,23 @@ public class GameSimulationTileUpdateTest {
         GameServer server = new GameServer(GameServerConfig.builder().build());
         server.start();
 
-        GameClient sender = new GameClient();
-        CountDownLatch latchSender = new CountDownLatch(1);
-        sender.start(state -> latchSender.countDown());
-        GameClient receiver = new GameClient();
-        CountDownLatch latchReceiver = new CountDownLatch(1);
-        receiver.start(state -> latchReceiver.countDown());
-        latchSender.await(1, TimeUnit.SECONDS);
-        latchReceiver.await(1, TimeUnit.SECONDS);
+        try (GameClient sender = new GameClient();
+             GameClient receiver = new GameClient()) {
+            CountDownLatch latchSender = new CountDownLatch(1);
+            sender.start(state -> latchSender.countDown());
+            CountDownLatch latchReceiver = new CountDownLatch(1);
+            receiver.start(state -> latchReceiver.countDown());
+            latchSender.await(1, TimeUnit.SECONDS);
+            latchReceiver.await(1, TimeUnit.SECONDS);
 
-        MapState state = receiver.getMapState();
-        GameSimulation sim = new GameSimulation(state, receiver);
+            MapState state = receiver.getMapState();
+            GameSimulation sim = new GameSimulation(state, receiver);
 
-        TileSelectionData data = new TileSelectionData(0, 0, true);
-        sender.sendTileSelectionRequest(data);
+            TileSelectionData data = new TileSelectionData(0, 0, true);
+            sender.sendTileSelectionRequest(data);
 
-        Thread.sleep(WAIT_MS);
-        sim.step();
+            Thread.sleep(WAIT_MS);
+            sim.step();
 
         var world = sim.getWorld();
         var maps = world.getAspectSubscriptionManager()
@@ -49,10 +49,8 @@ public class GameSimulationTileUpdateTest {
         var mapComponent = world.getMapper(net.lapidist.colony.components.maps.MapComponent.class).get(map);
         var tile = mapComponent.getTiles().get(0);
         var tileComponent = world.getMapper(net.lapidist.colony.components.maps.TileComponent.class).get(tile);
-        assertTrue(tileComponent.isSelected());
-
-        sender.stop();
-        receiver.stop();
+            assertTrue(tileComponent.isSelected());
+        }
         server.stop();
     }
 }

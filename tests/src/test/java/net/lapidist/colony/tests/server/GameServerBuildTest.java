@@ -43,21 +43,20 @@ public class GameServerBuildTest {
         server.start();
         Events.getInstance().registerEvents(this);
 
-        GameClient client = new GameClient();
-        CountDownLatch latch = new CountDownLatch(1);
-        client.start(state -> latch.countDown());
-        latch.await(1, TimeUnit.SECONDS);
+        try (GameClient client = new GameClient()) {
+            CountDownLatch latch = new CountDownLatch(1);
+            client.start(state -> latch.countDown());
+            latch.await(1, TimeUnit.SECONDS);
 
-        BuildingPlacementData data = new BuildingPlacementData(0, 0, "HOUSE");
-        client.sendBuildRequest(data);
-        Thread.sleep(WAIT_MS);
-        Events.update();
+            BuildingPlacementData data = new BuildingPlacementData(0, 0, "HOUSE");
+            client.sendBuildRequest(data);
+            Thread.sleep(WAIT_MS);
+            Events.update();
 
-        assertTrue(server.getMapState().buildings().stream()
-                .anyMatch(b -> b.x() == 0 && b.y() == 0));
-        assertTrue(handled);
-
-        client.stop();
+            assertTrue(server.getMapState().buildings().stream()
+                    .anyMatch(b -> b.x() == 0 && b.y() == 0));
+            assertTrue(handled);
+        }
         server.stop();
         Thread.sleep(WAIT_MS);
     }

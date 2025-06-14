@@ -42,25 +42,24 @@ public class GameSimulationFoodProductionTest {
         GameServer server = new GameServer(config);
         server.start();
 
-        GameClient client = new GameClient();
-        CountDownLatch latch = new CountDownLatch(1);
-        client.start(state -> latch.countDown());
-        latch.await(1, TimeUnit.SECONDS);
+        try (GameClient client = new GameClient()) {
+            CountDownLatch latch = new CountDownLatch(1);
+            client.start(state -> latch.countDown());
+            latch.await(1, TimeUnit.SECONDS);
 
-        MapState state = client.getMapState();
-        GameSimulation sim = new GameSimulation(state, client);
+            MapState state = client.getMapState();
+            GameSimulation sim = new GameSimulation(state, client);
 
-        Thread.sleep(WAIT_MS + DELAY_MS);
-        sim.step();
+            Thread.sleep(WAIT_MS + DELAY_MS);
+            sim.step();
 
-        var players = sim.getWorld().getAspectSubscriptionManager()
-                .get(com.artemis.Aspect.all(PlayerResourceComponent.class))
-                .getEntities();
-        var prc = sim.getWorld().getMapper(PlayerResourceComponent.class)
-                .get(sim.getWorld().getEntity(players.get(0)));
-        assertTrue(prc.getFood() > 0);
-
-        client.stop();
+            var players = sim.getWorld().getAspectSubscriptionManager()
+                    .get(com.artemis.Aspect.all(PlayerResourceComponent.class))
+                    .getEntities();
+            var prc = sim.getWorld().getMapper(PlayerResourceComponent.class)
+                    .get(sim.getWorld().getEntity(players.get(0)));
+            assertTrue(prc.getFood() > 0);
+        }
         server.stop();
         Thread.sleep(WAIT_MS);
     }
