@@ -20,6 +20,8 @@ public final class PlayerMovementSystem extends BaseSystem {
     private PlayerCameraSystem cameraSystem;
     private ComponentMapper<PlayerComponent> playerMapper;
     private Entity player;
+    private int lastTileX;
+    private int lastTileY;
 
     public PlayerMovementSystem(final KeyBindings bindings) {
         this(null, bindings);
@@ -42,6 +44,9 @@ public final class PlayerMovementSystem extends BaseSystem {
                 .getEntities();
         if (players.size() > 0) {
             player = world.getEntity(players.get(0));
+            PlayerComponent pc = playerMapper.get(player);
+            lastTileX = Math.floorDiv((int) pc.getX(), GameConstants.TILE_SIZE);
+            lastTileY = Math.floorDiv((int) pc.getY(), GameConstants.TILE_SIZE);
         }
     }
 
@@ -65,6 +70,16 @@ public final class PlayerMovementSystem extends BaseSystem {
             pc.setX(pc.getX() + move);
         }
         clampPosition(pc);
+
+        int tileX = Math.floorDiv((int) pc.getX(), GameConstants.TILE_SIZE);
+        int tileY = Math.floorDiv((int) pc.getY(), GameConstants.TILE_SIZE);
+        if (client != null && (tileX != lastTileX || tileY != lastTileY)) {
+            lastTileX = tileX;
+            lastTileY = tileY;
+            client.sendPlayerPositionUpdate(
+                    new net.lapidist.colony.components.state.PlayerPositionUpdate(tileX, tileY)
+            );
+        }
     }
 
     private void clampPosition(final PlayerComponent pc) {

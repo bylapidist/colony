@@ -18,12 +18,14 @@ import net.lapidist.colony.server.handlers.BuildingRemovalRequestHandler;
 import net.lapidist.colony.server.handlers.ChatMessageHandler;
 import net.lapidist.colony.server.handlers.ResourceGatherRequestHandler;
 import net.lapidist.colony.server.handlers.MapChunkRequestHandler;
+import net.lapidist.colony.server.handlers.PlayerPositionUpdateHandler;
 import net.lapidist.colony.server.commands.CommandBus;
 import net.lapidist.colony.server.commands.CommandHandler;
 import net.lapidist.colony.server.commands.TileSelectionCommandHandler;
 import net.lapidist.colony.server.commands.BuildCommandHandler;
 import net.lapidist.colony.server.commands.GatherCommandHandler;
 import net.lapidist.colony.server.commands.RemoveBuildingCommandHandler;
+import net.lapidist.colony.server.commands.PlayerPositionCommandHandler;
 import net.lapidist.colony.server.services.AutosaveService;
 import net.lapidist.colony.server.services.MapService;
 import net.lapidist.colony.server.services.NetworkService;
@@ -154,7 +156,8 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
                     new TileSelectionCommandHandler(() -> mapState, networkService, stateLock),
                     new BuildCommandHandler(() -> mapState, s -> mapState = s, networkService, stateLock),
                     new GatherCommandHandler(() -> mapState, s -> mapState = s, networkService, stateLock),
-                    new RemoveBuildingCommandHandler(() -> mapState, s -> mapState = s, networkService, stateLock)
+                    new RemoveBuildingCommandHandler(() -> mapState, s -> mapState = s, networkService, stateLock),
+                    new PlayerPositionCommandHandler(() -> mapState, s -> mapState = s, stateLock)
             );
         }
         commandBus.registerHandlers(commandHandlers);
@@ -166,7 +169,8 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
                     new BuildingRemovalRequestHandler(commandBus),
                     new ChatMessageHandler(networkService, commandBus),
                     new ResourceGatherRequestHandler(commandBus),
-                    new MapChunkRequestHandler(() -> mapState, networkService, stateLock)
+                    new MapChunkRequestHandler(() -> mapState, networkService, stateLock),
+                    new PlayerPositionUpdateHandler(commandBus)
             );
         }
         registerHandlers(handlers);

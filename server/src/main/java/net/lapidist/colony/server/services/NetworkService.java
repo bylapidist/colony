@@ -88,6 +88,8 @@ public final class NetworkService {
                 state.description(),
                 state.buildings(),
                 state.playerResources(),
+                state.playerPos(),
+                state.cameraPos(),
                 state.width(),
                 state.height(),
                 chunkCount
