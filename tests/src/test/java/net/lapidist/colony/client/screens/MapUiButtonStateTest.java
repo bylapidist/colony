@@ -6,11 +6,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.CameraInputSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
+import net.lapidist.colony.settings.KeyAction;
 import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
@@ -104,5 +107,48 @@ public class MapUiButtonStateTest {
         minimapButton.toggle();
         assertEquals(initial, ui.getMinimapActor().isVisible());
         assertEquals(initialChecked, minimapButton.isChecked());
+    }
+
+    @Test
+    public void keyPressesUpdateButtonStates() {
+        Stage stage = new Stage(new ScreenViewport(), mock(Batch.class));
+        Settings settings = new Settings();
+        BuildPlacementSystem buildSystem = new BuildPlacementSystem(
+                mock(GameClient.class),
+                settings.getKeyBindings()
+        );
+        World world = new World(new WorldConfigurationBuilder()
+                .with(
+                        new PlayerCameraSystem(),
+                        new CameraInputSystem(settings.getKeyBindings()),
+                        buildSystem
+                )
+                .build());
+        GameClient client = mock(GameClient.class);
+        Colony colony = mock(Colony.class);
+        when(colony.getSettings()).thenReturn(settings);
+
+        MapUiBuilder.build(stage, world, client, colony);
+
+        TextButton buildButton = stage.getRoot().findActor("buildButton");
+        TextButton removeButton = stage.getRoot().findActor("removeButton");
+
+        Input input = mock(Input.class);
+        Gdx.input = input;
+
+        when(input.isKeyJustPressed(settings.getKeyBindings().getKey(KeyAction.BUILD))).thenReturn(true);
+        world.process();
+        stage.act(0f);
+
+        assertTrue(buildButton.isChecked());
+        assertFalse(removeButton.isChecked());
+
+        when(input.isKeyJustPressed(settings.getKeyBindings().getKey(KeyAction.BUILD))).thenReturn(false);
+        when(input.isKeyJustPressed(settings.getKeyBindings().getKey(KeyAction.REMOVE))).thenReturn(true);
+        world.process();
+        stage.act(0f);
+
+        assertTrue(removeButton.isChecked());
+        assertFalse(buildButton.isChecked());
     }
 }

@@ -80,6 +80,9 @@ public final class BuildPlacementSystem extends BaseSystem {
 
     public void setBuildMode(final boolean mode) {
         this.buildMode = mode;
+        if (mode) {
+            this.removeMode = false;
+        }
     }
 
     public boolean isBuildMode() {
@@ -88,6 +91,9 @@ public final class BuildPlacementSystem extends BaseSystem {
 
     public void setRemoveMode(final boolean mode) {
         this.removeMode = mode;
+        if (mode) {
+            this.buildMode = false;
+        }
     }
 
     public boolean isRemoveMode() {

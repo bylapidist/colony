@@ -100,11 +100,9 @@ public final class MapUiBuilder {
         buildButton.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                boolean enabled = !buildSystem.isBuildMode();
+                boolean enabled = buildButton.isChecked();
                 buildSystem.setBuildMode(enabled);
-                buildButton.setChecked(enabled);
                 if (enabled) {
-                    buildSystem.setRemoveMode(false);
                     removeButton.setProgrammaticChangeEvents(false);
                     removeButton.setChecked(false);
                     removeButton.setProgrammaticChangeEvents(true);
@@ -115,11 +113,9 @@ public final class MapUiBuilder {
         removeButton.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                boolean enabled = !buildSystem.isRemoveMode();
+                boolean enabled = removeButton.isChecked();
                 buildSystem.setRemoveMode(enabled);
-                removeButton.setChecked(enabled);
                 if (enabled) {
-                    buildSystem.setBuildMode(false);
                     buildButton.setProgrammaticChangeEvents(false);
                     buildButton.setChecked(false);
                     buildButton.setProgrammaticChangeEvents(true);
@@ -154,6 +150,7 @@ public final class MapUiBuilder {
         chatTable.add(chatBox).pad(PADDING).growX();
 
         stage.addActor(new ShortcutUpdater(keyBindings, buildButton, removeButton, mapButton, minimapButton));
+        stage.addActor(new ModeUpdater(buildSystem, buildButton, removeButton));
 
         AutosaveLabel savingLabel = new AutosaveLabel(skin);
         Table savingTable = new Table();
@@ -233,6 +230,39 @@ public final class MapUiBuilder {
             setButtonText(remove, "map.remove", removeKey);
             setButtonText(map, "map.map", mapKey);
             setButtonText(minimap, "map.minimap", minimapKey);
+        }
+    }
+
+    private static final class ModeUpdater extends Actor {
+        private final BuildPlacementSystem buildSystem;
+        private final TextButton buildButton;
+        private final TextButton removeButton;
+
+        ModeUpdater(
+                final BuildPlacementSystem buildSystemToUse,
+                final TextButton buildBtn,
+                final TextButton removeBtn
+        ) {
+            this.buildSystem = buildSystemToUse;
+            this.buildButton = buildBtn;
+            this.removeButton = removeBtn;
+        }
+
+        @Override
+        public void act(final float delta) {
+            super.act(delta);
+            boolean build = buildSystem.isBuildMode();
+            boolean remove = buildSystem.isRemoveMode();
+            if (buildButton.isChecked() != build) {
+                buildButton.setProgrammaticChangeEvents(false);
+                buildButton.setChecked(build);
+                buildButton.setProgrammaticChangeEvents(true);
+            }
+            if (removeButton.isChecked() != remove) {
+                removeButton.setProgrammaticChangeEvents(false);
+                removeButton.setChecked(remove);
+                removeButton.setProgrammaticChangeEvents(true);
+            }
         }
     }
 }
