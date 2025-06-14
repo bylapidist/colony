@@ -1,6 +1,7 @@
 package net.lapidist.colony.tests.client.render.data;
 
 import net.lapidist.colony.client.renderers.DefaultAssetResolver;
+import net.lapidist.colony.base.BaseDefinitionsMod;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -8,6 +9,7 @@ import static org.junit.Assert.*;
 public class DefaultAssetResolverTest {
     @Test
     public void returnsSpriteReferences() {
+        new BaseDefinitionsMod().init();
         DefaultAssetResolver resolver = new DefaultAssetResolver();
         assertEquals("grass0", resolver.tileAsset("GRASS"));
         assertEquals("grass0", resolver.tileAsset("grass"));

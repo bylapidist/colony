@@ -13,6 +13,8 @@ import net.lapidist.colony.client.render.data.RenderTile;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.TileRotationUtil;
 import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.registry.Registries;
+import net.lapidist.colony.registry.TileDefinition;
 
 /**
  * Renders tile entities.
@@ -48,11 +50,11 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
         this.cameraSystem = cameraSystemToSet;
         this.resolver = resolverToSet;
 
-        for (String type : new String[]{"EMPTY", "DIRT", "GRASS"}) {
-            String ref = resolver.tileAsset(type);
+        for (TileDefinition def : Registries.tiles().all()) {
+            String ref = resolver.tileAsset(def.id());
             TextureRegion region = resourceLoader.findRegion(ref);
             if (region != null) {
-                tileRegions.put(type, region);
+                tileRegions.put(def.id().toUpperCase(java.util.Locale.ROOT), region);
             }
         }
         this.overlayRegion = resourceLoader.findRegion("hoveredTile0");
@@ -97,9 +99,10 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
 
                 if (!overlayOnly) {
                     String type = tile.getTileType();
-                    TextureRegion region = tileRegions.get(type);
+                    TextureRegion region = tileRegions.get(type.toUpperCase(java.util.Locale.ROOT));
                     if (region != null) {
-                        if ("GRASS".equals(type) || "DIRT".equals(type)) {
+                        String upper = type.toUpperCase(java.util.Locale.ROOT);
+                        if ("GRASS".equals(upper) || "DIRT".equals(upper)) {
                             float rotation = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
                             spriteBatch.draw(
                                     region,

@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.client.renderers.DefaultAssetResolver;
 import net.lapidist.colony.client.renderers.AssetResolver;
 import net.lapidist.colony.client.renderers.TileRenderer;
+import net.lapidist.colony.base.BaseDefinitionsMod;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.render.data.RenderTile;
@@ -35,6 +36,8 @@ public class TileRendererTest {
         TextureRegion overlay = mock(TextureRegion.class);
         when(loader.findRegion(anyString())).thenReturn(region);
         when(loader.findRegion(eq("hoveredTile0"))).thenReturn(overlay);
+
+        new BaseDefinitionsMod().init();
 
         CameraProvider camera = mock(CameraProvider.class);
         com.badlogic.gdx.graphics.OrthographicCamera cam = new com.badlogic.gdx.graphics.OrthographicCamera();
@@ -97,6 +100,8 @@ public class TileRendererTest {
         when(loader.findRegion(anyString())).thenReturn(region);
         when(loader.findRegion(eq("hoveredTile0"))).thenReturn(overlay);
 
+        new BaseDefinitionsMod().init();
+
         CameraProvider camera = mock(CameraProvider.class);
         com.badlogic.gdx.graphics.OrthographicCamera cam = new com.badlogic.gdx.graphics.OrthographicCamera();
         com.badlogic.gdx.utils.viewport.ExtendViewport viewport =
@@ -138,6 +143,8 @@ public class TileRendererTest {
         TextureRegion overlay = mock(TextureRegion.class);
         when(loader.findRegion(anyString())).thenReturn(region);
         when(loader.findRegion(eq("hoveredTile0"))).thenReturn(overlay);
+
+        new BaseDefinitionsMod().init();
 
         CameraProvider camera = mock(CameraProvider.class);
         com.badlogic.gdx.graphics.OrthographicCamera cam = new com.badlogic.gdx.graphics.OrthographicCamera();
