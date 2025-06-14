@@ -5,7 +5,7 @@ import net.lapidist.colony.mod.GameServer;
 import net.lapidist.colony.mod.CommandBus;
 
 /** Built-in mod registering default command and message handlers. */
-public final class BaseCommandsMod implements GameMod {
+public final class BaseHandlersMod implements GameMod {
     private net.lapidist.colony.server.GameServer server;
 
     @Override
