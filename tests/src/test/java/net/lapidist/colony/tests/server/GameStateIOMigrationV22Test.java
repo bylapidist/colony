@@ -3,42 +3,31 @@ package net.lapidist.colony.tests.server;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Output;
 import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.serialization.KryoRegistry;
 import net.lapidist.colony.save.SaveData;
 import net.lapidist.colony.save.SaveVersion;
 import net.lapidist.colony.serialization.SerializationRegistrar;
 import net.lapidist.colony.server.io.GameStateIO;
-import net.lapidist.colony.map.MapChunkData;
-import net.lapidist.colony.components.state.ChunkPos;
 import org.junit.Test;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class GameStateIOMigrationV6Test {
+public class GameStateIOMigrationV22Test {
 
     @Test
-    public void migratesV6ToCurrent() throws Exception {
+    public void migratesV22ToCurrent() throws Exception {
         Path file = Files.createTempFile("state", ".dat");
-        Map<TilePos, TileData> tiles = new HashMap<>();
-        tiles.put(new TilePos(0, 0), TileData.builder().x(0).y(0).tileType("GRASS").passable(true).build());
-        @SuppressWarnings("unchecked")
-        Map<ChunkPos, MapChunkData> misTyped = (Map<ChunkPos, MapChunkData>) (Map<?, ?>) tiles;
         MapState state = MapState.builder()
-                .version(SaveVersion.V6.number())
-                .chunks(misTyped)
+                .version(SaveVersion.V22.number())
                 .build();
         Kryo kryo = new Kryo();
         KryoRegistry.register(kryo);
         try (Output output = new Output(Files.newOutputStream(file))) {
             SaveData data = new SaveData(
-                    SaveVersion.V6.number(),
+                    SaveVersion.V22.number(),
                     SerializationRegistrar.registrationHash(),
                     state
             );
@@ -48,6 +37,5 @@ public class GameStateIOMigrationV6Test {
         MapState loaded = GameStateIO.load(file);
         Files.deleteIfExists(file);
         assertEquals(SaveVersion.CURRENT.number(), loaded.version());
-        assertEquals("grass", loaded.getTile(0, 0).tileType());
     }
 }

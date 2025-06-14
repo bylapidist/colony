@@ -35,6 +35,7 @@ public final class SaveMigrator {
         register(new V19ToV20Migration());
         register(new V20ToV21Migration());
         register(new V21ToV22Migration());
+        register(new V22ToV23Migration());
     }
 
     private SaveMigrator() {

@@ -9,7 +9,7 @@ import net.lapidist.colony.events.Events;
 import net.lapidist.colony.server.events.BuildingPlacedEvent;
 import net.lapidist.colony.server.services.NetworkService;
 import net.lapidist.colony.registry.Registries;
-import java.util.Locale;
+import net.lapidist.colony.registry.BuildingDefinition;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -58,10 +58,11 @@ public final class BuildCommandHandler implements CommandHandler<BuildCommand> {
             if (tile == null || occupied) {
                 return;
             }
-            String type = command.type().toLowerCase(Locale.ROOT);
-            if (Registries.buildings().get(type) == null) {
+            BuildingDefinition def = Registries.buildings().get(command.type());
+            if (def == null) {
                 return;
             }
+            String type = def.id();
             ResourceData cost = COSTS.getOrDefault(type, new ResourceData());
             ResourceData player = state.playerResources();
             if (player.wood() < cost.wood()

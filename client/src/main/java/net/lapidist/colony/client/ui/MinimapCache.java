@@ -69,7 +69,8 @@ final class MinimapCache implements Disposable {
         pixmap = new Pixmap(mapWidth, mapHeight, Pixmap.Format.RGBA8888);
         for (int i = 0; i < tiles.size; i++) {
             TileComponent tc = tileMapper.get(tiles.get(i));
-            Color c = switch (tc.getTileType()) {
+            String type = tc.getTileType() == null ? "" : tc.getTileType().toUpperCase(java.util.Locale.ROOT);
+            Color c = switch (type) {
                 case "GRASS" -> GRASS_COLOR;
                 case "DIRT" -> DIRT_COLOR;
                 case "EMPTY" -> Color.CLEAR;
