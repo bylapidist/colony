@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 public class ColonyTest {
 
     @Test
-    public void startGameLaunchesServerAndClient() throws Exception {
+    public void startGameWithoutSaveShowsNewGameScreen() throws Exception {
         Colony colony = new Colony();
         try (MockedConstruction<GameServer> serverCons =
                      mockConstruction(GameServer.class);
@@ -38,10 +38,9 @@ public class ColonyTest {
                      mockConstruction(com.badlogic.gdx.graphics.g2d.SpriteBatch.class)) {
             colony.startGame("test");
 
-            GameServer server = serverCons.constructed().get(0);
-            GameClient client = clientCons.constructed().get(0);
-            verify(server).start();
-            verify(client).start(any());
+            assertTrue(colony.getScreen() instanceof net.lapidist.colony.client.screens.NewGameScreen);
+            assertTrue(serverCons.constructed().isEmpty());
+            assertTrue(clientCons.constructed().isEmpty());
         }
     }
 
@@ -81,6 +80,16 @@ public class ColonyTest {
 
     @Test
     public void returnToMainMenuStopsServerAndClientAndShowsMenu() throws Exception {
+        String save = "menu-" + java.util.UUID.randomUUID();
+        java.nio.file.Path autosave = java.nio.file.Path.of(
+                System.getProperty("user.home"),
+                ".colony",
+                "saves",
+                save + Paths.AUTOSAVE_SUFFIX
+        );
+        java.nio.file.Files.createDirectories(autosave.getParent());
+        GameStateIO.save(MapState.builder().build(), autosave);
+
         Colony colony = new Colony();
         try (MockedConstruction<GameServer> serverCons =
                      mockConstruction(GameServer.class);
@@ -90,7 +99,7 @@ public class ColonyTest {
                      mockConstruction(MainMenuScreen.class);
              MockedConstruction<com.badlogic.gdx.graphics.g2d.SpriteBatch> batchCons =
                      mockConstruction(com.badlogic.gdx.graphics.g2d.SpriteBatch.class)) {
-            colony.startGame("test");
+            colony.startGame(save);
             GameServer server = serverCons.constructed().get(0);
             GameClient client = clientCons.constructed().get(0);
 
@@ -100,6 +109,7 @@ public class ColonyTest {
             verify(server).stop();
             assertSame(menuCons.constructed().get(0), colony.getScreen());
         }
+        java.nio.file.Files.deleteIfExists(autosave);
     }
 
     @Test
@@ -140,6 +150,16 @@ public class ColonyTest {
 
     @Test
     public void disposeStopsActiveConnectionsAndEvents() throws Exception {
+        String save = "dispose-" + java.util.UUID.randomUUID();
+        java.nio.file.Path autosave = java.nio.file.Path.of(
+                System.getProperty("user.home"),
+                ".colony",
+                "saves",
+                save + Paths.AUTOSAVE_SUFFIX
+        );
+        java.nio.file.Files.createDirectories(autosave.getParent());
+        GameStateIO.save(MapState.builder().build(), autosave);
+
         Colony colony = new Colony();
         try (MockedConstruction<GameServer> serverCons =
                      mockConstruction(GameServer.class);
@@ -147,7 +167,7 @@ public class ColonyTest {
                      mockConstruction(GameClient.class);
              MockedConstruction<com.badlogic.gdx.graphics.g2d.SpriteBatch> batchCons =
                      mockConstruction(com.badlogic.gdx.graphics.g2d.SpriteBatch.class)) {
-            colony.startGame("test");
+            colony.startGame(save);
             GameServer server = serverCons.constructed().get(0);
             GameClient client = clientCons.constructed().get(0);
 
@@ -157,5 +177,6 @@ public class ColonyTest {
             verify(server).stop();
             assertNull(Events.getInstance());
         }
+        java.nio.file.Files.deleteIfExists(autosave);
     }
 }

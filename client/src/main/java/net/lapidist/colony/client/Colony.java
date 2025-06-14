@@ -6,6 +6,7 @@ import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.client.screens.MapScreen;
 import net.lapidist.colony.client.screens.MainMenuScreen;
 import net.lapidist.colony.client.screens.LoadingScreen;
+import net.lapidist.colony.client.screens.NewGameScreen;
 import net.lapidist.colony.i18n.I18n;
 import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.client.network.GameClient;
@@ -47,19 +48,17 @@ public final class Colony extends Game {
      * when no save exists.
      */
     public void startGame(final String saveName) {
-        int width = MapState.DEFAULT_WIDTH;
-        int height = MapState.DEFAULT_HEIGHT;
         try {
             java.nio.file.Path file = Paths.get().getAutosave(saveName);
             if (java.nio.file.Files.exists(file)) {
-                var meta = GameStateIO.readMetadata(file);
-                width = meta.width();
-                height = meta.height();
+                MapState state = GameStateIO.load(file);
+                startGame(saveName, state.width(), state.height());
+            } else {
+                setScreen(new NewGameScreen(this));
             }
         } catch (IOException e) {
-            // ignore and fall back to defaults
+            throw new RuntimeException(e);
         }
-        startGame(saveName, width, height);
     }
 
     public void startGame(final String saveName, final int width, final int height) {
