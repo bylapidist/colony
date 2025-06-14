@@ -38,8 +38,8 @@ public class GameSimulationMapLoadNetworkTest {
         MapState state = client.getMapState();
         assertNotNull(state);
         assertEquals(server.getMapState().name(), state.name());
-        assertEquals(net.lapidist.colony.components.GameConstants.MAP_WIDTH, client.getMapWidth());
-        assertEquals(net.lapidist.colony.components.GameConstants.MAP_HEIGHT, client.getMapHeight());
+        assertEquals(MapState.DEFAULT_WIDTH, client.getMapWidth());
+        assertEquals(MapState.DEFAULT_HEIGHT, client.getMapHeight());
 
         GameSimulation sim = new GameSimulation(state, client);
         sim.step();

@@ -38,8 +38,8 @@ public class GameSimulationCameraTest {
         sim.step();
 
         final float epsilon = 0.01f;
-        float expectedX = max(0, min(GameConstants.MAP_WIDTH * GameConstants.TILE_SIZE, startX - deltaX));
-        float expectedY = max(0, min(GameConstants.MAP_HEIGHT * GameConstants.TILE_SIZE, startY + deltaY));
+        float expectedX = max(0, min(MapState.DEFAULT_WIDTH * GameConstants.TILE_SIZE, startX - deltaX));
+        float expectedY = max(0, min(MapState.DEFAULT_HEIGHT * GameConstants.TILE_SIZE, startY + deltaY));
 
         assertEquals(expectedX, sim.getCamera().getCamera().position.x, epsilon);
         assertEquals(expectedY, sim.getCamera().getCamera().position.y, epsilon);

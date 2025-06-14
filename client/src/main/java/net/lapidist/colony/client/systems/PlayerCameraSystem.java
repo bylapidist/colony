@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.components.entities.PlayerComponent;
+import net.lapidist.colony.components.state.MapState;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 
@@ -69,8 +70,8 @@ public final class PlayerCameraSystem extends BaseSystem implements CameraProvid
     }
 
     public Vector2 getWorldCenter() {
-        int width = client != null ? client.getMapWidth() : net.lapidist.colony.components.GameConstants.MAP_WIDTH;
-        int height = client != null ? client.getMapHeight() : net.lapidist.colony.components.GameConstants.MAP_HEIGHT;
+        int width = client != null ? client.getMapWidth() : MapState.DEFAULT_WIDTH;
+        int height = client != null ? client.getMapHeight() : MapState.DEFAULT_HEIGHT;
         return CameraUtils.getWorldCenter(width, height);
     }
 

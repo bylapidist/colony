@@ -43,9 +43,9 @@ public final class PlayerInitSystem extends BaseSystem {
             pr.setFood(initialResources.food());
             PlayerComponent pc = new PlayerComponent();
             int width = client != null ? client.getMapWidth()
-                    : net.lapidist.colony.components.GameConstants.MAP_WIDTH;
+                    : net.lapidist.colony.components.state.MapState.DEFAULT_WIDTH;
             int height = client != null ? client.getMapHeight()
-                    : net.lapidist.colony.components.GameConstants.MAP_HEIGHT;
+                    : net.lapidist.colony.components.state.MapState.DEFAULT_HEIGHT;
             var pos = initialPosition != null
                     ? CameraUtils.tileCoordsToWorldCoords(initialPosition.x(), initialPosition.y())
                     : CameraUtils.getWorldCenter(width, height);

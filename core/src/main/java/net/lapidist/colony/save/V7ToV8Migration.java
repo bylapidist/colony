@@ -1,6 +1,5 @@
 package net.lapidist.colony.save;
 
-import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.PlayerPosition;
 
@@ -20,8 +19,8 @@ public final class V7ToV8Migration implements MapStateMigration {
     public MapState apply(final MapState state) {
         return state.toBuilder()
                 .playerPos(new PlayerPosition(
-                        GameConstants.MAP_WIDTH / 2,
-                        GameConstants.MAP_HEIGHT / 2))
+                        MapState.DEFAULT_WIDTH / 2,
+                        MapState.DEFAULT_HEIGHT / 2))
                 .version(toVersion())
                 .build();
     }

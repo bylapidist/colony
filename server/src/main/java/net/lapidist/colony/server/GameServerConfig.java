@@ -1,7 +1,7 @@
 package net.lapidist.colony.server;
 
 import net.lapidist.colony.config.ColonyConfig;
-import net.lapidist.colony.components.GameConstants;
+import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.map.ChunkedMapGenerator;
 import net.lapidist.colony.map.MapGenerator;
 
@@ -12,8 +12,8 @@ public final class GameServerConfig {
 
     static final String DEFAULT_SAVE_NAME = ColonyConfig.get().getString("game.defaultSaveName");
     static final long DEFAULT_INTERVAL = ColonyConfig.get().getLong("game.autosaveInterval");
-    static final int DEFAULT_WIDTH = GameConstants.MAP_WIDTH;
-    static final int DEFAULT_HEIGHT = GameConstants.MAP_HEIGHT;
+    static final int DEFAULT_WIDTH = MapState.DEFAULT_WIDTH;
+    static final int DEFAULT_HEIGHT = MapState.DEFAULT_HEIGHT;
 
     private String saveName = DEFAULT_SAVE_NAME;
     private long autosaveInterval = DEFAULT_INTERVAL;

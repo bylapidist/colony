@@ -14,7 +14,7 @@ import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.render.SimpleMapRenderData;
 import net.lapidist.colony.client.render.data.RenderBuilding;
 import net.lapidist.colony.client.systems.MapRenderDataSystem;
-import net.lapidist.colony.components.GameConstants;
+import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,7 +55,7 @@ public class ResourceRendererTest {
                 .build();
         tiles.add(tile);
 
-        RenderTile[][] grid = new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT];
+        RenderTile[][] grid = new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT];
         grid[0][0] = tile;
         MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);
 
@@ -99,7 +99,7 @@ public class ResourceRendererTest {
                 .build();
         tiles.add(tile);
 
-        RenderTile[][] grid = new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT];
+        RenderTile[][] grid = new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT];
         grid[0][0] = tile;
         MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);
 
@@ -143,7 +143,7 @@ public class ResourceRendererTest {
                 .build();
         tiles.add(tile2);
 
-        RenderTile[][] grid2 = new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT];
+        RenderTile[][] grid2 = new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT];
         grid2[0][0] = tile2;
         MapRenderData map2 = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid2);
 
@@ -192,7 +192,7 @@ public class ResourceRendererTest {
                     .build());
         }
 
-        RenderTile[][] grid = new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT];
+        RenderTile[][] grid = new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT];
         grid[0][0] = tiles.first();
         MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);
 

@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import net.lapidist.colony.components.GameConstants;
+import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.client.core.io.FileLocation;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.core.io.TextureAtlasResourceLoader;
@@ -68,11 +69,11 @@ public final class MinimapActor extends Actor implements Disposable {
         }
 
         if (mapWidthWorld == 0) {
-            int width = client != null ? client.getMapWidth() : GameConstants.MAP_WIDTH;
+            int width = client != null ? client.getMapWidth() : MapState.DEFAULT_WIDTH;
             mapWidthWorld = width * GameConstants.TILE_SIZE;
         }
         if (mapHeightWorld == 0) {
-            int height = client != null ? client.getMapHeight() : GameConstants.MAP_HEIGHT;
+            int height = client != null ? client.getMapHeight() : MapState.DEFAULT_HEIGHT;
             mapHeightWorld = height * GameConstants.TILE_SIZE;
         }
     }

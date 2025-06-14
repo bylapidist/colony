@@ -8,6 +8,7 @@ import net.lapidist.colony.client.systems.input.KeyboardInputHandler;
 import net.lapidist.colony.settings.KeyAction;
 import net.lapidist.colony.settings.KeyBindings;
 import net.lapidist.colony.components.GameConstants;
+import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,8 +42,8 @@ public class KeyboardInputHandlerTest {
         assertEquals(0f, cameraSystem.getCamera().position.y, TOL);
 
         cameraSystem.getCamera().position.set(
-                GameConstants.MAP_WIDTH * GameConstants.TILE_SIZE + OFFSET_X,
-                GameConstants.MAP_HEIGHT * GameConstants.TILE_SIZE + OFFSET_Y,
+                MapState.DEFAULT_WIDTH * GameConstants.TILE_SIZE + OFFSET_X,
+                MapState.DEFAULT_HEIGHT * GameConstants.TILE_SIZE + OFFSET_Y,
                 0f
         );
         handler.clampCameraPosition();
@@ -52,9 +53,9 @@ public class KeyboardInputHandlerTest {
         float halfW = viewport.getWorldWidth() * cam.zoom / 2f;
         float halfH = viewport.getWorldHeight() * cam.zoom / 2f;
 
-        assertEquals(GameConstants.MAP_WIDTH * GameConstants.TILE_SIZE - halfW,
+        assertEquals(MapState.DEFAULT_WIDTH * GameConstants.TILE_SIZE - halfW,
                 cameraSystem.getCamera().position.x, TOL);
-        assertEquals(GameConstants.MAP_HEIGHT * GameConstants.TILE_SIZE - halfH,
+        assertEquals(MapState.DEFAULT_HEIGHT * GameConstants.TILE_SIZE - halfH,
                 cameraSystem.getCamera().position.y, TOL);
     }
 }

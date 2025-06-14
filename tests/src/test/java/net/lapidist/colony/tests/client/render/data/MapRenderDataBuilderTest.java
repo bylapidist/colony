@@ -37,8 +37,7 @@ public class MapRenderDataBuilderTest {
 
         MapRenderData data = MapRenderDataBuilder.fromMap(map, world);
         assertEquals(
-                net.lapidist.colony.components.GameConstants.MAP_WIDTH
-                        * net.lapidist.colony.components.GameConstants.MAP_HEIGHT,
+                state.width() * state.height(),
                 data.getTiles().size
         );
         assertEquals(1, data.getBuildings().size);

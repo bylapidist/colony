@@ -46,8 +46,7 @@ public class MapInitSystemTest {
         assertEquals(1, maps.size());
         MapComponent map = world.getMapper(MapComponent.class).get(maps.get(0));
         assertEquals(
-                net.lapidist.colony.components.GameConstants.MAP_WIDTH
-                        * net.lapidist.colony.components.GameConstants.MAP_HEIGHT,
+                state.width() * state.height(),
                 map.getTileMap().size()
         );
     }

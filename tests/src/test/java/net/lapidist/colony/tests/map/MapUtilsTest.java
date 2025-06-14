@@ -40,8 +40,7 @@ public class MapUtilsTest {
         assertTrue(MapUtils.findMapEntity(world).isPresent());
         MapComponent map = MapUtils.findMap(world).orElse(null);
         assertNotNull(map);
-        int expected = net.lapidist.colony.components.GameConstants.MAP_WIDTH
-                * net.lapidist.colony.components.GameConstants.MAP_HEIGHT;
+        int expected = state.width() * state.height();
         assertEquals(expected, map.getTiles().size);
         assertTrue(map.getTileMap().containsKey(new TilePos(0, 0)));
     }

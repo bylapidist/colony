@@ -1,6 +1,5 @@
 package net.lapidist.colony.save;
 
-import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.state.MapState;
 
 /** Migration from save version 13 to 14 adding map dimensions. */
@@ -18,8 +17,8 @@ public final class V13ToV14Migration implements MapStateMigration {
     @Override
     public MapState apply(final MapState state) {
         return state.toBuilder()
-                .width(GameConstants.MAP_WIDTH)
-                .height(GameConstants.MAP_HEIGHT)
+                .width(MapState.DEFAULT_WIDTH)
+                .height(MapState.DEFAULT_HEIGHT)
                 .version(toVersion())
                 .build();
     }

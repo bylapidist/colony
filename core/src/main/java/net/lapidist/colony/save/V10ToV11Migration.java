@@ -1,6 +1,5 @@
 package net.lapidist.colony.save;
 
-import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.state.CameraPosition;
 import net.lapidist.colony.components.state.MapState;
 
@@ -20,8 +19,8 @@ public final class V10ToV11Migration implements MapStateMigration {
     public MapState apply(final MapState state) {
         return state.toBuilder()
                 .cameraPos(new CameraPosition(
-                        GameConstants.MAP_WIDTH / 2f,
-                        GameConstants.MAP_HEIGHT / 2f))
+                        MapState.DEFAULT_WIDTH / 2f,
+                        MapState.DEFAULT_HEIGHT / 2f))
                 .version(toVersion())
                 .build();
     }

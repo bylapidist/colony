@@ -12,7 +12,7 @@ import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.client.render.data.RenderTile;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.TileRotationUtil;
-import net.lapidist.colony.components.GameConstants;
+import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.maps.TileComponent;
 
 /**
@@ -79,8 +79,8 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                 tmpEnd
         );
 
-        int mapWidth = client != null ? client.getMapWidth() : GameConstants.MAP_WIDTH;
-        int mapHeight = client != null ? client.getMapHeight() : GameConstants.MAP_HEIGHT;
+        int mapWidth = client != null ? client.getMapWidth() : MapState.DEFAULT_WIDTH;
+        int mapHeight = client != null ? client.getMapHeight() : MapState.DEFAULT_HEIGHT;
 
         int startX = Math.max(0, (int) start.x - 1);
         int startY = Math.max(0, (int) start.y - 1);
