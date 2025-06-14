@@ -20,6 +20,35 @@ state updates to all clients.
 JUnit test utilities and scenario suites. The module boots LibGDX in headless mode so gameplay systems can be
 tested without a graphical context.
 
+## ECS Systems
+
+`MapWorldBuilder` assembles the client's Artemis‑ODB world. Input systems like
+`CameraInputSystem`, `SelectionSystem` and `PlayerMovementSystem` handle user
+actions, while `BuildPlacementSystem` and `PlayerInitSystem` create entities.
+`TileUpdateSystem`, `BuildingUpdateSystem` and `ResourceUpdateSystem` apply
+server messages. `ChunkLoadSystem` and `ChunkRequestQueueSystem` request missing
+chunks. `MapRenderSystem` draws the world using a renderer from
+`SpriteMapRendererFactory`, which loads textures asynchronously as noted in
+[performance.md](performance.md#asynchronous-renderer-loading). The camera is
+managed by `PlayerCameraSystem` and the UI by `UISystem`.
+
+`GameServer` does not maintain an Artemis world. It initializes an
+`EventSystem` and relies on `NetworkService`, `MapService` and other services to
+mutate the shared `MapState`. Kryonet handlers convert incoming messages into
+commands processed by these services.
+
+### Client ↔ Server Systems
+
+| Client System | Server Handler | Purpose |
+|---------------|---------------|---------|
+| `TileUpdateSystem` | `TileSelectionRequestHandler` | Tile selection updates |
+| `BuildingUpdateSystem` | `BuildingPlacementRequestHandler`, `BuildingRemovalRequestHandler` | Building placement and removal |
+| `ResourceUpdateSystem` | `ResourceGatherRequestHandler` | Resource changes |
+| `ChunkRequestQueueSystem` | `MapChunkRequestHandler` | Map chunk loading |
+
+Responses are queued on the client and processed by these systems during the
+normal update loop.
+
 ## Networking Workflow
 Client driven actions that modify the game world follow this sequence:
 

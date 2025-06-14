@@ -36,6 +36,10 @@ import java.io.IOException;
 // Using java.nio here keeps the server independent from LibGDX's FileHandle API
 // because the server module runs headless without the Gdx runtime.
 
+/**
+ * Dedicated headless server responsible for managing the authoritative game state
+ * and broadcasting updates to all connected clients.
+ */
 public final class GameServer extends AbstractMessageEndpoint implements AutoCloseable {
     public static final int TCP_PORT = ColonyConfig.get().getInt("game.server.tcpPort");
     public static final int UDP_PORT = ColonyConfig.get().getInt("game.server.udpPort");
@@ -59,15 +63,33 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     private Iterable<CommandHandler<?>> commandHandlers;
     private java.util.List<GameMod> mods;
 
+    /**
+     * Create a new server instance using the supplied configuration.
+     *
+     * @param config configuration for map generation and runtime settings
+     */
     public GameServer(final GameServerConfig config) {
         this(config, null, null);
     }
 
+    /**
+     * Create a new server with custom network message handlers.
+     *
+     * @param config        game configuration
+     * @param handlersToUse handlers to register for incoming messages
+     */
     public GameServer(final GameServerConfig config,
                       final Iterable<MessageHandler<?>> handlersToUse) {
         this(config, handlersToUse, null);
     }
 
+    /**
+     * Create a fully customised server instance.
+     *
+     * @param config              game configuration
+     * @param handlersToUse       handlers for network messages
+     * @param commandHandlersToUse command handlers for in-game commands
+     */
     public GameServer(final GameServerConfig config,
                       final Iterable<MessageHandler<?>> handlersToUse,
                       final Iterable<CommandHandler<?>> commandHandlersToUse) {
@@ -91,6 +113,12 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     }
 
     @Override
+    /**
+     * Start all server subsystems and begin accepting client connections.
+     *
+     * @throws IOException          if map data cannot be loaded or networking fails
+     * @throws InterruptedException if the network thread is interrupted
+     */
     public void start() throws IOException, InterruptedException {
         initKryo();
         Events.init(new EventSystem());
@@ -142,6 +170,11 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         registerHandlers(handlers);
     }
 
+    /**
+     * Current authoritative map state held by the server.
+     *
+     * @return loaded map state
+     */
     public MapState getMapState() {
         return mapState;
     }
@@ -154,17 +187,28 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         return t != null && t.isAlive();
     }
 
+    /**
+     * Broadcast a message to all connected clients.
+     *
+     * @param message message to send
+     */
     public void broadcast(final Object message) {
         networkService.broadcast(message);
     }
 
     @Override
+    /**
+     * Send a message to all clients. Convenience method delegating to {@link #broadcast(Object)}.
+     */
     public void send(final Object message) {
         broadcast(message);
     }
 
 
     @Override
+    /**
+     * Stop all server services and dispose loaded mods.
+     */
     public void stop() {
         resourceProductionService.stop();
         autosaveService.stop();
@@ -179,6 +223,9 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     }
 
     @Override
+    /**
+     * Close the server, alias for {@link #stop()}.
+     */
     public void close() {
         stop();
     }
