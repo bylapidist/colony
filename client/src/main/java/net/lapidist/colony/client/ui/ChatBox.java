@@ -3,6 +3,7 @@ package net.lapidist.colony.client.ui;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -16,9 +17,12 @@ import net.lapidist.colony.i18n.I18n;
 public final class ChatBox extends Table {
     private static final int PREF_ROWS = 6;
     private static final float LOG_HEIGHT = 100f;
+    private static final int MAX_MESSAGES = 100;
     private final TextArea log;
+    private final ScrollPane scroll;
     private final TextField input;
     private final GameClient client;
+    private final java.util.Deque<String> messages = new java.util.ArrayDeque<>();
 
     public ChatBox(final Skin skin, final GameClient clientToUse) {
         this.client = clientToUse;
@@ -31,6 +35,9 @@ public final class ChatBox extends Table {
         logStyle.disabledBackground = null;
         logStyle.focusedBackground = null;
         log.setStyle(logStyle);
+        scroll = new ScrollPane(log, skin);
+        scroll.setScrollingDisabled(true, false);
+        scroll.setFadeScrollBars(false);
         input = new TextField("", skin);
         input.setVisible(false);
         input.setMessageText(I18n.get("chat.placeholder"));
@@ -44,7 +51,7 @@ public final class ChatBox extends Table {
                 return false;
             }
         });
-        add(log).growX().height(LOG_HEIGHT).row();
+        add(scroll).growX().height(LOG_HEIGHT).row();
         add(input).growX();
     }
 
@@ -74,7 +81,13 @@ public final class ChatBox extends Table {
     public void addMessage(final ChatMessage msg) {
         String format = I18n.get("chat.format");
         String line = String.format(format, msg.playerId(), msg.text());
-        log.appendText(line + "\n");
+        messages.addLast(line);
+        while (messages.size() > MAX_MESSAGES) {
+            messages.removeFirst();
+        }
+        log.setText(String.join("\n", messages) + "\n");
+        scroll.layout();
+        scroll.setScrollPercentY(1f);
     }
 
     @Override
