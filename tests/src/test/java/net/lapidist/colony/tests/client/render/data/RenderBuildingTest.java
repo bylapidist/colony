@@ -1,6 +1,8 @@
 package net.lapidist.colony.tests.client.render.data;
 
 import net.lapidist.colony.client.render.data.RenderBuilding;
+import net.lapidist.colony.base.BaseDefinitionsMod;
+import net.lapidist.colony.registry.Registries;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -11,14 +13,16 @@ public class RenderBuildingTest {
 
     @Test
     public void builderSetsFields() {
+        new BaseDefinitionsMod().init();
+        String id = Registries.buildings().get("house").id();
         RenderBuilding building = RenderBuilding.builder()
                 .x(X)
                 .y(Y)
-                .buildingType("house")
+                .buildingType(id)
                 .build();
 
         assertEquals(X, building.getX());
         assertEquals(Y, building.getY());
-        assertEquals("house", building.getBuildingType());
+        assertEquals(id, building.getBuildingType());
     }
 }

@@ -1,6 +1,8 @@
 package net.lapidist.colony.tests.client.render.data;
 
 import net.lapidist.colony.client.render.data.RenderTile;
+import net.lapidist.colony.base.BaseDefinitionsMod;
+import net.lapidist.colony.registry.Registries;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -14,10 +16,12 @@ public class RenderTileTest {
 
     @Test
     public void builderSetsAllFields() {
+        new BaseDefinitionsMod().init();
+        String id = Registries.tiles().get("grass").id();
         RenderTile tile = RenderTile.builder()
                 .x(X)
                 .y(Y)
-                .tileType("GRASS")
+                .tileType(id)
                 .selected(true)
                 .wood(WOOD)
                 .stone(STONE)
@@ -26,7 +30,7 @@ public class RenderTileTest {
 
         assertEquals(X, tile.getX());
         assertEquals(Y, tile.getY());
-        assertEquals("GRASS", tile.getTileType());
+        assertEquals(id, tile.getTileType());
         assertTrue(tile.isSelected());
         assertEquals(WOOD, tile.getWood());
         assertEquals(STONE, tile.getStone());
