@@ -7,7 +7,7 @@ Map size is determined when creating a game or loading a save:
 ```hocon
 game {
   tileSize = 32
-  autosaveInterval = 600000
+  autosaveInterval = 100000
   defaultSaveName = "autosave"
     networkBufferSize = 8388608
   server {

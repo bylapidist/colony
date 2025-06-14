@@ -16,6 +16,7 @@ import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.client.ui.MinimapActor;
 import net.lapidist.colony.client.ui.ChatBox;
 import net.lapidist.colony.client.ui.PlayerResourcesActor;
+import net.lapidist.colony.client.ui.AutosaveLabel;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
@@ -153,6 +154,13 @@ public final class MapUiBuilder {
         chatTable.add(chatBox).pad(PADDING).growX();
 
         stage.addActor(new ShortcutUpdater(keyBindings, buildButton, removeButton, mapButton, minimapButton));
+
+        AutosaveLabel savingLabel = new AutosaveLabel(skin);
+        Table savingTable = new Table();
+        savingTable.setFillParent(true);
+        savingTable.top().right();
+        savingTable.add(savingLabel).pad(PADDING);
+        stage.addActor(savingTable);
 
         stage.addListener(new InputListener() {
             @Override
