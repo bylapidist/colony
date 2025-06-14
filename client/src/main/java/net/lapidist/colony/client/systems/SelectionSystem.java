@@ -12,7 +12,6 @@ import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.resources.ResourceComponent;
-import net.lapidist.colony.components.resources.ResourceType;
 import net.lapidist.colony.components.state.ResourceGatherRequestData;
 import net.lapidist.colony.map.MapUtils;
 import net.lapidist.colony.settings.KeyAction;
@@ -80,7 +79,7 @@ public final class SelectionSystem extends BaseSystem {
                 var tile = selectedTiles.get(i);
                 TileComponent tc = tileMapper.get(tile);
                 ResourceGatherRequestData msg = new ResourceGatherRequestData(
-                        tc.getX(), tc.getY(), ResourceType.WOOD);
+                        tc.getX(), tc.getY(), "WOOD");
                 client.sendGatherRequest(msg);
             }
         }
@@ -104,7 +103,7 @@ public final class SelectionSystem extends BaseSystem {
                     ResourceComponent rc = resourceMapper.get(tile);
                     if (rc.getWood() > 0) {
                         ResourceGatherRequestData msg = new ResourceGatherRequestData(
-                                tc.getX(), tc.getY(), ResourceType.WOOD);
+                                tc.getX(), tc.getY(), "WOOD");
                         client.sendGatherRequest(msg);
                     }
                 });

@@ -46,9 +46,9 @@ public final class GatherCommandHandler implements CommandHandler<GatherCommand>
             ResourceData res = tile.resources();
             ResourceData updated;
             switch (command.resourceType()) {
-                case WOOD -> updated = new ResourceData(Math.max(res.wood() - 1, 0), res.stone(), res.food());
-                case STONE -> updated = new ResourceData(res.wood(), Math.max(res.stone() - 1, 0), res.food());
-                case FOOD -> updated = new ResourceData(res.wood(), res.stone(), Math.max(res.food() - 1, 0));
+                case "WOOD" -> updated = new ResourceData(Math.max(res.wood() - 1, 0), res.stone(), res.food());
+                case "STONE" -> updated = new ResourceData(res.wood(), Math.max(res.stone() - 1, 0), res.food());
+                case "FOOD" -> updated = new ResourceData(res.wood(), res.stone(), Math.max(res.food() - 1, 0));
                 default -> updated = res;
             }
             TileData newTile = tile.toBuilder().resources(updated).build();
