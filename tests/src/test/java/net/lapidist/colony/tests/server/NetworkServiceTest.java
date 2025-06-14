@@ -41,6 +41,7 @@ public class NetworkServiceTest {
         MapMetadata meta = metaCaptor.getValue();
         assertEquals(MapState.DEFAULT_WIDTH, meta.width());
         assertEquals(MapState.DEFAULT_HEIGHT, meta.height());
+        assertEquals(1, meta.chunkCount());
         verify(connection, atLeastOnce()).sendTCP(isA(MapChunkBytes.class));
     }
 
