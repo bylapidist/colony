@@ -27,6 +27,7 @@ public class KeyboardInputHandlerTest {
     @Test
     public void movesAndClampsCamera() {
         PlayerCameraSystem cameraSystem = new PlayerCameraSystem();
+        cameraSystem.toggleMode();
         ((OrthographicCamera) cameraSystem.getCamera()).position.set(0, 0, 0);
 
         KeyBindings bindings = new KeyBindings();

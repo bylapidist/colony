@@ -123,6 +123,8 @@ public class MapWorldBuilderConfigurationTest {
                     new net.lapidist.colony.settings.Settings(),
                     null
             );
+            PlayerCameraSystem camera = world.getSystem(PlayerCameraSystem.class);
+            camera.toggleMode();
             world.process();
 
             var players = world.getAspectSubscriptionManager()
@@ -190,6 +192,8 @@ public class MapWorldBuilderConfigurationTest {
                     new net.lapidist.colony.settings.Settings(),
                     null
             );
+            PlayerCameraSystem camera = world.getSystem(PlayerCameraSystem.class);
+            camera.toggleMode();
             world.process();
 
             var players = world.getAspectSubscriptionManager()

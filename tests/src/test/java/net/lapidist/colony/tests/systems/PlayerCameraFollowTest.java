@@ -25,7 +25,6 @@ public class PlayerCameraFollowTest {
         world.process();
         world.setDelta(1f);
         PlayerCameraSystem camera = world.getSystem(PlayerCameraSystem.class);
-        camera.toggleMode();
 
         int id = world.getAspectSubscriptionManager()
                 .get(Aspect.all(PlayerComponent.class))

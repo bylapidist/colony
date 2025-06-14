@@ -23,7 +23,7 @@ public final class PlayerCameraSystem extends BaseSystem implements CameraProvid
 
     private final Rectangle viewBounds = new Rectangle();
 
-    private Mode mode = Mode.MAP_OVERVIEW;
+    private Mode mode = Mode.PLAYER;
     private ComponentMapper<PlayerComponent> playerMapper;
     private Entity player;
 
