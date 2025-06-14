@@ -68,12 +68,13 @@ public final class MapUiBuilder {
         buildButton.setName("buildButton");
         TextButton removeButton = new TextButton("", skin, "toggle");
         removeButton.setName("removeButton");
-        TextButton mapButton = new TextButton("", skin);
+        TextButton mapButton = new TextButton("", skin, "toggle");
         mapButton.setName("mapButton");
-        TextButton minimapButton = new TextButton("", skin);
+        TextButton minimapButton = new TextButton("", skin, "toggle");
         minimapButton.setName("minimapButton");
         GraphicsSettings graphics = colony.getSettings().getGraphicsSettings();
         MinimapActor minimapActor = new MinimapActor(world, graphics, client);
+        minimapButton.setChecked(minimapActor.isVisible());
         ChatBox chatBox = new ChatBox(skin, client);
         PlayerResourcesActor resourcesActor = new PlayerResourcesActor(skin, world);
 
@@ -91,6 +92,9 @@ public final class MapUiBuilder {
 
         BuildPlacementSystem buildSystem = world.getSystem(BuildPlacementSystem.class);
         PlayerCameraSystem cameraSystem = world.getSystem(PlayerCameraSystem.class);
+        if (cameraSystem != null) {
+            mapButton.setChecked(cameraSystem.getMode() == PlayerCameraSystem.Mode.MAP_OVERVIEW);
+        }
 
         buildButton.addListener(new ChangeListener() {
             @Override
@@ -125,14 +129,16 @@ public final class MapUiBuilder {
         mapButton.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                cameraSystem.toggleMode();
+                if (cameraSystem != null) {
+                    cameraSystem.toggleMode();
+                }
             }
         });
 
         minimapButton.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                minimapActor.setVisible(!minimapActor.isVisible());
+                minimapActor.setVisible(minimapButton.isChecked());
             }
         });
 
@@ -156,7 +162,11 @@ public final class MapUiBuilder {
                     return true;
                 }
                 if (keycode == keyBindings.getKey(KeyAction.MINIMAP)) {
-                    minimapActor.setVisible(!minimapActor.isVisible());
+                    boolean visible = !minimapActor.isVisible();
+                    minimapActor.setVisible(visible);
+                    minimapButton.setProgrammaticChangeEvents(false);
+                    minimapButton.setChecked(visible);
+                    minimapButton.setProgrammaticChangeEvents(true);
                     return true;
                 }
                 return false;

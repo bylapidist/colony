@@ -60,14 +60,18 @@ public class MapUiBuilderTest {
         assertEquals(expectedButton, minimapButton.getText().toString());
 
         boolean initial = ui.getMinimapActor().isVisible();
+        boolean initialChecked = minimapButton.isChecked();
+        assertEquals(initial, initialChecked);
 
         stage.keyDown(settings.getKeyBindings().getKey(KeyAction.MINIMAP));
 
         assertEquals(!initial, ui.getMinimapActor().isVisible());
+        assertEquals(!initialChecked, minimapButton.isChecked());
 
         stage.keyDown(settings.getKeyBindings().getKey(KeyAction.MINIMAP));
 
         assertEquals(initial, ui.getMinimapActor().isVisible());
+        assertEquals(initialChecked, minimapButton.isChecked());
     }
 
     @Test
