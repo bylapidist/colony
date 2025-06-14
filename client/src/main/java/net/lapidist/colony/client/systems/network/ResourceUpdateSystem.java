@@ -48,21 +48,21 @@ public final class ResourceUpdateSystem extends BaseSystem {
             if (data.x() == -1 && data.y() == -1) {
                 if (player != null) {
                     var pr = playerMapper.get(player);
-                    pr.setWood(data.wood());
-                    pr.setStone(data.stone());
-                    pr.setFood(data.food());
+                    pr.setAmount("WOOD", data.wood());
+                    pr.setAmount("STONE", data.stone());
+                    pr.setAmount("FOOD", data.food());
                 }
                 continue;
             }
             var found = MapUtils.findTile(mapComponent, data.x(), data.y())
                     .map(tile -> {
                         ResourceComponent rc = resourceMapper.get(tile);
-                        int deltaWood = rc.getWood() - data.wood();
-                        int deltaStone = rc.getStone() - data.stone();
-                        int deltaFood = rc.getFood() - data.food();
-                        rc.setWood(data.wood());
-                        rc.setStone(data.stone());
-                        rc.setFood(data.food());
+                        int deltaWood = rc.getAmount("WOOD") - data.wood();
+                        int deltaStone = rc.getAmount("STONE") - data.stone();
+                        int deltaFood = rc.getAmount("FOOD") - data.food();
+                        rc.setAmount("WOOD", data.wood());
+                        rc.setAmount("STONE", data.stone());
+                        rc.setAmount("FOOD", data.food());
                         rc.setDirty(true);
                         int index = mapComponent.getTiles().indexOf(tile, true);
                         var ds = world.getSystem(net.lapidist.colony.client.systems.MapRenderDataSystem.class);
@@ -72,13 +72,13 @@ public final class ResourceUpdateSystem extends BaseSystem {
                         if (player != null) {
                             var pr = playerMapper.get(player);
                             if (deltaWood > 0) {
-                                pr.addWood(deltaWood);
+                                pr.addAmount("WOOD", deltaWood);
                             }
                             if (deltaStone > 0) {
-                                pr.addStone(deltaStone);
+                                pr.addAmount("STONE", deltaStone);
                             }
                             if (deltaFood > 0) {
-                                pr.addFood(deltaFood);
+                                pr.addAmount("FOOD", deltaFood);
                             }
                         }
                         mapComponent.incrementVersion();

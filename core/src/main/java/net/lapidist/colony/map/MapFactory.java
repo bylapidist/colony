@@ -62,9 +62,9 @@ public final class MapFactory {
 
                 ResourceComponent rc = new ResourceComponent();
                 if (td.resources() != null) {
-                    rc.setWood(td.resources().wood());
-                    rc.setStone(td.resources().stone());
-                    rc.setFood(td.resources().food());
+                    rc.setAmount("WOOD", td.resources().wood());
+                    rc.setAmount("STONE", td.resources().stone());
+                    rc.setAmount("FOOD", td.resources().food());
                 }
                 tile.edit().add(rc);
 

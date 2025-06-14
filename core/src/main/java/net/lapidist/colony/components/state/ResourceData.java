@@ -12,15 +12,15 @@ import java.util.Map;
 public record ResourceData(Map<String, Integer> amounts) {
 
     public ResourceData() {
-        this(Map.of());
+        this(new java.util.HashMap<>());
     }
 
     public ResourceData(final int wood, final int stone, final int food) {
-        this(Map.of(
+        this(new java.util.HashMap<>(java.util.Map.of(
                 "WOOD", wood,
                 "STONE", stone,
                 "FOOD", food
-        ));
+        )));
     }
 
     /**
@@ -43,7 +43,7 @@ public record ResourceData(Map<String, Integer> amounts) {
     public ResourceData with(final String id, final int amt) {
         Map<String, Integer> map = new HashMap<>(amounts);
         map.put(id, amt);
-        return new ResourceData(Map.copyOf(map));
+        return new ResourceData(new HashMap<>(map));
     }
 
     /**

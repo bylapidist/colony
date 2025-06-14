@@ -6,29 +6,27 @@ import com.artemis.Component;
  * Holds resource amounts available on a tile.
  */
 public final class ResourceComponent extends Component {
-    private int wood;
-    private int stone;
-    private int food;
+    private final java.util.Map<String, Integer> amounts = new java.util.HashMap<>();
     private boolean dirty;
 
     public int getWood() {
-        return wood;
+        return getAmount("WOOD");
     }
 
     public void setWood(final int woodToSet) {
-        this.wood = woodToSet;
+        setAmount("WOOD", woodToSet);
     }
 
     public int getStone() {
-        return stone;
+        return getAmount("STONE");
     }
 
     public void setStone(final int stoneToSet) {
-        this.stone = stoneToSet;
+        setAmount("STONE", stoneToSet);
     }
 
     public int getFood() {
-        return food;
+        return getAmount("FOOD");
     }
 
     public boolean isDirty() {
@@ -40,6 +38,23 @@ public final class ResourceComponent extends Component {
     }
 
     public void setFood(final int foodToSet) {
-        this.food = foodToSet;
+        setAmount("FOOD", foodToSet);
+    }
+
+    public java.util.Map<String, Integer> getAmounts() {
+        return amounts;
+    }
+
+    public void setAmounts(final java.util.Map<String, Integer> newAmounts) {
+        amounts.clear();
+        amounts.putAll(newAmounts);
+    }
+
+    public int getAmount(final String id) {
+        return amounts.getOrDefault(id, 0);
+    }
+
+    public void setAmount(final String id, final int value) {
+        amounts.put(id, value);
     }
 }
