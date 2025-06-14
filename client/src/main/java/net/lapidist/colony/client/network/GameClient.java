@@ -20,7 +20,7 @@ import net.lapidist.colony.serialization.KryoRegistry;
 import net.lapidist.colony.network.AbstractMessageEndpoint;
 import net.lapidist.colony.network.DispatchListener;
 import net.lapidist.colony.network.MessageHandler;
-import net.lapidist.colony.server.GameServer;
+import net.lapidist.colony.config.NetworkConfig;
 import net.lapidist.colony.client.network.handlers.MapMetadataHandler;
 import net.lapidist.colony.client.network.handlers.MapChunkHandler;
 import net.lapidist.colony.client.network.handlers.QueueingMessageHandler;
@@ -41,7 +41,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Handles all network communication with a {@link GameServer} instance.
+ * Handles all network communication with a {@link net.lapidist.colony.server.GameServer} instance.
  * <p>
  * The client is responsible for receiving world updates, queuing messages for
  * later processing and loading the initial map state.
@@ -202,7 +202,11 @@ public final class GameClient extends AbstractMessageEndpoint implements AutoClo
             }
         });
         try {
-            client.connect(CONNECT_TIMEOUT, "localhost", GameServer.TCP_PORT, GameServer.UDP_PORT);
+            client.connect(
+                    CONNECT_TIMEOUT,
+                    NetworkConfig.getHost(),
+                    NetworkConfig.getTcpPort(),
+                    NetworkConfig.getUdpPort());
         } catch (IOException e) {
             LOGGER.error("Failed to connect to server", e);
             client.stop();
@@ -216,7 +220,7 @@ public final class GameClient extends AbstractMessageEndpoint implements AutoClo
 
     @Override
     /**
-     * Starts the client and connects to the local {@link GameServer} using
+     * Starts the client and connects to the local {@link net.lapidist.colony.server.GameServer} using
      * the default callback.
      */
     public void start() {
