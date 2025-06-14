@@ -47,17 +47,10 @@ public final class TextureAtlasResourceLoader implements ResourceLoader {
         TextureAtlasLoader.TextureAtlasParameter parameter = null;
         if (graphicsSettings != null && graphicsSettings.isMipMapsEnabled()) {
             parameter = new TextureAtlasLoader.TextureAtlasParameter();
-            try {
-                java.lang.reflect.Field field = parameter.getClass().getField("genMipMaps");
-                field.setBoolean(parameter, true);
-            } catch (NoSuchFieldException | IllegalAccessException ignore) {
-                try {
-                    java.lang.reflect.Field field = parameter.getClass().getField("useMipMaps");
-                    field.setBoolean(parameter, true);
-                } catch (NoSuchFieldException | IllegalAccessException ignored) {
-                    // Field not present on this LibGDX version
-                }
-            }
+            // Recent LibGDX versions expose a genMipMaps field which we would
+            // normally set here. The 1.13.x line bundled with the project does
+            // not provide such a field, so mipmaps are generated manually once
+            // loading completes.
         }
         assetManager.load(atlasPath, TextureAtlas.class, parameter);
         pendingAtlasPath = atlasPath;
@@ -94,22 +87,35 @@ public final class TextureAtlasResourceLoader implements ResourceLoader {
                         ? Texture.TextureFilter.MipMapLinearLinear
                         : Texture.TextureFilter.Linear;
                 Texture.TextureFilter magFilter = Texture.TextureFilter.Linear;
+                com.badlogic.gdx.utils.ObjectSet<Texture> updated = new com.badlogic.gdx.utils.ObjectSet<>();
+                java.util.Map<Texture, Texture> remapped = new java.util.HashMap<>();
                 for (Texture texture : atlas.getTextures()) {
-                    texture.setFilter(minFilter, magFilter);
-                    if (pendingSettings.isMipMapsEnabled() && !texture.getTextureData().useMipMaps()) {
-                        try {
-                            java.lang.reflect.Field field =
-                                    texture.getTextureData().getClass().getDeclaredField("useMipMaps");
-                            field.setAccessible(true);
-                            field.setBoolean(texture.getTextureData(), true);
-                            texture.load(texture.getTextureData());
-                        } catch (NoSuchFieldException | IllegalAccessException ignored) {
-                            // ignore when field missing
+                    Texture result = texture;
+                    if (pendingSettings.isMipMapsEnabled()
+                            && !texture.getTextureData().useMipMaps()) {
+                        if (texture.getTextureData()
+                                instanceof com.badlogic.gdx.graphics.glutils.FileTextureData data) {
+                            result = new Texture(data.getFileHandle(), data.getFormat(), true);
+                            result.setWrap(texture.getUWrap(), texture.getVWrap());
+                            texture.dispose();
+                            remapped.put(texture, result);
                         }
                     }
+                    result.setFilter(minFilter, magFilter);
                     if (pendingSettings.isAnisotropicFilteringEnabled()) {
-                        texture.setAnisotropicFilter(GLTexture.getMaxAnisotropicFilterLevel());
+                        result.setAnisotropicFilter(GLTexture.getMaxAnisotropicFilterLevel());
                     }
+                    updated.add(result);
+                }
+                if (!remapped.isEmpty()) {
+                    for (TextureAtlas.AtlasRegion region : atlas.getRegions()) {
+                        Texture replace = remapped.get(region.getTexture());
+                        if (replace != null) {
+                            region.setTexture(replace);
+                        }
+                    }
+                    atlas.getTextures().clear();
+                    atlas.getTextures().addAll(updated);
                 }
             }
             loaded = true;
