@@ -47,6 +47,8 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     private final long autosaveInterval;
     private final String saveName;
     private final MapGenerator mapGenerator;
+    private final int mapWidth;
+    private final int mapHeight;
     private AutosaveService autosaveService;
     private ResourceProductionService resourceProductionService;
     private MapService mapService;
@@ -72,9 +74,11 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         this.saveName = config.getSaveName();
         this.autosaveInterval = config.getAutosaveInterval();
         this.mapGenerator = config.getMapGenerator();
+        this.mapWidth = config.getWidth();
+        this.mapHeight = config.getHeight();
         this.handlers = handlersToUse;
         this.commandHandlers = commandHandlersToUse;
-        this.mapService = new MapService(mapGenerator, saveName);
+        this.mapService = new MapService(mapGenerator, saveName, mapWidth, mapHeight);
         this.networkService = new NetworkService(server, TCP_PORT, UDP_PORT);
         this.autosaveService = new AutosaveService(autosaveInterval, saveName, () -> mapState);
         this.resourceProductionService = new ResourceProductionService(
