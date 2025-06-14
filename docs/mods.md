@@ -87,3 +87,58 @@ public final class ExtraMod implements GameMod {
 }
 ```
 
+## Registries
+
+Core data like tile, building and resource types are stored in simple string keyed registries. Mods can
+register new entries during the `init()` phase:
+
+```java
+public final class WaterTiles implements GameMod {
+    @Override
+    public void init() {
+        Registries.tileTypes().register("WATER");
+    }
+}
+```
+
+After registration the new ID can be referenced by map generators or scripts.
+
+## System hooks
+
+`GameMod` also defines lifecycle methods `init()` and `dispose()` which run when a mod is loaded and
+unloaded. Use them to add or remove registry entries and release resources. The service and handler
+registration hooks run between these stages during server startup.
+
+## Scripting
+
+Mods may ship Kotlin scripts inside a `scripts/` folder. Each script runs on load and can listen for events
+using a small DSL. The following script prints a message whenever a tile is selected:
+
+```kotlin
+// scripts/tileSelect.kts
+import net.lapidist.colony.server.events.TileSelectionEvent
+
+on<TileSelectionEvent> { event ->
+    if (event.selected()) {
+        println("Selected tile at ${event.x()}, ${event.y()}")
+    }
+}
+```
+
+### Example: custom tile type
+
+Combining registries and scripting allows mods to implement new gameplay elements. The following mod
+registers a `WATER` tile type and prints a message whenever the player selects one:
+
+```java
+public final class WaterMod implements GameMod {
+    @Override
+    public void init() {
+        Registries.tileTypes().register("WATER");
+    }
+}
+```
+
+Place the `tileSelect.kts` script from the previous section in the mod's `scripts/` directory to respond to
+`TileSelectionEvent`.
+
