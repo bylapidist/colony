@@ -15,9 +15,10 @@ public enum SaveVersion {
     V9(9),
     V10(10),
     V11(11),
-    V12(12);
+    V12(12),
+    V13(13);
 
-    public static final SaveVersion CURRENT = V12;
+    public static final SaveVersion CURRENT = V13;
 
     private final int number;
 

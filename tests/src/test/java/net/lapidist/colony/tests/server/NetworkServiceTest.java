@@ -10,6 +10,7 @@ import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.server.services.NetworkService;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import static org.junit.Assert.*;
 
 import static org.mockito.Mockito.*;
 
@@ -35,7 +36,11 @@ public class NetworkServiceTest {
         Listener listener = captor.getValue();
         Connection connection = mock(Connection.class);
         listener.connected(connection);
-        verify(connection).sendTCP(isA(MapMetadata.class));
+        ArgumentCaptor<MapMetadata> metaCaptor = ArgumentCaptor.forClass(MapMetadata.class);
+        verify(connection).sendTCP(metaCaptor.capture());
+        MapMetadata meta = metaCaptor.getValue();
+        assertEquals(net.lapidist.colony.components.GameConstants.MAP_WIDTH, meta.width());
+        assertEquals(net.lapidist.colony.components.GameConstants.MAP_HEIGHT, meta.height());
         verify(connection, atLeastOnce()).sendTCP(isA(MapChunkBytes.class));
     }
 

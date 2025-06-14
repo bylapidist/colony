@@ -86,6 +86,8 @@ public final class NetworkService {
                 state.description(),
                 state.buildings(),
                 state.playerResources(),
+                GameConstants.MAP_WIDTH,
+                GameConstants.MAP_HEIGHT,
                 chunkCount
         );
         connection.sendTCP(meta);
