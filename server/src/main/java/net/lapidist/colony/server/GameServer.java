@@ -3,6 +3,7 @@ package net.lapidist.colony.server;
 import com.esotericsoftware.kryonet.Server;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.config.ColonyConfig;
+import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.events.Events;
 import net.lapidist.colony.serialization.KryoRegistry;
 import net.lapidist.colony.mod.GameMod;
@@ -39,13 +40,10 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     public static final int TCP_PORT = ColonyConfig.get().getInt("game.server.tcpPort");
     public static final int UDP_PORT = ColonyConfig.get().getInt("game.server.udpPort");
 
-    // Increase buffers so the entire map can be serialized in one object.
-    // Larger maps (e.g. 320x320) require several megabytes when encoded by Kryo,
-    // so allocate 4MB to avoid overflow.
-    private static final int BUFFER_SIZE = 4 * 1024 * 1024;
+    // Buffer size for Kryo serialization configured via game.networkBufferSize.
     private static final Logger LOGGER = LoggerFactory.getLogger(GameServer.class);
 
-    private final Server server = new Server(BUFFER_SIZE, BUFFER_SIZE);
+    private final Server server = new Server(GameConstants.NETWORK_BUFFER_SIZE, GameConstants.NETWORK_BUFFER_SIZE);
     private final long autosaveInterval;
     private final String saveName;
     private final MapGenerator mapGenerator;
