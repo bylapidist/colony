@@ -20,7 +20,7 @@ import net.lapidist.colony.serialization.KryoRegistry;
 import net.lapidist.colony.network.AbstractMessageEndpoint;
 import net.lapidist.colony.network.DispatchListener;
 import net.lapidist.colony.network.MessageHandler;
-import net.lapidist.colony.server.GameServer;
+import net.lapidist.colony.config.NetworkConfig;
 import net.lapidist.colony.client.network.handlers.MapMetadataHandler;
 import net.lapidist.colony.client.network.handlers.MapChunkHandler;
 import net.lapidist.colony.client.network.handlers.QueueingMessageHandler;
@@ -179,7 +179,12 @@ public final class GameClient extends AbstractMessageEndpoint {
                 playerId = connection.getID();
             }
         });
-        client.connect(CONNECT_TIMEOUT, "localhost", GameServer.TCP_PORT, GameServer.UDP_PORT);
+        client.connect(
+                CONNECT_TIMEOUT,
+                NetworkConfig.getHost(),
+                NetworkConfig.getTcpPort(),
+                NetworkConfig.getUdpPort()
+        );
     }
 
     @Override
