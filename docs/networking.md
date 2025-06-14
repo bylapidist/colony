@@ -35,10 +35,17 @@ try (GameServer server = new GameServer(config)) {
 
 ```java
 GameClient client = new GameClient();
+client.setConnectionErrorHandler(e -> {
+    // handle connection failure
+});
 client.start(state -> {
     // initial map state received
 });
 ```
+
+If the connection attempt fails, the error handler receives the thrown
+`IOException` allowing the application to display an appropriate message
+instead of propagating the exception.
 
 The client submits requests using methods such as `sendTileSelectionRequest`. Each update is later retrieved within an update system:
 

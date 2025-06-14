@@ -7,6 +7,7 @@ import net.lapidist.colony.client.screens.MapScreen;
 import net.lapidist.colony.client.screens.MainMenuScreen;
 import net.lapidist.colony.client.screens.LoadingScreen;
 import net.lapidist.colony.client.screens.NewGameScreen;
+import net.lapidist.colony.client.screens.ErrorScreen;
 import net.lapidist.colony.i18n.I18n;
 import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.client.network.GameClient;
@@ -75,6 +76,9 @@ public final class Colony extends Game {
             );
             server.start();
             client = new GameClient();
+            client.setConnectionErrorHandler(e ->
+                    Gdx.app.postRunnable(() ->
+                            setScreen(new ErrorScreen(this, I18n.get("error.connection")))));
             LoadingScreen loading = new LoadingScreen();
             loading.setMessage(I18n.get("loading.connect"));
             client.setLoadProgressListener(p -> Gdx.app.postRunnable(() -> loading.setProgress(p)));
