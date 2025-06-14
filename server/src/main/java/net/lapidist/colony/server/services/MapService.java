@@ -1,8 +1,8 @@
 package net.lapidist.colony.server.services;
 
-import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.PlayerPosition;
+import net.lapidist.colony.components.state.CameraPosition;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.map.MapGenerator;
 import net.lapidist.colony.map.MapChunkData;
@@ -23,10 +23,14 @@ public final class MapService {
 
     private final MapGenerator mapGenerator;
     private final String saveName;
+    private final int width;
+    private final int height;
 
-    public MapService(final MapGenerator generator, final String name) {
+    public MapService(final MapGenerator generator, final String name, final int mapWidth, final int mapHeight) {
         this.mapGenerator = generator;
         this.saveName = name;
+        this.width = mapWidth;
+        this.height = mapHeight;
     }
 
     public MapState load() throws IOException {
@@ -49,16 +53,19 @@ public final class MapService {
     }
 
     private MapState generateMap() {
-        int width = (int) Math.ceil(GameConstants.MAP_WIDTH / (double) MapChunkData.CHUNK_SIZE)
+        int alignedWidth = (int) Math.ceil(width / (double) MapChunkData.CHUNK_SIZE)
                 * MapChunkData.CHUNK_SIZE;
-        int height = (int) Math.ceil(GameConstants.MAP_HEIGHT / (double) MapChunkData.CHUNK_SIZE)
+        int alignedHeight = (int) Math.ceil(height / (double) MapChunkData.CHUNK_SIZE)
                 * MapChunkData.CHUNK_SIZE;
-        MapState state = mapGenerator.generate(width, height);
+        MapState state = mapGenerator.generate(alignedWidth, alignedHeight);
         return state.toBuilder()
-                .width(GameConstants.MAP_WIDTH)
-                .height(GameConstants.MAP_HEIGHT)
-                .playerPos(new PlayerPosition(width / 2, height / 2))
-                .cameraPos(new net.lapidist.colony.components.state.CameraPosition(width / 2f, height / 2f))
+                .width(width)
+                .height(height)
+                .playerPos(new PlayerPosition(alignedWidth / 2, alignedHeight / 2))
+                .cameraPos(new CameraPosition(
+                        alignedWidth / 2f,
+                        alignedHeight / 2f
+                ))
                 .build();
     }
 }

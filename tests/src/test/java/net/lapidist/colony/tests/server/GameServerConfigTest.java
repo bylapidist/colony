@@ -13,13 +13,19 @@ public class GameServerConfigTest {
     @Test
     public void builderSetsAllValues() {
         MapGenerator gen = mock(MapGenerator.class);
+        final int w = 99;
+        final int h = 66;
         GameServerConfig cfg = GameServerConfig.builder()
                 .saveName("save")
                 .autosaveInterval(INTERVAL)
                 .mapGenerator(gen)
+                .width(w)
+                .height(h)
                 .build();
         assertEquals("save", cfg.getSaveName());
         assertEquals(INTERVAL, cfg.getAutosaveInterval());
         assertSame(gen, cfg.getMapGenerator());
+        assertEquals(w, cfg.getWidth());
+        assertEquals(h, cfg.getHeight());
     }
 }
