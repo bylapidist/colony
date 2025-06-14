@@ -7,6 +7,7 @@ import net.lapidist.colony.components.state.ResourceUpdateData;
 import net.lapidist.colony.server.services.NetworkService;
 import net.lapidist.colony.server.services.ResourceProductionService;
 import org.junit.Test;
+import java.util.concurrent.locks.ReentrantLock;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -29,7 +30,8 @@ public class ResourceProductionServiceTest {
                 INTERVAL,
                 ref::get,
                 ref::set,
-                network
+                network,
+                new ReentrantLock()
         );
 
         service.start();

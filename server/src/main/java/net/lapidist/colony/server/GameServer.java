@@ -28,6 +28,7 @@ import net.lapidist.colony.server.services.AutosaveService;
 import net.lapidist.colony.server.services.MapService;
 import net.lapidist.colony.server.services.NetworkService;
 import net.lapidist.colony.server.services.ResourceProductionService;
+import java.util.concurrent.locks.ReentrantLock;
 import net.mostlyoriginal.api.event.common.EventSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,11 @@ import java.io.IOException;
 // Using java.nio here keeps the server independent from LibGDX's FileHandle API
 // because the server module runs headless without the Gdx runtime.
 
+/**
+ * Main entry point for the dedicated game server. All access to {@code mapState} must
+ * be guarded by {@link #stateLock}. Services and command handlers receive the same
+ * lock instance and are responsible for locking when reading or modifying state.
+ */
 public final class GameServer extends AbstractMessageEndpoint implements AutoCloseable {
     public static final int TCP_PORT = ColonyConfig.get().getInt("game.server.tcpPort");
     public static final int UDP_PORT = ColonyConfig.get().getInt("game.server.udpPort");
@@ -49,6 +55,7 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     private final MapGenerator mapGenerator;
     private final int mapWidth;
     private final int mapHeight;
+    private final ReentrantLock stateLock = new ReentrantLock();
     private AutosaveService autosaveService;
     private ResourceProductionService resourceProductionService;
     private MapService mapService;
@@ -78,14 +85,15 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         this.mapHeight = config.getHeight();
         this.handlers = handlersToUse;
         this.commandHandlers = commandHandlersToUse;
-        this.mapService = new MapService(mapGenerator, saveName, mapWidth, mapHeight);
+        this.mapService = new MapService(mapGenerator, saveName, mapWidth, mapHeight, stateLock);
         this.networkService = new NetworkService(server, TCP_PORT, UDP_PORT);
-        this.autosaveService = new AutosaveService(autosaveInterval, saveName, () -> mapState);
+        this.autosaveService = new AutosaveService(autosaveInterval, saveName, () -> mapState, stateLock);
         this.resourceProductionService = new ResourceProductionService(
                 autosaveInterval,
                 () -> mapState,
                 s -> mapState = s,
-                networkService
+                networkService,
+                stateLock
         );
         this.commandBus = new CommandBus();
     }
@@ -121,10 +129,10 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     private void registerDefaultHandlers() {
         if (commandHandlers == null) {
             commandHandlers = java.util.List.of(
-                    new TileSelectionCommandHandler(() -> mapState, networkService),
-                    new BuildCommandHandler(() -> mapState, s -> mapState = s, networkService),
-                    new GatherCommandHandler(() -> mapState, s -> mapState = s, networkService),
-                    new RemoveBuildingCommandHandler(() -> mapState, s -> mapState = s, networkService)
+                    new TileSelectionCommandHandler(() -> mapState, networkService, stateLock),
+                    new BuildCommandHandler(() -> mapState, s -> mapState = s, networkService, stateLock),
+                    new GatherCommandHandler(() -> mapState, s -> mapState = s, networkService, stateLock),
+                    new RemoveBuildingCommandHandler(() -> mapState, s -> mapState = s, networkService, stateLock)
             );
         }
         commandBus.registerHandlers(commandHandlers);
@@ -136,14 +144,19 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
                     new BuildingRemovalRequestHandler(commandBus),
                     new ChatMessageHandler(networkService, commandBus),
                     new ResourceGatherRequestHandler(commandBus),
-                    new MapChunkRequestHandler(() -> mapState, networkService)
+                    new MapChunkRequestHandler(() -> mapState, networkService, stateLock)
             );
         }
         registerHandlers(handlers);
     }
 
     public MapState getMapState() {
-        return mapState;
+        stateLock.lock();
+        try {
+            return mapState;
+        } finally {
+            stateLock.unlock();
+        }
     }
 
     /**

@@ -17,6 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Handles periodic and shutdown saving of the game state.
@@ -28,16 +29,19 @@ public final class AutosaveService {
     private final long interval;
     private final String saveName;
     private final Supplier<MapState> supplier;
+    private final ReentrantLock lock;
     private ScheduledExecutorService executor;
 
     public AutosaveService(
             final long intervalToUse,
             final String saveNameToUse,
-            final Supplier<MapState> stateSupplier
+            final Supplier<MapState> stateSupplier,
+            final ReentrantLock lockToUse
     ) {
         this.interval = intervalToUse;
         this.saveName = saveNameToUse;
         this.supplier = stateSupplier;
+        this.lock = lockToUse;
     }
 
     /**
@@ -71,7 +75,13 @@ public final class AutosaveService {
     }
 
     private void saveGameState(final java.util.function.BiFunction<Path, Long, Event> creator, final String log) {
-        MapState mapState = supplier.get();
+        MapState mapState;
+        lock.lock();
+        try {
+            mapState = supplier.get();
+        } finally {
+            lock.unlock();
+        }
         try {
             Path file = Paths.get().getAutosave(saveName);
             GameStateIO.save(mapState, file);
