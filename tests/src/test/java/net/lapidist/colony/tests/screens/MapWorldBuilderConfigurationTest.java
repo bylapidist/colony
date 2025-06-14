@@ -139,6 +139,37 @@ public class MapWorldBuilderConfigurationTest {
     }
 
     @Test
+    public void baseBuilderUsesProvidedResources() {
+        ResourceData resources = new ResourceData(WOOD, STONE, FOOD);
+        Batch batch = mock(Batch.class);
+        when(batch.getTransformMatrix()).thenReturn(new com.badlogic.gdx.math.Matrix4());
+        when(batch.getProjectionMatrix()).thenReturn(new com.badlogic.gdx.math.Matrix4());
+        Stage stage = new Stage(new ScreenViewport(), batch);
+        GameClient client = mock(GameClient.class);
+        KeyBindings keys = new KeyBindings();
+        try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
+            World world = MapWorldBuilder.build(
+                    MapWorldBuilder.baseBuilder(client, stage, keys, resources),
+                    null,
+                    new net.lapidist.colony.settings.Settings(),
+                    null
+            );
+            world.process();
+
+            var players = world.getAspectSubscriptionManager()
+                    .get(Aspect.all(PlayerResourceComponent.class))
+                    .getEntities();
+            var comp = world.getMapper(PlayerResourceComponent.class)
+                    .get(world.getEntity(players.get(0)));
+            assertEquals(WOOD, comp.getWood());
+            assertEquals(STONE, comp.getStone());
+            assertEquals(FOOD, comp.getFood());
+
+            world.dispose();
+        }
+    }
+
+    @Test
     public void builderFromStateUsesPlayerPosition() {
         final int x = 2;
         final int y = 3;

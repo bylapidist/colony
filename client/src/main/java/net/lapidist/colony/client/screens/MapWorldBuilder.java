@@ -67,7 +67,10 @@ public final class MapWorldBuilder {
             final KeyBindings keyBindings,
             final ResourceData playerResources
     ) {
-        return createBuilder(client, stage, keyBindings, null, playerResources, null, null);
+        MapState state = MapState.builder()
+                .playerResources(playerResources)
+                .build();
+        return createBuilder(client, stage, keyBindings, null, state);
     }
 
     /**
@@ -85,7 +88,7 @@ public final class MapWorldBuilder {
             final Stage stage,
             final KeyBindings keyBindings
     ) {
-        return createBuilder(client, stage, keyBindings, provider, new ResourceData(), null, null);
+        return createBuilder(client, stage, keyBindings, provider, new MapState());
     }
 
     /**
@@ -102,9 +105,7 @@ public final class MapWorldBuilder {
                 stage,
                 keyBindings,
                 new ProvidedMapStateProvider(state),
-                state.playerResources(),
-                state.playerPos(),
-                state.cameraPos()
+                state
         );
     }
 
@@ -113,10 +114,11 @@ public final class MapWorldBuilder {
             final Stage stage,
             final KeyBindings keyBindings,
             final MapStateProvider provider,
-            final ResourceData playerResources,
-            final PlayerPosition playerPos,
-            final net.lapidist.colony.components.state.CameraPosition cameraPos
+            final MapState state
     ) {
+        ResourceData playerResources = state.playerResources();
+        PlayerPosition playerPos = state.playerPos();
+        net.lapidist.colony.components.state.CameraPosition cameraPos = state.cameraPos();
         CameraInputSystem cameraInputSystem = new CameraInputSystem(client, keyBindings);
         cameraInputSystem.addProcessor(stage);
         SelectionSystem selectionSystem = new SelectionSystem(client, keyBindings);
