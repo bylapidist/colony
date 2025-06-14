@@ -32,24 +32,21 @@ public class GameServerConcurrencyTest {
                 .mapGenerator(gen)
                 .build();
         net.lapidist.colony.io.Paths.get().deleteAutosave("concurrency");
-        GameServer server = new GameServer(config);
-        server.start();
+        try (GameServer server = new GameServer(config); GameClient client = new GameClient()) {
+            server.start();
 
-        GameClient client = new GameClient();
-        CountDownLatch latch = new CountDownLatch(1);
-        client.start(state -> latch.countDown());
-        latch.await(1, TimeUnit.SECONDS);
+            CountDownLatch latch = new CountDownLatch(1);
+            client.start(state -> latch.countDown());
+            latch.await(1, TimeUnit.SECONDS);
 
         client.sendBuildRequest(new BuildingPlacementData(0, 0, "HOUSE"));
         Thread.sleep(WAIT_MS);
 
         assertTrue(server.getMapState().buildings().stream()
                 .anyMatch(b -> b.x() == 0 && b.y() == 0));
-        assertTrue(java.nio.file.Files.exists(
-                net.lapidist.colony.io.Paths.get().getAutosave("concurrency")));
-
-        client.stop();
-        server.stop();
+            assertTrue(java.nio.file.Files.exists(
+                    net.lapidist.colony.io.Paths.get().getAutosave("concurrency")));
+        }
         Thread.sleep(WAIT_MS);
     }
 }

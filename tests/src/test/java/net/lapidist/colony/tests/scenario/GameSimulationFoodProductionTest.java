@@ -39,16 +39,16 @@ public class GameSimulationFoodProductionTest {
                 .mapGenerator(gen)
                 .build();
         net.lapidist.colony.io.Paths.get().deleteAutosave("scenario-food");
-        GameServer server = new GameServer(config);
-        server.start();
+        try (GameServer server = new GameServer(config);
+             GameClient client = new GameClient()) {
+            server.start();
 
-        GameClient client = new GameClient();
-        CountDownLatch latch = new CountDownLatch(1);
-        client.start(state -> latch.countDown());
-        latch.await(1, TimeUnit.SECONDS);
+            CountDownLatch latch = new CountDownLatch(1);
+            client.start(state -> latch.countDown());
+            latch.await(1, TimeUnit.SECONDS);
 
-        MapState state = client.getMapState();
-        GameSimulation sim = new GameSimulation(state, client);
+            MapState state = client.getMapState();
+            GameSimulation sim = new GameSimulation(state, client);
 
         Thread.sleep(WAIT_MS + DELAY_MS);
         sim.step();
@@ -58,10 +58,8 @@ public class GameSimulationFoodProductionTest {
                 .getEntities();
         var prc = sim.getWorld().getMapper(PlayerResourceComponent.class)
                 .get(sim.getWorld().getEntity(players.get(0)));
-        assertTrue(prc.getFood() > 0);
-
-        client.stop();
-        server.stop();
+            assertTrue(prc.getFood() > 0);
+        }
         Thread.sleep(WAIT_MS);
     }
 }

@@ -24,17 +24,17 @@ public class GameServerGatherBroadcastTest {
                 .saveName("gather-broadcast")
                 .build();
         net.lapidist.colony.io.Paths.get().deleteAutosave("gather-broadcast");
-        GameServer server = new GameServer(config);
-        server.start();
+        try (GameServer server = new GameServer(config);
+             GameClient clientA = new GameClient();
+             GameClient clientB = new GameClient()) {
+            server.start();
 
-        GameClient clientA = new GameClient();
-        CountDownLatch latchA = new CountDownLatch(1);
-        clientA.start(state -> latchA.countDown());
-        GameClient clientB = new GameClient();
-        CountDownLatch latchB = new CountDownLatch(1);
-        clientB.start(state -> latchB.countDown());
-        latchA.await(1, TimeUnit.SECONDS);
-        latchB.await(1, TimeUnit.SECONDS);
+            CountDownLatch latchA = new CountDownLatch(1);
+            clientA.start(state -> latchA.countDown());
+            CountDownLatch latchB = new CountDownLatch(1);
+            clientB.start(state -> latchB.countDown());
+            latchA.await(1, TimeUnit.SECONDS);
+            latchB.await(1, TimeUnit.SECONDS);
 
         ResourceGatherRequestData data = new ResourceGatherRequestData(0, 0, ResourceType.WOOD);
         clientA.sendGatherRequest(data);
@@ -46,8 +46,6 @@ public class GameServerGatherBroadcastTest {
         assertEquals(0, update.x());
         assertEquals(0, update.y());
 
-        clientA.stop();
-        clientB.stop();
-        server.stop();
+        }
     }
 }

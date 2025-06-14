@@ -20,17 +20,17 @@ public class GameSimulationTileUpdateTest {
 
     @Test
     public void serverUpdatesAppliedToClientWorld() throws Exception {
-        GameServer server = new GameServer(GameServerConfig.builder().build());
-        server.start();
+        try (GameServer server = new GameServer(GameServerConfig.builder().build());
+             GameClient sender = new GameClient();
+             GameClient receiver = new GameClient()) {
+            server.start();
 
-        GameClient sender = new GameClient();
-        CountDownLatch latchSender = new CountDownLatch(1);
-        sender.start(state -> latchSender.countDown());
-        GameClient receiver = new GameClient();
-        CountDownLatch latchReceiver = new CountDownLatch(1);
-        receiver.start(state -> latchReceiver.countDown());
-        latchSender.await(1, TimeUnit.SECONDS);
-        latchReceiver.await(1, TimeUnit.SECONDS);
+            CountDownLatch latchSender = new CountDownLatch(1);
+            sender.start(state -> latchSender.countDown());
+            CountDownLatch latchReceiver = new CountDownLatch(1);
+            receiver.start(state -> latchReceiver.countDown());
+            latchSender.await(1, TimeUnit.SECONDS);
+            latchReceiver.await(1, TimeUnit.SECONDS);
 
         MapState state = receiver.getMapState();
         GameSimulation sim = new GameSimulation(state, receiver);
@@ -51,8 +51,6 @@ public class GameSimulationTileUpdateTest {
         var tileComponent = world.getMapper(net.lapidist.colony.components.maps.TileComponent.class).get(tile);
         assertTrue(tileComponent.isSelected());
 
-        sender.stop();
-        receiver.stop();
-        server.stop();
+        }
     }
 }

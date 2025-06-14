@@ -21,17 +21,17 @@ public class GameServerBroadcastTest {
                 .saveName("broadcast")
                 .build();
         net.lapidist.colony.io.Paths.get().deleteAutosave("broadcast");
-        GameServer server = new GameServer(config);
-        server.start();
+        try (GameServer server = new GameServer(config);
+             GameClient clientA = new GameClient();
+             GameClient clientB = new GameClient()) {
+            server.start();
 
-        GameClient clientA = new GameClient();
-        CountDownLatch latchA = new CountDownLatch(1);
-        clientA.start(state -> latchA.countDown());
-        GameClient clientB = new GameClient();
-        CountDownLatch latchB = new CountDownLatch(1);
-        clientB.start(state -> latchB.countDown());
-        latchA.await(1, TimeUnit.SECONDS);
-        latchB.await(1, TimeUnit.SECONDS);
+            CountDownLatch latchA = new CountDownLatch(1);
+            clientA.start(state -> latchA.countDown());
+            CountDownLatch latchB = new CountDownLatch(1);
+            clientB.start(state -> latchB.countDown());
+            latchA.await(1, TimeUnit.SECONDS);
+            latchB.await(1, TimeUnit.SECONDS);
 
         TileSelectionData data = new TileSelectionData(0, 0, true);
         clientA.sendTileSelectionRequest(data);
@@ -44,8 +44,6 @@ public class GameServerBroadcastTest {
         assertEquals(data.x(), update.x());
         assertEquals(data.y(), update.y());
 
-        clientA.stop();
-        clientB.stop();
-        server.stop();
+        }
     }
 }
