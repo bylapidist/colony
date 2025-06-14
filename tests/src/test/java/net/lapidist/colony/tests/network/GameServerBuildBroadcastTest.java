@@ -45,7 +45,7 @@ public class GameServerBuildBroadcastTest {
             latchA.await(1, TimeUnit.SECONDS);
             latchB.await(1, TimeUnit.SECONDS);
 
-        BuildingPlacementData data = new BuildingPlacementData(0, 0, "HOUSE");
+        BuildingPlacementData data = new BuildingPlacementData(0, 0, "house");
         clientA.sendBuildRequest(data);
 
         Thread.sleep(WAIT_MS);
@@ -85,7 +85,7 @@ public class GameServerBuildBroadcastTest {
             latchA.await(1, TimeUnit.SECONDS);
             latchB.await(1, TimeUnit.SECONDS);
 
-        BuildingPlacementData data = new BuildingPlacementData(0, 0, "FARM");
+        BuildingPlacementData data = new BuildingPlacementData(0, 0, "farm");
         clientA.sendBuildRequest(data);
 
         Thread.sleep(WAIT_MS);

@@ -31,7 +31,7 @@ public class MapRenderDataBuilderTest {
                 .x(TILE_X).y(TILE_Y).tileType("GRASS").passable(true)
                 .resources(new net.lapidist.colony.components.state.ResourceData(WOOD, STONE, FOOD))
                 .build());
-        state.buildings().add(new BuildingData(BUILDING_X, BUILDING_Y, "HOUSE"));
+        state.buildings().add(new BuildingData(BUILDING_X, BUILDING_Y, "house"));
 
         World world = new World(new WorldConfigurationBuilder().build());
         MapComponent map = MapFactory.create(world, state).getComponent(MapComponent.class);

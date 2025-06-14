@@ -58,7 +58,7 @@ public final class BuildCommandHandler implements CommandHandler<BuildCommand> {
             if (tile == null || occupied) {
                 return;
             }
-            BuildingDefinition def = Registries.buildings().get(command.type());
+            BuildingDefinition def = Registries.buildings().get(command.buildingId());
             if (def == null) {
                 return;
             }

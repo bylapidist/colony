@@ -22,7 +22,7 @@ public class ResourceProductionServiceTest {
     @Test
     public void increasesFoodWhenFarmsExist() throws Exception {
         MapState state = new MapState();
-        state.buildings().add(new BuildingData(0, 0, "FARM"));
+        state.buildings().add(new BuildingData(0, 0, "farm"));
         state = state.toBuilder().playerResources(new ResourceData()).build();
         AtomicReference<MapState> ref = new AtomicReference<>(state);
         NetworkService network = mock(NetworkService.class);

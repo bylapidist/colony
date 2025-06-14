@@ -16,7 +16,7 @@ public class BuildingFactoryTest {
     @Test
     public void createSetsBuildingType() {
         World world = new World(new WorldConfigurationBuilder().build());
-        var entity = BuildingFactory.create(world, "HOUSE", new Vector2(X, Y));
+        var entity = BuildingFactory.create(world, "house", new Vector2(X, Y));
         BuildingComponent comp = entity.getComponent(BuildingComponent.class);
 
         assertEquals("house", comp.getBuildingType());

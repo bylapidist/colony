@@ -28,7 +28,7 @@ public class MapLoadSystemTest {
                 .build();
         state.putTile(tile);
 
-        BuildingData building = new BuildingData(1, 1, "HOUSE");
+        BuildingData building = new BuildingData(1, 1, "house");
         state.buildings().add(building);
 
         World world = new World(new WorldConfigurationBuilder()

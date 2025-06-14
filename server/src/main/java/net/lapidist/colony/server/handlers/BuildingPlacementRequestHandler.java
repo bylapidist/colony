@@ -21,7 +21,7 @@ public final class BuildingPlacementRequestHandler extends AbstractMessageHandle
         commandBus.dispatch(new BuildCommand(
                 data.x(),
                 data.y(),
-                data.buildingType()
+                data.buildingId()
         ));
     }
 }

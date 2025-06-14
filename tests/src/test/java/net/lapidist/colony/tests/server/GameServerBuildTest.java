@@ -47,7 +47,7 @@ public class GameServerBuildTest {
             client.start(state -> latch.countDown());
             latch.await(1, TimeUnit.SECONDS);
 
-        BuildingPlacementData data = new BuildingPlacementData(0, 0, "HOUSE");
+        BuildingPlacementData data = new BuildingPlacementData(0, 0, "house");
         client.sendBuildRequest(data);
         Thread.sleep(WAIT_MS);
         Events.update();

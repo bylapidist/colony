@@ -14,11 +14,11 @@ public class RenderBuildingTest {
         RenderBuilding building = RenderBuilding.builder()
                 .x(X)
                 .y(Y)
-                .buildingType("HOUSE")
+                .buildingType("house")
                 .build();
 
         assertEquals(X, building.getX());
         assertEquals(Y, building.getY());
-        assertEquals("HOUSE", building.getBuildingType());
+        assertEquals("house", building.getBuildingType());
     }
 }

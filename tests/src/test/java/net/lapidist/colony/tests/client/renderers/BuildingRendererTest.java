@@ -49,7 +49,7 @@ public class BuildingRendererTest {
         reset(loader);
 
         Array<RenderBuilding> buildings = new Array<>();
-        RenderBuilding building = RenderBuilding.builder().x(0).y(0).buildingType("HOUSE").build();
+        RenderBuilding building = RenderBuilding.builder().x(0).y(0).buildingType("house").build();
         buildings.add(building);
 
         MapRenderData map = new SimpleMapRenderData(new Array<RenderTile>(), buildings,
@@ -81,7 +81,7 @@ public class BuildingRendererTest {
         reset(loader);
 
         Array<RenderBuilding> buildings = new Array<>();
-        RenderBuilding building = RenderBuilding.builder().x(0).y(0).buildingType("HOUSE").build();
+        RenderBuilding building = RenderBuilding.builder().x(0).y(0).buildingType("house").build();
         buildings.add(building);
 
         MapRenderData map = new SimpleMapRenderData(new Array<RenderTile>(), buildings,
@@ -124,7 +124,7 @@ public class BuildingRendererTest {
         layoutField.set(renderer, layout);
 
         Array<RenderBuilding> buildings = new Array<>();
-        RenderBuilding building = RenderBuilding.builder().x(0).y(0).buildingType("HOUSE").build();
+        RenderBuilding building = RenderBuilding.builder().x(0).y(0).buildingType("house").build();
         buildings.add(building);
 
         MapRenderData map = new SimpleMapRenderData(new Array<RenderTile>(), buildings,
