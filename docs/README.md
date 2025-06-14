@@ -13,6 +13,9 @@ This directory contains all guides for the Colony project. References are groupe
 - [Modding Guide](mods.md) – how to load additional game logic from the `mods/` folder.
 - [Localization Guide](i18n.md)
 - [Configuration Guide](configuration.md)
+
+- [Map Generation](map_generation.md) – overview of `MapGenerator` implementations.
+- [Save Format](save_format.md) – versioning and migration workflow.
 - [Modding Guide](mods.md)
 - [Contributing Guide](../CONTRIBUTING.md) – coding conventions and contribution process.
 - [Performance Notes](performance.md) – benchmarking of data structures and renderer performance.
