@@ -4,6 +4,7 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.events.Events;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.server.events.AutosaveEvent;
+import net.lapidist.colony.server.events.AutosaveStartEvent;
 import net.lapidist.colony.server.events.ShutdownSaveEvent;
 import net.mostlyoriginal.api.event.common.Event;
 import net.lapidist.colony.server.io.GameStateIO;
@@ -84,6 +85,8 @@ public final class AutosaveService {
         }
         try {
             Path file = Paths.get().getAutosave(saveName);
+            Events.dispatch(new AutosaveStartEvent(file));
+            Events.update();
             GameStateIO.save(mapState, file);
             long size = Files.size(file);
             Events.dispatch(creator.apply(file, size));

@@ -17,6 +17,7 @@ import net.lapidist.colony.client.ui.MinimapActor;
 import net.lapidist.colony.client.ui.ChatBox;
 import net.lapidist.colony.client.ui.PlayerResourcesActor;
 import net.lapidist.colony.client.ui.AutosaveLabel;
+import net.lapidist.colony.client.ui.AutosaveProgressBar;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
@@ -158,6 +159,13 @@ public final class MapUiBuilder {
         savingTable.top().right();
         savingTable.add(savingLabel).pad(PADDING);
         stage.addActor(savingTable);
+
+        AutosaveProgressBar progressBar = new AutosaveProgressBar(skin);
+        Table progressTable = new Table();
+        progressTable.setFillParent(true);
+        progressTable.bottom().right();
+        progressTable.add(progressBar).pad(PADDING);
+        stage.addActor(progressTable);
 
         stage.addListener(new InputListener() {
             @Override
