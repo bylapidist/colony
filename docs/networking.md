@@ -65,7 +65,12 @@ sizes small. The client decompresses each chunk before applying it to the map
 state.
 
 `MapMetadata` provides initial game information including the map width and
-height. Clients use these dimensions to determine how many chunks to request
-when loading a new game.
+height. It now also includes the player's spawn tile (`playerPos`) and the
+starting camera position (`cameraPos`). Clients use these values to place the
+player and camera correctly and to determine how many chunks to request when
+loading a new game.
+
+`PlayerPositionUpdate` messages are sent from the client whenever the player
+moves to a new tile so the server can persist the updated location.
 
 For additional details see [architecture.md](architecture.md).

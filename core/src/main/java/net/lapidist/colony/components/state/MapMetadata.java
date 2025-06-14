@@ -16,6 +16,8 @@ public record MapMetadata(
         String description,
         List<BuildingData> buildings,
         ResourceData playerResources,
+        PlayerPosition playerPos,
+        CameraPosition cameraPos,
         int width,
         int height,
         int chunkCount

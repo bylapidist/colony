@@ -146,7 +146,9 @@ public final class GameClient extends AbstractMessageEndpoint implements AutoClo
                             .width(meta.width())
                             .height(meta.height())
                             .buildings(new java.util.ArrayList<>(meta.buildings()))
-                            .playerResources(meta.playerResources());
+                            .playerResources(meta.playerResources())
+                            .playerPos(meta.playerPos())
+                            .cameraPos(meta.cameraPos());
                     tileBuffer = new java.util.HashMap<>();
                     expectedChunks = meta.chunkCount();
                     mapWidth = meta.width();
@@ -440,6 +442,13 @@ public final class GameClient extends AbstractMessageEndpoint implements AutoClo
      * Send a resource gather request to the server.
      */
     public void sendGatherRequest(final ResourceGatherRequestData data) {
+        send(data);
+    }
+
+    /**
+     * Send a player position update to the server.
+     */
+    public void sendPlayerPositionUpdate(final net.lapidist.colony.components.state.PlayerPositionUpdate data) {
         send(data);
     }
 
