@@ -12,6 +12,7 @@ This directory contains all guides for the Colony project. References are groupe
 - [Networking Guide](networking.md) – client and server message flow examples.
 - [Localization Guide](i18n.md)
 - [Configuration Guide](configuration.md)
+- [Modding Guide](mods.md)
 - [Contributing Guide](../CONTRIBUTING.md) – coding conventions and contribution process.
  - [Performance Notes](performance.md) – benchmarking of data structures and renderer performance.
    Update the numbers whenever benchmarks change and strive to keep them from increasing.
