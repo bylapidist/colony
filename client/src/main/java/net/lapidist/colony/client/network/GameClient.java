@@ -98,6 +98,8 @@ public final class GameClient extends AbstractMessageEndpoint {
                             .saveName(meta.saveName())
                             .autosaveName(meta.autosaveName())
                             .description(meta.description())
+                            .width(meta.width())
+                            .height(meta.height())
                             .buildings(new java.util.ArrayList<>(meta.buildings()))
                             .playerResources(meta.playerResources());
                     tileBuffer = new java.util.HashMap<>();
