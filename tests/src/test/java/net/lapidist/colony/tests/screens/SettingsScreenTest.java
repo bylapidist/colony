@@ -1,6 +1,8 @@
 package net.lapidist.colony.tests.screens;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -31,6 +33,12 @@ public class SettingsScreenTest {
         return (Table) f.get(screen);
     }
 
+    private static Stage getStage(final SettingsScreen screen) throws Exception {
+        Field f = screen.getClass().getSuperclass().getDeclaredField("stage");
+        f.setAccessible(true);
+        return (Stage) f.get(screen);
+    }
+
     @Test
     public void keybindsButtonOpensKeybindsScreen() throws Exception {
         Colony colony = mock(Colony.class);
@@ -52,6 +60,19 @@ public class SettingsScreenTest {
             SettingsScreen screen = new SettingsScreen(colony);
             TextButton back = (TextButton) getRoot(screen).getChildren().get(BACK_BUTTON_INDEX);
             back.fire(new ChangeListener.ChangeEvent());
+            verify(colony).setScreen(isA(MainMenuScreen.class));
+            screen.dispose();
+        }
+    }
+
+    @Test
+    public void escapeReturnsToMainMenu() throws Exception {
+        Colony colony = mock(Colony.class);
+        when(colony.getSettings()).thenReturn(new Settings());
+        try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
+            SettingsScreen screen = new SettingsScreen(colony);
+            Stage stage = getStage(screen);
+            stage.keyDown(Input.Keys.ESCAPE);
             verify(colony).setScreen(isA(MainMenuScreen.class));
             screen.dispose();
         }

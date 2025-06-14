@@ -91,6 +91,17 @@ public final class KeybindsScreen extends BaseScreen {
                 return false;
             }
         });
+
+        getStage().addListener(new InputListener() {
+            @Override
+            public boolean keyDown(final InputEvent event, final int keycode) {
+                if (awaiting == null && keycode == Input.Keys.ESCAPE) {
+                    colony.setScreen(new SettingsScreen(colony));
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     private void updateButtons() {
