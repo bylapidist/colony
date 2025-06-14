@@ -10,7 +10,7 @@ game {
   tileSize = 32
   autosaveInterval = 600000
   defaultSaveName = "autosave"
-  networkBufferSize = 4194304
+    networkBufferSize = 8388608
   server {
     tcpPort = 54555
     udpPort = 54777
