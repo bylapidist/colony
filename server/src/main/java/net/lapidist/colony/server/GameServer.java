@@ -44,7 +44,8 @@ import java.io.IOException;
  * be guarded by {@link #stateLock}. Services and command handlers receive the same
  * lock instance and are responsible for locking when reading or modifying state.
  */
-public final class GameServer extends AbstractMessageEndpoint implements AutoCloseable {
+public final class GameServer extends AbstractMessageEndpoint implements AutoCloseable,
+        net.lapidist.colony.mod.GameServer {
 
     // Buffer size for Kryo serialization configured via game.networkBufferSize.
     private static final Logger LOGGER = LoggerFactory.getLogger(GameServer.class);
@@ -141,12 +142,30 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         initKryo();
         Events.init(new EventSystem());
         mods = new ModLoader(Paths.get()).loadMods();
+        // ensure built-in core mod is always loaded
+        mods = new java.util.ArrayList<>(mods);
+        mods.add(new LoadedMod(new net.lapidist.colony.server.mod.CoreServerMod(),
+                new net.lapidist.colony.mod.ModMetadata("core-server", "1.0.0", java.util.List.of())));
+
         for (LoadedMod mod : mods) {
             mod.mod().init();
+            mod.mod().registerServices(this);
         }
+
+        // re-create services after mods potentially changed the factories
+        this.mapService = mapServiceFactory.get();
+        this.networkService = networkServiceFactory.get();
+        this.autosaveService = autosaveServiceFactory.get();
+        this.resourceProductionService = resourceProductionServiceFactory.get();
+        this.commandBus = commandBusFactory.get();
+
         loadMapState();
         startNetwork();
-        registerDefaultHandlers();
+
+        for (LoadedMod mod : mods) {
+            mod.mod().registerHandlers(commandBus);
+        }
+
         autosaveService.start();
         resourceProductionService.start();
     }
