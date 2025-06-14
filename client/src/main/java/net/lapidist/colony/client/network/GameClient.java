@@ -36,6 +36,9 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 public final class GameClient extends AbstractMessageEndpoint {
@@ -50,7 +53,9 @@ public final class GameClient extends AbstractMessageEndpoint {
     private Consumer<MapState> readyCallback;
     private int playerId = -1;
     public static final int CHUNK_REQUEST_BATCH_SIZE = 8;
+    private static final int CHUNK_REQUEST_INTERVAL_MS = 16;
     private final Deque<ChunkPos> pendingChunkRequests = new ConcurrentLinkedDeque<>();
+    private ScheduledExecutorService requestExecutor;
     private MapState.Builder mapBuilder;
     private java.util.Map<TilePos, TileData> tileBuffer;
     private int expectedChunks;
@@ -64,6 +69,29 @@ public final class GameClient extends AbstractMessageEndpoint {
         Queue<T> queue = new ConcurrentLinkedQueue<>();
         messageQueues.put(type, queue);
         return queue;
+    }
+
+    private void startRequestExecutor() {
+        if (requestExecutor != null && !requestExecutor.isShutdown()) {
+            return;
+        }
+        requestExecutor = Executors.newSingleThreadScheduledExecutor(r -> {
+            Thread t = new Thread(r, "chunk-requests");
+            t.setDaemon(true);
+            return t;
+        });
+        requestExecutor.scheduleAtFixedRate(() -> {
+            if (tileBuffer != null) {
+                processChunkRequestQueue();
+            }
+        }, 0, CHUNK_REQUEST_INTERVAL_MS, TimeUnit.MILLISECONDS);
+    }
+
+    private void stopRequestExecutor() {
+        if (requestExecutor != null) {
+            requestExecutor.shutdownNow();
+            requestExecutor = null;
+        }
     }
 
     /**
@@ -163,6 +191,7 @@ public final class GameClient extends AbstractMessageEndpoint {
     public void start(final Consumer<MapState> callback) throws IOException {
         this.readyCallback = callback;
         connect();
+        startRequestExecutor();
     }
 
     public MapState getMapState() {
@@ -215,10 +244,14 @@ public final class GameClient extends AbstractMessageEndpoint {
                 if (loadProgressListener != null) {
                     loadProgressListener.accept(1f);
                 }
+                // ensure no queued requests remain
+                processChunkRequestQueue(Integer.MAX_VALUE);
+                pendingChunkRequests.clear();
                 // Switch to incremental chunk handling after the initial load
                 tileBuffer = null;
                 mapBuilder = null;
                 readyCallback = null;
+                stopRequestExecutor();
             }
             return;
         }
@@ -328,6 +361,7 @@ public final class GameClient extends AbstractMessageEndpoint {
 
     @Override
     public void stop() {
+        stopRequestExecutor();
         client.stop();
         LOGGER.info("Client stopped");
     }
