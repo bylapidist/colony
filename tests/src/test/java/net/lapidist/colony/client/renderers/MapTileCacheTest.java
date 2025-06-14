@@ -21,7 +21,6 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.map.MapFactory;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
@@ -82,7 +81,7 @@ public class MapTileCacheTest {
                 .wood(0).stone(0).food(0)
                 .build();
         tiles.add(tile2);
-        RenderTile[][] grid = new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT];
+        RenderTile[][] grid = new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT];
         grid[0][0] = tile1;
         grid[1][0] = tile2;
         return new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);

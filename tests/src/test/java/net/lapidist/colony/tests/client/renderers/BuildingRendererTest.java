@@ -16,7 +16,7 @@ import net.lapidist.colony.client.render.data.RenderBuilding;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.render.SimpleMapRenderData;
 import net.lapidist.colony.client.render.data.RenderTile;
-import net.lapidist.colony.components.GameConstants;
+import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,7 +50,7 @@ public class BuildingRendererTest {
         buildings.add(building);
 
         MapRenderData map = new SimpleMapRenderData(new Array<RenderTile>(), buildings,
-                new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT]);
+                new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT]);
 
         renderer.render(map);
 
@@ -80,7 +80,7 @@ public class BuildingRendererTest {
         buildings.add(building);
 
         MapRenderData map = new SimpleMapRenderData(new Array<RenderTile>(), buildings,
-                new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT]);
+                new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT]);
 
         renderer.render(map);
         renderer.render(map);
@@ -123,7 +123,7 @@ public class BuildingRendererTest {
         buildings.add(building);
 
         MapRenderData map = new SimpleMapRenderData(new Array<RenderTile>(), buildings,
-                new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT]);
+                new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT]);
 
         renderer.render(map);
 

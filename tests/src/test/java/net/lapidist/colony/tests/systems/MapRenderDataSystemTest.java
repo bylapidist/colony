@@ -40,8 +40,7 @@ public class MapRenderDataSystemTest {
 
         MapRenderDataSystem system = world.getSystem(MapRenderDataSystem.class);
         assertNotNull(system.getRenderData());
-        int expected = net.lapidist.colony.components.GameConstants.MAP_WIDTH
-                * net.lapidist.colony.components.GameConstants.MAP_HEIGHT;
+        int expected = state.width() * state.height();
         assertEquals(expected, system.getRenderData().getTiles().size);
         assertEquals(0, system.getRenderData().getBuildings().size);
 

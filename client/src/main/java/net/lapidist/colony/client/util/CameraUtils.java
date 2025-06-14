@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import net.lapidist.colony.components.GameConstants;
+import net.lapidist.colony.components.state.MapState;
 
 /**
  * Utility methods for converting between tile, world and screen coordinates.
@@ -128,7 +129,7 @@ public final class CameraUtils {
     }
 
     public static Vector2 getWorldCenter() {
-        return getWorldCenter(GameConstants.MAP_WIDTH, GameConstants.MAP_HEIGHT);
+        return getWorldCenter(MapState.DEFAULT_WIDTH, MapState.DEFAULT_HEIGHT);
     }
 
     public static Rectangle getViewBounds(

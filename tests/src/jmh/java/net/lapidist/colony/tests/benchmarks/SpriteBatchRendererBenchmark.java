@@ -84,8 +84,8 @@ public class SpriteBatchRendererBenchmark {
     private static CameraProvider createCamera() {
         OrthographicCamera cam = new OrthographicCamera();
         ExtendViewport vp = new ExtendViewport(
-                GameConstants.MAP_WIDTH * GameConstants.TILE_SIZE,
-                GameConstants.MAP_HEIGHT * GameConstants.TILE_SIZE,
+                MapState.DEFAULT_WIDTH * GameConstants.TILE_SIZE,
+                MapState.DEFAULT_HEIGHT * GameConstants.TILE_SIZE,
                 cam
         );
         vp.update((int) vp.getWorldWidth(), (int) vp.getWorldHeight(), true);

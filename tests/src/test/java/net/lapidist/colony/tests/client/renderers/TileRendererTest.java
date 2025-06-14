@@ -14,7 +14,7 @@ import net.lapidist.colony.client.render.data.RenderTile;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.render.SimpleMapRenderData;
 import net.lapidist.colony.client.render.data.RenderBuilding;
-import net.lapidist.colony.components.GameConstants;
+import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,7 +70,7 @@ public class TileRendererTest {
                 .build();
         tiles.add(tile2);
 
-        RenderTile[][] grid = new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT];
+        RenderTile[][] grid = new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT];
         grid[0][0] = tile;
         grid[1][1] = tile2;
         MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);
@@ -120,7 +120,7 @@ public class TileRendererTest {
                 .build();
         tiles.add(tile);
 
-        RenderTile[][] grid = new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT];
+        RenderTile[][] grid = new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT];
         grid[0][0] = tile;
         MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);
 
@@ -174,7 +174,7 @@ public class TileRendererTest {
                 .build();
         tiles.add(tile);
 
-        RenderTile[][] grid = new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT];
+        RenderTile[][] grid = new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT];
         grid[0][0] = tile;
         MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);
 
@@ -226,7 +226,7 @@ public class TileRendererTest {
                 .build();
         tiles.add(tile2);
 
-        RenderTile[][] grid = new RenderTile[GameConstants.MAP_WIDTH][GameConstants.MAP_HEIGHT];
+        RenderTile[][] grid = new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT];
         grid[0][0] = tile1;
         grid[1][0] = tile2;
         MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);

@@ -39,8 +39,8 @@ public class NetworkServiceTest {
         ArgumentCaptor<MapMetadata> metaCaptor = ArgumentCaptor.forClass(MapMetadata.class);
         verify(connection).sendTCP(metaCaptor.capture());
         MapMetadata meta = metaCaptor.getValue();
-        assertEquals(net.lapidist.colony.components.GameConstants.MAP_WIDTH, meta.width());
-        assertEquals(net.lapidist.colony.components.GameConstants.MAP_HEIGHT, meta.height());
+        assertEquals(MapState.DEFAULT_WIDTH, meta.width());
+        assertEquals(MapState.DEFAULT_HEIGHT, meta.height());
         verify(connection, atLeastOnce()).sendTCP(isA(MapChunkBytes.class));
     }
 

@@ -60,8 +60,8 @@ public final class GameClient extends AbstractMessageEndpoint {
     private java.util.Map<TilePos, TileData> tileBuffer;
     private int expectedChunks;
     private int receivedChunks;
-    private int mapWidth = GameConstants.MAP_WIDTH;
-    private int mapHeight = GameConstants.MAP_HEIGHT;
+    private int mapWidth = MapState.DEFAULT_WIDTH;
+    private int mapHeight = MapState.DEFAULT_HEIGHT;
     private java.util.function.Consumer<Float> loadProgressListener;
     private java.util.function.Consumer<String> loadMessageListener;
 

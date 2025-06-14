@@ -13,7 +13,7 @@ import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
 import net.lapidist.colony.server.io.GameStateIO;
 import net.lapidist.colony.config.ColonyConfig;
-import net.lapidist.colony.components.GameConstants;
+import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.events.Events;
 import net.lapidist.colony.client.events.GameInitEvent;
 import net.lapidist.colony.mod.GameMod;
@@ -42,12 +42,13 @@ public final class Colony extends Game {
 
     /**
      * Starts or resumes a game using the dimensions stored in the autosave file.
-     * Defaults to {@link GameConstants#MAP_WIDTH} and {@link GameConstants#MAP_HEIGHT}
+     * Defaults to {@link net.lapidist.colony.components.state.MapState#DEFAULT_WIDTH}
+     * and {@link net.lapidist.colony.components.state.MapState#DEFAULT_HEIGHT}
      * when no save exists.
      */
     public void startGame(final String saveName) {
-        int width = GameConstants.MAP_WIDTH;
-        int height = GameConstants.MAP_HEIGHT;
+        int width = MapState.DEFAULT_WIDTH;
+        int height = MapState.DEFAULT_HEIGHT;
         try {
             java.nio.file.Path file = Paths.get().getAutosave(saveName);
             if (java.nio.file.Files.exists(file)) {

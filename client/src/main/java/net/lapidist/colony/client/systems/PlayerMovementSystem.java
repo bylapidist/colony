@@ -6,6 +6,7 @@ import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import net.lapidist.colony.components.GameConstants;
+import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.entities.PlayerComponent;
 import net.lapidist.colony.settings.KeyAction;
 import net.lapidist.colony.settings.KeyBindings;
@@ -67,8 +68,8 @@ public final class PlayerMovementSystem extends BaseSystem {
     }
 
     private void clampPosition(final PlayerComponent pc) {
-        float mapWidth = client != null ? client.getMapWidth() : GameConstants.MAP_WIDTH;
-        float mapHeight = client != null ? client.getMapHeight() : GameConstants.MAP_HEIGHT;
+        float mapWidth = client != null ? client.getMapWidth() : MapState.DEFAULT_WIDTH;
+        float mapHeight = client != null ? client.getMapHeight() : MapState.DEFAULT_HEIGHT;
         float maxX = mapWidth * GameConstants.TILE_SIZE;
         float maxY = mapHeight * GameConstants.TILE_SIZE;
         pc.setX(MathUtils.clamp(pc.getX(), 0, maxX));

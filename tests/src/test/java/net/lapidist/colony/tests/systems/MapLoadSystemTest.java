@@ -44,8 +44,7 @@ public class MapLoadSystemTest {
 
         Entity map = world.getEntity(maps.get(0));
         MapComponent mapComponent = world.getMapper(MapComponent.class).get(map);
-        int expected = net.lapidist.colony.components.GameConstants.MAP_WIDTH
-                * net.lapidist.colony.components.GameConstants.MAP_HEIGHT;
+        int expected = state.width() * state.height();
         assertEquals(expected, mapComponent.getTiles().size);
         assertEquals(expected, mapComponent.getTileMap().size());
         assertEquals(1, mapComponent.getEntities().size);

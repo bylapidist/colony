@@ -2,7 +2,6 @@ package net.lapidist.colony.components.state;
 
 import net.lapidist.colony.serialization.KryoType;
 import net.lapidist.colony.save.SaveVersion;
-import net.lapidist.colony.components.GameConstants;
 
 import net.lapidist.colony.map.MapChunkData;
 
@@ -28,6 +27,8 @@ public record MapState(
         int height
 ) {
     public static final int CURRENT_VERSION = SaveVersion.CURRENT.number();
+    public static final int DEFAULT_WIDTH = 30;
+    public static final int DEFAULT_HEIGHT = 30;
 
     public MapState() {
         this(
@@ -39,10 +40,10 @@ public record MapState(
                 new HashMap<>(),
                 new ArrayList<>(),
                 new ResourceData(),
-                new PlayerPosition(GameConstants.MAP_WIDTH / 2, GameConstants.MAP_HEIGHT / 2),
-                new CameraPosition(GameConstants.MAP_WIDTH / 2f, GameConstants.MAP_HEIGHT / 2f),
-                GameConstants.MAP_WIDTH,
-                GameConstants.MAP_HEIGHT
+                new PlayerPosition(DEFAULT_WIDTH / 2, DEFAULT_HEIGHT / 2),
+                new CameraPosition(DEFAULT_WIDTH / 2f, DEFAULT_HEIGHT / 2f),
+                DEFAULT_WIDTH,
+                DEFAULT_HEIGHT
         );
     }
 

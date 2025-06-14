@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import net.lapidist.colony.components.GameConstants;
+import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.settings.KeyAction;
 import net.lapidist.colony.settings.KeyBindings;
@@ -64,8 +65,8 @@ public final class KeyboardInputHandler {
             return;
         }
         final Vector3 position = cameraSystem.getCamera().position;
-        float width = client != null ? client.getMapWidth() : GameConstants.MAP_WIDTH;
-        float height = client != null ? client.getMapHeight() : GameConstants.MAP_HEIGHT;
+        float width = client != null ? client.getMapWidth() : MapState.DEFAULT_WIDTH;
+        float height = client != null ? client.getMapHeight() : MapState.DEFAULT_HEIGHT;
         final float mapWidth = width * GameConstants.TILE_SIZE;
         final float mapHeight = height * GameConstants.TILE_SIZE;
 

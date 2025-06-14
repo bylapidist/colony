@@ -10,7 +10,7 @@ import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.resources.ResourceComponent;
-import net.lapidist.colony.components.GameConstants;
+import net.lapidist.colony.components.state.MapState;
 
 /** Utility to convert {@link MapComponent} to {@link MapRenderData}. */
 public final class MapRenderDataBuilder {
@@ -18,7 +18,7 @@ public final class MapRenderDataBuilder {
     }
 
     public static MapRenderData fromMap(final MapComponent map, final World world) {
-        return fromMap(map, world, GameConstants.MAP_WIDTH, GameConstants.MAP_HEIGHT);
+        return fromMap(map, world, MapState.DEFAULT_WIDTH, MapState.DEFAULT_HEIGHT);
     }
 
     public static MapRenderData fromMap(
