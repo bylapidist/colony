@@ -42,6 +42,9 @@ Both the client and dedicated server can be started directly from Gradle:
 ./gradlew :server:run   # start the dedicated server
 ```
 
+`Colony.startGame(String)` now reads the map size from the selected autosave so
+servers use the correct dimensions when continuing a game.
+
 ## Controls
 Default keyboard mappings can be remapped in game. See
 [docs/controls.md](docs/controls.md) for the full list and instructions.

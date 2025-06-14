@@ -4,6 +4,7 @@ import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.screens.MainMenuScreen;
 import net.lapidist.colony.server.GameServer;
+import net.lapidist.colony.server.GameServerConfig;
 import net.lapidist.colony.tests.GdxTestRunner;
 import net.lapidist.colony.client.events.GameInitEvent;
 import net.lapidist.colony.mod.ModLoader;
@@ -13,6 +14,8 @@ import net.mostlyoriginal.api.event.common.Subscribe;
 import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.i18n.I18n;
+import net.lapidist.colony.server.io.GameStateIO;
+import net.lapidist.colony.components.state.MapState;
 import org.mockito.MockedStatic;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +43,40 @@ public class ColonyTest {
             verify(server).start();
             verify(client).start(any());
         }
+    }
+
+    @Test
+    public void startGameReadsMapSizeFromSave() throws Exception {
+        String save = "size-" + java.util.UUID.randomUUID();
+        java.nio.file.Path autosave = java.nio.file.Path.of(
+                System.getProperty("user.home"),
+                ".colony",
+                "saves",
+                save + Paths.AUTOSAVE_SUFFIX
+        );
+        java.nio.file.Files.createDirectories(autosave.getParent());
+        final int size = 60;
+        MapState state = MapState.builder()
+                .width(size)
+                .height(size)
+                .build();
+        GameStateIO.save(state, autosave);
+
+        Colony colony = new Colony();
+        final GameServerConfig[] config = {null};
+        try (MockedConstruction<GameServer> serverCons = mockConstruction(
+                GameServer.class,
+                (mock, ctx) -> config[0] = (GameServerConfig) ctx.arguments().get(0)
+        );
+             MockedConstruction<GameClient> clientCons = mockConstruction(GameClient.class);
+             MockedConstruction<com.badlogic.gdx.graphics.g2d.SpriteBatch> batchCons =
+                     mockConstruction(com.badlogic.gdx.graphics.g2d.SpriteBatch.class)) {
+            colony.startGame(save);
+            assertEquals(size, config[0].getWidth());
+            assertEquals(size, config[0].getHeight());
+        }
+
+        java.nio.file.Files.deleteIfExists(autosave);
     }
 
     @Test

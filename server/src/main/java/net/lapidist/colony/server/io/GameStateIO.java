@@ -43,5 +43,13 @@ public final class GameStateIO {
         }
     }
 
+    /**
+     * Reads only the map dimensions from the supplied autosave file.
+     */
+    public static AutosaveMetadata readMetadata(final Path file) throws IOException {
+        MapState state = load(file);
+        return new AutosaveMetadata(state.width(), state.height());
+    }
+
     // Class registration handled by KryoRegistry
 }

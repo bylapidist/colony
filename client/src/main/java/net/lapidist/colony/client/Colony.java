@@ -11,6 +11,7 @@ import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
+import net.lapidist.colony.server.io.GameStateIO;
 import net.lapidist.colony.config.ColonyConfig;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.events.Events;
@@ -39,8 +40,25 @@ public final class Colony extends Game {
         setScreen(new MainMenuScreen(this));
     }
 
+    /**
+     * Starts or resumes a game using the dimensions stored in the autosave file.
+     * Defaults to {@link GameConstants#MAP_WIDTH} and {@link GameConstants#MAP_HEIGHT}
+     * when no save exists.
+     */
     public void startGame(final String saveName) {
-        startGame(saveName, GameConstants.MAP_WIDTH, GameConstants.MAP_HEIGHT);
+        int width = GameConstants.MAP_WIDTH;
+        int height = GameConstants.MAP_HEIGHT;
+        try {
+            java.nio.file.Path file = Paths.get().getAutosave(saveName);
+            if (java.nio.file.Files.exists(file)) {
+                var meta = GameStateIO.readMetadata(file);
+                width = meta.width();
+                height = meta.height();
+            }
+        } catch (IOException e) {
+            // ignore and fall back to defaults
+        }
+        startGame(saveName, width, height);
     }
 
     public void startGame(final String saveName, final int width, final int height) {
