@@ -16,8 +16,11 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.jar.JarFile;
@@ -39,6 +42,9 @@ public final class ModLoader {
         this.paths = pathsToUse;
     }
 
+    private record ScannedMod(Path path, boolean jar, ModMetadata metadata) {
+    }
+
     /**
      * Scans the mods folder and instantiates all mods discovered.
      */
@@ -48,8 +54,7 @@ public final class ModLoader {
             return java.util.List.of();
         }
 
-        List<LoadedMod> loaded = new ArrayList<>();
-        Set<String> loadedIds = new HashSet<>();
+        List<ScannedMod> scanned = new ArrayList<>();
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(modsDir)) {
             List<Path> entries = new ArrayList<>();
             for (Path entry : stream) {
@@ -57,68 +62,155 @@ public final class ModLoader {
             }
             entries.sort((a, b) -> a.getFileName().toString().compareToIgnoreCase(b.getFileName().toString()));
             for (Path entry : entries) {
+                ScannedMod mod = null;
                 if (Files.isDirectory(entry)) {
-                    loadFromDirectory(entry, loaded, loadedIds);
+                    mod = scanDirectory(entry);
                 } else if (entry.toString().endsWith(".jar")) {
-                    loadFromJar(entry, loaded, loadedIds);
+                    mod = scanJar(entry);
                 }
+                if (mod != null) {
+                    scanned.add(mod);
+                }
+            }
+        }
+
+        List<ScannedMod> ordered = resolveOrder(scanned);
+
+        List<LoadedMod> loaded = new ArrayList<>();
+        for (ScannedMod mod : ordered) {
+            if (mod.jar()) {
+                loadFromJar(mod.path(), mod.metadata(), loaded);
+            } else {
+                loadFromDirectory(mod.path(), mod.metadata(), loaded);
             }
         }
         return loaded;
     }
 
-    private void loadFromDirectory(final Path dir, final List<LoadedMod> out, final Set<String> loadedIds)
+    private void loadFromDirectory(final Path dir, final ModMetadata metadata, final List<LoadedMod> out)
             throws IOException {
-        Path meta = dir.resolve("mod.json");
-        if (!Files.isRegularFile(meta)) {
-            return;
-        }
-        ModMetadata metadata = readMetadata(Files.newBufferedReader(meta, StandardCharsets.UTF_8));
-        if (!loadedIds.containsAll(metadata.dependencies())) {
-            Set<String> missing = new HashSet<>(metadata.dependencies());
-            missing.removeAll(loadedIds);
-            LOGGER.warn("Skipping mod {} due to missing dependencies {}", metadata.id(), missing);
-            return;
-        }
-
         URLClassLoader cl = new URLClassLoader(new URL[]{dir.toUri().toURL()}, getClass().getClassLoader());
         int count = 0;
         for (GameMod mod : ServiceLoader.load(GameMod.class, cl)) {
             out.add(new LoadedMod(mod, metadata));
             count++;
         }
-        if (count > 0) {
-            loadedIds.add(metadata.id());
-        }
     }
 
-    private void loadFromJar(final Path jar, final List<LoadedMod> out, final Set<String> loadedIds)
-            throws IOException {
+    private ScannedMod scanDirectory(final Path dir) throws IOException {
+        Path meta = dir.resolve("mod.json");
+        if (!Files.isRegularFile(meta)) {
+            return null;
+        }
+        ModMetadata metadata = readMetadata(Files.newBufferedReader(meta, StandardCharsets.UTF_8));
+        return new ScannedMod(dir, false, metadata);
+    }
+
+    private ScannedMod scanJar(final Path jar) throws IOException {
         ModMetadata metadata;
         try (JarFile jf = new JarFile(jar.toFile())) {
             ZipEntry entry = jf.getEntry("mod.json");
             if (entry == null) {
-                return;
+                return null;
             }
             try (BufferedReader reader = new BufferedReader(
                     new InputStreamReader(jf.getInputStream(entry), StandardCharsets.UTF_8))) {
                 metadata = readMetadata(reader);
             }
         }
-        if (!loadedIds.containsAll(metadata.dependencies())) {
-            Set<String> missing = new HashSet<>(metadata.dependencies());
-            missing.removeAll(loadedIds);
-            LOGGER.warn("Skipping mod {} due to missing dependencies {}", metadata.id(), missing);
-            return;
+        return new ScannedMod(jar, true, metadata);
+    }
+
+    private List<ScannedMod> resolveOrder(final List<ScannedMod> scanned) {
+        Map<String, ScannedMod> byId = new HashMap<>();
+        for (ScannedMod mod : scanned) {
+            byId.putIfAbsent(mod.metadata().id(), mod);
         }
+
+        Map<String, List<String>> deps = new HashMap<>();
+        for (ScannedMod mod : scanned) {
+            deps.put(mod.metadata().id(), mod.metadata().dependencies());
+        }
+
+        Map<String, List<String>> missing = new HashMap<>();
+        Set<String> invalid = new HashSet<>();
+        boolean changed = true;
+        while (changed) {
+            changed = false;
+            for (ScannedMod mod : scanned) {
+                String id = mod.metadata().id();
+                if (invalid.contains(id)) {
+                    continue;
+                }
+                for (String dep : deps.get(id)) {
+                    if (!byId.containsKey(dep) || invalid.contains(dep)) {
+                        invalid.add(id);
+                        missing.computeIfAbsent(id, k -> new ArrayList<>()).add(dep);
+                        changed = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        for (String id : invalid) {
+            LOGGER.warn("Skipping mod {} due to missing dependencies {}", id, missing.get(id));
+        }
+
+        Map<String, ScannedMod> valid = new HashMap<>();
+        for (ScannedMod mod : scanned) {
+            if (!invalid.contains(mod.metadata().id())) {
+                valid.put(mod.metadata().id(), mod);
+            }
+        }
+
+        Map<String, Set<String>> dependents = new HashMap<>();
+        Map<String, Integer> indegree = new HashMap<>();
+        for (ScannedMod mod : valid.values()) {
+            String id = mod.metadata().id();
+            List<String> d = deps.get(id);
+            indegree.put(id, d.size());
+            for (String dep : d) {
+                dependents.computeIfAbsent(dep, k -> new HashSet<>()).add(id);
+            }
+        }
+
+        PriorityQueue<String> queue = new PriorityQueue<>();
+        for (Map.Entry<String, Integer> e : indegree.entrySet()) {
+            if (e.getValue() == 0) {
+                queue.add(e.getKey());
+            }
+        }
+
+        List<ScannedMod> ordered = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            String id = queue.poll();
+            ordered.add(valid.get(id));
+            for (String dep : dependents.getOrDefault(id, Set.of())) {
+                int deg = indegree.computeIfPresent(dep, (k, v) -> v - 1);
+                if (deg == 0) {
+                    queue.add(dep);
+                }
+            }
+            indegree.remove(id);
+        }
+
+        if (!indegree.isEmpty()) {
+            for (String id : indegree.keySet()) {
+                LOGGER.warn("Skipping mod {} due to dependency cycle", id);
+            }
+        }
+
+        return ordered;
+    }
+
+    private void loadFromJar(final Path jar, final ModMetadata metadata, final List<LoadedMod> out)
+            throws IOException {
         URLClassLoader cl = new URLClassLoader(new URL[]{jar.toUri().toURL()}, getClass().getClassLoader());
         int count = 0;
         for (GameMod mod : ServiceLoader.load(GameMod.class, cl)) {
             out.add(new LoadedMod(mod, metadata));
             count++;
-        }
-        if (count > 0) {
-            loadedIds.add(metadata.id());
         }
     }
 
