@@ -26,13 +26,13 @@ public class GameSimulationMapLoadNetworkTest {
 
     @Test
     public void clientLoadsInitialMapFromServer() throws Exception {
-        GameServer server = new GameServer(GameServerConfig.builder().build());
-        server.start();
+        try (GameServer server = new GameServer(GameServerConfig.builder().build());
+             GameClient client = new GameClient()) {
+            server.start();
 
-        GameClient client = new GameClient();
-        CountDownLatch latch = new CountDownLatch(1);
-        client.start(state -> latch.countDown());
-        latch.await(1, TimeUnit.SECONDS);
+            CountDownLatch latch = new CountDownLatch(1);
+            client.start(state -> latch.countDown());
+            latch.await(1, TimeUnit.SECONDS);
 
         assertTrue(client.isConnected());
         MapState state = client.getMapState();
@@ -53,7 +53,6 @@ public class GameSimulationMapLoadNetworkTest {
         MapComponent mapComponent = sim.getWorld().getMapper(MapComponent.class).get(map);
         assertFalse(mapComponent.getTiles().isEmpty());
 
-        client.stop();
-        server.stop();
+        }
     }
 }

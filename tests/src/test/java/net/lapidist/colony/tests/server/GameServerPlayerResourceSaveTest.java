@@ -24,19 +24,16 @@ public class GameServerPlayerResourceSaveTest {
                 .autosaveInterval(WAIT_MS)
                 .build();
         Paths.get().deleteAutosave("resource-save");
-        GameServer server = new GameServer(config);
-        server.start();
+        try (GameServer server = new GameServer(config); GameClient client = new GameClient()) {
+            server.start();
 
-        GameClient client = new GameClient();
-        CountDownLatch latch = new CountDownLatch(1);
-        client.start(state -> latch.countDown());
-        latch.await(1, TimeUnit.SECONDS);
+            CountDownLatch latch = new CountDownLatch(1);
+            client.start(state -> latch.countDown());
+            latch.await(1, TimeUnit.SECONDS);
 
-        client.sendGatherRequest(new ResourceGatherRequestData(0, 0, ResourceType.WOOD));
-        Thread.sleep(WAIT_MS);
-
-        client.stop();
-        server.stop();
+            client.sendGatherRequest(new ResourceGatherRequestData(0, 0, ResourceType.WOOD));
+            Thread.sleep(WAIT_MS);
+        }
 
         GameServer server2 = new GameServer(config);
         server2.start();

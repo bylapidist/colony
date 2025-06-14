@@ -13,28 +13,26 @@ public class GameClientServerTest {
 
     @Test
     public void clientReceivesMapFromServer() throws Exception {
-        GameServer server = new GameServer(GameServerConfig.builder().build());
-        server.start();
+        try (GameServer server = new GameServer(GameServerConfig.builder().build());
+             GameClient client = new GameClient()) {
+            server.start();
 
-        GameClient client = new GameClient();
-        CountDownLatch latch = new CountDownLatch(1);
-        client.start(state -> latch.countDown());
-        latch.await(1, TimeUnit.SECONDS);
+            CountDownLatch latch = new CountDownLatch(1);
+            client.start(state -> latch.countDown());
+            latch.await(1, TimeUnit.SECONDS);
 
-        assertNotNull(client.getMapState());
-        assertNotNull(server.getMapState());
-
-        client.stop();
-        server.stop();
+            assertNotNull(client.getMapState());
+            assertNotNull(server.getMapState());
+        }
     }
 
     @Test
     public void clientReceivesMapUsingDefaultStart() throws Exception {
-        GameServer server = new GameServer(GameServerConfig.builder().build());
-        server.start();
+        try (GameServer server = new GameServer(GameServerConfig.builder().build());
+             GameClient client = new GameClient()) {
+            server.start();
 
-        GameClient client = new GameClient();
-        client.start();
+            client.start();
 
         final int maxAttempts = 20;
         final int delayMs = 50;
@@ -45,8 +43,6 @@ public class GameClientServerTest {
         }
 
         assertNotNull(client.getMapState());
-
-        client.stop();
-        server.stop();
+        }
     }
 }

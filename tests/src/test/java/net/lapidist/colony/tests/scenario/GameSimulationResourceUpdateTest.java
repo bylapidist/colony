@@ -28,17 +28,17 @@ public class GameSimulationResourceUpdateTest {
                 .saveName("scenario-gather")
                 .build();
         net.lapidist.colony.io.Paths.get().deleteAutosave("scenario-gather");
-        GameServer server = new GameServer(config);
-        server.start();
+        try (GameServer server = new GameServer(config);
+             GameClient sender = new GameClient();
+             GameClient receiver = new GameClient()) {
+            server.start();
 
-        GameClient sender = new GameClient();
-        CountDownLatch latchSender = new CountDownLatch(1);
-        sender.start(state -> latchSender.countDown());
-        GameClient receiver = new GameClient();
-        CountDownLatch latchReceiver = new CountDownLatch(1);
-        receiver.start(state -> latchReceiver.countDown());
-        latchSender.await(1, TimeUnit.SECONDS);
-        latchReceiver.await(1, TimeUnit.SECONDS);
+            CountDownLatch latchSender = new CountDownLatch(1);
+            sender.start(state -> latchSender.countDown());
+            CountDownLatch latchReceiver = new CountDownLatch(1);
+            receiver.start(state -> latchReceiver.countDown());
+            latchSender.await(1, TimeUnit.SECONDS);
+            latchReceiver.await(1, TimeUnit.SECONDS);
 
         MapState state = receiver.getMapState();
         GameSimulation sim = new GameSimulation(state, receiver);
@@ -59,8 +59,6 @@ public class GameSimulationResourceUpdateTest {
         var rc = world.getMapper(ResourceComponent.class).get(tile);
         assertTrue(rc.getWood() <= MAX_WOOD);
 
-        sender.stop();
-        receiver.stop();
-        server.stop();
+        }
     }
 }

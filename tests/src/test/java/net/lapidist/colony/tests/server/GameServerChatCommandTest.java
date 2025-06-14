@@ -30,23 +30,20 @@ public class GameServerChatCommandTest {
                 .saveName("chat-command")
                 .build();
         net.lapidist.colony.io.Paths.get().deleteAutosave("chat-command");
-        GameServer server = new GameServer(config);
-        server.start();
-        Events.getInstance().registerEvents(this);
+        try (GameServer server = new GameServer(config); GameClient client = new GameClient()) {
+            server.start();
+            Events.getInstance().registerEvents(this);
 
-        GameClient client = new GameClient();
-        CountDownLatch latch = new CountDownLatch(1);
-        client.start(state -> latch.countDown());
-        latch.await(1, TimeUnit.SECONDS);
+            CountDownLatch latch = new CountDownLatch(1);
+            client.start(state -> latch.countDown());
+            latch.await(1, TimeUnit.SECONDS);
 
         client.sendChatMessage(new ChatMessage("/select 0 0 true"));
         Thread.sleep(WAIT_MS);
         Events.update();
 
         assertTrue(server.getMapState().getTile(0, 0).selected());
-        assertTrue(handled);
-
-        client.stop();
-        server.stop();
+            assertTrue(handled);
+        }
     }
 }

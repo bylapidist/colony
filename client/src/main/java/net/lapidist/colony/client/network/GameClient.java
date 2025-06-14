@@ -46,7 +46,7 @@ import java.util.concurrent.TimeUnit;
  * The client is responsible for receiving world updates, queuing messages for
  * later processing and loading the initial map state.
  */
-public final class GameClient extends AbstractMessageEndpoint {
+public final class GameClient extends AbstractMessageEndpoint implements AutoCloseable {
     // Increase buffers to handle large serialized map data.
     // Size is configured via game.networkBufferSize.
     private static final Logger LOGGER = LoggerFactory.getLogger(GameClient.class);
@@ -445,5 +445,13 @@ public final class GameClient extends AbstractMessageEndpoint {
         stopRequestExecutor();
         client.stop();
         LOGGER.info("Client stopped");
+    }
+
+    @Override
+    /**
+     * Close the client, alias for {@link #stop()}.
+     */
+    public void close() {
+        stop();
     }
 }

@@ -34,17 +34,17 @@ public class GameSimulationBuildingUpdateTest {
                 .mapGenerator(gen)
                 .build();
         net.lapidist.colony.io.Paths.get().deleteAutosave("scenario-build");
-        GameServer server = new GameServer(config);
-        server.start();
+        try (GameServer server = new GameServer(config);
+             GameClient sender = new GameClient();
+             GameClient receiver = new GameClient()) {
+            server.start();
 
-        GameClient sender = new GameClient();
-        CountDownLatch latchSender = new CountDownLatch(1);
-        sender.start(state -> latchSender.countDown());
-        GameClient receiver = new GameClient();
-        CountDownLatch latchReceiver = new CountDownLatch(1);
-        receiver.start(state -> latchReceiver.countDown());
-        latchSender.await(1, TimeUnit.SECONDS);
-        latchReceiver.await(1, TimeUnit.SECONDS);
+            CountDownLatch latchSender = new CountDownLatch(1);
+            sender.start(state -> latchSender.countDown());
+            CountDownLatch latchReceiver = new CountDownLatch(1);
+            receiver.start(state -> latchReceiver.countDown());
+            latchSender.await(1, TimeUnit.SECONDS);
+            latchReceiver.await(1, TimeUnit.SECONDS);
 
         MapState state = receiver.getMapState();
         GameSimulation sim = new GameSimulation(state, receiver);
@@ -72,9 +72,7 @@ public class GameSimulationBuildingUpdateTest {
         }
         assertTrue(found);
 
-        sender.stop();
-        receiver.stop();
-        server.stop();
+        }
         Thread.sleep(WAIT_MS);
     }
 }

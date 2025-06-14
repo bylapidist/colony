@@ -33,17 +33,17 @@ public class GameServerBuildBroadcastTest {
                 .mapGenerator(gen)
                 .build();
         net.lapidist.colony.io.Paths.get().deleteAutosave("build-broadcast");
-        GameServer server = new GameServer(config);
-        server.start();
+        try (GameServer server = new GameServer(config);
+             GameClient clientA = new GameClient();
+             GameClient clientB = new GameClient()) {
+            server.start();
 
-        GameClient clientA = new GameClient();
-        CountDownLatch latchA = new CountDownLatch(1);
-        clientA.start(state -> latchA.countDown());
-        GameClient clientB = new GameClient();
-        CountDownLatch latchB = new CountDownLatch(1);
-        clientB.start(state -> latchB.countDown());
-        latchA.await(1, TimeUnit.SECONDS);
-        latchB.await(1, TimeUnit.SECONDS);
+            CountDownLatch latchA = new CountDownLatch(1);
+            clientA.start(state -> latchA.countDown());
+            CountDownLatch latchB = new CountDownLatch(1);
+            clientB.start(state -> latchB.countDown());
+            latchA.await(1, TimeUnit.SECONDS);
+            latchB.await(1, TimeUnit.SECONDS);
 
         BuildingPlacementData data = new BuildingPlacementData(0, 0, "HOUSE");
         clientA.sendBuildRequest(data);
@@ -58,9 +58,7 @@ public class GameServerBuildBroadcastTest {
         assertNotNull(res);
         assertEquals(0, res.wood());
 
-        clientA.stop();
-        clientB.stop();
-        server.stop();
+        }
         Thread.sleep(WAIT_MS);
     }
 
@@ -75,17 +73,17 @@ public class GameServerBuildBroadcastTest {
                 .mapGenerator(gen)
                 .build();
         net.lapidist.colony.io.Paths.get().deleteAutosave("farm-broadcast");
-        GameServer server = new GameServer(config);
-        server.start();
+        try (GameServer server = new GameServer(config);
+             GameClient clientA = new GameClient();
+             GameClient clientB = new GameClient()) {
+            server.start();
 
-        GameClient clientA = new GameClient();
-        CountDownLatch latchA = new CountDownLatch(1);
-        clientA.start(state -> latchA.countDown());
-        GameClient clientB = new GameClient();
-        CountDownLatch latchB = new CountDownLatch(1);
-        clientB.start(state -> latchB.countDown());
-        latchA.await(1, TimeUnit.SECONDS);
-        latchB.await(1, TimeUnit.SECONDS);
+            CountDownLatch latchA = new CountDownLatch(1);
+            clientA.start(state -> latchA.countDown());
+            CountDownLatch latchB = new CountDownLatch(1);
+            clientB.start(state -> latchB.countDown());
+            latchA.await(1, TimeUnit.SECONDS);
+            latchB.await(1, TimeUnit.SECONDS);
 
         BuildingPlacementData data = new BuildingPlacementData(0, 0, "FARM");
         clientA.sendBuildRequest(data);
@@ -100,9 +98,7 @@ public class GameServerBuildBroadcastTest {
         assertNotNull(res);
         assertEquals(0, res.wood());
 
-        clientA.stop();
-        clientB.stop();
-        server.stop();
+        }
         Thread.sleep(WAIT_MS);
     }
 }

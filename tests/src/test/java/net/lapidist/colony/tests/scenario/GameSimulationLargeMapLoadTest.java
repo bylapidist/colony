@@ -19,23 +19,20 @@ public class GameSimulationLargeMapLoadTest {
     @Test
     public void clientLoadsLargeMap() throws Exception {
         final int size = 60;
-        GameServer server = new GameServer(GameServerConfig.builder()
+        try (GameServer server = new GameServer(GameServerConfig.builder()
                 .width(size)
                 .height(size)
                 .build());
-        server.start();
+             GameClient client = new GameClient()) {
+            server.start();
 
-        GameClient client = new GameClient();
-        CountDownLatch latch = new CountDownLatch(1);
-        client.start(state -> latch.countDown());
-        latch.await(2, TimeUnit.SECONDS);
+            CountDownLatch latch = new CountDownLatch(1);
+            client.start(state -> latch.countDown());
+            latch.await(2, TimeUnit.SECONDS);
 
-        assertTrue(client.isConnected());
-        MapState state = client.getMapState();
-        assertNotNull(state);
-
-
-        client.stop();
-        server.stop();
+            assertTrue(client.isConnected());
+            MapState state = client.getMapState();
+            assertNotNull(state);
+        }
     }
 }
