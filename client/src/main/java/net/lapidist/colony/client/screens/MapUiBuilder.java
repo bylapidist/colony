@@ -63,9 +63,9 @@ public final class MapUiBuilder {
 
         TextButton menuButton = new TextButton(I18n.get("map.menu"), skin);
         menuButton.setName("menuButton");
-        TextButton buildButton = new TextButton(I18n.get("map.build"), skin);
+        TextButton buildButton = new TextButton(I18n.get("map.build"), skin, "toggle");
         buildButton.setName("buildButton");
-        TextButton removeButton = new TextButton(I18n.get("map.remove"), skin);
+        TextButton removeButton = new TextButton(I18n.get("map.remove"), skin, "toggle");
         removeButton.setName("removeButton");
         TextButton mapButton = new TextButton(I18n.get("map.map"), skin);
         mapButton.setName("mapButton");
@@ -91,8 +91,12 @@ public final class MapUiBuilder {
             public void changed(final ChangeEvent event, final Actor actor) {
                 boolean enabled = !buildSystem.isBuildMode();
                 buildSystem.setBuildMode(enabled);
+                buildButton.setChecked(enabled);
                 if (enabled) {
                     buildSystem.setRemoveMode(false);
+                    removeButton.setProgrammaticChangeEvents(false);
+                    removeButton.setChecked(false);
+                    removeButton.setProgrammaticChangeEvents(true);
                 }
             }
         });
@@ -102,8 +106,12 @@ public final class MapUiBuilder {
             public void changed(final ChangeEvent event, final Actor actor) {
                 boolean enabled = !buildSystem.isRemoveMode();
                 buildSystem.setRemoveMode(enabled);
+                removeButton.setChecked(enabled);
                 if (enabled) {
                     buildSystem.setBuildMode(false);
+                    buildButton.setProgrammaticChangeEvents(false);
+                    buildButton.setChecked(false);
+                    buildButton.setProgrammaticChangeEvents(true);
                 }
             }
         });
