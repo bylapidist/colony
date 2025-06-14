@@ -212,33 +212,83 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         return t != null && t.isAlive();
     }
 
-    /** Override the factory for creating {@link MapService} instances. */
+    /**
+     * Override the factory for creating {@link MapService} instances.
+     * Modifications must occur before calling {@link #start()}.
+     */
     public void setMapServiceFactory(final java.util.function.Supplier<MapService> factory) {
         this.mapServiceFactory = factory;
     }
 
-    /** Override the factory for creating {@link NetworkService} instances. */
+    /**
+     * Current factory used to create {@link MapService} instances.
+     */
+    public java.util.function.Supplier<MapService> getMapServiceFactory() {
+        return mapServiceFactory;
+    }
+
+    /**
+     * Override the factory for creating {@link NetworkService} instances.
+     * Modifications must occur before calling {@link #start()}.
+     */
     public void setNetworkServiceFactory(
             final java.util.function.Supplier<NetworkService> factory) {
         this.networkServiceFactory = factory;
     }
 
-    /** Override the factory for creating {@link AutosaveService} instances. */
+    /**
+     * Current factory used to create {@link NetworkService} instances.
+     */
+    public java.util.function.Supplier<NetworkService> getNetworkServiceFactory() {
+        return networkServiceFactory;
+    }
+
+    /**
+     * Override the factory for creating {@link AutosaveService} instances.
+     * Modifications must occur before calling {@link #start()}.
+     */
     public void setAutosaveServiceFactory(
             final java.util.function.Supplier<AutosaveService> factory) {
         this.autosaveServiceFactory = factory;
     }
 
-    /** Override the factory for creating {@link ResourceProductionService} instances. */
+    /**
+     * Current factory used to create {@link AutosaveService} instances.
+     */
+    public java.util.function.Supplier<AutosaveService> getAutosaveServiceFactory() {
+        return autosaveServiceFactory;
+    }
+
+    /**
+     * Override the factory for creating {@link ResourceProductionService} instances.
+     * Modifications must occur before calling {@link #start()}.
+     */
     public void setResourceProductionServiceFactory(
             final java.util.function.Supplier<ResourceProductionService> factory) {
         this.resourceProductionServiceFactory = factory;
     }
 
-    /** Override the factory for creating {@link CommandBus} instances. */
+    /**
+     * Current factory used to create {@link ResourceProductionService} instances.
+     */
+    public java.util.function.Supplier<ResourceProductionService> getResourceProductionServiceFactory() {
+        return resourceProductionServiceFactory;
+    }
+
+    /**
+     * Override the factory for creating {@link CommandBus} instances.
+     * Modifications must occur before calling {@link #start()}.
+     */
     public void setCommandBusFactory(
             final java.util.function.Supplier<CommandBus> factory) {
         this.commandBusFactory = factory;
+    }
+
+    /**
+     * Current factory used to create {@link CommandBus} instances.
+     */
+    public java.util.function.Supplier<CommandBus> getCommandBusFactory() {
+        return commandBusFactory;
     }
 
     /**
