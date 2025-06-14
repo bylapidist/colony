@@ -39,6 +39,6 @@ public class ClientLauncherTest {
         Lwjgl3ApplicationConfiguration config = ClientLauncher.createConfiguration();
         Field samples = Lwjgl3ApplicationConfiguration.class.getDeclaredField("samples");
         samples.setAccessible(true);
-        assertEquals(0, samples.getInt(config));
+        assertEquals(ENABLED_SAMPLES, samples.getInt(config));
     }
 }
