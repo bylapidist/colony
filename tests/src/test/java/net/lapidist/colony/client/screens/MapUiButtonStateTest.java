@@ -66,4 +66,43 @@ public class MapUiButtonStateTest {
         assertFalse(buildSystem.isRemoveMode());
         assertFalse(removeButton.isChecked());
     }
+
+    @Test
+    public void mapAndMinimapButtonsToggleStates() {
+        Stage stage = new Stage(new ScreenViewport(), mock(Batch.class));
+        Settings settings = new Settings();
+        World world = new World(new WorldConfigurationBuilder()
+                .with(
+                        new PlayerCameraSystem(),
+                        new CameraInputSystem(settings.getKeyBindings())
+                )
+                .build());
+        GameClient client = mock(GameClient.class);
+        Colony colony = mock(Colony.class);
+        when(colony.getSettings()).thenReturn(settings);
+
+        MapUi ui = MapUiBuilder.build(stage, world, client, colony);
+
+        PlayerCameraSystem cameraSystem = world.getSystem(PlayerCameraSystem.class);
+        TextButton mapButton = stage.getRoot().findActor("mapButton");
+        TextButton minimapButton = stage.getRoot().findActor("minimapButton");
+
+        // toggle map view
+        mapButton.toggle();
+        assertEquals(PlayerCameraSystem.Mode.PLAYER, cameraSystem.getMode());
+        assertFalse(mapButton.isChecked());
+        mapButton.toggle();
+        assertEquals(PlayerCameraSystem.Mode.MAP_OVERVIEW, cameraSystem.getMode());
+        assertTrue(mapButton.isChecked());
+
+        // toggle minimap visibility
+        boolean initial = ui.getMinimapActor().isVisible();
+        boolean initialChecked = minimapButton.isChecked();
+        minimapButton.toggle();
+        assertEquals(!initial, ui.getMinimapActor().isVisible());
+        assertEquals(!initialChecked, minimapButton.isChecked());
+        minimapButton.toggle();
+        assertEquals(initial, ui.getMinimapActor().isVisible());
+        assertEquals(initialChecked, minimapButton.isChecked());
+    }
 }
