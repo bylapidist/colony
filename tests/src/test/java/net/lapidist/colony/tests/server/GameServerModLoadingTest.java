@@ -50,6 +50,7 @@ public class GameServerModLoadingTest {
             List<LoadedMod> loaded = (List<LoadedMod>) f.get(server);
             assertTrue(loaded.stream().anyMatch(m -> "base-services".equals(m.metadata().id())));
             assertTrue(loaded.stream().anyMatch(m -> "base-commands".equals(m.metadata().id())));
+            assertTrue(loaded.stream().anyMatch(m -> "base-definitions".equals(m.metadata().id())));
             assertTrue(loaded.stream().anyMatch(m -> "stub".equals(m.metadata().id())));
             assertTrue(server.isRunning());
             server.stop();
