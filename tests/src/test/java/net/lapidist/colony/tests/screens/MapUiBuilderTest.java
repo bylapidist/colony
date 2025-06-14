@@ -16,6 +16,8 @@ import net.lapidist.colony.client.systems.CameraInputSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.tests.GdxTestRunner;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.Input;
+import net.lapidist.colony.i18n.I18n;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -52,6 +54,11 @@ public class MapUiBuilderTest {
 
         MapUi ui = MapUiBuilder.build(stage, world, client, colony);
 
+        TextButton minimapButton = stage.getRoot().findActor("minimapButton");
+        String expectedButton = I18n.get("map.minimap") + " ["
+                + Input.Keys.toString(settings.getKeyBindings().getKey(KeyAction.MINIMAP)) + "]";
+        assertEquals(expectedButton, minimapButton.getText().toString());
+
         boolean initial = ui.getMinimapActor().isVisible();
 
         stage.keyDown(settings.getKeyBindings().getKey(KeyAction.MINIMAP));
@@ -85,6 +92,9 @@ public class MapUiBuilderTest {
         MapUi ui = MapUiBuilder.build(stage, world, client, colony);
 
         TextButton buildButton = stage.getRoot().findActor("buildButton");
+        String expected = I18n.get("map.build") + " ["
+                + Input.Keys.toString(settings.getKeyBindings().getKey(KeyAction.BUILD)) + "]";
+        assertEquals(expected, buildButton.getText().toString());
         buildButton.toggle();
         assertTrue(buildSystem.isBuildMode());
     }
