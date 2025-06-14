@@ -77,7 +77,9 @@ public final class NetworkService {
     }
 
     private void sendMapMetadata(final Connection connection, final MapState state) {
-        int chunkCount = state.chunks().size();
+        int chunkWidth = (int) Math.ceil(state.width() / (double) MapChunkData.CHUNK_SIZE);
+        int chunkHeight = (int) Math.ceil(state.height() / (double) MapChunkData.CHUNK_SIZE);
+        int chunkCount = chunkWidth * chunkHeight;
         MapMetadata meta = new MapMetadata(
                 state.version(),
                 state.name(),
