@@ -19,6 +19,8 @@ Thank you for your interest in contributing to Colony! This project follows the 
 - Fork the repository and create a feature branch.
 - Ensure all tests pass and no Checkstyle violations remain.
 - Add new tests when introducing functionality or modifying behaviour.
+- When modifying the save data structures, follow the
+  [Save Format guide](docs/save-format.md) and add a migration.
 - Open a pull request describing your changes.
 
 By contributing to this project you agree that your contributions are licensed under the MIT License.
