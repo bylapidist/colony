@@ -14,6 +14,7 @@ import net.lapidist.colony.components.state.ResourceGatherRequestData;
 import net.lapidist.colony.components.state.ResourceUpdateData;
 import net.lapidist.colony.components.state.MapMetadata;
 import net.lapidist.colony.components.state.MapChunk;
+import net.lapidist.colony.components.state.MapChunkBytes;
 import net.lapidist.colony.components.state.MapChunkRequest;
 import net.lapidist.colony.save.SaveData;
 import net.lapidist.colony.components.state.PlayerPosition;
@@ -42,6 +43,7 @@ public final class SerializationRegistrar {
         kryo.register(java.util.List.class);
         kryo.register(java.util.HashMap.class);
         kryo.register(java.util.Map.class);
+        kryo.register(byte[].class);
     }
 
     /**
@@ -57,7 +59,7 @@ public final class SerializationRegistrar {
     }
 
     /** Precomputed registration hash for quick access. */
-    public static final int REGISTRATION_HASH = 403491417;
+    public static final int REGISTRATION_HASH = 1490495894;
 
     private static final Class<?>[] REGISTERED_TYPES = {
             TileData.class,
@@ -72,6 +74,7 @@ public final class SerializationRegistrar {
             ResourceUpdateData.class,
             MapMetadata.class,
             MapChunk.class,
+            MapChunkBytes.class,
             MapChunkRequest.class,
             net.lapidist.colony.components.state.ChunkPos.class,
             net.lapidist.colony.map.MapChunkData.class,

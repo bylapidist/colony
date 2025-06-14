@@ -3,17 +3,19 @@ package net.lapidist.colony.server.services;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.MapChunk;
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Output;
+import net.lapidist.colony.components.state.MapChunkBytes;
 import net.lapidist.colony.components.state.MapMetadata;
-import net.lapidist.colony.components.state.TilePos;
-import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.map.MapChunkData;
 import net.lapidist.colony.network.DispatchListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.zip.GZIPOutputStream;
 import java.util.function.Consumer;
 
 /**
@@ -55,18 +57,23 @@ public final class NetworkService {
         });
     }
 
-    private MapChunk toChunkMessage(
-            final int index,
+    private MapChunkBytes toChunkBytes(
             final int chunkX,
             final int chunkY,
             final MapChunkData chunk
     ) {
-        java.util.Map<TilePos, TileData> tiles = new java.util.HashMap<>(chunk.getTiles().size());
-        for (var entry : chunk.getTiles().entrySet()) {
-            TileData td = entry.getValue();
-            tiles.put(new TilePos(td.x(), td.y()), td);
+        Kryo kryo = server.getKryo();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            try (GZIPOutputStream gzip = new GZIPOutputStream(baos); Output output = new Output(gzip)) {
+                synchronized (kryo) {
+                    kryo.writeObject(output, chunk);
+                }
+            }
+        } catch (IOException e) {
+            LOGGER.error("Failed to compress chunk", e);
         }
-        return new MapChunk(index, chunkX, chunkY, tiles);
+        return new MapChunkBytes(chunkX, chunkY, baos.toByteArray());
     }
 
     private void sendMapMetadata(final Connection connection, final MapState state) {
@@ -97,7 +104,7 @@ public final class NetworkService {
             for (int y = chunkY - radius; y <= chunkY + radius; y++) {
                 MapChunkData chunk = state.chunks().get(new net.lapidist.colony.components.state.ChunkPos(x, y));
                 if (chunk != null) {
-                    connection.sendTCP(toChunkMessage(0, x, y, chunk));
+                    connection.sendTCP(toChunkBytes(x, y, chunk));
                     sent++;
                 }
             }
@@ -107,7 +114,7 @@ public final class NetworkService {
 
     public void sendChunk(final Connection connection, final MapState state, final int chunkX, final int chunkY) {
         MapChunkData chunk = state.getOrCreateChunk(chunkX, chunkY);
-        connection.sendTCP(toChunkMessage(0, chunkX, chunkY, chunk));
+        connection.sendTCP(toChunkBytes(chunkX, chunkY, chunk));
     }
 
     public void stop() {
@@ -120,6 +127,6 @@ public final class NetworkService {
 
     public void broadcastChunk(final MapState state, final int chunkX, final int chunkY) {
         MapChunkData chunk = state.getOrCreateChunk(chunkX, chunkY);
-        server.sendToAllTCP(toChunkMessage(0, chunkX, chunkY, chunk));
+        server.sendToAllTCP(toChunkBytes(chunkX, chunkY, chunk));
     }
 }

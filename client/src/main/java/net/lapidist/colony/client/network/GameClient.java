@@ -25,7 +25,6 @@ import net.lapidist.colony.client.network.handlers.MapMetadataHandler;
 import net.lapidist.colony.client.network.handlers.MapChunkHandler;
 import net.lapidist.colony.client.network.handlers.QueueingMessageHandler;
 import net.lapidist.colony.client.network.handlers.ResourceUpdateHandler;
-import net.lapidist.colony.components.state.MapChunk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -112,7 +111,7 @@ public final class GameClient extends AbstractMessageEndpoint {
                         loadMessageListener.accept(net.lapidist.colony.i18n.I18n.get("loading.chunks"));
                     }
                 }),
-                new MapChunkHandler(this::handleChunk),
+                new MapChunkHandler(this::handleChunk, client.getKryo()),
                 new QueueingMessageHandler<>(TileSelectionData.class, messageQueues),
                 new QueueingMessageHandler<>(BuildingData.class, messageQueues),
                 new QueueingMessageHandler<>(BuildingRemovalData.class, messageQueues),
@@ -180,9 +179,12 @@ public final class GameClient extends AbstractMessageEndpoint {
         return chunks;
     }
 
-    private void handleChunk(final MapChunk chunk) {
+    private void handleChunk(final MapChunkData chunk) {
         if (tileBuffer != null) {
-            tileBuffer.putAll(chunk.tiles());
+            for (var entry : chunk.getTiles().entrySet()) {
+                TileData td = entry.getValue();
+                tileBuffer.put(new TilePos(td.x(), td.y()), td);
+            }
             receivedChunks++;
             if (loadProgressListener != null && expectedChunks > 0) {
                 loadProgressListener.accept(receivedChunks / (float) expectedChunks);
@@ -211,7 +213,7 @@ public final class GameClient extends AbstractMessageEndpoint {
             data = new MapChunkData(chunk.chunkX(), chunk.chunkY());
             mapState.chunks().put(posKey, data);
         }
-        for (var entry : chunk.tiles().entrySet()) {
+        for (var entry : chunk.getTiles().entrySet()) {
             TileData td = entry.getValue();
             int localX = Math.floorMod(td.x(), MapChunkData.CHUNK_SIZE);
             int localY = Math.floorMod(td.y(), MapChunkData.CHUNK_SIZE);

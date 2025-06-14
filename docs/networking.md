@@ -46,4 +46,8 @@ The client submits requests using methods such as `sendTileSelectionRequest`. Ea
 TileSelectionData update = client.poll(TileSelectionData.class);
 ```
 
+Map chunks are transmitted as GZIP-compressed Kryo streams to keep transfer
+sizes small. The client decompresses each chunk before applying it to the map
+state.
+
 For additional details see [architecture.md](architecture.md).

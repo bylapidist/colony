@@ -84,4 +84,12 @@ public final class MapChunkData {
     public Map<TilePos, TileData> getTiles() {
         return tiles;
     }
+
+    public int chunkX() {
+        return baseX / CHUNK_SIZE;
+    }
+
+    public int chunkY() {
+        return baseY / CHUNK_SIZE;
+    }
 }
