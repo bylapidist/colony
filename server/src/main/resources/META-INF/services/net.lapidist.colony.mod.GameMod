@@ -5,3 +5,5 @@ net.lapidist.colony.base.BaseResourceProductionMod
 net.lapidist.colony.base.BaseHandlersMod
 
 net.lapidist.colony.base.BaseDefinitionsMod
+
+net.lapidist.colony.base.BaseResourcesMod

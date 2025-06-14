@@ -145,6 +145,8 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         mods = new java.util.ArrayList<>(mods);
         mods.add(new LoadedMod(new net.lapidist.colony.base.BaseDefinitionsMod(),
                 new net.lapidist.colony.mod.ModMetadata("base-definitions", "1.0.0", java.util.List.of())));
+        mods.add(new LoadedMod(new net.lapidist.colony.base.BaseResourcesMod(),
+                new net.lapidist.colony.mod.ModMetadata("base-resources", "1.0.0", java.util.List.of())));
         mods.add(new LoadedMod(new net.lapidist.colony.base.BaseMapServiceMod(),
                 new net.lapidist.colony.mod.ModMetadata("base-map-service", "1.0.0", java.util.List.of())));
         mods.add(new LoadedMod(new net.lapidist.colony.base.BaseNetworkMod(),
