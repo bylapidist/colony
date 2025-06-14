@@ -3,6 +3,8 @@ package net.lapidist.colony.tests.server;
 import net.lapidist.colony.components.state.MapChunkRequest;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.mod.GameMod;
+import net.lapidist.colony.mod.ModMetadata;
+import net.lapidist.colony.mod.ModLoader.LoadedMod;
 import net.lapidist.colony.network.AbstractMessageHandler;
 import net.lapidist.colony.network.MessageHandler;
 import net.lapidist.colony.server.GameServer;
@@ -109,7 +111,8 @@ public class GameServerCoverageTest {
             }
         }
         DummyMod mod = new DummyMod();
-        field("mods").set(server, java.util.List.of(mod));
+        field("mods").set(server,
+                java.util.List.of(new LoadedMod(mod, new ModMetadata("dummy", "1", java.util.List.of()))));
 
         server.stop();
 

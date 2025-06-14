@@ -120,7 +120,7 @@ public class ColonyTest {
              MockedStatic<I18n> i18nStatic = mockStatic(I18n.class);
              MockedConstruction<ModLoader> loaderCons =
                      mockConstruction(ModLoader.class, (m, c) ->
-                             when(m.loadMods()).thenReturn(java.util.List.of()));
+                             when(m.loadMods()).thenReturn(java.util.Collections.emptyList()));
              MockedConstruction<MainMenuScreen> menuCons = mockConstruction(MainMenuScreen.class)) {
             Settings settings = new Settings();
             settingsStatic.when(Settings::load).thenReturn(settings);
