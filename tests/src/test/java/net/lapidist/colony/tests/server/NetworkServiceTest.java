@@ -5,7 +5,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.MapMetadata;
-import net.lapidist.colony.components.state.MapChunk;
+import net.lapidist.colony.components.state.MapChunkBytes;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.server.services.NetworkService;
 import org.junit.Test;
@@ -49,13 +49,16 @@ public class NetworkServiceTest {
     @Test
     public void broadcastChunkSendsData() {
         Server server = mock(Server.class);
+        com.esotericsoftware.kryo.Kryo kryo = new com.esotericsoftware.kryo.Kryo();
+        net.lapidist.colony.serialization.KryoRegistry.register(kryo);
+        when(server.getKryo()).thenReturn(kryo);
         NetworkService service = new NetworkService(server, 1, 2);
         MapState state = new MapState();
         state.putTile(new TileData());
 
         service.broadcastChunk(state, 0, 0);
 
-        verify(server).sendToAllTCP(isA(MapChunk.class));
+        verify(server).sendToAllTCP(isA(MapChunkBytes.class));
     }
 
     @Test

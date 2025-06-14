@@ -81,7 +81,8 @@ reason.
 
 `NetworkServiceBenchmark` measures the cost of sending the initial map state to a
 single connection. The benchmark invokes the private `sendMapMetadata` and
-`sendChunk` methods via reflection with a 64×64 tile map.
+`sendChunk` methods via reflection with a 64×64 tile map. Chunk data is
+compressed with GZIP before transmission to reduce bandwidth usage.
 
 ### Benchmark results (JDK 21)
 
