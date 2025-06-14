@@ -145,10 +145,16 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         mods = new java.util.ArrayList<>(mods);
         mods.add(new LoadedMod(new net.lapidist.colony.base.BaseDefinitionsMod(),
                 new net.lapidist.colony.mod.ModMetadata("base-definitions", "1.0.0", java.util.List.of())));
-        mods.add(new LoadedMod(new net.lapidist.colony.base.BaseServicesMod(),
-                new net.lapidist.colony.mod.ModMetadata("base-services", "1.0.0", java.util.List.of())));
-        mods.add(new LoadedMod(new net.lapidist.colony.base.BaseCommandsMod(),
-                new net.lapidist.colony.mod.ModMetadata("base-commands", "1.0.0", java.util.List.of())));
+        mods.add(new LoadedMod(new net.lapidist.colony.base.BaseMapServiceMod(),
+                new net.lapidist.colony.mod.ModMetadata("base-map-service", "1.0.0", java.util.List.of())));
+        mods.add(new LoadedMod(new net.lapidist.colony.base.BaseNetworkMod(),
+                new net.lapidist.colony.mod.ModMetadata("base-network", "1.0.0", java.util.List.of())));
+        mods.add(new LoadedMod(new net.lapidist.colony.base.BaseAutosaveMod(),
+                new net.lapidist.colony.mod.ModMetadata("base-autosave", "1.0.0", java.util.List.of())));
+        mods.add(new LoadedMod(new net.lapidist.colony.base.BaseResourceProductionMod(),
+                new net.lapidist.colony.mod.ModMetadata("base-resource-production", "1.0.0", java.util.List.of())));
+        mods.add(new LoadedMod(new net.lapidist.colony.base.BaseHandlersMod(),
+                new net.lapidist.colony.mod.ModMetadata("base-handlers", "1.0.0", java.util.List.of())));
 
         for (LoadedMod mod : mods) {
             mod.mod().init();

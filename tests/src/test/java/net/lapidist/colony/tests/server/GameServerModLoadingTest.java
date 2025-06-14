@@ -48,8 +48,11 @@ public class GameServerModLoadingTest {
             java.lang.reflect.Field f = GameServer.class.getDeclaredField("mods");
             f.setAccessible(true);
             List<LoadedMod> loaded = (List<LoadedMod>) f.get(server);
-            assertTrue(loaded.stream().anyMatch(m -> "base-services".equals(m.metadata().id())));
-            assertTrue(loaded.stream().anyMatch(m -> "base-commands".equals(m.metadata().id())));
+            assertTrue(loaded.stream().anyMatch(m -> "base-map-service".equals(m.metadata().id())));
+            assertTrue(loaded.stream().anyMatch(m -> "base-network".equals(m.metadata().id())));
+            assertTrue(loaded.stream().anyMatch(m -> "base-autosave".equals(m.metadata().id())));
+            assertTrue(loaded.stream().anyMatch(m -> "base-resource-production".equals(m.metadata().id())));
+            assertTrue(loaded.stream().anyMatch(m -> "base-handlers".equals(m.metadata().id())));
             assertTrue(loaded.stream().anyMatch(m -> "base-definitions".equals(m.metadata().id())));
             assertTrue(loaded.stream().anyMatch(m -> "stub".equals(m.metadata().id())));
             assertTrue(server.isRunning());

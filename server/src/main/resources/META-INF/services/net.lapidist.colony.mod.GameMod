@@ -1,4 +1,7 @@
-net.lapidist.colony.base.BaseServicesMod
-net.lapidist.colony.base.BaseCommandsMod
+net.lapidist.colony.base.BaseMapServiceMod
+net.lapidist.colony.base.BaseNetworkMod
+net.lapidist.colony.base.BaseAutosaveMod
+net.lapidist.colony.base.BaseResourceProductionMod
+net.lapidist.colony.base.BaseHandlersMod
 
 net.lapidist.colony.base.BaseDefinitionsMod
