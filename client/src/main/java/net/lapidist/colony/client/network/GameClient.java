@@ -31,6 +31,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Deque;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
@@ -47,6 +49,8 @@ public final class GameClient extends AbstractMessageEndpoint {
     private static final int CONNECT_TIMEOUT = 5000;
     private Consumer<MapState> readyCallback;
     private int playerId = -1;
+    public static final int CHUNK_REQUEST_BATCH_SIZE = 8;
+    private final Deque<ChunkPos> pendingChunkRequests = new ConcurrentLinkedDeque<>();
     private MapState.Builder mapBuilder;
     private java.util.Map<TilePos, TileData> tileBuffer;
     private int expectedChunks;
@@ -104,7 +108,7 @@ public final class GameClient extends AbstractMessageEndpoint {
                     int chunkHeight = (int) Math.ceil(GameConstants.MAP_HEIGHT / (double) MapChunkData.CHUNK_SIZE);
                     for (int x = 0; x < chunkWidth; x++) {
                         for (int y = 0; y < chunkHeight; y++) {
-                            send(new MapChunkRequest(x, y));
+                            queueChunkRequest(x, y);
                         }
                     }
                     if (loadMessageListener != null) {
@@ -232,6 +236,33 @@ public final class GameClient extends AbstractMessageEndpoint {
     public <T> T poll(final Class<T> type) {
         Queue<T> queue = (Queue<T>) messageQueues.get(type);
         return queue != null ? queue.poll() : null;
+    }
+
+    /**
+     * Queue a chunk request to be processed later.
+     */
+    public void queueChunkRequest(final int chunkX, final int chunkY) {
+        pendingChunkRequests.add(new ChunkPos(chunkX, chunkY));
+    }
+
+    /**
+     * Send up to {@code maxRequests} queued chunk requests.
+     */
+    public void processChunkRequestQueue(final int maxRequests) {
+        for (int i = 0; i < maxRequests; i++) {
+            ChunkPos pos = pendingChunkRequests.poll();
+            if (pos == null) {
+                break;
+            }
+            send(new MapChunkRequest(pos.x(), pos.y()));
+        }
+    }
+
+    /**
+     * Convenience overload using {@link #CHUNK_REQUEST_BATCH_SIZE} as the limit.
+     */
+    public void processChunkRequestQueue() {
+        processChunkRequestQueue(CHUNK_REQUEST_BATCH_SIZE);
     }
 
     @SuppressWarnings("unchecked")
