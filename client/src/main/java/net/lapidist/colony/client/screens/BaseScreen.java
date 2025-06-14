@@ -16,6 +16,7 @@ public abstract class BaseScreen extends ScreenAdapter {
     private final Stage stage;
     private final Skin skin;
     private final Table root;
+    private static final float PADDING = 10f;
 
     /**
      * Creates a screen with a default {@link Stage} instance.
@@ -34,6 +35,8 @@ public abstract class BaseScreen extends ScreenAdapter {
         skin = new Skin(Gdx.files.internal("skin/default.json"));
         root = new Table();
         root.setFillParent(true);
+        root.center();
+        root.defaults().pad(PADDING);
         stage.addActor(root);
         Gdx.input.setInputProcessor(stage);
     }
