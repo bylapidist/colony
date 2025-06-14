@@ -1,6 +1,8 @@
 package net.lapidist.colony.tests.screens;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -39,6 +41,12 @@ public class LoadGameScreenTest {
         return (Table) scroll.getActor();
     }
 
+    private static Stage getStage(final LoadGameScreen screen) throws Exception {
+        Field f = screen.getClass().getSuperclass().getDeclaredField("stage");
+        f.setAccessible(true);
+        return (Stage) f.get(screen);
+    }
+
     @Test
     public void backButtonReturnsToMainMenu() throws Exception {
         Colony colony = mock(Colony.class);
@@ -47,6 +55,18 @@ public class LoadGameScreenTest {
             Table root = getRoot(screen);
             TextButton back = (TextButton) root.getChildren().peek();
             back.fire(new ChangeListener.ChangeEvent());
+            verify(colony).setScreen(isA(MainMenuScreen.class));
+            screen.dispose();
+        }
+    }
+
+    @Test
+    public void escapeReturnsToMainMenu() throws Exception {
+        Colony colony = mock(Colony.class);
+        try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
+            LoadGameScreen screen = new LoadGameScreen(colony);
+            Stage stage = getStage(screen);
+            stage.keyDown(Input.Keys.ESCAPE);
             verify(colony).setScreen(isA(MainMenuScreen.class));
             screen.dispose();
         }

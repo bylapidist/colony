@@ -1,6 +1,8 @@
 package net.lapidist.colony.tests.screens;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -47,6 +49,12 @@ public class NewGameScreenTest {
         return (Table) root.getChildren().get(BUTTON_TABLE_INDEX);
     }
 
+    private static Stage getStage(final NewGameScreen screen) throws Exception {
+        Field f = screen.getClass().getSuperclass().getDeclaredField("stage");
+        f.setAccessible(true);
+        return (Stage) f.get(screen);
+    }
+
     @Test
     public void startButtonBeginsGameWithEnteredName() throws Exception {
         Colony colony = mock(Colony.class);
@@ -73,6 +81,18 @@ public class NewGameScreenTest {
             Table buttons = getButtons(screen);
             TextButton back = (TextButton) buttons.getChildren().get(BACK_BUTTON_INDEX);
             back.fire(new ChangeListener.ChangeEvent());
+            verify(colony).setScreen(isA(MainMenuScreen.class));
+            screen.dispose();
+        }
+    }
+
+    @Test
+    public void escapeReturnsToMainMenu() throws Exception {
+        Colony colony = mock(Colony.class);
+        try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
+            NewGameScreen screen = new NewGameScreen(colony);
+            Stage stage = getStage(screen);
+            stage.keyDown(Input.Keys.ESCAPE);
             verify(colony).setScreen(isA(MainMenuScreen.class));
             screen.dispose();
         }
