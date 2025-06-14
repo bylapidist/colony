@@ -45,7 +45,7 @@ public class ModLoaderTest {
         }
 
         assertTrue(modsLoaded.stream().anyMatch(m -> m.mod().getClass().getName().equals(StubMod.class.getName())));
-        assertTrue(modsLoaded.stream().anyMatch(m -> m.metadata().id().equals("stub")));
+        assertTrue(modsLoaded.stream().anyMatch(m -> "stub".equals(m.metadata().id())));
         assertEquals("true", System.getProperty("stubmod.init"));
     }
 
@@ -67,7 +67,7 @@ public class ModLoaderTest {
         }
 
         assertTrue(modsLoaded.stream().anyMatch(m -> m.mod().getClass().getName().equals(StubMod.class.getName())));
-        assertTrue(modsLoaded.stream().anyMatch(m -> m.metadata().id().equals("stub")));
+        assertTrue(modsLoaded.stream().anyMatch(m -> "stub".equals(m.metadata().id())));
         assertEquals("true", System.getProperty("stubmod.init"));
     }
 
@@ -91,7 +91,7 @@ public class ModLoaderTest {
 
         logger.detachAppender(appender);
 
-        assertTrue(modsLoaded.stream().noneMatch(m -> m.metadata().id().equals("dep")));
+        assertTrue(modsLoaded.stream().noneMatch(m -> "dep".equals(m.metadata().id())));
     }
 
     @Test
@@ -110,7 +110,57 @@ public class ModLoaderTest {
         List<LoadedMod> modsLoaded = loader.loadMods();
 
         assertTrue(modsLoaded.size() >= 2);
-        assertTrue(modsLoaded.stream().anyMatch(m -> m.metadata().id().equals("child")));
+        assertTrue(modsLoaded.stream().anyMatch(m -> "child".equals(m.metadata().id())));
+    }
+
+    @Test
+    public void ordersModsByDependencies() throws Exception {
+        Path base = Files.createTempDirectory("mods-test-order");
+        Paths paths = new Paths(new TestPathService(base));
+        Path mods = paths.getModsFolder();
+        Files.createDirectories(mods);
+
+        Path childJar = mods.resolve("a-child.jar");
+        createJarMod(childJar, "child", List.of("base"));
+        Path baseJar = mods.resolve("z-base.jar");
+        createJarMod(baseJar, "base", List.of());
+
+        ModLoader loader = new ModLoader(paths);
+        List<LoadedMod> modsLoaded = loader.loadMods();
+
+        int baseIndex = -1;
+        int childIndex = -1;
+        for (int i = 0; i < modsLoaded.size(); i++) {
+            String id = modsLoaded.get(i).metadata().id();
+            if ("base".equals(id)) {
+                baseIndex = i;
+            } else if ("child".equals(id)) {
+                childIndex = i;
+            }
+        }
+
+        assertTrue(baseIndex >= 0);
+        assertTrue(childIndex >= 0);
+        assertTrue(baseIndex < childIndex);
+    }
+
+    @Test
+    public void skipsModsInCycle() throws Exception {
+        Path base = Files.createTempDirectory("mods-test-cycle");
+        Paths paths = new Paths(new TestPathService(base));
+        Path mods = paths.getModsFolder();
+        Files.createDirectories(mods);
+
+        Path aJar = mods.resolve("a.jar");
+        createJarMod(aJar, "a", List.of("b"));
+        Path bJar = mods.resolve("b.jar");
+        createJarMod(bJar, "b", List.of("a"));
+
+        ModLoader loader = new ModLoader(paths);
+        List<LoadedMod> modsLoaded = loader.loadMods();
+
+        assertTrue(modsLoaded.stream().noneMatch(m -> "a".equals(m.metadata().id())));
+        assertTrue(modsLoaded.stream().noneMatch(m -> "b".equals(m.metadata().id())));
     }
 
     private void createJarMod(final Path jar, final String id, final List<String> deps) throws IOException {
