@@ -35,9 +35,10 @@ public enum SaveVersion {
     V2(2),
     // ...
     V18(18),
-    V19(19);
+    V19(19),
+    V20(20);
 
-    public static final SaveVersion CURRENT = V19;
+    public static final SaveVersion CURRENT = V20;
 }
 ```
 
@@ -49,9 +50,9 @@ When a game is loaded, `SaveMigrator` applies registered `MapStateMigration` ste
 2. Implement a migration class:
 
 ```java
-public final class V18ToV19Migration implements MapStateMigration {
-    @Override public int fromVersion() { return SaveVersion.V18.number(); }
-    @Override public int toVersion() { return SaveVersion.V19.number(); }
+public final class V19ToV20Migration implements MapStateMigration {
+    @Override public int fromVersion() { return SaveVersion.V19.number(); }
+    @Override public int toVersion() { return SaveVersion.V20.number(); }
     @Override public MapState apply(MapState state) {
         // update fields here
         return state.toBuilder().version(toVersion()).build();
