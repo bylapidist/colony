@@ -53,3 +53,37 @@ JAR or directory it finds. Each class loader is passed to Java's `ServiceLoader`
 to locate implementations of the `GameMod` interface. If a `mod.json` is
 missing, the entry is skipped.
 
+### Dependency resolution
+
+Dependencies declared in `mod.json` are used to determine the load order. The
+loader performs a topological sort and removes entries with missing
+dependencies or cycles, logging a warning for each skipped mod.
+
+### Service and handler registration
+
+`GameMod` exposes two hooks that run during server startup:
+
+```java
+default void registerServices(GameServer server) { }
+default void registerHandlers(CommandBus bus) { }
+```
+
+`registerServices` allows mods to override `GameServer` factories or install
+additional services before the server begins accepting connections. Once the
+core services have been recreated, `registerHandlers` runs to register custom
+command handlers. A minimal example:
+
+```java
+public final class ExtraMod implements GameMod {
+    @Override
+    public void registerServices(GameServer server) {
+        server.setMapServiceFactory(() -> new MyMapService());
+    }
+
+    @Override
+    public void registerHandlers(CommandBus bus) {
+        bus.registerHandlers(List.of(new MyCommandHandler()));
+    }
+}
+```
+

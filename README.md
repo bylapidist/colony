@@ -68,7 +68,7 @@ development workflow.
 The latest Java API reference is published to [GitHub Pages](https://bylapidist.github.io/colony/) on every release.
 For a high level overview of the modules see [docs/architecture.md](docs/architecture.md).
 Refer to [docs/networking.md](docs/networking.md) for hands‑on client and server examples.
-See [docs/mods.md](docs/mods.md) for details on the mod system.
+See [docs/mods.md](docs/mods.md) for details on the enhanced mod system.
 Configuration details are in [docs/configuration.md](docs/configuration.md).
 
 ## License
