@@ -1,6 +1,7 @@
 package net.lapidist.colony.client.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -63,18 +64,23 @@ public final class MapUiBuilder {
 
         TextButton menuButton = new TextButton(I18n.get("map.menu"), skin);
         menuButton.setName("menuButton");
-        TextButton buildButton = new TextButton(I18n.get("map.build"), skin, "toggle");
+        TextButton buildButton = new TextButton("", skin, "toggle");
         buildButton.setName("buildButton");
-        TextButton removeButton = new TextButton(I18n.get("map.remove"), skin, "toggle");
+        TextButton removeButton = new TextButton("", skin, "toggle");
         removeButton.setName("removeButton");
-        TextButton mapButton = new TextButton(I18n.get("map.map"), skin);
+        TextButton mapButton = new TextButton("", skin);
         mapButton.setName("mapButton");
-        TextButton minimapButton = new TextButton(I18n.get("map.minimap"), skin);
+        TextButton minimapButton = new TextButton("", skin);
         minimapButton.setName("minimapButton");
         GraphicsSettings graphics = colony.getSettings().getGraphicsSettings();
         MinimapActor minimapActor = new MinimapActor(world, graphics, client);
         ChatBox chatBox = new ChatBox(skin, client);
         PlayerResourcesActor resourcesActor = new PlayerResourcesActor(skin, world);
+
+        setButtonText(buildButton, "map.build", keyBindings.getKey(KeyAction.BUILD));
+        setButtonText(removeButton, "map.remove", keyBindings.getKey(KeyAction.REMOVE));
+        setButtonText(mapButton, "map.map", keyBindings.getKey(KeyAction.TOGGLE_CAMERA));
+        setButtonText(minimapButton, "map.minimap", keyBindings.getKey(KeyAction.MINIMAP));
 
         menuButton.addListener(new ChangeListener() {
             @Override
@@ -140,6 +146,8 @@ public final class MapUiBuilder {
         table.row();
         chatTable.add(chatBox).pad(PADDING).growX();
 
+        stage.addActor(new ShortcutUpdater(keyBindings, buildButton, removeButton, mapButton, minimapButton));
+
         stage.addListener(new InputListener() {
             @Override
             public boolean keyDown(final InputEvent event, final int keycode) {
@@ -155,5 +163,58 @@ public final class MapUiBuilder {
             }
         });
         return new MapUi(stage, minimapActor, chatBox);
+    }
+
+    private static void setButtonText(final TextButton button, final String key, final int code) {
+        button.setText(I18n.get(key) + " [" + Input.Keys.toString(code) + "]");
+    }
+
+    private static final class ShortcutUpdater extends Actor {
+        private final KeyBindings bindings;
+        private final TextButton build;
+        private final TextButton remove;
+        private final TextButton map;
+        private final TextButton minimap;
+        private int buildKey;
+        private int removeKey;
+        private int mapKey;
+        private int minimapKey;
+
+        ShortcutUpdater(
+                final KeyBindings bindingsToUse,
+                final TextButton buildButton,
+                final TextButton removeButton,
+                final TextButton mapButton,
+                final TextButton minimapButton
+        ) {
+            this.bindings = bindingsToUse;
+            this.build = buildButton;
+            this.remove = removeButton;
+            this.map = mapButton;
+            this.minimap = minimapButton;
+            refresh();
+        }
+
+        @Override
+        public void act(final float delta) {
+            super.act(delta);
+            if (buildKey != bindings.getKey(KeyAction.BUILD)
+                    || removeKey != bindings.getKey(KeyAction.REMOVE)
+                    || mapKey != bindings.getKey(KeyAction.TOGGLE_CAMERA)
+                    || minimapKey != bindings.getKey(KeyAction.MINIMAP)) {
+                refresh();
+            }
+        }
+
+        private void refresh() {
+            buildKey = bindings.getKey(KeyAction.BUILD);
+            removeKey = bindings.getKey(KeyAction.REMOVE);
+            mapKey = bindings.getKey(KeyAction.TOGGLE_CAMERA);
+            minimapKey = bindings.getKey(KeyAction.MINIMAP);
+            setButtonText(build, "map.build", buildKey);
+            setButtonText(remove, "map.remove", removeKey);
+            setButtonText(map, "map.map", mapKey);
+            setButtonText(minimap, "map.minimap", minimapKey);
+        }
     }
 }
