@@ -39,10 +39,9 @@ import java.util.function.Consumer;
 
 public final class GameClient extends AbstractMessageEndpoint {
     // Increase buffers to handle large serialized map data.
-    // Matches the server allocation of 4MB to allow receiving big map states.
-    private static final int BUFFER_SIZE = 4 * 1024 * 1024;
+    // Size is configured via game.networkBufferSize.
     private static final Logger LOGGER = LoggerFactory.getLogger(GameClient.class);
-    private final Client client = new Client(BUFFER_SIZE, BUFFER_SIZE);
+    private final Client client = new Client(GameConstants.NETWORK_BUFFER_SIZE, GameConstants.NETWORK_BUFFER_SIZE);
     private MapState mapState;
     private final Map<Class<?>, Queue<?>> messageQueues = new ConcurrentHashMap<>();
     private Iterable<MessageHandler<?>> handlers;
