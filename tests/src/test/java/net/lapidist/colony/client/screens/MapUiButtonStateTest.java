@@ -66,4 +66,41 @@ public class MapUiButtonStateTest {
         assertFalse(buildSystem.isRemoveMode());
         assertFalse(removeButton.isChecked());
     }
+
+    @Test
+    public void mapAndMinimapButtonsToggle() {
+        Stage stage = new Stage(new ScreenViewport(), mock(Batch.class));
+        Settings settings = new Settings();
+        BuildPlacementSystem buildSystem = new BuildPlacementSystem(
+                mock(GameClient.class),
+                settings.getKeyBindings()
+        );
+        World world = new World(new WorldConfigurationBuilder()
+                .with(
+                        new PlayerCameraSystem(),
+                        new CameraInputSystem(settings.getKeyBindings()),
+                        buildSystem
+                )
+                .build());
+        GameClient client = mock(GameClient.class);
+        Colony colony = mock(Colony.class);
+        when(colony.getSettings()).thenReturn(settings);
+
+        MapUi ui = MapUiBuilder.build(stage, world, client, colony);
+
+        TextButton mapButton = stage.getRoot().findActor("mapButton");
+        TextButton minimapButton = stage.getRoot().findActor("minimapButton");
+
+        PlayerCameraSystem cameraSystem = world.getSystem(PlayerCameraSystem.class);
+        assertTrue(mapButton.isChecked());
+
+        mapButton.toggle();
+        assertTrue(cameraSystem.isPlayerMode());
+        assertFalse(mapButton.isChecked());
+
+        assertTrue(minimapButton.isChecked());
+        minimapButton.toggle();
+        assertFalse(ui.getMinimapActor().isVisible());
+        assertFalse(minimapButton.isChecked());
+    }
 }
