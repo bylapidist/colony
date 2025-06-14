@@ -17,8 +17,8 @@ import net.lapidist.colony.config.ColonyConfig;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.events.Events;
 import net.lapidist.colony.client.events.GameInitEvent;
-import net.lapidist.colony.mod.GameMod;
 import net.lapidist.colony.mod.ModLoader;
+import net.lapidist.colony.mod.ModLoader.LoadedMod;
 
 import java.io.IOException;
 
@@ -27,7 +27,7 @@ public final class Colony extends Game {
     private GameClient client;
     private GameServer server;
     private Settings settings;
-    private java.util.List<GameMod> mods;
+    private java.util.List<LoadedMod> mods;
 
     public void returnToMainMenu() {
         if (client != null) {
@@ -103,8 +103,8 @@ public final class Colony extends Game {
             settings = Settings.load();
             I18n.setLocale(settings.getLocale());
             mods = new ModLoader(Paths.get()).loadMods();
-            for (GameMod mod : mods) {
-                mod.init();
+            for (LoadedMod mod : mods) {
+                mod.mod().init();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -125,8 +125,8 @@ public final class Colony extends Game {
             server.stop();
         }
         if (mods != null) {
-            for (GameMod mod : mods) {
-                mod.dispose();
+            for (LoadedMod mod : mods) {
+                mod.mod().dispose();
             }
         }
         Events.dispose();
