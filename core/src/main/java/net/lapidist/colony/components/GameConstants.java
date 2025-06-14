@@ -5,8 +5,9 @@ import net.lapidist.colony.config.ColonyConfig;
 public final class GameConstants {
     private GameConstants() { }
 
-    public static final int MAP_WIDTH = ColonyConfig.get().getInt("game.mapWidth");
-    public static final int MAP_HEIGHT = ColonyConfig.get().getInt("game.mapHeight");
+    // Default map size used before metadata is loaded
+    public static final int MAP_WIDTH = 30;
+    public static final int MAP_HEIGHT = 30;
     public static final int TILE_SIZE = ColonyConfig.get().getInt("game.tileSize");
     public static final int CHUNK_LOAD_RADIUS = ColonyConfig.get().getInt("game.chunkLoadRadius");
     public static final int NETWORK_BUFFER_SIZE = ColonyConfig.get().getInt("game.networkBufferSize");
