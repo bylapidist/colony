@@ -61,6 +61,11 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     private MapService mapService;
     private NetworkService networkService;
     private CommandBus commandBus;
+    private java.util.function.Supplier<MapService> mapServiceFactory;
+    private java.util.function.Supplier<NetworkService> networkServiceFactory;
+    private java.util.function.Supplier<AutosaveService> autosaveServiceFactory;
+    private java.util.function.Supplier<ResourceProductionService> resourceProductionServiceFactory;
+    private java.util.function.Supplier<CommandBus> commandBusFactory;
     private MapState mapState;
     private Iterable<MessageHandler<?>> handlers;
     private Iterable<CommandHandler<?>> commandHandlers;
@@ -103,17 +108,26 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         this.mapHeight = config.getHeight();
         this.handlers = handlersToUse;
         this.commandHandlers = commandHandlersToUse;
-        this.mapService = new MapService(mapGenerator, saveName, mapWidth, mapHeight, stateLock);
-        this.networkService = new NetworkService(server, NetworkConfig.getTcpPort(), NetworkConfig.getUdpPort());
-        this.autosaveService = new AutosaveService(autosaveInterval, saveName, () -> mapState, stateLock);
-        this.resourceProductionService = new ResourceProductionService(
+        this.mapServiceFactory = () -> new MapService(mapGenerator, saveName, mapWidth, mapHeight, stateLock);
+        this.networkServiceFactory = () -> new NetworkService(
+                server,
+                NetworkConfig.getTcpPort(),
+                NetworkConfig.getUdpPort()
+        );
+        this.autosaveServiceFactory = () -> new AutosaveService(autosaveInterval, saveName, () -> mapState, stateLock);
+        this.resourceProductionServiceFactory = () -> new ResourceProductionService(
                 autosaveInterval,
                 () -> mapState,
                 s -> mapState = s,
                 networkService,
                 stateLock
         );
-        this.commandBus = new CommandBus();
+        this.commandBusFactory = CommandBus::new;
+        this.mapService = mapServiceFactory.get();
+        this.networkService = networkServiceFactory.get();
+        this.autosaveService = autosaveServiceFactory.get();
+        this.resourceProductionService = resourceProductionServiceFactory.get();
+        this.commandBus = commandBusFactory.get();
     }
 
     @Override
@@ -196,6 +210,35 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     public boolean isRunning() {
         Thread t = server.getUpdateThread();
         return t != null && t.isAlive();
+    }
+
+    /** Override the factory for creating {@link MapService} instances. */
+    public void setMapServiceFactory(final java.util.function.Supplier<MapService> factory) {
+        this.mapServiceFactory = factory;
+    }
+
+    /** Override the factory for creating {@link NetworkService} instances. */
+    public void setNetworkServiceFactory(
+            final java.util.function.Supplier<NetworkService> factory) {
+        this.networkServiceFactory = factory;
+    }
+
+    /** Override the factory for creating {@link AutosaveService} instances. */
+    public void setAutosaveServiceFactory(
+            final java.util.function.Supplier<AutosaveService> factory) {
+        this.autosaveServiceFactory = factory;
+    }
+
+    /** Override the factory for creating {@link ResourceProductionService} instances. */
+    public void setResourceProductionServiceFactory(
+            final java.util.function.Supplier<ResourceProductionService> factory) {
+        this.resourceProductionServiceFactory = factory;
+    }
+
+    /** Override the factory for creating {@link CommandBus} instances. */
+    public void setCommandBusFactory(
+            final java.util.function.Supplier<CommandBus> factory) {
+        this.commandBusFactory = factory;
     }
 
     /**
