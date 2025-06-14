@@ -18,6 +18,9 @@ public class NetworkServiceTest {
     @Test
     public void startBindsServerAndSendsStateOnConnect() throws Exception {
         Server server = mock(Server.class);
+        com.esotericsoftware.kryo.Kryo kryo = new com.esotericsoftware.kryo.Kryo();
+        net.lapidist.colony.serialization.KryoRegistry.register(kryo);
+        when(server.getKryo()).thenReturn(kryo);
         NetworkService service = new NetworkService(server, 1, 2);
         MapState state = new MapState();
         state.putTile(new TileData());
@@ -33,7 +36,7 @@ public class NetworkServiceTest {
         Connection connection = mock(Connection.class);
         listener.connected(connection);
         verify(connection).sendTCP(isA(MapMetadata.class));
-        verify(connection, atLeastOnce()).sendTCP(isA(MapChunk.class));
+        verify(connection, atLeastOnce()).sendTCP(isA(MapChunkBytes.class));
     }
 
     @Test

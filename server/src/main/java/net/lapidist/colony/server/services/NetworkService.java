@@ -7,8 +7,6 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Output;
 import net.lapidist.colony.components.state.MapChunkBytes;
 import net.lapidist.colony.components.state.MapMetadata;
-import net.lapidist.colony.components.state.TilePos;
-import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.map.MapChunkData;
 import net.lapidist.colony.network.DispatchListener;
@@ -106,7 +104,7 @@ public final class NetworkService {
             for (int y = chunkY - radius; y <= chunkY + radius; y++) {
                 MapChunkData chunk = state.chunks().get(new net.lapidist.colony.components.state.ChunkPos(x, y));
                 if (chunk != null) {
-                    connection.sendTCP(toChunkMessage(0, x, y, chunk));
+                    connection.sendTCP(toChunkBytes(x, y, chunk));
                     sent++;
                 }
             }
