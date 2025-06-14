@@ -3,6 +3,7 @@ package net.lapidist.colony.client.screens;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -25,6 +26,7 @@ public final class GraphicsSettingsScreen extends BaseScreen {
     private final CheckBox shadersBox;
     private final CheckBox cacheBox;
     private final SelectBox<String> rendererBox;
+    private static final float PADDING = 10f;
 
     public GraphicsSettingsScreen(final Colony game) {
         this(game, new Stage(new ScreenViewport()));
@@ -55,14 +57,23 @@ public final class GraphicsSettingsScreen extends BaseScreen {
         TextButton save = new TextButton(I18n.get("common.save"), getSkin());
         TextButton back = new TextButton(I18n.get("common.back"), getSkin());
 
-        root.add(aaBox).left().row();
-        root.add(mipBox).left().row();
-        root.add(afBox).left().row();
-        root.add(shadersBox).left().row();
-        root.add(cacheBox).left().row();
-        root.add(rendererBox).left().row();
-        root.add(save).row();
-        root.add(back).row();
+        Table options = new Table();
+        options.add(aaBox).left().row();
+        options.add(mipBox).left().row();
+        options.add(afBox).left().row();
+        options.add(shadersBox).left().row();
+        options.add(cacheBox).left().row();
+        options.add(rendererBox).left().row();
+
+        ScrollPane scroll = new ScrollPane(options, getSkin());
+        scroll.setScrollingDisabled(true, false);
+        root.add(scroll).expand().fill().row();
+
+        Table buttons = new Table();
+        buttons.add(back).padRight(PADDING);
+        buttons.add(save);
+
+        root.add(buttons).padBottom(PADDING).bottom();
 
         save.addListener(new ChangeListener() {
             @Override

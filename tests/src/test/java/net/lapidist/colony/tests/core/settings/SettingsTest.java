@@ -80,8 +80,8 @@ public class SettingsTest {
         Settings loaded = Settings.load();
         assertEquals(true, loaded.getGraphicsSettings().isAntialiasingEnabled());
         assertEquals(true, loaded.getGraphicsSettings().isMipMapsEnabled());
-        assertEquals(false, loaded.getGraphicsSettings().isAnisotropicFilteringEnabled());
-        assertEquals(false, loaded.getGraphicsSettings().isShadersEnabled());
+        assertEquals(true, loaded.getGraphicsSettings().isAnisotropicFilteringEnabled());
+        assertEquals(true, loaded.getGraphicsSettings().isShadersEnabled());
         assertEquals("model", loaded.getGraphicsSettings().getRenderer());
         assertEquals(false, loaded.getGraphicsSettings().isSpriteCacheEnabled());
     }

@@ -14,10 +14,10 @@ public final class GraphicsSettings {
     private static final String RENDERER_KEY = PREFIX + "renderer";
     private static final String CACHE_KEY = PREFIX + "spritecache";
 
-    private boolean antialiasingEnabled;
-    private boolean mipMapsEnabled;
-    private boolean anisotropicFilteringEnabled;
-    private boolean shadersEnabled;
+    private boolean antialiasingEnabled = true;
+    private boolean mipMapsEnabled = true;
+    private boolean anisotropicFilteringEnabled = true;
+    private boolean shadersEnabled = true;
     private String renderer = "sprite";
     private boolean spriteCacheEnabled = true;
 
@@ -72,10 +72,10 @@ public final class GraphicsSettings {
     /** Load graphics settings from the given preferences. */
     public static GraphicsSettings load(final Preferences prefs) {
         GraphicsSettings gs = new GraphicsSettings();
-        gs.antialiasingEnabled = prefs.getBoolean(AA_KEY, false);
-        gs.mipMapsEnabled = prefs.getBoolean(MIP_KEY, false);
-        gs.anisotropicFilteringEnabled = prefs.getBoolean(AF_KEY, false);
-        gs.shadersEnabled = prefs.getBoolean(SHADER_KEY, false);
+        gs.antialiasingEnabled = prefs.getBoolean(AA_KEY, true);
+        gs.mipMapsEnabled = prefs.getBoolean(MIP_KEY, true);
+        gs.anisotropicFilteringEnabled = prefs.getBoolean(AF_KEY, true);
+        gs.shadersEnabled = prefs.getBoolean(SHADER_KEY, true);
         gs.renderer = prefs.getString(RENDERER_KEY, "sprite");
         gs.spriteCacheEnabled = prefs.getBoolean(CACHE_KEY, true);
         return gs;

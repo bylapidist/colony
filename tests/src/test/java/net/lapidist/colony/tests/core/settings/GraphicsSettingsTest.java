@@ -44,10 +44,10 @@ public class GraphicsSettingsTest {
         prefs.flush();
 
         GraphicsSettings loaded = GraphicsSettings.load(prefs);
-        assertFalse(loaded.isAntialiasingEnabled());
-        assertFalse(loaded.isMipMapsEnabled());
-        assertFalse(loaded.isAnisotropicFilteringEnabled());
-        assertFalse(loaded.isShadersEnabled());
+        assertTrue(loaded.isAntialiasingEnabled());
+        assertTrue(loaded.isMipMapsEnabled());
+        assertTrue(loaded.isAnisotropicFilteringEnabled());
+        assertTrue(loaded.isShadersEnabled());
         assertEquals("sprite", loaded.getRenderer());
         assertTrue(loaded.isSpriteCacheEnabled());
     }
