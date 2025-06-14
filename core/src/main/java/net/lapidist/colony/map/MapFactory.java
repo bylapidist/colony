@@ -13,6 +13,8 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.registry.Registries;
+import net.lapidist.colony.registry.TileDefinition;
+import net.lapidist.colony.registry.BuildingDefinition;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,10 +46,11 @@ public final class MapFactory {
                 Entity tile = world.createEntity();
                 TileComponent tileComponent = new TileComponent();
                 String tileType = td.tileType();
-                if (Registries.tiles().get(tileType) == null) {
-                    tileType = "empty";
+                TileDefinition tileDef = Registries.tiles().get(tileType);
+                if (tileDef == null) {
+                    tileDef = Registries.tiles().get("empty");
                 }
-                tileComponent.setTileType(tileType);
+                tileComponent.setTileType(tileDef.id());
                 tileComponent.setPassable(td.passable());
                 tileComponent.setSelected(td.selected());
                 tileComponent.setHeight(GameConstants.TILE_SIZE);
@@ -72,12 +75,13 @@ public final class MapFactory {
 
         for (BuildingData bd : state.buildings()) {
             String buildingType = bd.buildingType();
-            if (Registries.buildings().get(buildingType) == null) {
+            BuildingDefinition def = Registries.buildings().get(buildingType);
+            if (def == null) {
                 continue;
             }
             Entity building = world.createEntity();
             BuildingComponent component = new BuildingComponent();
-            component.setBuildingType(buildingType);
+            component.setBuildingType(def.id());
             component.setHeight(GameConstants.TILE_SIZE);
             component.setWidth(GameConstants.TILE_SIZE);
             component.setX(bd.x());
