@@ -17,6 +17,8 @@ import java.nio.file.Path;
 /**
  * Loads existing maps or generates new ones when no save exists.
  */
+import java.util.concurrent.locks.ReentrantLock;
+
 public final class MapService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MapService.class);
@@ -25,31 +27,39 @@ public final class MapService {
     private final String saveName;
     private final int width;
     private final int height;
+    private final ReentrantLock lock;
 
-    public MapService(final MapGenerator generator, final String name, final int mapWidth, final int mapHeight) {
+    public MapService(final MapGenerator generator, final String name, final int mapWidth, final int mapHeight,
+                      final ReentrantLock lockToUse) {
         this.mapGenerator = generator;
         this.saveName = name;
         this.width = mapWidth;
         this.height = mapHeight;
+        this.lock = lockToUse;
     }
 
     public MapState load() throws IOException {
-        Path saveFile = Paths.get().getAutosave(saveName);
-        MapState state;
-        if (Files.exists(saveFile)) {
-            state = GameStateIO.load(saveFile);
-            LOGGER.info("Loaded save file: {}", saveFile);
-        } else {
-            state = generateMap();
-            GameStateIO.save(state, saveFile);
-            LOGGER.info("Generated new map and saved to: {}", saveFile);
+        lock.lock();
+        try {
+            Path saveFile = Paths.get().getAutosave(saveName);
+            MapState state;
+            if (Files.exists(saveFile)) {
+                state = GameStateIO.load(saveFile);
+                LOGGER.info("Loaded save file: {}", saveFile);
+            } else {
+                state = generateMap();
+                GameStateIO.save(state, saveFile);
+                LOGGER.info("Generated new map and saved to: {}", saveFile);
+            }
+            state = state.toBuilder()
+                    .saveName(saveName)
+                    .autosaveName(saveName + Paths.AUTOSAVE_SUFFIX)
+                    .build();
+            Files.writeString(Paths.get().getLastAutosaveMarker(), saveName);
+            return state;
+        } finally {
+            lock.unlock();
         }
-        state = state.toBuilder()
-                .saveName(saveName)
-                .autosaveName(saveName + Paths.AUTOSAVE_SUFFIX)
-                .build();
-        Files.writeString(Paths.get().getLastAutosaveMarker(), saveName);
-        return state;
     }
 
     private MapState generateMap() {

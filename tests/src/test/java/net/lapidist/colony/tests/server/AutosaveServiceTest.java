@@ -8,6 +8,7 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.io.TestPathService;
 import net.lapidist.colony.server.services.AutosaveService;
+import java.util.concurrent.locks.ReentrantLock;
 import org.junit.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
@@ -34,7 +35,12 @@ public class AutosaveServiceTest {
 
         try (MockedStatic<Paths> mock = Mockito.mockStatic(Paths.class)) {
             mock.when(Paths::get).thenReturn(paths);
-            AutosaveService service = new AutosaveService(0, "err", MapState::new);
+            AutosaveService service = new AutosaveService(
+                    0,
+                    "err",
+                    MapState::new,
+                    new ReentrantLock()
+            );
             service.stop();
         }
 
