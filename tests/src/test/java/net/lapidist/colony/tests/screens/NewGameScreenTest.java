@@ -2,6 +2,7 @@ package net.lapidist.colony.tests.screens;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -21,10 +22,11 @@ import static org.mockito.Mockito.*;
 @RunWith(GdxTestRunner.class)
 public class NewGameScreenTest {
 
+    private static final int SCROLL_INDEX = 0;
     private static final int NAME_FIELD_INDEX = 1;
-    private static final int MEDIUM_BUTTON_INDEX = 3;
-    private static final int START_BUTTON_INDEX = 5;
-    private static final int BACK_BUTTON_INDEX = 6;
+    private static final int SIZE_BUTTON_INDEX = 3;
+    private static final int BACK_BUTTON_INDEX = 1;
+    private static final int START_BUTTON_INDEX = 2;
     private static final int MEDIUM_SIZE = 60;
 
     private static Table getRoot(final NewGameScreen screen) throws Exception {
@@ -33,18 +35,23 @@ public class NewGameScreenTest {
         return (Table) f.get(screen);
     }
 
+    private static Table getOptions(final NewGameScreen screen) throws Exception {
+        Table root = getRoot(screen);
+        ScrollPane scroll = (ScrollPane) root.getChildren().get(SCROLL_INDEX);
+        return (Table) scroll.getActor();
+    }
+
     @Test
     public void startButtonBeginsGameWithEnteredName() throws Exception {
         Colony colony = mock(Colony.class);
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             NewGameScreen screen = new NewGameScreen(colony);
-            Table root = getRoot(screen);
-            TextField field = (TextField) root.getChildren().get(NAME_FIELD_INDEX);
-            TextButton medium = (TextButton) root.getChildren().get(MEDIUM_BUTTON_INDEX);
-            TextButton start = (TextButton) root.getChildren().get(START_BUTTON_INDEX);
+            Table options = getOptions(screen);
+            TextField field = (TextField) options.getChildren().get(NAME_FIELD_INDEX);
+            TextButton size = (TextButton) options.getChildren().get(SIZE_BUTTON_INDEX);
+            TextButton start = (TextButton) getRoot(screen).getChildren().get(START_BUTTON_INDEX);
             field.setText("mysave");
-            medium.setChecked(true);
-            medium.fire(new ChangeListener.ChangeEvent());
+            size.fire(new ChangeListener.ChangeEvent());
             start.fire(new ChangeListener.ChangeEvent());
             verify(colony).startGame("mysave", MEDIUM_SIZE, MEDIUM_SIZE);
             screen.dispose();
