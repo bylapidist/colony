@@ -60,7 +60,7 @@ public final class SerializationRegistrar {
     }
 
     /** Precomputed registration hash for quick access. */
-    public static final int REGISTRATION_HASH = -308489516;
+    public static final int REGISTRATION_HASH = 632693971;
 
     private static final Class<?>[] REGISTERED_TYPES = {
             TileData.class,
@@ -70,7 +70,8 @@ public final class SerializationRegistrar {
             BuildingPlacementData.class,
             BuildingRemovalData.class,
             ResourceData.class,
-            net.lapidist.colony.components.resources.ResourceType.class,
+            net.lapidist.colony.registry.ResourceDefinition.class,
+            net.lapidist.colony.registry.ResourceRegistry.class,
             ResourceGatherRequestData.class,
             ResourceUpdateData.class,
             MapMetadata.class,
