@@ -25,6 +25,7 @@ public final class SaveMigrator {
         register(new V10ToV11Migration());
         register(new V11ToV12Migration());
         register(new V12ToV13Migration());
+        register(new V13ToV14Migration());
     }
 
     private SaveMigrator() {

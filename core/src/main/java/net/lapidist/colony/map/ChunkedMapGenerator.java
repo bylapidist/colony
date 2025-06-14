@@ -29,6 +29,8 @@ public final class ChunkedMapGenerator implements MapGenerator {
         state = state.toBuilder()
                 .name("map-" + random.nextInt(NAME_RANGE))
                 .description(I18n.get("generator.generatedMap"))
+                .width(width)
+                .height(height)
                 .build();
 
         int chunkWidth = (int) Math.ceil(width / (double) MapChunkData.CHUNK_SIZE);

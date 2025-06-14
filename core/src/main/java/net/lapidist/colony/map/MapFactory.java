@@ -37,8 +37,8 @@ public final class MapFactory {
         Map<TilePos, Entity> tileMap = new HashMap<>();
         Array<Entity> entities = new Array<>();
 
-        for (int x = 0; x < GameConstants.MAP_WIDTH; x++) {
-            for (int y = 0; y < GameConstants.MAP_HEIGHT; y++) {
+        for (int x = 0; x < state.width(); x++) {
+            for (int y = 0; y < state.height(); y++) {
                 TileData td = state.getTile(x, y);
                 Entity tile = world.createEntity();
                 TileComponent tileComponent = new TileComponent();
