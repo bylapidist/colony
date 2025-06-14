@@ -2,7 +2,7 @@ package net.lapidist.colony.server;
 
 import com.esotericsoftware.kryonet.Server;
 import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.config.ColonyConfig;
+import net.lapidist.colony.config.NetworkConfig;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.events.Events;
 import net.lapidist.colony.serialization.KryoRegistry;
@@ -43,8 +43,6 @@ import java.io.IOException;
  * lock instance and are responsible for locking when reading or modifying state.
  */
 public final class GameServer extends AbstractMessageEndpoint implements AutoCloseable {
-    public static final int TCP_PORT = ColonyConfig.get().getInt("game.server.tcpPort");
-    public static final int UDP_PORT = ColonyConfig.get().getInt("game.server.udpPort");
 
     // Buffer size for Kryo serialization configured via game.networkBufferSize.
     private static final Logger LOGGER = LoggerFactory.getLogger(GameServer.class);
@@ -104,7 +102,11 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         this.handlers = handlersToUse;
         this.commandHandlers = commandHandlersToUse;
         this.mapService = new MapService(mapGenerator, saveName, mapWidth, mapHeight, stateLock);
-        this.networkService = new NetworkService(server, TCP_PORT, UDP_PORT);
+        this.networkService = new NetworkService(
+                server,
+                NetworkConfig.getTcpPort(),
+                NetworkConfig.getUdpPort()
+        );
         this.autosaveService = new AutosaveService(autosaveInterval, saveName, () -> mapState, stateLock);
         this.resourceProductionService = new ResourceProductionService(
                 autosaveInterval,
