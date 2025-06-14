@@ -69,6 +69,7 @@ public final class GameClient extends AbstractMessageEndpoint {
     private int mapHeight = MapState.DEFAULT_HEIGHT;
     private java.util.function.Consumer<Float> loadProgressListener;
     private java.util.function.Consumer<String> loadMessageListener;
+    private java.util.function.Consumer<Exception> connectionErrorCallback;
 
     private <T> Queue<T> registerQueue(final Class<T> type) {
         Queue<T> queue = new ConcurrentLinkedQueue<>();
@@ -111,6 +112,14 @@ public final class GameClient extends AbstractMessageEndpoint {
      */
     public void setLoadMessageListener(final java.util.function.Consumer<String> listener) {
         this.loadMessageListener = listener;
+    }
+
+    /**
+     * Register a callback for connection errors. If provided, it will be invoked when the
+     * initial connection attempt fails instead of throwing an exception.
+     */
+    public void setConnectionErrorCallback(final java.util.function.Consumer<Exception> callback) {
+        this.connectionErrorCallback = callback;
     }
 
     /**
@@ -175,7 +184,7 @@ public final class GameClient extends AbstractMessageEndpoint {
         this.handlers = handlersToUse;
     }
 
-    private void connect() throws IOException {
+    private void connect() {
         KryoRegistry.register(client.getKryo());
         client.start();
         LOGGER.info("Connecting to server...");
@@ -192,17 +201,25 @@ public final class GameClient extends AbstractMessageEndpoint {
                 playerId = connection.getID();
             }
         });
-        client.connect(CONNECT_TIMEOUT, "localhost", GameServer.TCP_PORT, GameServer.UDP_PORT);
+        try {
+            client.connect(CONNECT_TIMEOUT, "localhost", GameServer.TCP_PORT, GameServer.UDP_PORT);
+        } catch (IOException e) {
+            LOGGER.error("Failed to connect to server", e);
+            client.stop();
+            if (connectionErrorCallback != null) {
+                connectionErrorCallback.accept(e);
+            } else {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override
     /**
      * Starts the client and connects to the local {@link GameServer} using
      * the default callback.
-     *
-     * @throws IOException if the connection cannot be established
      */
-    public void start() throws IOException {
+    public void start() {
         start(ms -> {
         });
     }
@@ -211,12 +228,13 @@ public final class GameClient extends AbstractMessageEndpoint {
      * Start the client and register a callback invoked once the initial map is loaded.
      *
      * @param callback called when the map has finished loading
-     * @throws IOException if network connection fails
      */
-    public void start(final Consumer<MapState> callback) throws IOException {
+    public void start(final Consumer<MapState> callback) {
         this.readyCallback = callback;
         connect();
-        startRequestExecutor();
+        if (client.isConnected()) {
+            startRequestExecutor();
+        }
     }
 
     /**

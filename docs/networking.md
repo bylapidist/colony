@@ -40,6 +40,20 @@ client.start(state -> {
 });
 ```
 
+### Handling Connection Errors
+
+`GameClient` exposes an optional error callback for failed connections. Register
+it before calling `start` to handle issues like the server not running:
+
+```java
+GameClient client = new GameClient();
+client.setConnectionErrorCallback(ex -> System.err.println(ex.getMessage()));
+client.start(state -> { /* loaded */ });
+```
+
+`Colony.startGame()` uses this callback to show an error screen when the client
+cannot connect.
+
 The client submits requests using methods such as `sendTileSelectionRequest`. Each update is later retrieved within an update system:
 
 ```java
