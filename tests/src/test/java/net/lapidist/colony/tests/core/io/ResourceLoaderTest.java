@@ -48,6 +48,7 @@ public class ResourceLoaderTest {
         for (Texture texture : resourceLoader.getAtlas().getTextures()) {
             assertEquals(Texture.TextureFilter.MipMapLinearLinear, texture.getMinFilter());
             assertTrue(texture.getAnisotropicFilter() >= 1f);
+            assertTrue(texture.getTextureData().useMipMaps());
         }
     }
 
