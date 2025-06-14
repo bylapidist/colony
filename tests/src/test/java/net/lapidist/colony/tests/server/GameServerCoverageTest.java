@@ -88,7 +88,7 @@ public class GameServerCoverageTest {
         NetworkService network = mock(NetworkService.class);
         field("networkService").set(server, network);
 
-        method("registerDefaultHandlers").invoke(server);
+        server.registerDefaultHandlers();
         dispatch().invoke(server, new MapChunkRequest(0, 0));
 
         verify(network).broadcastChunk(any(MapState.class), eq(0), eq(0));

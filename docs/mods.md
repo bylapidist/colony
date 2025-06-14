@@ -35,16 +35,15 @@ A minimal `mod.json` looks like:
 `version` is an arbitrary string.
 `dependencies` lists other mod IDs that must be loaded first.
 
-### Built-in server mod
+### Built-in server mods
 
-The dedicated server bundles a mod providing the default services and handlers.
-It is loaded automatically with the following metadata:
+The dedicated server bundles two mods providing the default functionality. These
+are loaded automatically and do not need to be placed inside the `mods/` folder:
 
 ```json
-{ "id": "core-server", "version": "1.0.0" }
+{ "id": "base-services", "version": "1.0.0" }
+{ "id": "base-commands", "version": "1.0.0" }
 ```
-
-This mod does not need to be placed inside the `mods/` folder.
 
 ## How mods are discovered
 

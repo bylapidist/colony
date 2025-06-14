@@ -142,10 +142,11 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         initKryo();
         Events.init(new EventSystem());
         mods = new ModLoader(Paths.get()).loadMods();
-        // ensure built-in core mod is always loaded
         mods = new java.util.ArrayList<>(mods);
-        mods.add(new LoadedMod(new net.lapidist.colony.server.mod.CoreServerMod(),
-                new net.lapidist.colony.mod.ModMetadata("core-server", "1.0.0", java.util.List.of())));
+        mods.add(new LoadedMod(new net.lapidist.colony.base.BaseServicesMod(),
+                new net.lapidist.colony.mod.ModMetadata("base-services", "1.0.0", java.util.List.of())));
+        mods.add(new LoadedMod(new net.lapidist.colony.base.BaseCommandsMod(),
+                new net.lapidist.colony.mod.ModMetadata("base-commands", "1.0.0", java.util.List.of())));
 
         for (LoadedMod mod : mods) {
             mod.mod().init();
@@ -183,7 +184,8 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         networkService.start(mapState, this::dispatch);
     }
 
-    private void registerDefaultHandlers() {
+    /** Register built-in command and network handlers. */
+    public void registerDefaultHandlers() {
         if (commandHandlers == null) {
             commandHandlers = java.util.List.of(
                     new TileSelectionCommandHandler(() -> mapState, networkService, stateLock),
