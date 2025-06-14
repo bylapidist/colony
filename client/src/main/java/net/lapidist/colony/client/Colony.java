@@ -12,6 +12,7 @@ import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
 import net.lapidist.colony.config.ColonyConfig;
+import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.events.Events;
 import net.lapidist.colony.client.events.GameInitEvent;
 import net.lapidist.colony.mod.GameMod;
@@ -39,12 +40,20 @@ public final class Colony extends Game {
     }
 
     public void startGame(final String saveName) {
+        startGame(saveName, GameConstants.MAP_WIDTH, GameConstants.MAP_HEIGHT);
+    }
+
+    public void startGame(final String saveName, final int width, final int height) {
         try {
             if (server != null) {
                 server.stop();
             }
             server = new GameServer(
-                    GameServerConfig.builder().saveName(saveName).build()
+                    GameServerConfig.builder()
+                            .saveName(saveName)
+                            .width(width)
+                            .height(height)
+                            .build()
             );
             server.start();
             client = new GameClient();
