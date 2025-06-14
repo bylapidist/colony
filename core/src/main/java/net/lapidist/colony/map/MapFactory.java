@@ -42,7 +42,7 @@ public final class MapFactory {
                 TileData td = state.getTile(x, y);
                 Entity tile = world.createEntity();
                 TileComponent tileComponent = new TileComponent();
-                tileComponent.setTileType(TileComponent.TileType.valueOf(td.tileType()));
+                tileComponent.setTileType(td.tileType());
                 tileComponent.setPassable(td.passable());
                 tileComponent.setSelected(td.selected());
                 tileComponent.setHeight(GameConstants.TILE_SIZE);
@@ -68,7 +68,7 @@ public final class MapFactory {
         for (BuildingData bd : state.buildings()) {
             Entity building = world.createEntity();
             BuildingComponent component = new BuildingComponent();
-            component.setBuildingType(BuildingComponent.BuildingType.valueOf(bd.buildingType()));
+            component.setBuildingType(bd.buildingType());
             component.setHeight(GameConstants.TILE_SIZE);
             component.setWidth(GameConstants.TILE_SIZE);
             component.setX(bd.x());

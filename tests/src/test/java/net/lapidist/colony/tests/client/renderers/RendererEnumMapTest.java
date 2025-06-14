@@ -7,8 +7,6 @@ import net.lapidist.colony.client.renderers.DefaultAssetResolver;
 import net.lapidist.colony.client.renderers.TileRenderer;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
-import net.lapidist.colony.components.entities.BuildingComponent;
-import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,8 +36,9 @@ public class RendererEnumMapTest {
         f.setAccessible(true);
         java.util.Map<?, ?> map = (java.util.Map<?, ?>) f.get(renderer);
 
-        assertEquals(TileComponent.TileType.values().length, map.size());
-        for (TileComponent.TileType type : TileComponent.TileType.values()) {
+        String[] types = {"EMPTY", "DIRT", "GRASS"};
+        assertEquals(types.length, map.size());
+        for (String type : types) {
             assertNotNull(map.get(type));
         }
     }
@@ -60,8 +59,9 @@ public class RendererEnumMapTest {
         f.setAccessible(true);
         java.util.Map<?, ?> map = (java.util.Map<?, ?>) f.get(renderer);
 
-        assertEquals(BuildingComponent.BuildingType.values().length, map.size());
-        for (BuildingComponent.BuildingType type : BuildingComponent.BuildingType.values()) {
+        String[] buildings = {"HOUSE", "MARKET", "FACTORY", "FARM"};
+        assertEquals(buildings.length, map.size());
+        for (String type : buildings) {
             assertNotNull(map.get(type));
         }
     }

@@ -1,10 +1,10 @@
 package net.lapidist.colony.base;
 
-import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.mod.GameMod;
 import net.lapidist.colony.registry.BuildingDefinition;
 import net.lapidist.colony.registry.Registries;
 import net.lapidist.colony.registry.TileDefinition;
+import net.lapidist.colony.i18n.I18n;
 
 /** Built-in mod registering standard tile and building definitions. */
 public final class BaseDefinitionsMod implements GameMod {
@@ -16,19 +16,19 @@ public final class BaseDefinitionsMod implements GameMod {
 
         Registries.buildings().register(new BuildingDefinition(
                 "house",
-                BuildingComponent.BuildingType.HOUSE.toString(),
+                I18n.get("building.house"),
                 "house0"));
         Registries.buildings().register(new BuildingDefinition(
                 "market",
-                BuildingComponent.BuildingType.MARKET.toString(),
+                I18n.get("building.market"),
                 "house0"));
         Registries.buildings().register(new BuildingDefinition(
                 "factory",
-                BuildingComponent.BuildingType.FACTORY.toString(),
+                I18n.get("building.factory"),
                 "house0"));
         Registries.buildings().register(new BuildingDefinition(
                 "farm",
-                BuildingComponent.BuildingType.FARM.toString(),
+                I18n.get("building.farm"),
                 "house0"));
     }
 }

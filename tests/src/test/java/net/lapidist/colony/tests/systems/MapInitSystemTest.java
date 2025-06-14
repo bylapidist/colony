@@ -82,7 +82,7 @@ public class MapInitSystemTest {
         TileComponent tc = world.getMapper(TileComponent.class).get(tile);
         ResourceComponent rc = world.getMapper(ResourceComponent.class).get(tile);
 
-        assertEquals(TileComponent.TileType.GRASS, tc.getTileType());
+        assertEquals("GRASS", tc.getTileType());
         assertEquals(WOOD, rc.getWood());
         assertEquals(STONE, rc.getStone());
         assertEquals(FOOD, rc.getFood());

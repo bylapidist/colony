@@ -13,7 +13,6 @@ import net.lapidist.colony.client.render.data.RenderTile;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.TileRotationUtil;
 import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.maps.TileComponent;
 
 /**
  * Renders tile entities.
@@ -25,8 +24,7 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
     private final ResourceLoader resourceLoader;
     private final CameraProvider cameraSystem;
     private final AssetResolver resolver;
-    private final java.util.EnumMap<TileComponent.TileType, TextureRegion> tileRegions =
-            new java.util.EnumMap<>(TileComponent.TileType.class);
+    private final java.util.HashMap<String, TextureRegion> tileRegions = new java.util.HashMap<>();
     private final TextureRegion overlayRegion;
     private final BitmapFont font = new BitmapFont();
     private final GlyphLayout layout = new GlyphLayout();
@@ -50,8 +48,8 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
         this.cameraSystem = cameraSystemToSet;
         this.resolver = resolverToSet;
 
-        for (TileComponent.TileType type : TileComponent.TileType.values()) {
-            String ref = resolver.tileAsset(type.name());
+        for (String type : new String[]{"EMPTY", "DIRT", "GRASS"}) {
+            String ref = resolver.tileAsset(type);
             TextureRegion region = resourceLoader.findRegion(ref);
             if (region != null) {
                 tileRegions.put(type, region);
@@ -98,10 +96,10 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                 CameraUtils.tileCoordsToWorldCoords(tile.getX(), tile.getY(), worldCoords);
 
                 if (!overlayOnly) {
-                    TileComponent.TileType type = TileComponent.TileType.valueOf(tile.getTileType());
+                    String type = tile.getTileType();
                     TextureRegion region = tileRegions.get(type);
                     if (region != null) {
-                        if (type == TileComponent.TileType.GRASS || type == TileComponent.TileType.DIRT) {
+                        if ("GRASS".equals(type) || "DIRT".equals(type)) {
                             float rotation = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
                             spriteBatch.draw(
                                     region,
@@ -119,8 +117,8 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                             spriteBatch.draw(region, worldCoords.x, worldCoords.y);
                         }
                     }
-                    if (!resolver.hasTileAsset(type.name())) {
-                        layout.setText(font, type.name());
+                    if (!resolver.hasTileAsset(type)) {
+                        layout.setText(font, type);
                         font.draw(spriteBatch, layout, worldCoords.x, worldCoords.y + LABEL_OFFSET_Y);
                     }
                 }
