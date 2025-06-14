@@ -38,9 +38,9 @@ public final class PlayerInitSystem extends BaseSystem {
         if (!created) {
             Entity player = world.createEntity();
             PlayerResourceComponent pr = new PlayerResourceComponent();
-            pr.setWood(initialResources.wood());
-            pr.setStone(initialResources.stone());
-            pr.setFood(initialResources.food());
+            pr.setAmount("WOOD", initialResources.wood());
+            pr.setAmount("STONE", initialResources.stone());
+            pr.setAmount("FOOD", initialResources.food());
             PlayerComponent pc = new PlayerComponent();
             int width = client != null ? client.getMapWidth()
                     : net.lapidist.colony.components.state.MapState.DEFAULT_WIDTH;
