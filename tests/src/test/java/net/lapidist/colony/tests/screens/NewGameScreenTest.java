@@ -25,8 +25,9 @@ public class NewGameScreenTest {
     private static final int SCROLL_INDEX = 0;
     private static final int NAME_FIELD_INDEX = 1;
     private static final int SIZE_BUTTON_INDEX = 3;
-    private static final int BACK_BUTTON_INDEX = 1;
-    private static final int START_BUTTON_INDEX = 2;
+    private static final int BUTTON_TABLE_INDEX = 1;
+    private static final int BACK_BUTTON_INDEX = 0;
+    private static final int START_BUTTON_INDEX = 1;
     private static final int MEDIUM_SIZE = 60;
 
     private static Table getRoot(final NewGameScreen screen) throws Exception {
@@ -41,6 +42,11 @@ public class NewGameScreenTest {
         return (Table) scroll.getActor();
     }
 
+    private static Table getButtons(final NewGameScreen screen) throws Exception {
+        Table root = getRoot(screen);
+        return (Table) root.getChildren().get(BUTTON_TABLE_INDEX);
+    }
+
     @Test
     public void startButtonBeginsGameWithEnteredName() throws Exception {
         Colony colony = mock(Colony.class);
@@ -49,7 +55,8 @@ public class NewGameScreenTest {
             Table options = getOptions(screen);
             TextField field = (TextField) options.getChildren().get(NAME_FIELD_INDEX);
             TextButton size = (TextButton) options.getChildren().get(SIZE_BUTTON_INDEX);
-            TextButton start = (TextButton) getRoot(screen).getChildren().get(START_BUTTON_INDEX);
+            Table buttons = getButtons(screen);
+            TextButton start = (TextButton) buttons.getChildren().get(START_BUTTON_INDEX);
             field.setText("mysave");
             size.fire(new ChangeListener.ChangeEvent());
             start.fire(new ChangeListener.ChangeEvent());
@@ -63,7 +70,8 @@ public class NewGameScreenTest {
         Colony colony = mock(Colony.class);
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             NewGameScreen screen = new NewGameScreen(colony);
-            TextButton back = (TextButton) getRoot(screen).getChildren().get(BACK_BUTTON_INDEX);
+            Table buttons = getButtons(screen);
+            TextButton back = (TextButton) buttons.getChildren().get(BACK_BUTTON_INDEX);
             back.fire(new ChangeListener.ChangeEvent());
             verify(colony).setScreen(isA(MainMenuScreen.class));
             screen.dispose();

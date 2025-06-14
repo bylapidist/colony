@@ -49,8 +49,12 @@ public final class NewGameScreen extends BaseScreen {
         ScrollPane scroll = new ScrollPane(options, getSkin());
         scroll.setScrollingDisabled(true, false);
         getRoot().add(scroll).expand().fill().row();
-        getRoot().add(backButton).padRight(PADDING);
-        getRoot().add(startButton).row();
+
+        Table buttons = new Table();
+        buttons.add(backButton).padRight(PADDING);
+        buttons.add(startButton);
+
+        getRoot().add(buttons).padBottom(PADDING).bottom();
 
         startButton.addListener(new ChangeListener() {
             @Override
