@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Simple dispatcher mapping commands to their handlers.
  */
-public final class CommandBus {
+public final class CommandBus implements net.lapidist.colony.mod.CommandBus {
 
     private final Map<Class<?>, CommandHandler<?>> handlers = new ConcurrentHashMap<>();
 

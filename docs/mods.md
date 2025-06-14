@@ -35,6 +35,17 @@ A minimal `mod.json` looks like:
 `version` is an arbitrary string.
 `dependencies` lists other mod IDs that must be loaded first.
 
+### Built-in server mod
+
+The dedicated server bundles a mod providing the default services and handlers.
+It is loaded automatically with the following metadata:
+
+```json
+{ "id": "core-server", "version": "1.0.0" }
+```
+
+This mod does not need to be placed inside the `mods/` folder.
+
 ## How mods are discovered
 
 `ModLoader` scans the `mods/` folder and creates a `URLClassLoader` for every
