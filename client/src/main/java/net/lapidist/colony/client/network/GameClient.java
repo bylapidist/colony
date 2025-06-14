@@ -51,6 +51,8 @@ public final class GameClient extends AbstractMessageEndpoint {
     private java.util.Map<TilePos, TileData> tileBuffer;
     private int expectedChunks;
     private int receivedChunks;
+    private int mapWidth = GameConstants.MAP_WIDTH;
+    private int mapHeight = GameConstants.MAP_HEIGHT;
     private java.util.function.Consumer<Float> loadProgressListener;
     private java.util.function.Consumer<String> loadMessageListener;
 
@@ -96,12 +98,14 @@ public final class GameClient extends AbstractMessageEndpoint {
                             .playerResources(meta.playerResources());
                     tileBuffer = new java.util.HashMap<>();
                     expectedChunks = meta.chunkCount();
+                    mapWidth = meta.width();
+                    mapHeight = meta.height();
                     receivedChunks = 0;
                     if (loadProgressListener != null) {
                         loadProgressListener.accept(0f);
                     }
-                    int chunkWidth = (int) Math.ceil(GameConstants.MAP_WIDTH / (double) MapChunkData.CHUNK_SIZE);
-                    int chunkHeight = (int) Math.ceil(GameConstants.MAP_HEIGHT / (double) MapChunkData.CHUNK_SIZE);
+                    int chunkWidth = (int) Math.ceil(mapWidth / (double) MapChunkData.CHUNK_SIZE);
+                    int chunkHeight = (int) Math.ceil(mapHeight / (double) MapChunkData.CHUNK_SIZE);
                     for (int x = 0; x < chunkWidth; x++) {
                         for (int y = 0; y < chunkHeight; y++) {
                             send(new MapChunkRequest(x, y));
@@ -161,6 +165,14 @@ public final class GameClient extends AbstractMessageEndpoint {
 
     public int getPlayerId() {
         return playerId;
+    }
+
+    public int getMapWidth() {
+        return mapWidth;
+    }
+
+    public int getMapHeight() {
+        return mapHeight;
     }
 
     private static java.util.Map<ChunkPos, MapChunkData> buildChunks(final java.util.Map<TilePos, TileData> tiles) {

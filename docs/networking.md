@@ -50,4 +50,8 @@ Map chunks are transmitted as GZIP-compressed Kryo streams to keep transfer
 sizes small. The client decompresses each chunk before applying it to the map
 state.
 
+`MapMetadata` provides initial game information including the map width and
+height. Clients use these dimensions to determine how many chunks to request
+when loading a new game.
+
 For additional details see [architecture.md](architecture.md).
