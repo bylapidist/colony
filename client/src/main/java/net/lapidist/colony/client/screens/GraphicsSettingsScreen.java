@@ -1,0 +1,95 @@
+package net.lapidist.colony.client.screens;
+
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import net.lapidist.colony.client.Colony;
+import net.lapidist.colony.i18n.I18n;
+import net.lapidist.colony.settings.GraphicsSettings;
+
+import java.io.IOException;
+
+/**
+ * Screen allowing modification of graphics options.
+ */
+public final class GraphicsSettingsScreen extends BaseScreen {
+    private final Colony colony;
+    private final CheckBox aaBox;
+    private final CheckBox mipBox;
+    private final CheckBox afBox;
+    private final CheckBox shadersBox;
+    private final CheckBox cacheBox;
+    private final SelectBox<String> rendererBox;
+
+    public GraphicsSettingsScreen(final Colony game) {
+        this(game, new Stage(new ScreenViewport()));
+    }
+
+    public GraphicsSettingsScreen(final Colony game, final Stage stage) {
+        super(stage);
+        this.colony = game;
+
+        GraphicsSettings graphics = colony.getSettings().getGraphicsSettings();
+        Table root = getRoot();
+
+        aaBox = new CheckBox(I18n.get("graphics.antialiasing"), getSkin());
+        aaBox.setChecked(graphics.isAntialiasingEnabled());
+        mipBox = new CheckBox(I18n.get("graphics.mipmaps"), getSkin());
+        mipBox.setChecked(graphics.isMipMapsEnabled());
+        afBox = new CheckBox(I18n.get("graphics.anisotropic"), getSkin());
+        afBox.setChecked(graphics.isAnisotropicFilteringEnabled());
+        shadersBox = new CheckBox(I18n.get("graphics.shaders"), getSkin());
+        shadersBox.setChecked(graphics.isShadersEnabled());
+        cacheBox = new CheckBox(I18n.get("graphics.spritecache"), getSkin());
+        cacheBox.setChecked(graphics.isSpriteCacheEnabled());
+
+        rendererBox = new SelectBox<>(getSkin());
+        rendererBox.setItems("sprite");
+        rendererBox.setSelected(graphics.getRenderer());
+
+        TextButton save = new TextButton(I18n.get("common.save"), getSkin());
+        TextButton back = new TextButton(I18n.get("common.back"), getSkin());
+
+        root.add(aaBox).left().row();
+        root.add(mipBox).left().row();
+        root.add(afBox).left().row();
+        root.add(shadersBox).left().row();
+        root.add(cacheBox).left().row();
+        root.add(rendererBox).left().row();
+        root.add(save).row();
+        root.add(back).row();
+
+        save.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                graphics.setAntialiasingEnabled(aaBox.isChecked());
+                graphics.setMipMapsEnabled(mipBox.isChecked());
+                graphics.setAnisotropicFilteringEnabled(afBox.isChecked());
+                graphics.setShadersEnabled(shadersBox.isChecked());
+                graphics.setSpriteCacheEnabled(cacheBox.isChecked());
+                graphics.setRenderer(rendererBox.getSelected());
+                save();
+            }
+        });
+
+        back.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                colony.setScreen(new SettingsScreen(colony));
+            }
+        });
+    }
+
+    private void save() {
+        try {
+            colony.getSettings().save();
+        } catch (IOException e) {
+            // ignore
+        }
+    }
+}

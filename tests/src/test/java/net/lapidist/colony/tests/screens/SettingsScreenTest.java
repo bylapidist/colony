@@ -8,6 +8,7 @@ import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.client.screens.KeybindsScreen;
 import net.lapidist.colony.client.screens.MainMenuScreen;
 import net.lapidist.colony.client.screens.SettingsScreen;
+import net.lapidist.colony.client.screens.GraphicsSettingsScreen;
 import net.lapidist.colony.settings.Settings;
 import org.mockito.MockedConstruction;
 import net.lapidist.colony.tests.GdxTestRunner;
@@ -23,7 +24,8 @@ import static org.mockito.Mockito.*;
 public class SettingsScreenTest {
 
     private static final int KEYBINDS_INDEX = 4;
-    private static final int BACK_BUTTON_INDEX = 5;
+    private static final int GRAPHICS_INDEX = 5;
+    private static final int BACK_BUTTON_INDEX = 6;
 
     private static Table getRoot(final SettingsScreen screen) throws Exception {
         Field f = screen.getClass().getSuperclass().getDeclaredField("root");
@@ -40,6 +42,19 @@ public class SettingsScreenTest {
             TextButton keybinds = (TextButton) getRoot(screen).getChildren().get(KEYBINDS_INDEX);
             keybinds.fire(new ChangeListener.ChangeEvent());
             verify(colony).setScreen(isA(KeybindsScreen.class));
+            screen.dispose();
+        }
+    }
+
+    @Test
+    public void graphicsButtonOpensGraphicsScreen() throws Exception {
+        Colony colony = mock(Colony.class);
+        when(colony.getSettings()).thenReturn(new Settings());
+        try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
+            SettingsScreen screen = new SettingsScreen(colony);
+            TextButton graphics = (TextButton) getRoot(screen).getChildren().get(GRAPHICS_INDEX);
+            graphics.fire(new ChangeListener.ChangeEvent());
+            verify(colony).setScreen(isA(GraphicsSettingsScreen.class));
             screen.dispose();
         }
     }
