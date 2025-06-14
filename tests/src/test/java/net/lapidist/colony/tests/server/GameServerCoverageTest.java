@@ -9,9 +9,11 @@ import net.lapidist.colony.network.AbstractMessageHandler;
 import net.lapidist.colony.network.MessageHandler;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
+import net.lapidist.colony.server.commands.CommandBus;
 import net.lapidist.colony.server.services.AutosaveService;
 import net.lapidist.colony.server.services.NetworkService;
 import net.lapidist.colony.server.services.ResourceProductionService;
+import net.lapidist.colony.server.services.MapService;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
@@ -120,5 +122,27 @@ public class GameServerCoverageTest {
         verify((NetworkService) field("networkService").get(server)).stop();
         verify((AutosaveService) field("autosaveService").get(server)).stop();
         verify((ResourceProductionService) field("resourceProductionService").get(server)).stop();
+    }
+
+    @Test
+    public void factoryAccessorsStoreValues() {
+        GameServer server = new GameServer(GameServerConfig.builder().saveName("factories").build());
+        java.util.function.Supplier<MapService> mapFactory = () -> null;
+        java.util.function.Supplier<NetworkService> netFactory = () -> null;
+        java.util.function.Supplier<AutosaveService> autoFactory = () -> null;
+        java.util.function.Supplier<ResourceProductionService> prodFactory = () -> null;
+        java.util.function.Supplier<CommandBus> busFactory = () -> null;
+
+        server.setMapServiceFactory(mapFactory);
+        server.setNetworkServiceFactory(netFactory);
+        server.setAutosaveServiceFactory(autoFactory);
+        server.setResourceProductionServiceFactory(prodFactory);
+        server.setCommandBusFactory(busFactory);
+
+        assertSame(mapFactory, server.getMapServiceFactory());
+        assertSame(netFactory, server.getNetworkServiceFactory());
+        assertSame(autoFactory, server.getAutosaveServiceFactory());
+        assertSame(prodFactory, server.getResourceProductionServiceFactory());
+        assertSame(busFactory, server.getCommandBusFactory());
     }
 }
