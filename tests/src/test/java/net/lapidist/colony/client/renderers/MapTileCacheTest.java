@@ -41,6 +41,7 @@ public class MapTileCacheTest {
     private static final int EXPECTED_CACHE_COUNT_AFTER_UPDATE = 2;
 
     private MapRenderData createData() {
+        new net.lapidist.colony.base.BaseDefinitionsMod().init();
         MapState state = new MapState();
         state.putTile(TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)
@@ -53,6 +54,7 @@ public class MapTileCacheTest {
     }
 
     private MapRenderData createLargeData() {
+        new net.lapidist.colony.base.BaseDefinitionsMod().init();
         MapState state = new MapState();
         int total = LARGE_TILE_COUNT;
         for (int i = 0; i < total; i++) {

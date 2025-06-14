@@ -4,6 +4,7 @@ import com.artemis.Entity;
 import com.artemis.World;
 import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.components.entities.BuildingComponent;
+import java.util.Locale;
 
 import static net.lapidist.colony.client.entities.factories.SpriteFactoryUtil.createEntity;
 
@@ -29,7 +30,8 @@ public final class BuildingFactory {
             final Vector2 coords
     ) {
         BuildingComponent buildingComponent = new BuildingComponent();
-        buildingComponent.setBuildingType(buildingType);
+        String id = buildingType == null ? null : buildingType.toLowerCase(Locale.ROOT);
+        buildingComponent.setBuildingType(id);
         return createEntity(world, buildingComponent, coords);
     }
 }

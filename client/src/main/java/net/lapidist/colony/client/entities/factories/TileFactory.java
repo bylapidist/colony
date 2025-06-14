@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.resources.ResourceComponent;
 import net.lapidist.colony.components.state.ResourceData;
+import java.util.Locale;
 
 import static net.lapidist.colony.client.entities.factories.SpriteFactoryUtil.createEntity;
 
@@ -23,7 +24,8 @@ public final class TileFactory {
             final ResourceData resources
     ) {
         TileComponent tileComponent = new TileComponent();
-        tileComponent.setTileType(tileType);
+        String id = tileType == null ? null : tileType.toLowerCase(Locale.ROOT);
+        tileComponent.setTileType(id);
         tileComponent.setPassable(passable);
         tileComponent.setSelected(selected);
 

@@ -62,7 +62,7 @@ public final class ResourceProductionService {
             state = supplier.get();
             long farms = state.buildings().stream()
                     .map(BuildingData::buildingType)
-                    .filter(t -> "FARM".equals(t))
+                    .filter(t -> "farm".equalsIgnoreCase(t))
                     .count();
             if (farms == 0) {
                 return;

@@ -25,6 +25,7 @@ public class MapRenderDataBuilderTest {
 
     @Test
     public void convertsMapToRenderObjects() {
+        new net.lapidist.colony.base.BaseDefinitionsMod().init();
         MapState state = new MapState();
         state.putTile(TileData.builder()
                 .x(TILE_X).y(TILE_Y).tileType("GRASS").passable(true)
@@ -51,6 +52,7 @@ public class MapRenderDataBuilderTest {
 
     @Test
     public void updatesExistingRenderData() {
+        new net.lapidist.colony.base.BaseDefinitionsMod().init();
         MapState state = new MapState();
         state.putTile(TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)
