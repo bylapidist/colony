@@ -1,12 +1,11 @@
 # Configuration
 
-Default settings are read from `core/src/main/resources/game.conf`. The file
-controls the initial map size, network buffer size, autosave interval and server ports:
+Default settings are read from `core/src/main/resources/game.conf`.
+The file controls the network buffer size, autosave interval and server ports.
+Map size is determined when creating a game or loading a save:
 
 ```hocon
 game {
-  mapWidth = 30
-  mapHeight = 30
   tileSize = 32
   autosaveInterval = 600000
   defaultSaveName = "autosave"
