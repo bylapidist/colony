@@ -1,32 +1,13 @@
 package net.lapidist.colony.components.entities;
 
 import net.lapidist.colony.components.AbstractBoundedComponent;
-import net.lapidist.colony.i18n.I18n;
 
 public final class BuildingComponent extends AbstractBoundedComponent {
-
-    public enum BuildingType {
-        HOUSE("building.house"),
-        MARKET("building.market"),
-        FACTORY("building.factory"),
-        FARM("building.farm");
-
-        private final String key;
-
-        BuildingType(final String keyToSet) {
-            this.key = keyToSet;
-        }
-
-        @Override
-        public String toString() {
-            return I18n.get(key);
-        }
-    }
-    private BuildingType buildingType;
+    private String buildingTypeId;
     private boolean dirty;
 
-    public BuildingType getBuildingType() {
-        return buildingType;
+    public String getBuildingType() {
+        return buildingTypeId;
     }
 
     public boolean isDirty() {
@@ -37,7 +18,7 @@ public final class BuildingComponent extends AbstractBoundedComponent {
         this.dirty = dirtyToSet;
     }
 
-    public void setBuildingType(final BuildingType buildingTypeToSet) {
-        this.buildingType = buildingTypeToSet;
+    public void setBuildingType(final String buildingTypeToSet) {
+        this.buildingTypeId = buildingTypeToSet;
     }
 }

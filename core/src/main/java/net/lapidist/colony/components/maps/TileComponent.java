@@ -4,30 +4,13 @@ import net.lapidist.colony.components.AbstractBoundedComponent;
 
 public final class TileComponent extends AbstractBoundedComponent {
 
-    public enum TileType {
-        EMPTY("empty"),
-        DIRT("dirt"),
-        GRASS("grass");
-
-        private final String type;
-
-        TileType(final String typeToSet) {
-            this.type = typeToSet;
-        }
-
-        @Override
-        public String toString() {
-            return type;
-        }
-    }
-
     private boolean passable;
 
     private boolean selected;
 
     private boolean dirty;
 
-    private TileType tileType;
+    private String tileTypeId;
 
     public boolean isPassable() {
         return passable;
@@ -37,8 +20,8 @@ public final class TileComponent extends AbstractBoundedComponent {
         return selected;
     }
 
-    public TileType getTileType() {
-        return tileType;
+    public String getTileType() {
+        return tileTypeId;
     }
 
     public boolean isDirty() {
@@ -57,7 +40,7 @@ public final class TileComponent extends AbstractBoundedComponent {
         this.selected = selectedToSet;
     }
 
-    public void setTileType(final TileType tileTypeToSet) {
-        this.tileType = tileTypeToSet;
+    public void setTileType(final String tileTypeToSet) {
+        this.tileTypeId = tileTypeToSet;
     }
 }

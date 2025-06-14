@@ -23,7 +23,7 @@ public class TileFactoryTest {
         World world = new World(new WorldConfigurationBuilder().build());
         var entity = TileFactory.create(
                 world,
-                TileComponent.TileType.GRASS,
+                "GRASS",
                 new Vector2(X, Y),
                 true,
                 false,
@@ -31,7 +31,7 @@ public class TileFactoryTest {
         );
         TileComponent tc = entity.getComponent(TileComponent.class);
 
-        assertEquals(TileComponent.TileType.GRASS, tc.getTileType());
+        assertEquals("GRASS", tc.getTileType());
         assertTrue(tc.isPassable());
         assertFalse(tc.isSelected());
         assertEquals(X, tc.getX());
@@ -45,7 +45,7 @@ public class TileFactoryTest {
         ResourceData data = new ResourceData(WOOD, STONE, FOOD);
         var entity = TileFactory.create(
                 world,
-                TileComponent.TileType.GRASS,
+                "GRASS",
                 new Vector2(X, Y),
                 true,
                 false,

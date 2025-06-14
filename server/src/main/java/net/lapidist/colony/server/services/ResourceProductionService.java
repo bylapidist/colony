@@ -1,6 +1,5 @@
 package net.lapidist.colony.server.services;
 
-import net.lapidist.colony.components.entities.BuildingComponent.BuildingType;
 import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
@@ -63,7 +62,7 @@ public final class ResourceProductionService {
             state = supplier.get();
             long farms = state.buildings().stream()
                     .map(BuildingData::buildingType)
-                    .filter(t -> BuildingType.FARM.name().equals(t))
+                    .filter(t -> "FARM".equals(t))
                     .count();
             if (farms == 0) {
                 return;

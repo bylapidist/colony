@@ -16,7 +16,7 @@ public final class TileFactory {
 
     public static Entity create(
             final World world,
-            final TileComponent.TileType tileType,
+            final String tileType,
             final Vector2 coords,
             final boolean passable,
             final boolean selected,

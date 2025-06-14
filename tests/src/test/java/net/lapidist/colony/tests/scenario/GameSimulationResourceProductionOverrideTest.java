@@ -2,7 +2,6 @@ package net.lapidist.colony.tests.scenario;
 
 import com.artemis.Aspect;
 import net.lapidist.colony.client.network.GameClient;
-import net.lapidist.colony.components.entities.BuildingComponent.BuildingType;
 import net.lapidist.colony.components.resources.PlayerResourceComponent;
 import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
@@ -39,7 +38,7 @@ public class GameSimulationResourceProductionOverrideTest {
     public void overriddenServicePreventsFoodProduction() throws Exception {
         MapGenerator gen = (w, h) -> {
             MapState s = new ChunkedMapGenerator().generate(w, h);
-            s.buildings().add(new BuildingData(0, 0, BuildingType.FARM.name()));
+            s.buildings().add(new BuildingData(0, 0, "FARM"));
             return s.toBuilder().playerResources(new ResourceData()).build();
         };
         GameServerConfig config = GameServerConfig.builder()

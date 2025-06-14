@@ -12,7 +12,6 @@ import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.util.CameraUtils;
 import net.lapidist.colony.client.render.data.RenderBuilding;
 import net.lapidist.colony.client.render.MapRenderData;
-import net.lapidist.colony.components.entities.BuildingComponent;
 
 /**
  * Renders building entities.
@@ -23,8 +22,7 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
     private final ResourceLoader resourceLoader;
     private final CameraProvider cameraSystem;
     private final AssetResolver resolver;
-    private final java.util.EnumMap<BuildingComponent.BuildingType, TextureRegion> buildingRegions =
-            new java.util.EnumMap<>(BuildingComponent.BuildingType.class);
+    private final java.util.HashMap<String, TextureRegion> buildingRegions = new java.util.HashMap<>();
     private final BitmapFont font = new BitmapFont();
     private final GlyphLayout layout = new GlyphLayout();
     private static final float LABEL_OFFSET_Y = 8f;
@@ -42,8 +40,8 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
         this.cameraSystem = cameraSystemToSet;
         this.resolver = resolverToSet;
 
-        for (BuildingComponent.BuildingType type : BuildingComponent.BuildingType.values()) {
-            String ref = resolver.buildingAsset(type.name());
+        for (String type : new String[]{"HOUSE", "MARKET", "FACTORY", "FARM"}) {
+            String ref = resolver.buildingAsset(type);
             TextureRegion region = resourceLoader.findRegion(ref);
             if (region != null) {
                 buildingRegions.put(type, region);
@@ -67,14 +65,13 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
                 continue;
             }
 
-            BuildingComponent.BuildingType type =
-                    BuildingComponent.BuildingType.valueOf(building.getBuildingType());
+            String type = building.getBuildingType();
             TextureRegion region = buildingRegions.get(type);
             if (region != null) {
                 spriteBatch.draw(region, worldCoords.x, worldCoords.y);
             }
-            if (!resolver.hasBuildingAsset(type.name())) {
-                layout.setText(font, type.name());
+            if (!resolver.hasBuildingAsset(type)) {
+                layout.setText(font, type);
                 font.draw(spriteBatch, layout, worldCoords.x, worldCoords.y + LABEL_OFFSET_Y);
             }
         }

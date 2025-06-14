@@ -16,10 +16,10 @@ public class BuildingFactoryTest {
     @Test
     public void createSetsBuildingType() {
         World world = new World(new WorldConfigurationBuilder().build());
-        var entity = BuildingFactory.create(world, BuildingComponent.BuildingType.HOUSE, new Vector2(X, Y));
+        var entity = BuildingFactory.create(world, "HOUSE", new Vector2(X, Y));
         BuildingComponent comp = entity.getComponent(BuildingComponent.class);
 
-        assertEquals(BuildingComponent.BuildingType.HOUSE, comp.getBuildingType());
+        assertEquals("HOUSE", comp.getBuildingType());
         assertEquals(X, comp.getX());
         assertEquals(Y, comp.getY());
         world.dispose();
