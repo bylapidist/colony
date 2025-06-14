@@ -6,6 +6,8 @@ import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.map.MapChunkData;
 
+import java.util.Map;
+
 /** Migration from save version 3 to version 4 adding resource data. */
 public final class V3ToV4Migration implements MapStateMigration {
     private static final int DEFAULT_WOOD = 10;
@@ -29,7 +31,11 @@ public final class V3ToV4Migration implements MapStateMigration {
                 TileData tile = chunk.getTiles().get(pos);
                 if (tile.resources() == null) {
                     TileData updated = tile.toBuilder()
-                            .resources(new ResourceData(DEFAULT_WOOD, DEFAULT_STONE, DEFAULT_FOOD))
+                            .resources(new ResourceData(Map.of(
+                                    "WOOD", DEFAULT_WOOD,
+                                    "STONE", DEFAULT_STONE,
+                                    "FOOD", DEFAULT_FOOD
+                            )))
                             .build();
                     chunk.getTiles().put(pos, updated);
                 }

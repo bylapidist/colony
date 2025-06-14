@@ -8,6 +8,7 @@ import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.components.state.ChunkPos;
 import net.lapidist.colony.i18n.I18n;
 
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -50,7 +51,11 @@ public final class ChunkedMapGenerator implements MapGenerator {
             for (int y = 0; y < height; y++) {
                 TileData td = state.getTile(x, y);
                 TileData updated = td.toBuilder()
-                        .resources(new ResourceData(DEFAULT_WOOD, DEFAULT_STONE, DEFAULT_FOOD))
+                        .resources(new ResourceData(Map.of(
+                                "WOOD", DEFAULT_WOOD,
+                                "STONE", DEFAULT_STONE,
+                                "FOOD", DEFAULT_FOOD
+                        )))
                         .build();
                 int chunkX = Math.floorDiv(x, MapChunkData.CHUNK_SIZE);
                 int chunkY = Math.floorDiv(y, MapChunkData.CHUNK_SIZE);
