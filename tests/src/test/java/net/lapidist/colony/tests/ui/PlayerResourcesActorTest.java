@@ -38,9 +38,17 @@ public class PlayerResourcesActorTest {
         PlayerResourcesActor actor = new PlayerResourcesActor(skin, world);
         actor.act(0f);
 
-        Field labelField = PlayerResourcesActor.class.getDeclaredField("label");
-        labelField.setAccessible(true);
-        Label label = (Label) labelField.get(actor);
-        assertEquals("W:" + WOOD + " S:" + STONE + " F:" + FOOD, label.getText().toString());
+        Field woodField = PlayerResourcesActor.class.getDeclaredField("woodLabel");
+        Field stoneField = PlayerResourcesActor.class.getDeclaredField("stoneLabel");
+        Field foodField = PlayerResourcesActor.class.getDeclaredField("foodLabel");
+        woodField.setAccessible(true);
+        stoneField.setAccessible(true);
+        foodField.setAccessible(true);
+        Label wood = (Label) woodField.get(actor);
+        Label stone = (Label) stoneField.get(actor);
+        Label food = (Label) foodField.get(actor);
+        assertEquals(String.valueOf(WOOD), wood.getText().toString());
+        assertEquals(String.valueOf(STONE), stone.getText().toString());
+        assertEquals(String.valueOf(FOOD), food.getText().toString());
     }
 }
