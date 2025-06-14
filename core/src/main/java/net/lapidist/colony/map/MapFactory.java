@@ -12,6 +12,7 @@ import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.registry.Registries;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +43,11 @@ public final class MapFactory {
                 TileData td = state.getTile(x, y);
                 Entity tile = world.createEntity();
                 TileComponent tileComponent = new TileComponent();
-                tileComponent.setTileType(td.tileType());
+                String tileType = td.tileType();
+                if (Registries.tiles().get(tileType) == null) {
+                    tileType = "empty";
+                }
+                tileComponent.setTileType(tileType);
                 tileComponent.setPassable(td.passable());
                 tileComponent.setSelected(td.selected());
                 tileComponent.setHeight(GameConstants.TILE_SIZE);
@@ -66,9 +71,13 @@ public final class MapFactory {
         }
 
         for (BuildingData bd : state.buildings()) {
+            String buildingType = bd.buildingType();
+            if (Registries.buildings().get(buildingType) == null) {
+                continue;
+            }
             Entity building = world.createEntity();
             BuildingComponent component = new BuildingComponent();
-            component.setBuildingType(bd.buildingType());
+            component.setBuildingType(buildingType);
             component.setHeight(GameConstants.TILE_SIZE);
             component.setWidth(GameConstants.TILE_SIZE);
             component.setX(bd.x());

@@ -31,7 +31,7 @@ public class TileFactoryTest {
         );
         TileComponent tc = entity.getComponent(TileComponent.class);
 
-        assertEquals("GRASS", tc.getTileType());
+        assertEquals("grass", tc.getTileType());
         assertTrue(tc.isPassable());
         assertFalse(tc.isSelected());
         assertEquals(X, tc.getX());

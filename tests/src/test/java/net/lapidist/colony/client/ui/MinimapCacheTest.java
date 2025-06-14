@@ -30,6 +30,7 @@ public class MinimapCacheTest {
     private static final float DRAW_Y = 6f;
 
     private World createWorld() {
+        new net.lapidist.colony.base.BaseDefinitionsMod().init();
         MapState state = new MapState();
         state.putTile(TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)

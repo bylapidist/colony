@@ -66,6 +66,7 @@ public class MapInitSystemTest {
 
     @Test
     public void mapFactoryCreatesLogicalComponents() {
+        new net.lapidist.colony.base.BaseDefinitionsMod().init();
         MapState state = new MapState();
         state.putTile(TileData.builder()
                 .x(0)

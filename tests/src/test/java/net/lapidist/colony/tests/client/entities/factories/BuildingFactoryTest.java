@@ -19,7 +19,7 @@ public class BuildingFactoryTest {
         var entity = BuildingFactory.create(world, "HOUSE", new Vector2(X, Y));
         BuildingComponent comp = entity.getComponent(BuildingComponent.class);
 
-        assertEquals("HOUSE", comp.getBuildingType());
+        assertEquals("house", comp.getBuildingType());
         assertEquals(X, comp.getX());
         assertEquals(Y, comp.getY());
         world.dispose();
