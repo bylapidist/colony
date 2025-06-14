@@ -26,3 +26,37 @@ exact locations are resolved by
 Save version 8 introduces a new `playerPos` field in `MapState` storing the player's tile
 coordinates. Older saves are migrated automatically with the position initialized to the
 center of the world.
+Save versions are tracked by the `SaveVersion` enum. Each constant stores its numeric representation and `CURRENT` points to the latest version:
+
+```java
+public enum SaveVersion {
+    V1(1),
+    V2(2),
+    // ...
+    V18(18);
+
+    public static final SaveVersion CURRENT = V18;
+}
+```
+
+When a game is loaded, `SaveMigrator` applies registered `MapStateMigration` steps to upgrade old data. Each migration class converts from one version to the next and is registered once in the static block of `SaveMigrator`.
+
+### Adding a New Version
+
+1. Append the new constant to `SaveVersion` and update `CURRENT`.
+2. Implement a migration class:
+
+```java
+public final class V18ToV19Migration implements MapStateMigration {
+    @Override public int fromVersion() { return SaveVersion.V18.number(); }
+    @Override public int toVersion() { return SaveVersion.V19.number(); }
+    @Override public MapState apply(MapState state) {
+        // update fields here
+        return state.toBuilder().version(toVersion()).build();
+    }
+}
+```
+
+3. Register the new migration inside `SaveMigrator`.
+
+Whenever a serialized class list changes, recompute `SerializationRegistrar.REGISTRATION_HASH` using `registrationHash()` so mismatched saves are detected.
