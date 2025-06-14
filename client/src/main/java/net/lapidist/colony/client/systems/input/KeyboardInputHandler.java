@@ -19,11 +19,21 @@ public final class KeyboardInputHandler {
 
     private final PlayerCameraSystem cameraSystem;
     private final KeyBindings keyBindings;
+    private final net.lapidist.colony.client.network.GameClient client;
 
     public KeyboardInputHandler(
             final PlayerCameraSystem cameraSystemToSet,
             final KeyBindings bindings
     ) {
+        this(null, cameraSystemToSet, bindings);
+    }
+
+    public KeyboardInputHandler(
+            final net.lapidist.colony.client.network.GameClient clientToUse,
+            final PlayerCameraSystem cameraSystemToSet,
+            final KeyBindings bindings
+    ) {
+        this.client = clientToUse;
         this.cameraSystem = cameraSystemToSet;
         this.keyBindings = bindings;
     }
@@ -54,8 +64,10 @@ public final class KeyboardInputHandler {
             return;
         }
         final Vector3 position = cameraSystem.getCamera().position;
-        final float mapWidth = GameConstants.MAP_WIDTH * GameConstants.TILE_SIZE;
-        final float mapHeight = GameConstants.MAP_HEIGHT * GameConstants.TILE_SIZE;
+        float width = client != null ? client.getMapWidth() : GameConstants.MAP_WIDTH;
+        float height = client != null ? client.getMapHeight() : GameConstants.MAP_HEIGHT;
+        final float mapWidth = width * GameConstants.TILE_SIZE;
+        final float mapHeight = height * GameConstants.TILE_SIZE;
 
         var camera = (OrthographicCamera) cameraSystem.getCamera();
         var viewport = (ExtendViewport) cameraSystem.getViewport();

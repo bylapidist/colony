@@ -117,11 +117,11 @@ public final class MapWorldBuilder {
             final PlayerPosition playerPos,
             final net.lapidist.colony.components.state.CameraPosition cameraPos
     ) {
-        CameraInputSystem cameraInputSystem = new CameraInputSystem(keyBindings);
+        CameraInputSystem cameraInputSystem = new CameraInputSystem(client, keyBindings);
         cameraInputSystem.addProcessor(stage);
         SelectionSystem selectionSystem = new SelectionSystem(client, keyBindings);
         BuildPlacementSystem buildPlacementSystem = new BuildPlacementSystem(client, keyBindings);
-        PlayerMovementSystem movementSystem = new PlayerMovementSystem(keyBindings);
+        PlayerMovementSystem movementSystem = new PlayerMovementSystem(client, keyBindings);
 
         WorldConfigurationBuilder builder = new WorldConfigurationBuilder()
                 .with(
@@ -130,7 +130,7 @@ public final class MapWorldBuilder {
                         cameraInputSystem,
                         selectionSystem,
                         buildPlacementSystem,
-                        new PlayerInitSystem(playerResources, playerPos),
+                        new PlayerInitSystem(client, playerResources, playerPos),
                         movementSystem,
                         new TileUpdateSystem(client),
                         new BuildingUpdateSystem(client),
@@ -144,7 +144,7 @@ public final class MapWorldBuilder {
         if (provider != null) {
             builder.with(
                     new MapInitSystem(provider),
-                    new MapRenderDataSystem()
+                    new MapRenderDataSystem(client)
             );
         }
 

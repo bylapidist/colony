@@ -44,7 +44,7 @@ public class TileRendererTest {
         when(camera.getViewport()).thenReturn(viewport);
         when(camera.getCamera()).thenReturn(cam);
 
-        TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver());
+        TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver(), null);
         reset(loader);
 
         Array<RenderTile> tiles = new Array<>();
@@ -105,7 +105,7 @@ public class TileRendererTest {
         when(camera.getViewport()).thenReturn(viewport);
         when(camera.getCamera()).thenReturn(cam);
 
-        TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver());
+        TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver(), null);
         reset(loader);
 
         Array<RenderTile> tiles = new Array<>();
@@ -151,7 +151,7 @@ public class TileRendererTest {
         when(resolver.tileAsset(anyString())).thenReturn("dirt0");
         when(resolver.hasTileAsset(anyString())).thenReturn(false);
 
-        TileRenderer renderer = new TileRenderer(batch, loader, camera, resolver);
+        TileRenderer renderer = new TileRenderer(batch, loader, camera, resolver, null);
 
         java.lang.reflect.Field fontField = TileRenderer.class.getDeclaredField("font");
         fontField.setAccessible(true);
@@ -200,7 +200,7 @@ public class TileRendererTest {
         when(camera.getViewport()).thenReturn(viewport);
         when(camera.getCamera()).thenReturn(cam);
 
-        TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver());
+        TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver(), null);
         reset(loader);
 
         Array<RenderTile> tiles = new Array<>();

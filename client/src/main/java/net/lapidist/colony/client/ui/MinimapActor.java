@@ -33,6 +33,7 @@ public final class MinimapActor extends Actor implements Disposable {
     private static final Logger LOGGER = LoggerFactory.getLogger(MinimapActor.class);
 
     private final World world;
+    private final net.lapidist.colony.client.network.GameClient client;
     private final ResourceLoader resourceLoader = new TextureAtlasResourceLoader();
     private ViewportOverlayRenderer overlayRenderer;
     private MinimapOutlineRenderer outlineRenderer;
@@ -67,10 +68,12 @@ public final class MinimapActor extends Actor implements Disposable {
         }
 
         if (mapWidthWorld == 0) {
-            mapWidthWorld = GameConstants.MAP_WIDTH * GameConstants.TILE_SIZE;
+            int width = client != null ? client.getMapWidth() : GameConstants.MAP_WIDTH;
+            mapWidthWorld = width * GameConstants.TILE_SIZE;
         }
         if (mapHeightWorld == 0) {
-            mapHeightWorld = GameConstants.MAP_HEIGHT * GameConstants.TILE_SIZE;
+            int height = client != null ? client.getMapHeight() : GameConstants.MAP_HEIGHT;
+            mapHeightWorld = height * GameConstants.TILE_SIZE;
         }
     }
 
@@ -95,14 +98,23 @@ public final class MinimapActor extends Actor implements Disposable {
 
 
     public MinimapActor(final World worldToSet) {
-        this(worldToSet, Settings.load().getGraphicsSettings());
+        this(worldToSet, Settings.load().getGraphicsSettings(), null);
     }
 
     public MinimapActor(
             final World worldToSet,
             final GraphicsSettings graphicsSettings
     ) {
+        this(worldToSet, graphicsSettings, null);
+    }
+
+    public MinimapActor(
+            final World worldToSet,
+            final GraphicsSettings graphicsSettings,
+            final net.lapidist.colony.client.network.GameClient clientToUse
+    ) {
         this.world = worldToSet;
+        this.client = clientToUse;
         setSize(DEFAULT_SIZE, DEFAULT_SIZE);
         try {
             resourceLoader.loadTextures(FileLocation.INTERNAL, "textures/textures.atlas", graphicsSettings);

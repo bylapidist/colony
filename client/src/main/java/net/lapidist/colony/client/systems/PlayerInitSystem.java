@@ -13,16 +13,22 @@ public final class PlayerInitSystem extends BaseSystem {
     private boolean created;
     private final ResourceData initialResources;
     private final PlayerPosition initialPosition;
+    private final net.lapidist.colony.client.network.GameClient client;
 
     public PlayerInitSystem() {
-        this(new ResourceData(), null);
+        this(null, new ResourceData(), null);
     }
 
     public PlayerInitSystem(final ResourceData resources) {
-        this(resources, null);
+        this(null, resources, null);
     }
 
-    public PlayerInitSystem(final ResourceData resources, final PlayerPosition position) {
+    public PlayerInitSystem(
+            final net.lapidist.colony.client.network.GameClient clientToUse,
+            final ResourceData resources,
+            final PlayerPosition position
+    ) {
+        this.client = clientToUse;
         this.initialResources = resources;
         this.initialPosition = position;
     }
@@ -36,9 +42,13 @@ public final class PlayerInitSystem extends BaseSystem {
             pr.setStone(initialResources.stone());
             pr.setFood(initialResources.food());
             PlayerComponent pc = new PlayerComponent();
+            int width = client != null ? client.getMapWidth()
+                    : net.lapidist.colony.components.GameConstants.MAP_WIDTH;
+            int height = client != null ? client.getMapHeight()
+                    : net.lapidist.colony.components.GameConstants.MAP_HEIGHT;
             var pos = initialPosition != null
                     ? CameraUtils.tileCoordsToWorldCoords(initialPosition.x(), initialPosition.y())
-                    : CameraUtils.getWorldCenter();
+                    : CameraUtils.getWorldCenter(width, height);
             pc.setX(pos.x);
             pc.setY(pos.y);
             player.edit().add(pr).add(pc);

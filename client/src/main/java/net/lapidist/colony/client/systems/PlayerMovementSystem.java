@@ -12,6 +12,7 @@ import net.lapidist.colony.settings.KeyBindings;
 
 /** Handles player movement when player camera mode is active. */
 public final class PlayerMovementSystem extends BaseSystem {
+    private final net.lapidist.colony.client.network.GameClient client;
     private static final float SPEED = 400f; // units per second
 
     private final KeyBindings keyBindings;
@@ -20,6 +21,14 @@ public final class PlayerMovementSystem extends BaseSystem {
     private Entity player;
 
     public PlayerMovementSystem(final KeyBindings bindings) {
+        this(null, bindings);
+    }
+
+    public PlayerMovementSystem(
+            final net.lapidist.colony.client.network.GameClient clientToUse,
+            final KeyBindings bindings
+    ) {
+        this.client = clientToUse;
         this.keyBindings = bindings;
     }
 
@@ -58,8 +67,10 @@ public final class PlayerMovementSystem extends BaseSystem {
     }
 
     private void clampPosition(final PlayerComponent pc) {
-        float maxX = GameConstants.MAP_WIDTH * GameConstants.TILE_SIZE;
-        float maxY = GameConstants.MAP_HEIGHT * GameConstants.TILE_SIZE;
+        float mapWidth = client != null ? client.getMapWidth() : GameConstants.MAP_WIDTH;
+        float mapHeight = client != null ? client.getMapHeight() : GameConstants.MAP_HEIGHT;
+        float maxX = mapWidth * GameConstants.TILE_SIZE;
+        float maxY = mapHeight * GameConstants.TILE_SIZE;
         pc.setX(MathUtils.clamp(pc.getX(), 0, maxX));
         pc.setY(MathUtils.clamp(pc.getY(), 0, maxY));
     }

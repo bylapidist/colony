@@ -61,7 +61,7 @@ public class SpriteBatchRendererBenchmark {
         resolver = new DefaultAssetResolver();
         camera = createCamera();
         SpriteBatch batch = mock(SpriteBatch.class);
-        TileRenderer tileRenderer = new TileRenderer(batch, loader, camera, resolver);
+        TileRenderer tileRenderer = new TileRenderer(batch, loader, camera, resolver, null);
         BuildingRenderer buildingRenderer = new BuildingRenderer(batch, loader, camera, resolver);
         ResourceRenderer resourceRenderer = mock(ResourceRenderer.class);
         PlayerRenderer playerRenderer = mock(PlayerRenderer.class);

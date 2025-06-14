@@ -14,6 +14,7 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 
 public final class PlayerCameraSystem extends BaseSystem implements CameraProvider {
+    private net.lapidist.colony.client.network.GameClient client;
 
     public enum Mode { MAP_OVERVIEW, PLAYER }
 
@@ -30,6 +31,11 @@ public final class PlayerCameraSystem extends BaseSystem implements CameraProvid
     private ExtendViewport viewport;
 
     public PlayerCameraSystem() {
+        this(null);
+    }
+
+    public PlayerCameraSystem(final net.lapidist.colony.client.network.GameClient clientToUse) {
+        this.client = clientToUse;
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
 
@@ -37,6 +43,10 @@ public final class PlayerCameraSystem extends BaseSystem implements CameraProvid
         moveCameraToWorldCoords(getWorldCenter());
 
         viewport.apply();
+    }
+
+    public void setClient(final net.lapidist.colony.client.network.GameClient clientToSet) {
+        this.client = clientToSet;
     }
 
     @Override
@@ -59,7 +69,9 @@ public final class PlayerCameraSystem extends BaseSystem implements CameraProvid
     }
 
     public Vector2 getWorldCenter() {
-        return CameraUtils.getWorldCenter();
+        int width = client != null ? client.getMapWidth() : net.lapidist.colony.components.GameConstants.MAP_WIDTH;
+        int height = client != null ? client.getMapHeight() : net.lapidist.colony.components.GameConstants.MAP_HEIGHT;
+        return CameraUtils.getWorldCenter(width, height);
     }
 
     public Vector2 cameraCoordsFromWorldCoords(

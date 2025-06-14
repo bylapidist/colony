@@ -26,7 +26,13 @@ public class RendererEnumMapTest {
         SpriteBatch batch = mock(SpriteBatch.class);
         ResourceLoader loader = mock(ResourceLoader.class);
         when(loader.findRegion(anyString())).thenReturn(new TextureRegion());
-        TileRenderer renderer = new TileRenderer(batch, loader, mock(CameraProvider.class), new DefaultAssetResolver());
+        TileRenderer renderer = new TileRenderer(
+                batch,
+                loader,
+                mock(CameraProvider.class),
+                new DefaultAssetResolver(),
+                null
+        );
 
         Field f = TileRenderer.class.getDeclaredField("tileRegions");
         f.setAccessible(true);

@@ -53,11 +53,17 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
             if (!done) {
                 return;
             }
+            net.lapidist.colony.client.network.GameClient gc = null;
+            MapRenderDataSystem ds = world.getSystem(MapRenderDataSystem.class);
+            if (ds != null) {
+                gc = ds.getClient();
+            }
             TileRenderer tileRenderer = new TileRenderer(
                     spriteBatch,
                     resourceLoader,
                     cameraSystem,
-                    new DefaultAssetResolver()
+                    new DefaultAssetResolver(),
+                    gc
             );
             BuildingRenderer buildingRenderer = new BuildingRenderer(
                     spriteBatch,

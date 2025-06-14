@@ -17,6 +17,7 @@ import net.lapidist.colony.settings.KeyAction;
 public final class CameraInputSystem extends BaseSystem {
 
     private final KeyBindings keyBindings;
+    private final net.lapidist.colony.client.network.GameClient client;
     private final InputMultiplexer multiplexer = new InputMultiplexer();
 
     private PlayerCameraSystem cameraSystem;
@@ -24,6 +25,14 @@ public final class CameraInputSystem extends BaseSystem {
     private GestureInputHandler gestureHandler;
 
     public CameraInputSystem(final KeyBindings bindings) {
+        this(null, bindings);
+    }
+
+    public CameraInputSystem(
+            final net.lapidist.colony.client.network.GameClient clientToUse,
+            final KeyBindings bindings
+    ) {
+        this.client = clientToUse;
         this.keyBindings = bindings;
     }
 
@@ -38,7 +47,7 @@ public final class CameraInputSystem extends BaseSystem {
     @Override
     public void initialize() {
         cameraSystem = world.getSystem(PlayerCameraSystem.class);
-        keyboardHandler = new KeyboardInputHandler(cameraSystem, keyBindings);
+        keyboardHandler = new KeyboardInputHandler(client, cameraSystem, keyBindings);
         gestureHandler = new GestureInputHandler(cameraSystem);
         GestureDetector detector = new GestureDetector(new CameraGestureListener());
         multiplexer.addProcessor(detector);
