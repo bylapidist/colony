@@ -2,7 +2,7 @@
 [![Java CI](https://github.com/bylapidist/colony/actions/workflows/gradle.yml/badge.svg)](https://github.com/bylapidist/colony/actions/workflows/gradle.yml)
 [![codecov](https://codecov.io/gh/bylapidist/colony/graph/badge.svg?token=mCn1MJTldf)](https://codecov.io/gh/bylapidist/colony)
 
-Colony is a small simulation/strategy prototype built with LibGDX and the Artemis-ODB entity component system. The project is structured as a multi-module Gradle build so the client, server and shared logic can evolve independently.
+Colony is a small simulation/strategy prototype built with LibGDX and the Artemis-ODB entity component system. The project uses Kryonet for networking and includes a lightweight mod system. It is organized as a multi-module Gradle build so the client, server and shared logic can evolve independently.
 
 ## Table of Contents
 - [Quick Start](#quick-start)
@@ -37,10 +37,8 @@ The `tests:copyAssets` task is required so that resources used by the test suite
 ### Running the Game
 Both the client and dedicated server can be started directly from Gradle:
 
-```bash
-./gradlew :client:run   # start the game client
-./gradlew :server:run   # start the dedicated server
-```
+- `./gradlew :client:run` – launches the game client.
+- `./gradlew :server:run` – starts a headless server.
 
 `Colony.startGame(String)` now reads the map size from the selected autosave so
 servers use the correct dimensions when continuing a game.
@@ -70,6 +68,7 @@ development workflow.
 The latest Java API reference is published to [GitHub Pages](https://bylapidist.github.io/colony/) on every release.
 For a high level overview of the modules see [docs/architecture.md](docs/architecture.md).
 Refer to [docs/networking.md](docs/networking.md) for hands‑on client and server examples.
+See [docs/mods.md](docs/mods.md) for details on the mod system.
 Configuration details are in [docs/configuration.md](docs/configuration.md).
 
 ## License

@@ -10,6 +10,7 @@ This directory contains all guides for the Colony project. References are groupe
 ## For Developers
 - [Architecture Overview](architecture.md) – explains the module layout and networking workflow.
 - [Networking Guide](networking.md) – client and server message flow examples.
+- [Modding Guide](mods.md) – how to load additional game logic from the `mods/` folder.
 - [Localization Guide](i18n.md)
 - [Configuration Guide](configuration.md)
 - [Contributing Guide](../CONTRIBUTING.md) – coding conventions and contribution process.
