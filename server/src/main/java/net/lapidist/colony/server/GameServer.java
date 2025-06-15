@@ -192,15 +192,16 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
             mapState = data.mapState();
             if (mods == null) {
                 mods = new java.util.ArrayList<>();
+                boolean useAll = data.mods().isEmpty();
                 for (GameMod builtin : java.util.ServiceLoader.load(GameMod.class)) {
                     ModMetadata meta = ModMetadataUtil.builtinMetadata(builtin.getClass());
-                    if (data.mods().stream().anyMatch(m -> m.id().equals(meta.id()))) {
+                    if (useAll || data.mods().stream().anyMatch(m -> m.id().equals(meta.id()))) {
                         mods.add(new LoadedMod(builtin, meta));
                     }
                 }
                 java.util.List<LoadedMod> loaded = new ModLoader(Paths.get()).loadMods();
                 for (LoadedMod mod : loaded) {
-                    if (data.mods().stream().anyMatch(m -> m.id().equals(mod.metadata().id()))) {
+                    if (useAll || data.mods().stream().anyMatch(m -> m.id().equals(mod.metadata().id()))) {
                         mods.add(mod);
                     }
                 }

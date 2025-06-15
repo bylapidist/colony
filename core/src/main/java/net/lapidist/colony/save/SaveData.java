@@ -20,7 +20,7 @@ public record SaveData(int version, int kryoHash, MapState mapState, List<ModMet
         mods = mods == null ? new java.util.ArrayList<>() : new java.util.ArrayList<>(mods);
     }
 
-    public SaveData(final int version, final int kryoHash, final MapState mapState) {
-        this(version, kryoHash, mapState, new java.util.ArrayList<>());
+    public SaveData(final int versionValue, final int kryoHashValue, final MapState state) {
+        this(versionValue, kryoHashValue, state, new java.util.ArrayList<>());
     }
 }
