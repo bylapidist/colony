@@ -24,5 +24,7 @@ public interface PathService {
 
     void deleteAutosave(String saveName) throws IOException;
 
+    Path getConfigFile() throws IOException;
+
     Path getModsFolder() throws IOException;
 }

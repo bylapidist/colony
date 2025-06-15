@@ -93,6 +93,18 @@ public class PathsTest {
     }
 
     @Test
+    public void delegatesGetConfigFile() throws Exception {
+        PathService service = mock(PathService.class);
+        Path expected = java.nio.file.Paths.get("config.conf");
+        when(service.getConfigFile()).thenReturn(expected);
+        Paths paths = new Paths(service);
+
+        Path actual = paths.getConfigFile();
+        assertEquals(expected, actual);
+        verify(service).getConfigFile();
+    }
+
+    @Test
     public void delegatesGetModsFolder() throws Exception {
         PathService service = mock(PathService.class);
         Path expected = java.nio.file.Paths.get("mods");

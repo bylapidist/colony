@@ -56,6 +56,15 @@ public final class MapService {
                     .autosaveName(saveName + Paths.AUTOSAVE_SUFFIX)
                     .build();
             Files.writeString(Paths.get().getLastAutosaveMarker(), saveName);
+            java.nio.file.Path config = Paths.get().getConfigFile();
+            java.util.List<String> lines = new java.util.ArrayList<>();
+            if (java.nio.file.Files.exists(config)) {
+                lines.addAll(java.nio.file.Files.readAllLines(config));
+            }
+            if (!lines.contains(saveName)) {
+                lines.add(saveName);
+                java.nio.file.Files.write(config, lines);
+            }
             return state;
         } finally {
             lock.unlock();

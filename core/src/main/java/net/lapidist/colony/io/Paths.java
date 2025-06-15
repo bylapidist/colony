@@ -70,6 +70,10 @@ public final class Paths {
         service.deleteAutosave(saveName);
     }
 
+    public Path getConfigFile() throws IOException {
+        return service.getConfigFile();
+    }
+
     public Path getModsFolder() throws IOException {
         return service.getModsFolder();
     }

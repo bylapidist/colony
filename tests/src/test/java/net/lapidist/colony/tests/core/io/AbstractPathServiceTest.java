@@ -38,11 +38,13 @@ public class AbstractPathServiceTest {
         Paths paths = new Paths(service);
 
         Path settings = paths.getSettingsFile();
+        Path config = paths.getConfigFile();
 
         assertTrue(java.nio.file.Files.exists(gameFolder));
         assertTrue(java.nio.file.Files.exists(gameFolder.resolve("saves")));
         assertTrue(java.nio.file.Files.exists(gameFolder.resolve("mods")));
         assertEquals(gameFolder.resolve("settings.properties"), settings);
+        assertEquals(gameFolder.resolve("config.conf"), config);
     }
 
     @Test

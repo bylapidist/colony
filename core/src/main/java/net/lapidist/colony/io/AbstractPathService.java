@@ -16,6 +16,7 @@ abstract class AbstractPathService implements PathService {
 
     private static final String AUTOSAVE_SUFFIX = Paths.AUTOSAVE_SUFFIX;
     private static final String SETTINGS_FILE = "settings.properties";
+    private static final String CONFIG_FILE = "config.conf";
 
     protected abstract String getGameFolderPath();
 
@@ -32,6 +33,10 @@ abstract class AbstractPathService implements PathService {
 
     private FileHandle getSettingsHandle() {
         return getGameFolder().child(SETTINGS_FILE);
+    }
+
+    private FileHandle getConfigHandle() {
+        return getGameFolder().child(CONFIG_FILE);
     }
 
     private void ensureExists(final FileHandle handle) {
@@ -101,6 +106,12 @@ abstract class AbstractPathService implements PathService {
         if (file.exists()) {
             file.delete();
         }
+    }
+
+    @Override
+    public Path getConfigFile() throws IOException {
+        createGameFoldersIfNotExists();
+        return getConfigHandle().file().toPath();
     }
 
     @Override
