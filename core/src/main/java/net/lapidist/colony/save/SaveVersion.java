@@ -32,9 +32,10 @@ public enum SaveVersion {
     V26(26),
     V27(27),
     V28(28),
-    V29(29);
+    V29(29),
+    V30(30);
 
-    public static final SaveVersion CURRENT = V29;
+    public static final SaveVersion CURRENT = V30;
 
     private final int number;
 

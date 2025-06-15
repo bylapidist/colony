@@ -4,7 +4,6 @@ import net.lapidist.colony.mod.GameMod;
 import net.lapidist.colony.registry.BuildingDefinition;
 import net.lapidist.colony.registry.Registries;
 import net.lapidist.colony.registry.TileDefinition;
-import net.lapidist.colony.registry.ResourceDefinition;
 import net.lapidist.colony.i18n.I18n;
 
 /** Built-in mod registering standard tile and building definitions. */
@@ -15,9 +14,6 @@ public final class BaseDefinitionsMod implements GameMod {
         Registries.tiles().register(new TileDefinition("dirt", "Dirt", "dirt0"));
         Registries.tiles().register(new TileDefinition("grass", "Grass", "grass0"));
 
-        Registries.resources().register(new ResourceDefinition("WOOD", "Wood", "wood0"));
-        Registries.resources().register(new ResourceDefinition("STONE", "Stone", "stone0"));
-        Registries.resources().register(new ResourceDefinition("FOOD", "Food", "food0"));
 
         Registries.buildings().register(new BuildingDefinition(
                 "house",

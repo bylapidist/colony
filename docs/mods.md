@@ -46,6 +46,9 @@ These are loaded automatically and do not need to be placed inside the `mods/` f
 { "id": "base-autosave", "version": "1.0.0" }
 { "id": "base-resource-production", "version": "1.0.0" }
 { "id": "base-handlers", "version": "1.0.0" }
+{ "id": "base-definitions", "version": "1.0.0" }
+{ "id": "base-resources", "version": "1.0.0" }
+{ "id": "base-items", "version": "1.0.0" }
 ```
 
 ## How mods are discovered
@@ -91,8 +94,15 @@ public final class ExtraMod implements GameMod {
 
 ## Registries
 
-Core data like tile, building, resource and item types are stored in simple string keyed registries. Mods can
-register new entries during the `init()` phase:
+Core game data is looked up from string keyed registries. Four registries are
+provided via the `Registries` helper class:
+
+- `tiles()` – `TileDefinition` entries
+- `buildings()` – `BuildingDefinition` entries
+- `resources()` – `ResourceDefinition` entries
+- `items()` – `ItemDefinition` entries
+
+Mods can register new entries during the `init()` phase:
 
 ```java
 public final class WaterTiles implements GameMod {
