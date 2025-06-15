@@ -1,4 +1,4 @@
-package net.lapidist.colony.client.entities.factories;
+package net.lapidist.colony.client.entities;
 
 import com.artemis.Entity;
 import com.artemis.World;
@@ -10,7 +10,7 @@ import net.lapidist.colony.registry.Registries;
 import net.lapidist.colony.registry.TileDefinition;
 import java.util.Locale;
 
-import static net.lapidist.colony.client.entities.factories.SpriteFactoryUtil.createEntity;
+import static net.lapidist.colony.client.entities.SpriteFactoryUtil.createEntity;
 
 public final class TileFactory {
 

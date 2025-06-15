@@ -1,4 +1,4 @@
-package net.lapidist.colony.client.entities.factories;
+package net.lapidist.colony.client.entities;
 
 import com.artemis.Entity;
 import com.artemis.World;

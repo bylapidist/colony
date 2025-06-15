@@ -3,7 +3,7 @@ package net.lapidist.colony.tests.client.entities.factories;
 import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.math.Vector2;
-import net.lapidist.colony.client.entities.factories.BuildingFactory;
+import net.lapidist.colony.client.entities.BuildingFactory;
 import net.lapidist.colony.components.entities.BuildingComponent;
 import org.junit.Test;
 
