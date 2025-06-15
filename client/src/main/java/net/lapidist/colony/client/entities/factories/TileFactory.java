@@ -36,9 +36,7 @@ public final class TileFactory {
 
         ResourceComponent rc = new ResourceComponent();
         if (resources != null) {
-            rc.setAmount("WOOD", resources.wood());
-            rc.setAmount("STONE", resources.stone());
-            rc.setAmount("FOOD", resources.food());
+            rc.setAmounts(new java.util.HashMap<>(resources.amounts()));
         }
 
         return createEntity(world, tileComponent, rc, coords);

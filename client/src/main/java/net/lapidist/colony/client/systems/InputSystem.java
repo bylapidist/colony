@@ -161,14 +161,11 @@ public final class InputSystem extends BaseSystem {
     }
 
     private String getResourceType(final net.lapidist.colony.components.resources.ResourceComponent rc) {
-        if (rc.getWood() > 0) {
-            return "WOOD";
-        } else if (rc.getStone() > 0) {
-            return "STONE";
-        } else if (rc.getFood() > 0) {
-            return "FOOD";
-        }
-        return null;
+        return rc.getAmounts().entrySet().stream()
+                .filter(e -> e.getValue() > 0)
+                .max(java.util.Map.Entry.comparingByValue())
+                .map(java.util.Map.Entry::getKey)
+                .orElse(null);
     }
 
     public void setBuildMode(final boolean mode) {
