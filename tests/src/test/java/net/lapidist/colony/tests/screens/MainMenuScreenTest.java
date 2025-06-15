@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.client.screens.LoadGameScreen;
 import net.lapidist.colony.client.screens.MainMenuScreen;
-import net.lapidist.colony.client.screens.NewGameScreen;
+import net.lapidist.colony.client.screens.ModSelectionScreen;
 import net.lapidist.colony.client.screens.SettingsScreen;
 import org.mockito.MockedConstruction;
 import static org.mockito.Mockito.mockConstruction;
@@ -39,7 +39,7 @@ public class MainMenuScreenTest {
             MainMenuScreen screen = new MainMenuScreen(colony);
             TextButton newGame = (TextButton) getRoot(screen).getChildren().get(NEW_GAME_INDEX);
             newGame.fire(new ChangeListener.ChangeEvent());
-            verify(colony).setScreen(isA(NewGameScreen.class));
+            verify(colony).setScreen(isA(ModSelectionScreen.class));
             screen.dispose();
         }
     }

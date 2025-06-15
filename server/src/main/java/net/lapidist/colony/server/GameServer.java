@@ -124,12 +124,14 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     public void start() throws IOException, InterruptedException {
         initKryo();
         Events.init(new EventSystem());
-        mods = new java.util.ArrayList<>();
-        for (GameMod builtin : java.util.ServiceLoader.load(GameMod.class)) {
-            ModMetadata meta = builtinMetadata(builtin.getClass());
-            mods.add(new LoadedMod(builtin, meta));
+        if (mods == null) {
+            mods = new java.util.ArrayList<>();
+            for (GameMod builtin : java.util.ServiceLoader.load(GameMod.class)) {
+                ModMetadata meta = builtinMetadata(builtin.getClass());
+                mods.add(new LoadedMod(builtin, meta));
+            }
+            mods.addAll(new ModLoader(Paths.get()).loadMods());
         }
-        mods.addAll(new ModLoader(Paths.get()).loadMods());
 
         for (LoadedMod mod : mods) {
             mod.mod().init();
@@ -368,6 +370,13 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
      */
     public java.util.function.Supplier<CommandBus> getCommandBusFactory() {
         return commandBusFactory;
+    }
+
+    /**
+     * Specify the list of mods to load. Must be called before {@link #start()}.
+     */
+    public void setMods(final java.util.List<LoadedMod> modsToUse) {
+        this.mods = modsToUse;
     }
 
     /**
