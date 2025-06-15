@@ -99,7 +99,9 @@ public class GameServerCoverageTest {
         GameServer server = new GameServer(GameServerConfig.builder().saveName("mods").build());
         field("networkService").set(server, mock(NetworkService.class));
         field("autosaveService").set(server, mock(AutosaveService.class));
-        field("resourceProductionService").set(server, mock(ResourceProductionService.class));
+        ResourceProductionService prod = mock(ResourceProductionService.class);
+        field("resourceProductionService").set(server, prod);
+        server.registerSystem(prod);
         class DummyMod implements GameMod {
             private boolean disposed;
 
