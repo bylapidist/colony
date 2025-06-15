@@ -9,6 +9,7 @@ import net.lapidist.colony.base.BaseDefinitionsMod;
 import net.lapidist.colony.registry.Registries;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
+import net.lapidist.colony.settings.GraphicsSettings;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,12 +28,14 @@ public class RendererEnumMapTest {
         ResourceLoader loader = mock(ResourceLoader.class);
         when(loader.findRegion(anyString())).thenReturn(new TextureRegion());
         new BaseDefinitionsMod().init();
+        GraphicsSettings graphics = new GraphicsSettings();
         TileRenderer renderer = new TileRenderer(
                 batch,
                 loader,
                 mock(CameraProvider.class),
                 new DefaultAssetResolver(),
-                null
+                null,
+                graphics
         );
 
         Field f = TileRenderer.class.getDeclaredField("tileRegions");
@@ -52,11 +55,13 @@ public class RendererEnumMapTest {
         ResourceLoader loader = mock(ResourceLoader.class);
         when(loader.findRegion(anyString())).thenReturn(new TextureRegion());
         new BaseDefinitionsMod().init();
+        GraphicsSettings graphics = new GraphicsSettings();
         BuildingRenderer renderer = new BuildingRenderer(
                 batch,
                 loader,
                 mock(CameraProvider.class),
-                new DefaultAssetResolver()
+                new DefaultAssetResolver(),
+                graphics
         );
 
         Field f = BuildingRenderer.class.getDeclaredField("buildingRegions");

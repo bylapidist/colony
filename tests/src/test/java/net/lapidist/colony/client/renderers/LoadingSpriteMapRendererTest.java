@@ -10,6 +10,7 @@ import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockedConstruction;
+import net.lapidist.colony.settings.GraphicsSettings;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -32,7 +33,8 @@ public class LoadingSpriteMapRendererTest {
         try (MockedConstruction<SpriteBatchMapRenderer> cons =
                 mockConstruction(SpriteBatchMapRenderer.class)) {
             LoadingSpriteMapRenderer renderer = new LoadingSpriteMapRenderer(
-                    world, batch, loader, camera, false, null, null, null);
+                    world, batch, loader, camera, false, null, null);
+            renderer.setGraphicsSettings(new GraphicsSettings());
             renderer.setLights(lights);
 
             renderer.render(mock(net.lapidist.colony.client.render.MapRenderData.class), null);

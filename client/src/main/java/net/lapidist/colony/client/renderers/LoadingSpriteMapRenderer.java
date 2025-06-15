@@ -8,6 +8,7 @@ import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.client.render.MapRenderData;
+import net.lapidist.colony.settings.GraphicsSettings;
 
 import java.util.function.Consumer;
 
@@ -22,12 +23,12 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
     private final CameraProvider cameraSystem;
     private final boolean cacheEnabled;
     private final Consumer<Float> progressCallback;
-    private final com.badlogic.gdx.graphics.glutils.ShaderProgram shader;
-    private final net.lapidist.colony.client.graphics.ShaderPlugin plugin;
+    private com.badlogic.gdx.graphics.glutils.ShaderProgram shader;
+    private net.lapidist.colony.client.graphics.ShaderPlugin plugin;
+    private GraphicsSettings graphicsSettings;
     private box2dLight.RayHandler lights;
 
     private MapRenderer delegate;
-
     public LoadingSpriteMapRenderer(
             final World worldContext,
             final SpriteBatch batchToUse,
@@ -35,7 +36,6 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
             final CameraProvider camera,
             final boolean cache,
             final Consumer<Float> callback,
-            final com.badlogic.gdx.graphics.glutils.ShaderProgram shaderProgram,
             final net.lapidist.colony.client.graphics.ShaderPlugin pluginParam
     ) {
         this.world = worldContext;
@@ -44,10 +44,20 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
         this.cameraSystem = camera;
         this.cacheEnabled = cache;
         this.progressCallback = callback;
-        this.shader = shaderProgram;
         this.plugin = pluginParam;
+        this.graphicsSettings = new GraphicsSettings();
         // ensure mapper initialization for render systems
         worldContext.getMapper(MapComponent.class);
+    }
+
+    /** Assign custom shader program. */
+    public void setShader(final com.badlogic.gdx.graphics.glutils.ShaderProgram shaderProgram) {
+        this.shader = shaderProgram;
+    }
+
+    /** Set graphics settings for renderer creation. */
+    public void setGraphicsSettings(final GraphicsSettings settings) {
+        this.graphicsSettings = settings;
     }
 
     /** Assign lighting handler. */
@@ -75,13 +85,15 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
                     resourceLoader,
                     cameraSystem,
                     new DefaultAssetResolver(),
-                    gc
+                    gc,
+                    graphicsSettings
             );
             BuildingRenderer buildingRenderer = new BuildingRenderer(
                     spriteBatch,
                     resourceLoader,
                     cameraSystem,
-                    new DefaultAssetResolver()
+                    new DefaultAssetResolver(),
+                    graphicsSettings
             );
             PlayerRenderer playerRenderer = new PlayerRenderer(
                     spriteBatch,
@@ -106,9 +118,9 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
                     buildingRenderer,
                     renderers,
                     cacheEnabled,
-                    shader,
-                    plugin
+                    shader
             );
+            ((SpriteBatchMapRenderer) delegate).setPlugin(plugin);
             if (lights != null && delegate instanceof SpriteBatchMapRenderer sb) {
                 sb.setLights(lights);
             }
