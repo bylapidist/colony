@@ -12,5 +12,5 @@ public interface MapRendererFactory {
      * @param world game world context
      * @return configured map renderer
      */
-    MapRenderer create(World world);
+    MapRenderer create(World world, net.lapidist.colony.client.graphics.ShaderPlugin plugin);
 }

@@ -7,6 +7,9 @@ import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.core.io.TextureAtlasResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
+import net.lapidist.colony.client.graphics.ShaderManager;
+import net.lapidist.colony.client.graphics.ShaderPlugin;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import net.lapidist.colony.settings.GraphicsSettings;
 import net.lapidist.colony.settings.Settings;
 import org.slf4j.Logger;
@@ -51,7 +54,7 @@ public final class SpriteMapRendererFactory implements MapRendererFactory {
     }
 
     @Override
-    public MapRenderer create(final World world) {
+    public MapRenderer create(final World world, final ShaderPlugin plugin) {
         GraphicsSettings graphics;
         try {
             graphics = Settings.load().getGraphicsSettings();
@@ -65,13 +68,23 @@ public final class SpriteMapRendererFactory implements MapRendererFactory {
 
         CameraProvider cameraSystem = world.getSystem(PlayerCameraSystem.class);
 
+        ShaderProgram shader = null;
+        if (plugin != null && graphics.isShadersEnabled()) {
+            try {
+                shader = plugin.create(new ShaderManager());
+            } catch (Exception ex) {
+                LOGGER.warn("Shader plugin {} failed", plugin.getClass().getSimpleName(), ex);
+            }
+        }
+
         return new LoadingSpriteMapRenderer(
                 world,
                 batch,
                 resourceLoader,
                 cameraSystem,
                 graphics.isSpriteCacheEnabled(),
-                progressCallback
+                progressCallback,
+                shader
         );
     }
 }
