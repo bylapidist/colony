@@ -21,10 +21,26 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public final class BuildCommandHandler implements CommandHandler<BuildCommand> {
     private static final Map<String, ResourceData> COSTS = Map.of(
-            "house", new ResourceData(1, 0, 0),
-            "market", new ResourceData(5, 2, 0),
-            "factory", new ResourceData(10, 5, 0),
-            "farm", new ResourceData(2, 0, 0)
+            "house", new ResourceData(new java.util.HashMap<>(Map.of(
+                    "WOOD", 1,
+                    "STONE", 0,
+                    "FOOD", 0
+            ))),
+            "market", new ResourceData(new java.util.HashMap<>(Map.of(
+                    "WOOD", 5,
+                    "STONE", 2,
+                    "FOOD", 0
+            ))),
+            "factory", new ResourceData(new java.util.HashMap<>(Map.of(
+                    "WOOD", 10,
+                    "STONE", 5,
+                    "FOOD", 0
+            ))),
+            "farm", new ResourceData(new java.util.HashMap<>(Map.of(
+                    "WOOD", 2,
+                    "STONE", 0,
+                    "FOOD", 0
+            )))
     );
 
     private final Supplier<MapState> stateSupplier;
@@ -65,18 +81,18 @@ public final class BuildCommandHandler implements CommandHandler<BuildCommand> {
             String type = def.id();
             ResourceData cost = COSTS.getOrDefault(type, new ResourceData());
             ResourceData player = state.playerResources();
-            if (player.wood() < cost.wood()
-                    || player.stone() < cost.stone()
-                    || player.food() < cost.food()) {
-                return;
+            java.util.Map<String, Integer> playerAmounts = new java.util.HashMap<>(player.amounts());
+            for (var entry : cost.amounts().entrySet()) {
+                if (playerAmounts.getOrDefault(entry.getKey(), 0) < entry.getValue()) {
+                    return;
+                }
             }
             BuildingData building = new BuildingData(command.x(), command.y(), type);
             state.buildings().add(building);
-            ResourceData newResources = new ResourceData(
-                    player.wood() - cost.wood(),
-                    player.stone() - cost.stone(),
-                    player.food() - cost.food()
-            );
+            for (var entry : cost.amounts().entrySet()) {
+                playerAmounts.merge(entry.getKey(), -entry.getValue(), Integer::sum);
+            }
+            ResourceData newResources = new ResourceData(new java.util.HashMap<>(playerAmounts));
             MapState updated = state.toBuilder()
                     .playerResources(newResources)
                     .build();

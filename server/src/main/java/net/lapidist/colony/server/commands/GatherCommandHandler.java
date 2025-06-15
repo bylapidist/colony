@@ -44,13 +44,11 @@ public final class GatherCommandHandler implements CommandHandler<GatherCommand>
                 return;
             }
             ResourceData res = tile.resources();
-            ResourceData updated;
-            switch (command.resourceType()) {
-                case "WOOD" -> updated = new ResourceData(Math.max(res.wood() - 1, 0), res.stone(), res.food());
-                case "STONE" -> updated = new ResourceData(res.wood(), Math.max(res.stone() - 1, 0), res.food());
-                case "FOOD" -> updated = new ResourceData(res.wood(), res.stone(), Math.max(res.food() - 1, 0));
-                default -> updated = res;
-            }
+            java.util.Map<String, Integer> amounts = new java.util.HashMap<>(res.amounts());
+            int current = amounts.getOrDefault(command.resourceId(), 0);
+            int updatedValue = Math.max(current - 1, 0);
+            amounts.put(command.resourceId(), updatedValue);
+            ResourceData updated = new ResourceData(new java.util.HashMap<>(amounts));
             TileData newTile = tile.toBuilder().resources(updated).build();
             int chunkX = Math.floorDiv(command.x(), MapChunkData.CHUNK_SIZE);
             int chunkY = Math.floorDiv(command.y(), MapChunkData.CHUNK_SIZE);
@@ -58,11 +56,9 @@ public final class GatherCommandHandler implements CommandHandler<GatherCommand>
             int localY = Math.floorMod(command.y(), MapChunkData.CHUNK_SIZE);
             state.getOrCreateChunk(chunkX, chunkY).getTiles().put(new TilePos(localX, localY), newTile);
             ResourceData player = state.playerResources();
-            ResourceData newPlayer = new ResourceData(
-                    player.wood() + (res.wood() - updated.wood()),
-                    player.stone() + (res.stone() - updated.stone()),
-                    player.food() + (res.food() - updated.food())
-            );
+            java.util.Map<String, Integer> playerAmounts = new java.util.HashMap<>(player.amounts());
+            playerAmounts.merge(command.resourceId(), current - updatedValue, Integer::sum);
+            ResourceData newPlayer = new ResourceData(new java.util.HashMap<>(playerAmounts));
             MapState updatedState = state.toBuilder()
                     .playerResources(newPlayer)
                     .build();
