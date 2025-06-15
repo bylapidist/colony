@@ -20,6 +20,7 @@ import net.lapidist.colony.save.SaveData;
 import net.lapidist.colony.components.state.PlayerPosition;
 import net.lapidist.colony.components.state.CameraPosition;
 import net.lapidist.colony.components.state.PlayerPositionUpdate;
+import net.lapidist.colony.mod.ModMetadata;
 
 /**
  * Registers all serializable classes with a given Kryo instance.
@@ -61,7 +62,7 @@ public final class SerializationRegistrar {
     }
 
     /** Precomputed registration hash for quick access. */
-    public static final int REGISTRATION_HASH = 632693971;
+    public static final int REGISTRATION_HASH = 23376500;
 
     private static final Class<?>[] REGISTERED_TYPES = {
             TileData.class,
@@ -86,6 +87,7 @@ public final class SerializationRegistrar {
             PlayerPosition.class,
             SaveData.class,
             CameraPosition.class,
-            PlayerPositionUpdate.class
+            PlayerPositionUpdate.class,
+            ModMetadata.class
     };
 }

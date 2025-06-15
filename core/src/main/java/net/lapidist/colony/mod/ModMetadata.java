@@ -1,5 +1,6 @@
 package net.lapidist.colony.mod;
 
+import net.lapidist.colony.serialization.KryoType;
 import java.util.List;
 
 /**
@@ -9,5 +10,6 @@ import java.util.List;
  * @param version      version string
  * @param dependencies list of required mod ids
  */
+@KryoType
 public record ModMetadata(String id, String version, List<String> dependencies) {
 }
