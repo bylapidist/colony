@@ -1,4 +1,4 @@
-package net.lapidist.colony.server;
+package net.lapidist.colony.mod;
 
 /** Simple lifecycle for server side runnable systems. */
 public interface GameSystem {

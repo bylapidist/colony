@@ -33,6 +33,7 @@ import net.lapidist.colony.server.services.AutosaveService;
 import net.lapidist.colony.server.services.MapService;
 import net.lapidist.colony.server.services.NetworkService;
 import net.lapidist.colony.server.services.ResourceProductionService;
+import net.lapidist.colony.mod.GameSystem;
 import java.util.concurrent.locks.ReentrantLock;
 import net.mostlyoriginal.api.event.common.EventSystem;
 import org.slf4j.Logger;
