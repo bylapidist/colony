@@ -68,11 +68,9 @@ public final class ResourceProductionService {
                 return;
             }
             ResourceData player = state.playerResources();
-            ResourceData updated = new ResourceData(
-                    player.wood(),
-                    player.stone(),
-                    player.food() + (int) farms
-            );
+            java.util.Map<String, Integer> amounts = new java.util.HashMap<>(player.amounts());
+            amounts.merge("FOOD", (int) farms, Integer::sum);
+            ResourceData updated = new ResourceData(new java.util.HashMap<>(amounts));
             MapState newState = state.toBuilder()
                     .playerResources(updated)
                     .build();
