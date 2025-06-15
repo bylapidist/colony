@@ -60,6 +60,26 @@ public interface ResourceLoader extends Disposable {
     TextureRegion findRegion(String name);
 
     /**
+     * Retrieve the normal map associated with a region if present.
+     *
+     * @param name base region identifier
+     * @return matching normal map region or {@code null}
+     */
+    default TextureRegion findNormalRegion(final String name) {
+        return null;
+    }
+
+    /**
+     * Retrieve the specular map associated with a region if present.
+     *
+     * @param name base region identifier
+     * @return matching specular map region or {@code null}
+     */
+    default TextureRegion findSpecularRegion(final String name) {
+        return null;
+    }
+
+    /**
      * Load a particle effect from the given path. Implementations should look
      * for definitions under an {@code effects/} directory.
      *

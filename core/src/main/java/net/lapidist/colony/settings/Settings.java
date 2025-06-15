@@ -63,6 +63,8 @@ public final class Settings {
             settings.graphicsSettings.setRenderer(gLoaded.getRenderer());
             settings.graphicsSettings.setSpriteCacheEnabled(gLoaded.isSpriteCacheEnabled());
             settings.graphicsSettings.setLightingEnabled(gLoaded.isLightingEnabled());
+            settings.graphicsSettings.setNormalMapsEnabled(gLoaded.isNormalMapsEnabled());
+            settings.graphicsSettings.setSpecularMapsEnabled(gLoaded.isSpecularMapsEnabled());
         }
         return settings;
     }

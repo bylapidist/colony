@@ -77,6 +77,8 @@ public class SettingsTest {
         graphics.setShaderPlugin("test");
         graphics.setSpriteCacheEnabled(false);
         graphics.setLightingEnabled(false);
+        graphics.setNormalMapsEnabled(true);
+        graphics.setSpecularMapsEnabled(true);
         settings.save();
 
         Settings loaded = Settings.load();
@@ -87,5 +89,7 @@ public class SettingsTest {
         assertEquals("model", loaded.getGraphicsSettings().getRenderer());
         assertEquals(false, loaded.getGraphicsSettings().isSpriteCacheEnabled());
         assertEquals(false, loaded.getGraphicsSettings().isLightingEnabled());
+        assertEquals(true, loaded.getGraphicsSettings().isNormalMapsEnabled());
+        assertEquals(true, loaded.getGraphicsSettings().isSpecularMapsEnabled());
     }
 }

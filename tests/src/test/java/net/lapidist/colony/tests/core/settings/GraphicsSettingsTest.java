@@ -26,6 +26,8 @@ public class GraphicsSettingsTest {
         gs.setRenderer("model");
         gs.setSpriteCacheEnabled(false);
         gs.setLightingEnabled(false);
+        gs.setNormalMapsEnabled(true);
+        gs.setSpecularMapsEnabled(true);
         gs.save(prefs);
         prefs.flush();
 
@@ -37,6 +39,8 @@ public class GraphicsSettingsTest {
         assertEquals("model", loaded.getRenderer());
         assertFalse(loaded.isSpriteCacheEnabled());
         assertFalse(loaded.isLightingEnabled());
+        assertTrue(loaded.isNormalMapsEnabled());
+        assertTrue(loaded.isSpecularMapsEnabled());
     }
 
     @Test
@@ -53,5 +57,7 @@ public class GraphicsSettingsTest {
         assertEquals("sprite", loaded.getRenderer());
         assertTrue(loaded.isSpriteCacheEnabled());
         assertTrue(loaded.isLightingEnabled());
+        assertFalse(loaded.isNormalMapsEnabled());
+        assertFalse(loaded.isSpecularMapsEnabled());
     }
 }
