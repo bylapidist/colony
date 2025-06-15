@@ -27,7 +27,7 @@ public class EventsTest {
     @Before
     public void setUp() {
         Events.init(new EventSystem());
-        Events.getInstance().registerEvents(this);
+        Events.registerEvents(this);
     }
 
     @Subscribe
@@ -89,5 +89,16 @@ public class EventsTest {
                 String.format("ResizeEvent(width=%d, height=%d)", width, height),
                 event.toString()
         );
+    }
+
+    @Test
+    public void listenerQueuedUntilInit() {
+        Events.dispose();
+        pauseHandled = false;
+        Events.registerEvents(this);
+        Events.init(new EventSystem());
+        Events.dispatch(new PauseEvent());
+        Events.update();
+        assertTrue(pauseHandled);
     }
 }
