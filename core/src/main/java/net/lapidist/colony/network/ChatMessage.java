@@ -1,4 +1,4 @@
-package net.lapidist.colony.chat;
+package net.lapidist.colony.network;
 
 /**
  * Simple chat message exchanged between clients via the server.

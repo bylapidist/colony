@@ -84,7 +84,7 @@ public final class SerializationRegistrar {
             net.lapidist.colony.components.state.ChunkPos.class,
             net.lapidist.colony.map.MapChunkData.class,
             TilePos.class,
-            net.lapidist.colony.chat.ChatMessage.class,
+            net.lapidist.colony.network.ChatMessage.class,
             PlayerPosition.class,
             SaveData.class,
             CameraPosition.class,

@@ -15,7 +15,7 @@ import net.lapidist.colony.components.state.ChunkPos;
 import net.lapidist.colony.map.MapChunkData;
 import net.lapidist.colony.components.state.MapChunkRequest;
 import net.lapidist.colony.components.GameConstants;
-import net.lapidist.colony.chat.ChatMessage;
+import net.lapidist.colony.network.ChatMessage;
 import net.lapidist.colony.serialization.KryoRegistry;
 import net.lapidist.colony.network.AbstractMessageEndpoint;
 import net.lapidist.colony.network.DispatchListener;
