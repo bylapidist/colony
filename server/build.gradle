@@ -1,4 +1,21 @@
 apply plugin: 'application'
+import org.gradle.api.file.DuplicatesStrategy
+
+def processedResourcesDir = "$buildDir/processedResources"
+
+task processModJson(type: Copy) {
+    from 'src/main/resources/mod.json'
+    into processedResourcesDir
+    filteringCharset = 'UTF-8'
+    filter { line -> line.replace('"1.0.0"', "\"${rootProject.applicationVersion}\"") }
+}
+
+processResources {
+    dependsOn processModJson
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(processedResourcesDir) { include 'mod.json' }
+    from('src/main/resources') { exclude 'mod.json' }
+}
 
 dependencies {
     implementation project(":core")
