@@ -5,3 +5,5 @@ set -euo pipefail
 ./gradlew spotlessApply
 ./gradlew clean test
 ./gradlew check
+javac scripts/I18nCheck.java
+java -cp scripts I18nCheck

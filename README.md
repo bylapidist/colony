@@ -33,7 +33,7 @@ You can also run all of these steps at once:
 ./scripts/check.sh
 ```
 
-The `tests:copyAssets` task is required so that resources used by the test suite are available. `spotlessApply` will automatically format all Java sources and must be executed before committing. After running the tasks above, open `build/reports/jacoco/test/html/index.html` to review coverage results. New code should maintain at least 80% line coverage.
+The `tests:copyAssets` task is required so that resources used by the test suite are available. `spotlessApply` will automatically format all Java sources and must be executed before committing. `check.sh` also validates the translation files to ensure all locales share the same keys. After running the tasks above, open `build/reports/jacoco/test/html/index.html` to review coverage results. New code should maintain at least 80% line coverage.
 
 ### Running the Game
 Both the client and dedicated server can be started directly from Gradle:
