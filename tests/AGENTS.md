@@ -6,5 +6,4 @@ JUnit tests and utilities including `GdxTestRunner` for headless LibGDX executio
 - Copy assets from the client module via `./gradlew tests:copyAssets` before running tests.
 
 # Testing notes
-- Run `./gradlew clean test` followed by `./gradlew check` to ensure style and coverage.
-- Generate the coverage report with `./gradlew codeCoverageReport`.
+- See [`../docs/developer_workflow.md`](../docs/developer_workflow.md) for build, style and coverage commands.

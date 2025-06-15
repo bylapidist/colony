@@ -18,6 +18,8 @@ Each module contains its own `AGENTS.md` with extra notes.
 - Run `./gradlew clean test` to compile and execute tests.
 - Run `./gradlew check` to verify Checkstyle and Spotless rules.
 - The helper script `./scripts/check.sh` performs all steps at once.
+- See `docs/developer_workflow.md` for a detailed walkthrough of these commands and
+  save-migration steps.
 
 ## Running the game
 - `./gradlew :client:run` – start the desktop client.

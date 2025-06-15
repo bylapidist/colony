@@ -34,6 +34,7 @@ You can also run all of these steps at once:
 ```
 
 The `tests:copyAssets` task is required so that resources used by the test suite are available. `spotlessApply` will automatically format all Java sources and must be executed before committing. After running the tasks above, open `build/reports/jacoco/test/html/index.html` to review coverage results. New code should maintain at least 80% line coverage.
+For more details on the developer workflow, see [docs/developer_workflow.md](docs/developer_workflow.md).
 
 ### Running the Game
 Both the client and dedicated server can be started directly from Gradle:
@@ -87,6 +88,7 @@ Configuration details are in [docs/configuration.md](docs/configuration.md).
 Performance benchmark numbers are tracked in [docs/performance.md](docs/performance.md).
 Translation instructions are in [docs/i18n.md](docs/i18n.md).
 Scenario test utilities are covered in [docs/tests.md](docs/tests.md).
+Developer build steps are summarized in [docs/developer_workflow.md](docs/developer_workflow.md).
 Shader plugins are described in [docs/shaders.md](docs/shaders.md).
 
 ## License

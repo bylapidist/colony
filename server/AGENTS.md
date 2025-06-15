@@ -6,5 +6,5 @@ Headless game server running the same ECS logic as the client and exposing netwo
 - Broadcast state updates to connected clients.
 
 # Testing notes
-- Follow the root module steps before running tests: `tests:copyAssets`, `clean test`, and `check`.
-- Generate coverage with `./gradlew codeCoverageReport` after tests.
+- Follow the root module steps before running tests.
+- See [`../docs/developer_workflow.md`](../docs/developer_workflow.md) for build, style and coverage commands.
