@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.BooleanArray;
-import net.lapidist.colony.client.util.CameraUtils;
+import net.lapidist.colony.client.graphics.CameraUtils;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.TileRotationUtil;
 import net.lapidist.colony.client.render.MapRenderData;

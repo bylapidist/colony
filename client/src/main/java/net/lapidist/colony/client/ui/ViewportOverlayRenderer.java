@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
-import net.lapidist.colony.client.util.CameraUtils;
+import net.lapidist.colony.client.graphics.CameraUtils;
 
 /**
  * Renders the camera viewport rectangle on the minimap.

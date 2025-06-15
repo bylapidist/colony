@@ -5,7 +5,7 @@ import com.artemis.Entity;
 import com.artemis.utils.IntBag;
 import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.client.network.GameClient;
-import net.lapidist.colony.client.util.CameraUtils;
+import net.lapidist.colony.client.graphics.CameraUtils;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.map.MapUtils;

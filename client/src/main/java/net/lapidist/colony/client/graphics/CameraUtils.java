@@ -1,4 +1,4 @@
-package net.lapidist.colony.client.util;
+package net.lapidist.colony.client.graphics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
