@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  server:
+    build: .
+    ports:
+      - "54555:54555/tcp"
+      - "54777:54777/udp"
+    volumes:
+      - ./colony-data:/root/.colony

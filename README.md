@@ -41,6 +41,21 @@ Both the client and dedicated server can be started directly from Gradle:
 - `./gradlew :client:run` – launches the game client.
 - `./gradlew :server:run` – starts a headless server.
 
+### Docker
+A `Dockerfile` is available to run the server in a container. Build the image and expose the default ports:
+
+```bash
+docker build -t colony-server .
+docker run -p 54555:54555/tcp -p 54777:54777/udp \
+           -v $(pwd)/colony-data:/root/.colony colony-server
+```
+
+Game data is stored in the mounted `colony-data` directory. An example compose file is included for convenience:
+
+```bash
+docker compose up
+```
+
 
 ## Controls
 Default keyboard mappings can be remapped in game. See
