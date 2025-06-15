@@ -6,7 +6,7 @@ import net.lapidist.colony.save.SaveVersion;
 import net.lapidist.colony.map.MapChunkData;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -37,7 +37,7 @@ public record MapState(
                 "save-" + UUID.randomUUID(),
                 null,
                 null,
-                new HashMap<>(),
+                new ConcurrentHashMap<>(),
                 new ArrayList<>(),
                 new ResourceData(),
                 new PlayerPosition(DEFAULT_WIDTH / 2, DEFAULT_HEIGHT / 2),
