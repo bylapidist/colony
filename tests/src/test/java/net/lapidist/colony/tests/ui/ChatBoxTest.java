@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import net.lapidist.colony.chat.ChatMessage;
+import net.lapidist.colony.network.ChatMessage;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.ui.ChatBox;
 import net.lapidist.colony.tests.GdxTestRunner;

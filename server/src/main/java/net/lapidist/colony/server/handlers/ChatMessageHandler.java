@@ -1,6 +1,6 @@
 package net.lapidist.colony.server.handlers;
 
-import net.lapidist.colony.chat.ChatMessage;
+import net.lapidist.colony.network.ChatMessage;
 import net.lapidist.colony.network.AbstractMessageHandler;
 import java.util.HashMap;
 import java.util.Map;

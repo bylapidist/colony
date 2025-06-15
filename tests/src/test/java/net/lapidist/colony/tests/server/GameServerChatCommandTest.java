@@ -1,6 +1,6 @@
 package net.lapidist.colony.tests.server;
 
-import net.lapidist.colony.chat.ChatMessage;
+import net.lapidist.colony.network.ChatMessage;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
