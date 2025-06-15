@@ -55,7 +55,11 @@ public final class Settings {
             settings.graphicsSettings.setMipMapsEnabled(gLoaded.isMipMapsEnabled());
             settings.graphicsSettings.setAnisotropicFilteringEnabled(
                     gLoaded.isAnisotropicFilteringEnabled());
-            settings.graphicsSettings.setShadersEnabled(gLoaded.isShadersEnabled());
+            settings.graphicsSettings.setShaderPlugin(gLoaded.getShaderPlugin());
+            if (prefs.contains(GraphicsSettings.LEGACY_SHADER_KEY)
+                    && !prefs.getBoolean(GraphicsSettings.LEGACY_SHADER_KEY, true)) {
+                settings.graphicsSettings.setShaderPlugin("none");
+            }
             settings.graphicsSettings.setRenderer(gLoaded.getRenderer());
             settings.graphicsSettings.setSpriteCacheEnabled(gLoaded.isSpriteCacheEnabled());
         }

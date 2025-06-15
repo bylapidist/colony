@@ -69,7 +69,7 @@ public final class SpriteMapRendererFactory implements MapRendererFactory {
         CameraProvider cameraSystem = world.getSystem(PlayerCameraSystem.class);
 
         ShaderProgram shader = null;
-        if (plugin != null && graphics.isShadersEnabled()) {
+        if (plugin != null) {
             try {
                 shader = plugin.create(new ShaderManager());
             } catch (Exception ex) {
