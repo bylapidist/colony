@@ -34,11 +34,10 @@ public enum SaveVersion {
     V1(1),
     V2(2),
     // ...
-    V18(18),
-    V19(19),
-    V20(20);
+    V28(28),
+    V29(29);
 
-    public static final SaveVersion CURRENT = V20;
+    public static final SaveVersion CURRENT = V29;
 }
 ```
 

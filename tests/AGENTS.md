@@ -7,3 +7,4 @@ JUnit tests and utilities including `GdxTestRunner` for headless LibGDX executio
 
 # Testing notes
 - Run `./gradlew clean test` followed by `./gradlew check` to ensure style and coverage.
+- Generate the coverage report with `./gradlew codeCoverageReport`.
