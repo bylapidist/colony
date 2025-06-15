@@ -27,4 +27,9 @@ public final class ResourceStubMod implements GameMod {
         ((net.lapidist.colony.server.GameServer) server)
                 .setResourceProductionServiceFactory(() -> service);
     }
+
+    @Override
+    public void registerSystems(final GameServer server) {
+        ((net.lapidist.colony.server.GameServer) server).registerSystem(service);
+    }
 }

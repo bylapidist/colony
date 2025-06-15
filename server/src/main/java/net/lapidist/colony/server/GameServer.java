@@ -73,6 +73,7 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     private Iterable<MessageHandler<?>> handlers;
     private Iterable<CommandHandler<?>> commandHandlers;
     private java.util.List<LoadedMod> mods;
+    private final java.util.List<GameSystem> systems = new java.util.ArrayList<>();
 
     /**
      * Create a new server instance using the supplied configuration.
@@ -161,6 +162,10 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         this.resourceProductionService = resourceProductionServiceFactory.get();
         this.commandBus = commandBusFactory.get();
 
+        for (LoadedMod mod : mods) {
+            mod.mod().registerSystems(this);
+        }
+
         loadMapState();
         startNetwork();
 
@@ -169,7 +174,9 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         }
 
         autosaveService.start();
-        resourceProductionService.start();
+        for (GameSystem system : systems) {
+            system.start();
+        }
     }
 
     private void initKryo() {
@@ -224,6 +231,26 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         } finally {
             stateLock.unlock();
         }
+    }
+
+    /** Replace the current map state with a new instance. */
+    public void setMapState(final MapState newState) {
+        stateLock.lock();
+        try {
+            this.mapState = newState;
+        } finally {
+            stateLock.unlock();
+        }
+    }
+
+    /** Access to the default resource production service instance. */
+    public ResourceProductionService getResourceProductionService() {
+        return resourceProductionService;
+    }
+
+    /** Register a system to start and stop with the server lifecycle. */
+    public void registerSystem(final GameSystem system) {
+        systems.add(system);
     }
 
     /**
@@ -336,7 +363,9 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
      * Stop all server services and dispose loaded mods.
      */
     public void stop() {
-        resourceProductionService.stop();
+        for (GameSystem system : systems) {
+            system.stop();
+        }
         autosaveService.stop();
         networkService.stop();
         if (mods != null) {

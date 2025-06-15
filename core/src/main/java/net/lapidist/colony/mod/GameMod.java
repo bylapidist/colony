@@ -38,4 +38,16 @@ public interface GameMod {
      */
     default void registerHandlers(CommandBus bus) {
     }
+
+    /**
+     * Register additional runnable systems with the server.
+     *
+     * <p>Invoked during startup after core services are created but before they
+     * begin execution. Mods may use this hook to schedule periodic tasks or
+     * other background work.</p>
+     *
+     * @param server active server instance
+     */
+    default void registerSystems(GameServer server) {
+    }
 }
