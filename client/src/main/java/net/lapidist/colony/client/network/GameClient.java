@@ -135,7 +135,7 @@ public final class GameClient extends AbstractMessageEndpoint implements AutoClo
         this.handlers = java.util.List.of(
                 new MapMetadataHandler(meta -> {
                     if (loadMessageListener != null) {
-                        loadMessageListener.accept(net.lapidist.colony.i18n.I18n.get("loading.metadata"));
+                        loadMessageListener.accept(net.lapidist.colony.util.I18n.get("loading.metadata"));
                     }
                     mapBuilder = MapState.builder()
                             .version(meta.version())
@@ -165,7 +165,7 @@ public final class GameClient extends AbstractMessageEndpoint implements AutoClo
                         }
                     }
                     if (loadMessageListener != null) {
-                        loadMessageListener.accept(net.lapidist.colony.i18n.I18n.get("loading.chunks"));
+                        loadMessageListener.accept(net.lapidist.colony.util.I18n.get("loading.chunks"));
                     }
                 }),
                 new MapChunkHandler(this::handleChunk, client.getKryo()),
@@ -191,7 +191,7 @@ public final class GameClient extends AbstractMessageEndpoint implements AutoClo
         client.start();
         LOGGER.info("Connecting to server...");
         if (loadMessageListener != null) {
-            loadMessageListener.accept(net.lapidist.colony.i18n.I18n.get("loading.connect"));
+            loadMessageListener.accept(net.lapidist.colony.util.I18n.get("loading.connect"));
         }
 
         registerHandlers(handlers);

@@ -17,7 +17,7 @@ import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.tests.GdxTestRunner;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.Input;
-import net.lapidist.colony.i18n.I18n;
+import net.lapidist.colony.util.I18n;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

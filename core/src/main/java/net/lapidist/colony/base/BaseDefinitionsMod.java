@@ -5,7 +5,7 @@ import net.lapidist.colony.registry.BuildingDefinition;
 import net.lapidist.colony.registry.Registries;
 import net.lapidist.colony.registry.TileDefinition;
 import net.lapidist.colony.components.state.ResourceData;
-import net.lapidist.colony.i18n.I18n;
+import net.lapidist.colony.util.I18n;
 
 /** Built-in mod registering standard tile and building definitions. */
 public final class BaseDefinitionsMod implements GameMod {

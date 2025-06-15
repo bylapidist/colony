@@ -4,7 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import net.lapidist.colony.i18n.I18n;
+import net.lapidist.colony.util.I18n;
 import net.lapidist.colony.client.Colony;
 
 /** Simple screen that displays an error message with a button to return to the main menu. */

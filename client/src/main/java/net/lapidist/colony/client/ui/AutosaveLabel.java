@@ -3,7 +3,7 @@ package net.lapidist.colony.client.ui;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import net.lapidist.colony.events.Events;
-import net.lapidist.colony.i18n.I18n;
+import net.lapidist.colony.util.I18n;
 import net.lapidist.colony.server.events.AutosaveEvent;
 import net.mostlyoriginal.api.event.common.Subscribe;
 

@@ -13,7 +13,7 @@ import net.mostlyoriginal.api.event.common.EventSystem;
 import net.mostlyoriginal.api.event.common.Subscribe;
 import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.io.Paths;
-import net.lapidist.colony.i18n.I18n;
+import net.lapidist.colony.util.I18n;
 import net.lapidist.colony.server.io.GameStateIO;
 import net.lapidist.colony.components.state.MapState;
 import org.mockito.MockedStatic;

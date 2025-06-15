@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import net.lapidist.colony.chat.ChatMessage;
 import net.lapidist.colony.client.network.GameClient;
-import net.lapidist.colony.i18n.I18n;
+import net.lapidist.colony.util.I18n;
 
 /**
  * Simple chat UI widget containing a log and input field.

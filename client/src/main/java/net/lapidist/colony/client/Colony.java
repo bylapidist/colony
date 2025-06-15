@@ -8,7 +8,7 @@ import net.lapidist.colony.client.screens.MainMenuScreen;
 import net.lapidist.colony.client.screens.LoadingScreen;
 import net.lapidist.colony.client.screens.ErrorScreen;
 import net.lapidist.colony.client.screens.NewGameScreen;
-import net.lapidist.colony.i18n.I18n;
+import net.lapidist.colony.util.I18n;
 import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.server.GameServer;

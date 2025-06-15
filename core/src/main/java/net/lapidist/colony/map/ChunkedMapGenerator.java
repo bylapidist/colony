@@ -6,7 +6,7 @@ import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.components.state.ChunkPos;
-import net.lapidist.colony.i18n.I18n;
+import net.lapidist.colony.util.I18n;
 
 import java.util.Map;
 import java.util.Random;

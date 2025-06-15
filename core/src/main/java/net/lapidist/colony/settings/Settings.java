@@ -2,7 +2,7 @@ package net.lapidist.colony.settings;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import net.lapidist.colony.i18n.I18n;
+import net.lapidist.colony.util.I18n;
 
 import java.io.IOException;
 import java.util.Locale;
