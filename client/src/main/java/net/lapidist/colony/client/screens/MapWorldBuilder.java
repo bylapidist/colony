@@ -18,6 +18,7 @@ import net.lapidist.colony.client.systems.SelectionSystem;
 import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.MapRenderSystem;
 import net.lapidist.colony.client.systems.LightingSystem;
+import net.lapidist.colony.client.systems.DynamicLightSystem;
 import net.lapidist.colony.client.systems.DayNightSystem;
 import net.lapidist.colony.client.systems.ParticleSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
@@ -157,6 +158,7 @@ public final class MapWorldBuilder {
 
         ClearScreenSystem clear = new ClearScreenSystem(Color.BLACK);
         LightingSystem lighting = new LightingSystem();
+        DynamicLightSystem dynamicLights = new DynamicLightSystem(lighting);
         WorldConfigurationBuilder builder = new WorldConfigurationBuilder()
                 .with(
                         new EventSystem(),
@@ -177,6 +179,10 @@ public final class MapWorldBuilder {
                         lighting,
                         new UISystem(stage)
                 );
+
+        if (graphics != null && graphics.isLightingEnabled()) {
+            builder.with(dynamicLights);
+        }
 
         if (graphics == null || (graphics.isLightingEnabled() && graphics.isDayNightCycleEnabled())) {
             builder.with(new DayNightSystem(clear, lighting, state.environment()));
