@@ -25,6 +25,9 @@ import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 /**
  * Discovers and loads {@link GameMod} implementations from the game\'s {@code mods/} directory.
@@ -90,10 +93,9 @@ public final class ModLoader {
     private void loadFromDirectory(final Path dir, final ModMetadata metadata, final List<LoadedMod> out)
             throws IOException {
         URLClassLoader cl = new URLClassLoader(new URL[]{dir.toUri().toURL()}, getClass().getClassLoader());
-        int count = 0;
+        executeDirectoryScripts(dir, cl);
         for (GameMod mod : ServiceLoader.load(GameMod.class, cl)) {
             out.add(new LoadedMod(mod, metadata));
-            count++;
         }
     }
 
@@ -207,10 +209,9 @@ public final class ModLoader {
     private void loadFromJar(final Path jar, final ModMetadata metadata, final List<LoadedMod> out)
             throws IOException {
         URLClassLoader cl = new URLClassLoader(new URL[]{jar.toUri().toURL()}, getClass().getClassLoader());
-        int count = 0;
+        executeJarScripts(jar, cl);
         for (GameMod mod : ServiceLoader.load(GameMod.class, cl)) {
             out.add(new LoadedMod(mod, metadata));
-            count++;
         }
     }
 
@@ -218,5 +219,49 @@ public final class ModLoader {
         Config config = ConfigFactory.parseReader(reader);
         List<String> deps = config.hasPath("dependencies") ? config.getStringList("dependencies") : List.of();
         return new ModMetadata(config.getString("id"), config.getString("version"), deps);
+    }
+
+    private void executeDirectoryScripts(final Path dir, final ClassLoader cl) throws IOException {
+        Path scripts = dir.resolve("scripts");
+        if (!Files.isDirectory(scripts)) {
+            return;
+        }
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(scripts, "*.kts")) {
+            for (Path script : stream) {
+                try (BufferedReader reader = Files.newBufferedReader(script, StandardCharsets.UTF_8)) {
+                    executeScript(reader, cl, script.toString());
+                }
+            }
+        }
+    }
+
+    private void executeJarScripts(final Path jar, final ClassLoader cl) throws IOException {
+        try (JarFile jf = new JarFile(jar.toFile())) {
+            var entries = jf.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry e = entries.nextElement();
+                if (!e.isDirectory() && e.getName().startsWith("scripts/") && e.getName().endsWith(".kts")) {
+                    try (BufferedReader reader = new BufferedReader(
+                            new InputStreamReader(jf.getInputStream(e), StandardCharsets.UTF_8))) {
+                        executeScript(reader, cl, e.getName());
+                    }
+                }
+            }
+        }
+    }
+
+    private void executeScript(final BufferedReader reader, final ClassLoader cl,
+                               final String name) throws IOException {
+        ScriptEngine engine = new ScriptEngineManager(cl).getEngineByExtension("kts");
+        if (engine == null) {
+            LOGGER.warn("Kotlin scripting engine not available, skipping {}", name);
+            return;
+        }
+        try {
+            engine.eval(reader);
+            LOGGER.debug("Executed script {}", name);
+        } catch (ScriptException e) {
+            LOGGER.error("Failed to execute script {}", name, e);
+        }
     }
 }

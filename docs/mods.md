@@ -114,8 +114,9 @@ registration hooks run between these stages during server startup.
 
 ## Scripting
 
-Mods may ship Kotlin scripts inside a `scripts/` folder. Each script runs on load and can listen for events
-using a small DSL. The following script prints a message whenever a tile is selected:
+Mods may ship Kotlin scripts inside a `scripts/` folder. When a mod is loaded the loader executes every
+`*.kts` file found and the script may register event listeners using the `on` DSL function. The following
+script prints a message whenever a tile is selected:
 
 ```kotlin
 // scripts/tileSelect.kts
