@@ -93,6 +93,8 @@ Rendering code is decoupled from map creation through the `MapRendererFactory`
 interface. `MapWorldBuilder` accepts a factory instance when building the world
 and defaults to a sprite batch based implementation. The active factory can be
 configured via the `graphics.renderer` setting.
+Optional GLSL effects can be added through shader plugins as explained in
+[shaders.md](shaders.md).
 
 `MapRenderData` acts as a lightweight view of the map state for renderers. A
 `MapRenderDataSystem` converts the ECS `MapComponent` into immutable

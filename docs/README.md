@@ -22,3 +22,4 @@ This directory contains all guides for the Colony project. References are groupe
 - [Performance Notes](performance.md) – benchmarking of data structures and renderer performance.
   Update the numbers whenever benchmarks change and strive to keep them from increasing.
 - [Scenario Test Harness](tests.md) – explains `GameSimulation` and the headless test setup.
+- [Shader Plugin Guide](shaders.md) – how to register custom GLSL programs.

@@ -72,6 +72,7 @@ Configuration details are in [docs/configuration.md](docs/configuration.md).
 Performance benchmark numbers are tracked in [docs/performance.md](docs/performance.md).
 Translation instructions are in [docs/i18n.md](docs/i18n.md).
 Scenario test utilities are covered in [docs/tests.md](docs/tests.md).
+Shader plugins are described in [docs/shaders.md](docs/shaders.md).
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
