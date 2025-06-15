@@ -17,6 +17,7 @@ import net.lapidist.colony.client.systems.SelectionSystem;
 import net.lapidist.colony.client.systems.PlayerInitSystem;
 import net.lapidist.colony.client.systems.MapRenderSystem;
 import net.lapidist.colony.client.systems.MapRenderDataSystem;
+import net.lapidist.colony.client.systems.DayNightSystem;
 import net.lapidist.colony.components.resources.PlayerResourceComponent;
 import net.lapidist.colony.components.entities.PlayerComponent;
 import net.lapidist.colony.components.state.MapState;
@@ -50,11 +51,12 @@ public class MapWorldBuilderConfigurationTest {
         Stage stage = new Stage(new ScreenViewport(), batch);
         GameClient client = mock(GameClient.class);
         KeyBindings keys = new KeyBindings();
+        net.lapidist.colony.settings.Settings settings = new net.lapidist.colony.settings.Settings();
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             World world = MapWorldBuilder.build(
-                    MapWorldBuilder.baseBuilder(client, stage, keys),
+                    MapWorldBuilder.baseBuilder(client, stage, keys, settings.getGraphicsSettings()),
                     null,
-                    new net.lapidist.colony.settings.Settings(),
+                    settings,
                     null
             );
 
@@ -66,6 +68,7 @@ public class MapWorldBuilderConfigurationTest {
             assertNotNull(world.getSystem(MapRenderSystem.class));
             assertNull(world.getSystem(MapInitSystem.class));
             assertNull(world.getSystem(MapRenderDataSystem.class));
+            assertNotNull(world.getSystem(DayNightSystem.class));
 
             world.dispose();
         }
@@ -83,11 +86,18 @@ public class MapWorldBuilderConfigurationTest {
         Stage stage = new Stage(new ScreenViewport(), batch);
         GameClient client = mock(GameClient.class);
         KeyBindings keys = new KeyBindings();
+        net.lapidist.colony.settings.Settings settings = new net.lapidist.colony.settings.Settings();
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             World world = MapWorldBuilder.build(
-                    MapWorldBuilder.builder(new ProvidedMapStateProvider(state), client, stage, keys),
+                    MapWorldBuilder.builder(
+                            new ProvidedMapStateProvider(state),
+                            client,
+                            stage,
+                            keys,
+                            settings.getGraphicsSettings()
+                    ),
                     null,
-                    new net.lapidist.colony.settings.Settings(),
+                    settings,
                     null
             );
             world.process();
@@ -116,11 +126,12 @@ public class MapWorldBuilderConfigurationTest {
         Stage stage = new Stage(new ScreenViewport(), batch);
         GameClient client = mock(GameClient.class);
         KeyBindings keys = new KeyBindings();
+        net.lapidist.colony.settings.Settings settings = new net.lapidist.colony.settings.Settings();
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             World world = MapWorldBuilder.build(
-                    MapWorldBuilder.builder(state, client, stage, keys),
+                    MapWorldBuilder.builder(state, client, stage, keys, settings.getGraphicsSettings()),
                     null,
-                    new net.lapidist.colony.settings.Settings(),
+                    settings,
                     null
             );
             PlayerCameraSystem camera = world.getSystem(PlayerCameraSystem.class);
@@ -149,11 +160,12 @@ public class MapWorldBuilderConfigurationTest {
         Stage stage = new Stage(new ScreenViewport(), batch);
         GameClient client = mock(GameClient.class);
         KeyBindings keys = new KeyBindings();
+        net.lapidist.colony.settings.Settings settings = new net.lapidist.colony.settings.Settings();
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             World world = MapWorldBuilder.build(
-                    MapWorldBuilder.baseBuilder(client, stage, keys, resources),
+                    MapWorldBuilder.baseBuilder(client, stage, keys, resources, settings.getGraphicsSettings()),
                     null,
-                    new net.lapidist.colony.settings.Settings(),
+                    settings,
                     null
             );
             world.process();
@@ -185,11 +197,12 @@ public class MapWorldBuilderConfigurationTest {
         Stage stage = new Stage(new ScreenViewport(), batch);
         GameClient client = mock(GameClient.class);
         KeyBindings keys = new KeyBindings();
+        net.lapidist.colony.settings.Settings settings = new net.lapidist.colony.settings.Settings();
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             World world = MapWorldBuilder.build(
-                    MapWorldBuilder.builder(state, client, stage, keys),
+                    MapWorldBuilder.builder(state, client, stage, keys, settings.getGraphicsSettings()),
                     null,
-                    new net.lapidist.colony.settings.Settings(),
+                    settings,
                     null
             );
             PlayerCameraSystem camera = world.getSystem(PlayerCameraSystem.class);
@@ -216,5 +229,27 @@ public class MapWorldBuilderConfigurationTest {
         World world = MapWorldBuilder.build(new com.artemis.WorldConfigurationBuilder(), null, settings, null);
         assertNotNull(world.getSystem(PlayerCameraSystem.class));
         world.dispose();
+    }
+
+    @Test
+    public void disablesDayNightWhenLightingOff() {
+        Batch batch = mock(Batch.class);
+        when(batch.getTransformMatrix()).thenReturn(new com.badlogic.gdx.math.Matrix4());
+        when(batch.getProjectionMatrix()).thenReturn(new com.badlogic.gdx.math.Matrix4());
+        Stage stage = new Stage(new ScreenViewport(), batch);
+        GameClient client = mock(GameClient.class);
+        KeyBindings keys = new KeyBindings();
+        net.lapidist.colony.settings.Settings settings = new net.lapidist.colony.settings.Settings();
+        settings.getGraphicsSettings().setLightingEnabled(false);
+        try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
+            World world = MapWorldBuilder.build(
+                    MapWorldBuilder.baseBuilder(client, stage, keys, settings.getGraphicsSettings()),
+                    null,
+                    settings,
+                    null
+            );
+            assertNull(world.getSystem(DayNightSystem.class));
+            world.dispose();
+        }
     }
 }

@@ -79,6 +79,7 @@ public class SettingsTest {
         graphics.setLightingEnabled(false);
         graphics.setNormalMapsEnabled(true);
         graphics.setSpecularMapsEnabled(true);
+        graphics.setDayNightCycleEnabled(false);
         settings.save();
 
         Settings loaded = Settings.load();
@@ -91,5 +92,6 @@ public class SettingsTest {
         assertEquals(false, loaded.getGraphicsSettings().isLightingEnabled());
         assertEquals(true, loaded.getGraphicsSettings().isNormalMapsEnabled());
         assertEquals(true, loaded.getGraphicsSettings().isSpecularMapsEnabled());
+        assertEquals(false, loaded.getGraphicsSettings().isDayNightCycleEnabled());
     }
 }

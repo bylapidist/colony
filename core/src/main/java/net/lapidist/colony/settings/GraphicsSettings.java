@@ -17,6 +17,7 @@ public final class GraphicsSettings {
     private static final String LIGHT_KEY = PREFIX + "lighting";
     private static final String NORMAL_KEY = PREFIX + "normalmaps";
     private static final String SPECULAR_KEY = PREFIX + "specularmaps";
+    private static final String DAY_NIGHT_KEY = PREFIX + "dayNightCycle";
 
     private boolean antialiasingEnabled = true;
     private boolean mipMapsEnabled = true;
@@ -27,6 +28,7 @@ public final class GraphicsSettings {
     private boolean lightingEnabled = true;
     private boolean normalMapsEnabled;
     private boolean specularMapsEnabled;
+    private boolean dayNightCycleEnabled = true;
 
     public boolean isAntialiasingEnabled() {
         return antialiasingEnabled;
@@ -100,6 +102,14 @@ public final class GraphicsSettings {
         this.specularMapsEnabled = enabled;
     }
 
+    public boolean isDayNightCycleEnabled() {
+        return dayNightCycleEnabled;
+    }
+
+    public void setDayNightCycleEnabled(final boolean enabled) {
+        this.dayNightCycleEnabled = enabled;
+    }
+
     /** Load graphics settings from the given preferences. */
     public static GraphicsSettings load(final Preferences prefs) {
         GraphicsSettings gs = new GraphicsSettings();
@@ -112,6 +122,7 @@ public final class GraphicsSettings {
         gs.lightingEnabled = prefs.getBoolean(LIGHT_KEY, true);
         gs.normalMapsEnabled = prefs.getBoolean(NORMAL_KEY, false);
         gs.specularMapsEnabled = prefs.getBoolean(SPECULAR_KEY, false);
+        gs.dayNightCycleEnabled = prefs.getBoolean(DAY_NIGHT_KEY, true);
         return gs;
     }
 
@@ -126,5 +137,6 @@ public final class GraphicsSettings {
         prefs.putBoolean(LIGHT_KEY, lightingEnabled);
         prefs.putBoolean(NORMAL_KEY, normalMapsEnabled);
         prefs.putBoolean(SPECULAR_KEY, specularMapsEnabled);
+        prefs.putBoolean(DAY_NIGHT_KEY, dayNightCycleEnabled);
     }
 }

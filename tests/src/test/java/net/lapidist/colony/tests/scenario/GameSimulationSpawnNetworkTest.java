@@ -68,7 +68,13 @@ public class GameSimulationSpawnNetworkTest {
             Settings settings = new Settings();
             try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
                 var world = MapWorldBuilder.build(
-                        MapWorldBuilder.builder(client.getMapState(), client, stage, new KeyBindings()),
+                        MapWorldBuilder.builder(
+                                client.getMapState(),
+                                client,
+                                stage,
+                                new KeyBindings(),
+                                settings.getGraphicsSettings()
+                        ),
                         null,
                         settings,
                         client.getMapState().cameraPos()
