@@ -10,7 +10,7 @@ Game state is serialized into a `SaveData` record containing the save version, a
 
 `DefaultSaveMigrationStrategy` checks the file version when loading a save. If it is older than `SaveVersion.CURRENT`, it calls `SaveMigrator.migrate`. `SaveMigrator` applies each `MapStateMigration` step in order and returns an updated `MapState` with the target version.
 
-The repository's root `AGENTS.md` outlines the required steps whenever the save format changes:
+The repository's root `AGENTS.md` outlines the required steps whenever the save serialization changes:
 
 1. Add the next constant in `SaveVersion`.
 2. Implement migration logic in `SaveMigrator`.

@@ -41,7 +41,7 @@ Each module contains its own `AGENTS.md` with extra notes.
     `docs/performance.md` with the new numbers so future runs have an accurate baseline.
 
 ## Save Format and Serialization
-Whenever creating a PR, add a new save version and migration. Every PR must have a new save migration, unless they only change documentation.
+Add a new save version and migration whenever your PR changes something that affects the serialized save format. Documentation-only changes do not require a migration.
 1. Add the next constant in `SaveVersion`.
 2. Implement migration logic in `SaveMigrator`.
 3. Add tests covering the migration.
