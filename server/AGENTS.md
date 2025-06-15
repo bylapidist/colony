@@ -7,3 +7,4 @@ Headless game server running the same ECS logic as the client and exposing netwo
 
 # Testing notes
 - Follow the root module steps before running tests: `tests:copyAssets`, `clean test`, and `check`.
+- Generate coverage with `./gradlew codeCoverageReport` after tests.

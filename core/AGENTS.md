@@ -8,3 +8,4 @@ Shared ECS components, constants and serialization code used by the client and s
 # Testing notes
 - Run `./gradlew tests:copyAssets` before executing the main test suite.
 - Execute `./gradlew clean test` and `./gradlew check` to verify changes.
+- Run `./gradlew codeCoverageReport` to generate coverage data.

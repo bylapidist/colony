@@ -24,6 +24,7 @@ Java 21 toolchains are configured via the Gradle wrapper. Run the following comm
 ./gradlew spotlessApply      # format the code base
 ./gradlew clean test         # build and execute all tests
 ./gradlew check              # run Checkstyle and Spotless verification
+./gradlew codeCoverageReport # generate the JaCoCo coverage report
 ```
 
 You can also run all of these steps at once:
@@ -32,7 +33,7 @@ You can also run all of these steps at once:
 ./scripts/check.sh
 ```
 
-The `tests:copyAssets` task is required so that resources used by the test suite are available. `spotlessApply` will automatically format all Java sources and must be executed before committing.
+The `tests:copyAssets` task is required so that resources used by the test suite are available. `spotlessApply` will automatically format all Java sources and must be executed before committing. After running the tasks above, open `build/reports/jacoco/test/html/index.html` to review coverage results. New code should maintain at least 80% line coverage.
 
 ### Running the Game
 Both the client and dedicated server can be started directly from Gradle:
@@ -40,8 +41,6 @@ Both the client and dedicated server can be started directly from Gradle:
 - `./gradlew :client:run` – launches the game client.
 - `./gradlew :server:run` – starts a headless server.
 
-`Colony.startGame(String)` now reads the map size from the selected autosave so
-servers use the correct dimensions when continuing a game.
 
 ## Controls
 Default keyboard mappings can be remapped in game. See
@@ -70,6 +69,9 @@ For a high level overview of the modules see [docs/architecture.md](docs/archite
 Refer to [docs/networking.md](docs/networking.md) for hands‑on client and server examples.
 See [docs/mods.md](docs/mods.md) for details on the enhanced mod system.
 Configuration details are in [docs/configuration.md](docs/configuration.md).
+Performance benchmark numbers are tracked in [docs/performance.md](docs/performance.md).
+Translation instructions are in [docs/i18n.md](docs/i18n.md).
+Scenario test utilities are covered in [docs/tests.md](docs/tests.md).
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
