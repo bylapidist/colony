@@ -32,5 +32,6 @@ public class RegistryTest {
     public void globalAccessorsReturnSingletons() {
         assertSame(Registries.tiles(), Registries.tiles());
         assertSame(Registries.buildings(), Registries.buildings());
+        assertSame(Registries.items(), Registries.items());
     }
 }

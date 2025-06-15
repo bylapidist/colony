@@ -5,6 +5,7 @@ public final class Registries {
     private static final TileRegistry TILE_REGISTRY = new TileRegistry();
     private static final BuildingRegistry BUILDING_REGISTRY = new BuildingRegistry();
     private static final ResourceRegistry RESOURCE_REGISTRY = new ResourceRegistry();
+    private static final ItemRegistry ITEM_REGISTRY = new ItemRegistry();
 
     private Registries() { }
 
@@ -21,5 +22,10 @@ public final class Registries {
     /** @return resource type registry */
     public static ResourceRegistry resources() {
         return RESOURCE_REGISTRY;
+    }
+
+    /** @return item type registry */
+    public static ItemRegistry items() {
+        return ITEM_REGISTRY;
     }
 }
