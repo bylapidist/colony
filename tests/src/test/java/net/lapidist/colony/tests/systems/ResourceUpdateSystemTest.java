@@ -49,7 +49,11 @@ public class ResourceUpdateSystemTest {
                 .build());
         world.process();
 
-        client.injectResourceUpdate(new ResourceUpdateData(0, 0, UPDATED_WOOD, 0, 0));
+        client.injectResourceUpdate(new ResourceUpdateData(0, 0, java.util.Map.of(
+                "WOOD", UPDATED_WOOD,
+                "STONE", 0,
+                "FOOD", 0
+        )));
         world.process();
         world.process();
 

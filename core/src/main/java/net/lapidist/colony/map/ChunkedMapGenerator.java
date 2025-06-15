@@ -51,11 +51,11 @@ public final class ChunkedMapGenerator implements MapGenerator {
             for (int y = 0; y < height; y++) {
                 TileData td = state.getTile(x, y);
                 TileData updated = td.toBuilder()
-                        .resources(new ResourceData(Map.of(
+                        .resources(new ResourceData(new java.util.HashMap<>(Map.of(
                                 "WOOD", DEFAULT_WOOD,
                                 "STONE", DEFAULT_STONE,
                                 "FOOD", DEFAULT_FOOD
-                        )))
+                        ))))
                         .build();
                 int chunkX = Math.floorDiv(x, MapChunkData.CHUNK_SIZE);
                 int chunkY = Math.floorDiv(y, MapChunkData.CHUNK_SIZE);

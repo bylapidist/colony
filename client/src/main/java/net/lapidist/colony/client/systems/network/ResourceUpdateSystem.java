@@ -48,21 +48,21 @@ public final class ResourceUpdateSystem extends BaseSystem {
             if (data.x() == -1 && data.y() == -1) {
                 if (player != null) {
                     var pr = playerMapper.get(player);
-                    pr.setAmount("WOOD", data.wood());
-                    pr.setAmount("STONE", data.stone());
-                    pr.setAmount("FOOD", data.food());
+                    for (var entry : data.amounts().entrySet()) {
+                        pr.setAmount(entry.getKey(), entry.getValue());
+                    }
                 }
                 continue;
             }
             var found = MapUtils.findTile(mapComponent, data.x(), data.y())
                     .map(tile -> {
                         ResourceComponent rc = resourceMapper.get(tile);
-                        int deltaWood = rc.getAmount("WOOD") - data.wood();
-                        int deltaStone = rc.getAmount("STONE") - data.stone();
-                        int deltaFood = rc.getAmount("FOOD") - data.food();
-                        rc.setAmount("WOOD", data.wood());
-                        rc.setAmount("STONE", data.stone());
-                        rc.setAmount("FOOD", data.food());
+                        int deltaWood = rc.getAmount("WOOD") - data.amounts().getOrDefault("WOOD", 0);
+                        int deltaStone = rc.getAmount("STONE") - data.amounts().getOrDefault("STONE", 0);
+                        int deltaFood = rc.getAmount("FOOD") - data.amounts().getOrDefault("FOOD", 0);
+                        for (var entry : data.amounts().entrySet()) {
+                            rc.setAmount(entry.getKey(), entry.getValue());
+                        }
                         rc.setDirty(true);
                         int index = mapComponent.getTiles().indexOf(tile, true);
                         var ds = world.getSystem(net.lapidist.colony.client.systems.MapRenderDataSystem.class);

@@ -31,11 +31,11 @@ public final class V3ToV4Migration implements MapStateMigration {
                 TileData tile = chunk.getTiles().get(pos);
                 if (tile.resources() == null) {
                     TileData updated = tile.toBuilder()
-                            .resources(new ResourceData(Map.of(
+                            .resources(new ResourceData(new java.util.HashMap<>(Map.of(
                                     "WOOD", DEFAULT_WOOD,
                                     "STONE", DEFAULT_STONE,
                                     "FOOD", DEFAULT_FOOD
-                            )))
+                            ))))
                             .build();
                     chunk.getTiles().put(pos, updated);
                 }
