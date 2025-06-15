@@ -58,6 +58,26 @@ public interface ResourceLoader extends Disposable {
      */
     TextureRegion findRegion(String name);
 
+    /**
+     * Find a normal map region for the given base texture name.
+     *
+     * @param name base region identifier
+     * @return matching normal map region or {@code null}
+     */
+    default TextureRegion findNormalRegion(final String name) {
+        return null;
+    }
+
+    /**
+     * Find a specular map region for the given base texture name.
+     *
+     * @param name base region identifier
+     * @return matching specular map region or {@code null}
+     */
+    default TextureRegion findSpecularRegion(final String name) {
+        return null;
+    }
+
 
     /**
      * Progress the asynchronous loading process once.

@@ -36,6 +36,14 @@ public class TileRendererTest {
         TextureRegion overlay = mock(TextureRegion.class);
         when(loader.findRegion(anyString())).thenReturn(region);
         when(loader.findRegion(eq("hoveredTile0"))).thenReturn(overlay);
+        when(loader.findNormalRegion(anyString())).thenReturn(null);
+        when(loader.findSpecularRegion(anyString())).thenReturn(null);
+        when(loader.findNormalRegion(anyString())).thenReturn(null);
+        when(loader.findSpecularRegion(anyString())).thenReturn(null);
+        when(loader.findNormalRegion(anyString())).thenReturn(null);
+        when(loader.findSpecularRegion(anyString())).thenReturn(null);
+        when(loader.findNormalRegion(anyString())).thenReturn(null);
+        when(loader.findSpecularRegion(anyString())).thenReturn(null);
 
         new BaseDefinitionsMod().init();
 

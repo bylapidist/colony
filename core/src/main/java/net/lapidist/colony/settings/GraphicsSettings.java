@@ -15,6 +15,8 @@ public final class GraphicsSettings {
     private static final String RENDERER_KEY = PREFIX + "renderer";
     private static final String CACHE_KEY = PREFIX + "spritecache";
     private static final String LIGHT_KEY = PREFIX + "lighting";
+    private static final String NORMAL_KEY = PREFIX + "normalmaps";
+    private static final String SPECULAR_KEY = PREFIX + "specularmaps";
 
     private boolean antialiasingEnabled = true;
     private boolean mipMapsEnabled = true;
@@ -23,6 +25,8 @@ public final class GraphicsSettings {
     private String renderer = "sprite";
     private boolean spriteCacheEnabled = true;
     private boolean lightingEnabled = true;
+    private boolean normalMapsEnabled = false;
+    private boolean specularMapsEnabled = false;
 
     public boolean isAntialiasingEnabled() {
         return antialiasingEnabled;
@@ -80,6 +84,22 @@ public final class GraphicsSettings {
         this.lightingEnabled = enabled;
     }
 
+    public boolean isNormalMapsEnabled() {
+        return normalMapsEnabled;
+    }
+
+    public void setNormalMapsEnabled(final boolean enabled) {
+        this.normalMapsEnabled = enabled;
+    }
+
+    public boolean isSpecularMapsEnabled() {
+        return specularMapsEnabled;
+    }
+
+    public void setSpecularMapsEnabled(final boolean enabled) {
+        this.specularMapsEnabled = enabled;
+    }
+
     /** Load graphics settings from the given preferences. */
     public static GraphicsSettings load(final Preferences prefs) {
         GraphicsSettings gs = new GraphicsSettings();
@@ -90,6 +110,8 @@ public final class GraphicsSettings {
         gs.renderer = prefs.getString(RENDERER_KEY, "sprite");
         gs.spriteCacheEnabled = prefs.getBoolean(CACHE_KEY, true);
         gs.lightingEnabled = prefs.getBoolean(LIGHT_KEY, true);
+        gs.normalMapsEnabled = prefs.getBoolean(NORMAL_KEY, false);
+        gs.specularMapsEnabled = prefs.getBoolean(SPECULAR_KEY, false);
         return gs;
     }
 
@@ -102,5 +124,7 @@ public final class GraphicsSettings {
         prefs.putString(RENDERER_KEY, renderer);
         prefs.putBoolean(CACHE_KEY, spriteCacheEnabled);
         prefs.putBoolean(LIGHT_KEY, lightingEnabled);
+        prefs.putBoolean(NORMAL_KEY, normalMapsEnabled);
+        prefs.putBoolean(SPECULAR_KEY, specularMapsEnabled);
     }
 }

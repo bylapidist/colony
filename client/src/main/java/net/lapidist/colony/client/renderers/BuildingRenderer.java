@@ -25,6 +25,8 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
     private final CameraProvider cameraSystem;
     private final AssetResolver resolver;
     private final java.util.HashMap<String, TextureRegion> buildingRegions = new java.util.HashMap<>();
+    private final java.util.HashMap<String, TextureRegion> normalRegions = new java.util.HashMap<>();
+    private final java.util.HashMap<String, TextureRegion> specularRegions = new java.util.HashMap<>();
     private final BitmapFont font = new BitmapFont();
     private final GlyphLayout layout = new GlyphLayout();
     private static final float LABEL_OFFSET_Y = 8f;
@@ -45,8 +47,16 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
         for (BuildingDefinition def : Registries.buildings().all()) {
             String ref = resolver.buildingAsset(def.id());
             TextureRegion region = resourceLoader.findRegion(ref);
+            TextureRegion normal = resourceLoader.findNormalRegion(ref);
+            TextureRegion specular = resourceLoader.findSpecularRegion(ref);
             if (region != null) {
                 buildingRegions.put(def.id().toUpperCase(java.util.Locale.ROOT), region);
+            }
+            if (normal != null) {
+                normalRegions.put(def.id().toUpperCase(java.util.Locale.ROOT), normal);
+            }
+            if (specular != null) {
+                specularRegions.put(def.id().toUpperCase(java.util.Locale.ROOT), specular);
             }
         }
     }
@@ -69,7 +79,15 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
 
             String type = building.getBuildingType();
             TextureRegion region = buildingRegions.get(type.toUpperCase(java.util.Locale.ROOT));
+            TextureRegion normal = normalRegions.get(type.toUpperCase(java.util.Locale.ROOT));
+            TextureRegion specular = specularRegions.get(type.toUpperCase(java.util.Locale.ROOT));
             if (region != null) {
+                if (normal != null) {
+                    normal.getTexture().bind(1);
+                }
+                if (specular != null) {
+                    specular.getTexture().bind(2);
+                }
                 spriteBatch.draw(region, worldCoords.x, worldCoords.y);
             }
             if (!resolver.hasBuildingAsset(type)) {

@@ -34,6 +34,12 @@ public class BuildingRendererTest {
         ResourceLoader loader = mock(ResourceLoader.class);
         TextureRegion region = mock(TextureRegion.class);
         when(loader.findRegion(anyString())).thenReturn(region);
+        when(loader.findNormalRegion(anyString())).thenReturn(null);
+        when(loader.findSpecularRegion(anyString())).thenReturn(null);
+        when(loader.findNormalRegion(anyString())).thenReturn(null);
+        when(loader.findSpecularRegion(anyString())).thenReturn(null);
+        when(loader.findNormalRegion(anyString())).thenReturn(null);
+        when(loader.findSpecularRegion(anyString())).thenReturn(null);
 
         new BaseDefinitionsMod().init();
 

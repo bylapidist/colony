@@ -64,3 +64,11 @@ The `Box2dLightsPlugin` is included with the game and integrates the
 [box2d-lights](https://github.com/libgdx/box2dlights) library. It returns
 no shader program but exposes a `RayHandler` when frame buffers are supported.
 Headless or unsupported environments automatically skip lighting.
+
+## Normal map plugin
+
+The `NormalMapShaderPlugin` combines diffuse, normal and specular
+textures. Assets should follow the naming convention of appending
+`_n` for normal maps and `_s` for specular maps to the base region
+name inside the texture atlas. Enable the plugin through the graphics
+settings screen to see the effect.

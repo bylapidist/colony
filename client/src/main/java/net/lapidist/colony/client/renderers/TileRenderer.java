@@ -27,6 +27,8 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
     private final CameraProvider cameraSystem;
     private final AssetResolver resolver;
     private final java.util.HashMap<String, TextureRegion> tileRegions = new java.util.HashMap<>();
+    private final java.util.HashMap<String, TextureRegion> normalRegions = new java.util.HashMap<>();
+    private final java.util.HashMap<String, TextureRegion> specularRegions = new java.util.HashMap<>();
     private final TextureRegion overlayRegion;
     private final BitmapFont font = new BitmapFont();
     private final GlyphLayout layout = new GlyphLayout();
@@ -53,8 +55,16 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
         for (TileDefinition def : Registries.tiles().all()) {
             String ref = resolver.tileAsset(def.id());
             TextureRegion region = resourceLoader.findRegion(ref);
+            TextureRegion normal = resourceLoader.findNormalRegion(ref);
+            TextureRegion specular = resourceLoader.findSpecularRegion(ref);
             if (region != null) {
                 tileRegions.put(def.id().toUpperCase(java.util.Locale.ROOT), region);
+            }
+            if (normal != null) {
+                normalRegions.put(def.id().toUpperCase(java.util.Locale.ROOT), normal);
+            }
+            if (specular != null) {
+                specularRegions.put(def.id().toUpperCase(java.util.Locale.ROOT), specular);
             }
         }
         this.overlayRegion = resourceLoader.findRegion("hoveredTile0");
@@ -100,7 +110,15 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                 if (!overlayOnly) {
                     String type = tile.getTileType();
                     TextureRegion region = tileRegions.get(type.toUpperCase(java.util.Locale.ROOT));
+                    TextureRegion normal = normalRegions.get(type.toUpperCase(java.util.Locale.ROOT));
+                    TextureRegion specular = specularRegions.get(type.toUpperCase(java.util.Locale.ROOT));
                     if (region != null) {
+                        if (normal != null) {
+                            normal.getTexture().bind(1);
+                        }
+                        if (specular != null) {
+                            specular.getTexture().bind(2);
+                        }
                         String upper = type.toUpperCase(java.util.Locale.ROOT);
                         if ("GRASS".equals(upper) || "DIRT".equals(upper)) {
                             float rotation = TileRotationUtil.rotationFor(tile.getX(), tile.getY());

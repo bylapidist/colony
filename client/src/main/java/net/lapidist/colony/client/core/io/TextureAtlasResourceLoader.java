@@ -142,6 +142,22 @@ public final class TextureAtlasResourceLoader implements ResourceLoader {
         return atlas.findRegion(name);
     }
 
+    @Override
+    public TextureRegion findNormalRegion(final String name) {
+        if (atlas == null) {
+            return null;
+        }
+        return atlas.findRegion(name + "_n");
+    }
+
+    @Override
+    public TextureRegion findSpecularRegion(final String name) {
+        if (atlas == null) {
+            return null;
+        }
+        return atlas.findRegion(name + "_s");
+    }
+
 
     @Override
     public void dispose() {
