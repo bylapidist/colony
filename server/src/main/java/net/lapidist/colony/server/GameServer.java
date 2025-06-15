@@ -9,6 +9,7 @@ import net.lapidist.colony.mod.ModLoader;
 import net.lapidist.colony.mod.ModLoader.LoadedMod;
 import net.lapidist.colony.mod.ModMetadata;
 import net.lapidist.colony.mod.GameMod;
+import net.lapidist.colony.base.ModMetadataUtil;
 import net.lapidist.colony.network.AbstractMessageEndpoint;
 import net.lapidist.colony.network.MessageHandler;
 import net.lapidist.colony.io.Paths;
@@ -32,7 +33,6 @@ import net.lapidist.colony.server.services.MapService;
 import net.lapidist.colony.server.services.NetworkService;
 import net.lapidist.colony.server.services.ResourceProductionService;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.Optional;
 import net.mostlyoriginal.api.event.common.EventSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,7 +127,7 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         if (mods == null) {
             mods = new java.util.ArrayList<>();
             for (GameMod builtin : java.util.ServiceLoader.load(GameMod.class)) {
-                ModMetadata meta = builtinMetadata(builtin.getClass());
+                ModMetadata meta = ModMetadataUtil.builtinMetadata(builtin.getClass());
                 mods.add(new LoadedMod(builtin, meta));
             }
             mods.addAll(new ModLoader(Paths.get()).loadMods());
@@ -424,31 +424,4 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         stop();
     }
 
-    private static ModMetadata builtinMetadata(final Class<?> cls) {
-        String version = Optional.ofNullable(GameServer.class.getPackage().getImplementationVersion())
-                .orElse("dev");
-        String id;
-        if (cls.getName().equals("net.lapidist.colony.base.BaseMapServiceMod")) {
-            id = "base-map-service";
-        } else if (cls.getName().equals("net.lapidist.colony.base.BaseNetworkMod")) {
-            id = "base-network";
-        } else if (cls.getName().equals("net.lapidist.colony.base.BaseAutosaveMod")) {
-            id = "base-autosave";
-        } else if (cls.getName().equals("net.lapidist.colony.base.BaseResourceProductionMod")) {
-            id = "base-resource-production";
-        } else if (cls.getName().equals("net.lapidist.colony.base.BaseHandlersMod")) {
-            id = "base-handlers";
-        } else if (cls.getName().equals("net.lapidist.colony.base.BaseDefinitionsMod")) {
-            id = "base-definitions";
-        } else if (cls.getName().equals("net.lapidist.colony.base.BaseResourcesMod")) {
-            id = "base-resources";
-        } else if (cls.getName().equals("net.lapidist.colony.base.BaseCommandBusMod")) {
-            id = "base-command-bus";
-        } else if (cls.getName().equals("net.lapidist.colony.base.BaseGameplaySystemsMod")) {
-            id = "base-systems";
-        } else {
-            id = cls.getSimpleName();
-        }
-        return new ModMetadata(id, version, java.util.List.of());
-    }
 }
