@@ -4,6 +4,11 @@ import net.mostlyoriginal.api.event.common.Event;
 import net.mostlyoriginal.api.event.common.EventSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.Map;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
 
 public final class Events {
 
@@ -17,6 +22,8 @@ public final class Events {
      */
     private static volatile EventSystem instance;
     private static final Logger LOGGER = LoggerFactory.getLogger(Events.class);
+    private static final Map<Class<? extends Event>, List<Consumer<? extends Event>>>
+            LISTENERS = new ConcurrentHashMap<>();
 
     private Events() { }
 
@@ -36,10 +43,21 @@ public final class Events {
         return instance;
     }
 
+    public static <T extends Event> void listen(final Class<T> type, final Consumer<T> handler) {
+        LISTENERS.computeIfAbsent(type, k -> new CopyOnWriteArrayList<>()).add(handler);
+    }
+
     public static void dispatch(final Event event) {
         if (instance != null) {
             LOGGER.debug("Dispatched event: {}", event);
             instance.dispatch(event);
+        }
+        for (Map.Entry<Class<? extends Event>, List<Consumer<? extends Event>>> e : LISTENERS.entrySet()) {
+            if (e.getKey().isInstance(event)) {
+                for (Consumer handler : e.getValue()) {
+                    handler.accept(event);
+                }
+            }
         }
     }
 
@@ -51,5 +69,6 @@ public final class Events {
 
     public static void dispose() {
         instance = null;
+        LISTENERS.clear();
     }
 }
