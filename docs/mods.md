@@ -53,6 +53,8 @@ These are loaded automatically and do not need to be placed inside the `mods/` f
 { "id": "base-definitions", "version": "1.0.0" }
 { "id": "base-resources", "version": "1.0.0" }
 { "id": "base-items", "version": "1.0.0" }
+{ "id": "base-map-generation", "version": "1.0.0" }
+{ "id": "base-systems", "version": "1.0.0" }
 ```
 
 ## How mods are discovered
