@@ -25,6 +25,7 @@ public final class GraphicsSettingsScreen extends BaseScreen {
     private final CheckBox mipBox;
     private final CheckBox afBox;
     private final SelectBox<String> shaderBox;
+    private final com.badlogic.gdx.utils.Array<String> pluginIds;
     private final CheckBox cacheBox;
     private final SelectBox<String> rendererBox;
     private static final float PADDING = 10f;
@@ -48,13 +49,19 @@ public final class GraphicsSettingsScreen extends BaseScreen {
         afBox.setChecked(graphics.isAnisotropicFilteringEnabled());
         shaderBox = new SelectBox<>(getSkin());
         var plugins = new ShaderPluginLoader().loadPlugins();
-        com.badlogic.gdx.utils.Array<String> ids = new com.badlogic.gdx.utils.Array<>();
-        ids.add("none");
+        pluginIds = new com.badlogic.gdx.utils.Array<>();
+        com.badlogic.gdx.utils.Array<String> names = new com.badlogic.gdx.utils.Array<>();
+        pluginIds.add("none");
+        names.add("None");
         for (var p : plugins) {
-            ids.add(p.getClass().getName());
+            pluginIds.add(p.id());
+            names.add(p.displayName());
         }
-        shaderBox.setItems(ids);
-        shaderBox.setSelected(graphics.getShaderPlugin());
+        shaderBox.setItems(names);
+        int selected = pluginIds.indexOf(graphics.getShaderPlugin(), false);
+        if (selected >= 0) {
+            shaderBox.setSelectedIndex(selected);
+        }
         cacheBox = new CheckBox(I18n.get("graphics.spritecache"), getSkin());
         cacheBox.setChecked(graphics.isSpriteCacheEnabled());
 
@@ -89,7 +96,8 @@ public final class GraphicsSettingsScreen extends BaseScreen {
                 graphics.setAntialiasingEnabled(aaBox.isChecked());
                 graphics.setMipMapsEnabled(mipBox.isChecked());
                 graphics.setAnisotropicFilteringEnabled(afBox.isChecked());
-                graphics.setShaderPlugin(shaderBox.getSelected());
+                int idx = shaderBox.getSelectedIndex();
+                graphics.setShaderPlugin(pluginIds.get(idx));
                 graphics.setSpriteCacheEnabled(cacheBox.isChecked());
                 graphics.setRenderer(rendererBox.getSelected());
                 save();

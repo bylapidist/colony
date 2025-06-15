@@ -10,4 +10,14 @@ public final class NullShaderPlugin implements ShaderPlugin {
     public ShaderProgram create(final ShaderManager manager) {
         return null;
     }
+
+    @Override
+    public String id() {
+        return "none";
+    }
+
+    @Override
+    public String displayName() {
+        return "None";
+    }
 }

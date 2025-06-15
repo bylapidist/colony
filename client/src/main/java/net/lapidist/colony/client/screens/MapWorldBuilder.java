@@ -192,7 +192,7 @@ public final class MapWorldBuilder {
             String id = settings.getGraphicsSettings().getShaderPlugin();
             if (!"none".equals(id)) {
                 for (ShaderPlugin p : new ShaderPluginLoader().loadPlugins()) {
-                    if (p.getClass().getName().equals(id)) {
+                    if (p.id().equals(id)) {
                         plugin = p;
                         break;
                     }

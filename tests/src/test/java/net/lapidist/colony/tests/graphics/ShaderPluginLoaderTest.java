@@ -19,7 +19,10 @@ public class ShaderPluginLoaderTest {
         ShaderPluginLoader loader = new ShaderPluginLoader();
         List<ShaderPlugin> plugins = loader.loadPlugins();
         assertFalse(plugins.isEmpty());
-        assertTrue(plugins.get(0) instanceof NullShaderPlugin);
-        assertNull(plugins.get(0).create(new net.lapidist.colony.client.graphics.ShaderManager()));
+        ShaderPlugin plugin = plugins.get(0);
+        assertTrue(plugin instanceof NullShaderPlugin);
+        assertEquals("none", plugin.id());
+        assertEquals("None", plugin.displayName());
+        assertNull(plugin.create(new net.lapidist.colony.client.graphics.ShaderManager()));
     }
 }
