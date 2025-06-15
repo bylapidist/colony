@@ -2,7 +2,6 @@ package net.lapidist.colony.server;
 
 import com.esotericsoftware.kryonet.Server;
 import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.config.NetworkConfig;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.events.Events;
 import net.lapidist.colony.serialization.KryoRegistry;
@@ -112,26 +111,6 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         this.mapHeight = config.getHeight();
         this.handlers = handlersToUse;
         this.commandHandlers = commandHandlersToUse;
-        this.mapServiceFactory = () -> new MapService(mapGenerator, saveName, mapWidth, mapHeight, stateLock);
-        this.networkServiceFactory = () -> new NetworkService(
-                server,
-                NetworkConfig.getTcpPort(),
-                NetworkConfig.getUdpPort()
-        );
-        this.autosaveServiceFactory = () -> new AutosaveService(autosaveInterval, saveName, () -> mapState, stateLock);
-        this.resourceProductionServiceFactory = () -> new ResourceProductionService(
-                autosaveInterval,
-                () -> mapState,
-                s -> mapState = s,
-                networkService,
-                stateLock
-        );
-        this.commandBusFactory = CommandBus::new;
-        this.mapService = mapServiceFactory.get();
-        this.networkService = networkServiceFactory.get();
-        this.autosaveService = autosaveServiceFactory.get();
-        this.resourceProductionService = resourceProductionServiceFactory.get();
-        this.commandBus = commandBusFactory.get();
     }
 
     @Override
@@ -144,14 +123,18 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     public void start() throws IOException, InterruptedException {
         initKryo();
         Events.init(new EventSystem());
-        mods = new java.util.ArrayList<>(new ModLoader(Paths.get()).loadMods());
+        mods = new java.util.ArrayList<>();
         for (GameMod builtin : java.util.ServiceLoader.load(GameMod.class)) {
             ModMetadata meta = builtinMetadata(builtin.getClass());
             mods.add(new LoadedMod(builtin, meta));
         }
+        mods.addAll(new ModLoader(Paths.get()).loadMods());
 
         for (LoadedMod mod : mods) {
             mod.mod().init();
+        }
+
+        for (LoadedMod mod : mods) {
             mod.mod().registerServices(this);
         }
 
@@ -264,6 +247,46 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     public boolean isRunning() {
         Thread t = server.getUpdateThread();
         return t != null && t.isAlive();
+    }
+
+    /** Access to the save name used by this server. */
+    public String getSaveName() {
+        return saveName;
+    }
+
+    /** Interval between autosaves in milliseconds. */
+    public long getAutosaveInterval() {
+        return autosaveInterval;
+    }
+
+    /** Map generator configured for this server. */
+    public MapGenerator getMapGenerator() {
+        return mapGenerator;
+    }
+
+    /** Configured map width in tiles. */
+    public int getMapWidth() {
+        return mapWidth;
+    }
+
+    /** Configured map height in tiles. */
+    public int getMapHeight() {
+        return mapHeight;
+    }
+
+    /** Lock guarding access to the map state. */
+    public ReentrantLock getStateLock() {
+        return stateLock;
+    }
+
+    /** Underlying KryoNet server instance. */
+    public Server getServer() {
+        return server;
+    }
+
+    /** Network service used by the server. */
+    public NetworkService getNetworkService() {
+        return networkService;
     }
 
     /**

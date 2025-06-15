@@ -6,6 +6,10 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileSelectionData;
 import net.lapidist.colony.io.Paths;
 import com.esotericsoftware.kryonet.Server;
+import net.lapidist.colony.server.commands.CommandBus;
+import net.lapidist.colony.server.services.MapService;
+import net.lapidist.colony.server.services.NetworkService;
+import static org.mockito.Mockito.mock;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
@@ -31,6 +35,12 @@ public class GameServerHelperMethodsTest {
         return value;
     }
 
+    private static void setField(final Object o, final String name, final Object value) throws Exception {
+        Field f = o.getClass().getDeclaredField(name);
+        f.setAccessible(true);
+        f.set(o, value);
+    }
+
     @Test
     public void initKryoRegistersClasses() throws Exception {
         GameServer server = new GameServer(GameServerConfig.builder().saveName("init").build());
@@ -44,6 +54,13 @@ public class GameServerHelperMethodsTest {
         String name = "load-state";
         Paths.get().deleteAutosave(name);
         GameServer server = new GameServer(GameServerConfig.builder().saveName(name).build());
+        setField(server, "mapService", new MapService(
+                server.getMapGenerator(),
+                name,
+                server.getMapWidth(),
+                server.getMapHeight(),
+                server.getStateLock()
+        ));
         method(GameServer.class, "loadMapState").invoke(server);
         MapState state = getField(server, "mapState");
         assertNotNull(state);
@@ -56,6 +73,15 @@ public class GameServerHelperMethodsTest {
         String name = "register";
         Paths.get().deleteAutosave(name);
         GameServer server = new GameServer(GameServerConfig.builder().saveName(name).build());
+        setField(server, "mapService", new MapService(
+                server.getMapGenerator(),
+                name,
+                server.getMapWidth(),
+                server.getMapHeight(),
+                server.getStateLock()
+        ));
+        setField(server, "commandBus", new CommandBus());
+        setField(server, "networkService", mock(NetworkService.class));
         method(GameServer.class, "loadMapState").invoke(server);
         server.registerDefaultHandlers();
         Method dispatch = method(GameServer.class.getSuperclass(), "dispatch", Object.class);
