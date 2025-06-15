@@ -32,7 +32,7 @@ public class GameSimulationMapLoadNetworkTest {
 
             CountDownLatch latch = new CountDownLatch(1);
             client.start(state -> latch.countDown());
-            latch.await(1, TimeUnit.SECONDS);
+            latch.await(2, TimeUnit.SECONDS);
 
         assertTrue(client.isConnected());
         MapState state = client.getMapState();

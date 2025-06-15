@@ -21,11 +21,14 @@ import static org.mockito.Mockito.when;
 @RunWith(GdxTestRunner.class)
 public class GameSimulationCustomSystemTest {
 
+    private static final int AUTOSAVE_INTERVAL = 20;
+    private static final int SLEEP_MS = 60;
+
     @Test
     public void modUpdatesMapStateEachTick() throws Exception {
         GameServerConfig config = GameServerConfig.builder()
                 .saveName("scenario-custom-system")
-                .autosaveInterval(20)
+                .autosaveInterval(AUTOSAVE_INTERVAL)
                 .build();
         net.lapidist.colony.io.Paths.get().deleteAutosave("scenario-custom-system");
         MapTickerMod.TICKS.set(0);
@@ -34,7 +37,7 @@ public class GameSimulationCustomSystemTest {
                         new LoadedMod(new MapTickerMod(), new ModMetadata("tick", "1", List.of())))));
              GameServer server = new GameServer(config)) {
             server.start();
-            Thread.sleep(60);
+            Thread.sleep(SLEEP_MS);
 
             assertTrue(MapTickerMod.TICKS.get() > 0);
             assertTrue(server.getMapState().description().startsWith("tick"));

@@ -248,9 +248,14 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         return resourceProductionService;
     }
 
-    /** Register a system to start and stop with the server lifecycle. */
+    /**
+     * Register a system to start and stop with the server lifecycle.
+     * Duplicate registrations are ignored to prevent multiple start calls.
+     */
     public void registerSystem(final GameSystem system) {
-        systems.add(system);
+        if (!systems.contains(system)) {
+            systems.add(system);
+        }
     }
 
     /**
