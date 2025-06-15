@@ -10,6 +10,7 @@ import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.graphics.ShaderManager;
 import net.lapidist.colony.client.graphics.ShaderPlugin;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import net.lapidist.colony.client.graphics.Box2dLightsPlugin;
 import net.lapidist.colony.settings.GraphicsSettings;
 import net.lapidist.colony.settings.Settings;
 import org.slf4j.Logger;
@@ -69,15 +70,19 @@ public final class SpriteMapRendererFactory implements MapRendererFactory {
         CameraProvider cameraSystem = world.getSystem(PlayerCameraSystem.class);
 
         ShaderProgram shader = null;
+        box2dLight.RayHandler lights = null;
         if (plugin != null) {
             try {
                 shader = plugin.create(new ShaderManager());
+                if (plugin instanceof Box2dLightsPlugin bl) {
+                    lights = bl.getRayHandler();
+                }
             } catch (Exception ex) {
                 LOGGER.warn("Shader plugin {} failed", plugin.getClass().getSimpleName(), ex);
             }
         }
 
-        return new LoadingSpriteMapRenderer(
+        LoadingSpriteMapRenderer renderer = new LoadingSpriteMapRenderer(
                 world,
                 batch,
                 resourceLoader,
@@ -86,5 +91,9 @@ public final class SpriteMapRendererFactory implements MapRendererFactory {
                 progressCallback,
                 shader
         );
+        if (lights != null) {
+            renderer.setLights(lights);
+        }
+        return renderer;
     }
 }

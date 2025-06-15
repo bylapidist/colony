@@ -11,6 +11,7 @@ buildscript {
         logbackVersion = '1.5.18'
         typesafeConfigVersion = '1.4.3'
         kotlinVersion = '2.1.21'
+        box2dLightsVersion = '1.5'
     }
 
     repositories {
