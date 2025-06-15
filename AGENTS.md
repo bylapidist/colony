@@ -28,6 +28,9 @@ Each module contains its own `AGENTS.md` with extra notes.
 - Place new classes under the `net.lapidist.colony` package in the appropriate module.
 - Use the i18n translation system for all user-facing text.
 - Ensure each file ends with a newline and avoid trailing whitespace.
+- When adding new gameplay, implement it as a built-in core mod under
+  `server/src/main/java/net/lapidist/colony/base` if possible. This keeps
+  features modular and easier to test.
 
 ## Testing and Coverage
 - Achieve **at least 80% line coverage** on new or modified code.

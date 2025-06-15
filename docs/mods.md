@@ -2,6 +2,10 @@
 
 This guide covers how to organize your `mods/` folder and how `ModLoader` discovers mod implementations.
 
+When developing new gameplay for Colony itself, try to implement the feature as
+a built-in core mod under `server/src/main/java/net/lapidist/colony/base` before
+expanding the main modules. Core mods keep functionality modular and optional.
+
 ## Folder layout
 
 All mods live under the `mods/` directory inside the game folder.
