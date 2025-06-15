@@ -188,10 +188,15 @@ public final class MapWorldBuilder {
         builder.with(new PlayerCameraSystem());
 
         ShaderPlugin plugin = null;
-        if (settings != null && settings.getGraphicsSettings().isShadersEnabled()) {
-            var plugins = new ShaderPluginLoader().loadPlugins();
-            if (!plugins.isEmpty()) {
-                plugin = plugins.get(0);
+        if (settings != null) {
+            String id = settings.getGraphicsSettings().getShaderPlugin();
+            if (!"none".equals(id)) {
+                for (ShaderPlugin p : new ShaderPluginLoader().loadPlugins()) {
+                    if (p.getClass().getName().equals(id)) {
+                        plugin = p;
+                        break;
+                    }
+                }
             }
         }
 
