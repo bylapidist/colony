@@ -24,6 +24,7 @@ public final class Events {
     private static final Logger LOGGER = LoggerFactory.getLogger(Events.class);
     private static final Map<Class<? extends Event>, List<Consumer<? extends Event>>>
             LISTENERS = new ConcurrentHashMap<>();
+    private static final List<Object> PENDING = new CopyOnWriteArrayList<>();
 
     private Events() { }
 
@@ -37,10 +38,27 @@ public final class Events {
      */
     public static void init(final EventSystem system) {
         instance = system;
+        for (Object listener : PENDING) {
+            instance.registerEvents(listener);
+        }
+        PENDING.clear();
     }
 
     public static EventSystem getInstance() {
         return instance;
+    }
+
+    /**
+     * Register a listener object with the global event system. If the system is
+     * not yet initialised the listener is queued and automatically registered
+     * once {@link #init(EventSystem)} is called.
+     */
+    public static void registerEvents(final Object listener) {
+        if (instance != null) {
+            instance.registerEvents(listener);
+        } else {
+            PENDING.add(listener);
+        }
     }
 
     public static <T extends Event> void listen(final Class<T> type, final Consumer<T> handler) {
@@ -70,5 +88,6 @@ public final class Events {
     public static void dispose() {
         instance = null;
         LISTENERS.clear();
+        PENDING.clear();
     }
 }

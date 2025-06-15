@@ -77,7 +77,7 @@ public class GameServerScriptTest {
                 "    }",
                 "}",
                 "",
-                "Events.getInstance().registerEvents(ScriptListener())"
+                "Events.registerEvents(ScriptListener())"
         ));
     }
 
