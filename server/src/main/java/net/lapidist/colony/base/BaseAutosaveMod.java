@@ -13,6 +13,7 @@ public final class BaseAutosaveMod implements GameMod {
                 s.getAutosaveInterval(),
                 s.getSaveName(),
                 s::getMapState,
+                s::getModMetadata,
                 s.getStateLock()
         ));
     }

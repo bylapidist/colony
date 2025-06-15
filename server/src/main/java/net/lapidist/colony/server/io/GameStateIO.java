@@ -8,6 +8,8 @@ import net.lapidist.colony.serialization.KryoRegistry;
 import net.lapidist.colony.save.SaveData;
 import net.lapidist.colony.save.SaveVersion;
 import net.lapidist.colony.serialization.SerializationRegistrar;
+import net.lapidist.colony.mod.ModMetadata;
+import java.util.List;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -18,20 +20,28 @@ public final class GameStateIO {
 
     private GameStateIO() { }
 
-    public static void save(final MapState state, final Path file) throws IOException {
+    public static void save(
+            final MapState state,
+            final List<ModMetadata> mods,
+            final Path file) throws IOException {
         Kryo kryo = new Kryo();
         KryoRegistry.register(kryo);
         try (Output output = new Output(new FileOutputStream(file.toFile()))) {
             SaveData data = new SaveData(
                     SaveVersion.CURRENT.number(),
                     SerializationRegistrar.registrationHash(),
-                    state
+                    state,
+                    mods
             );
             kryo.writeObject(output, data);
         }
     }
 
-    public static MapState load(final Path file) throws IOException {
+    public static void save(final MapState state, final Path file) throws IOException {
+        save(state, new java.util.ArrayList<>(), file);
+    }
+
+    public static SaveData loadData(final Path file) throws IOException {
         Kryo kryo = new Kryo();
         KryoRegistry.register(kryo);
         try (Input input = new Input(new FileInputStream(file.toFile()))) {
@@ -39,8 +49,13 @@ public final class GameStateIO {
             SaveFormatValidator validator = new DefaultSaveFormatValidator();
             validator.validate(data);
             SaveMigrationStrategy migrator = new DefaultSaveMigrationStrategy();
-            return migrator.migrate(data);
+            MapState state = migrator.migrate(data);
+            return new SaveData(data.version(), data.kryoHash(), state, data.mods());
         }
+    }
+
+    public static MapState load(final Path file) throws IOException {
+        return loadData(file).mapState();
     }
 
     /**

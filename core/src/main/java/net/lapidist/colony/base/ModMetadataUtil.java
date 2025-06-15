@@ -35,6 +35,6 @@ public final class ModMetadataUtil {
         String id = IDS.getOrDefault(cls.getName(), cls.getSimpleName());
         String version = Optional.ofNullable(cls.getPackage().getImplementationVersion())
                 .orElse("dev");
-        return new ModMetadata(id, version, List.of());
+        return new ModMetadata(id, version, new java.util.ArrayList<>());
     }
 }
