@@ -54,12 +54,10 @@ public final class ResourceUpdateSystem extends BaseSystem {
                 }
                 continue;
             }
-            var found = MapUtils.findTile(mapComponent, data.x(), data.y())
-                    .map(tile -> {
+            MapUtils.findTile(mapComponent, data.x(), data.y())
+                    .ifPresent(tile -> {
                         ResourceComponent rc = resourceMapper.get(tile);
-                        int deltaWood = rc.getAmount("WOOD") - data.amounts().getOrDefault("WOOD", 0);
-                        int deltaStone = rc.getAmount("STONE") - data.amounts().getOrDefault("STONE", 0);
-                        int deltaFood = rc.getAmount("FOOD") - data.amounts().getOrDefault("FOOD", 0);
+                        java.util.Map<String, Integer> before = new java.util.HashMap<>(rc.getAmounts());
                         for (var entry : data.amounts().entrySet()) {
                             rc.setAmount(entry.getKey(), entry.getValue());
                         }
@@ -71,20 +69,16 @@ public final class ResourceUpdateSystem extends BaseSystem {
                         }
                         if (player != null) {
                             var pr = playerMapper.get(player);
-                            if (deltaWood > 0) {
-                                pr.addAmount("WOOD", deltaWood);
-                            }
-                            if (deltaStone > 0) {
-                                pr.addAmount("STONE", deltaStone);
-                            }
-                            if (deltaFood > 0) {
-                                pr.addAmount("FOOD", deltaFood);
+                            for (var entry : data.amounts().entrySet()) {
+                                int oldVal = before.getOrDefault(entry.getKey(), 0);
+                                int delta = oldVal - entry.getValue();
+                                if (delta > 0) {
+                                    pr.addAmount(entry.getKey(), delta);
+                                }
                             }
                         }
                         mapComponent.incrementVersion();
-                        return true;
-                    })
-                    .orElse(false);
+                    });
         }
     }
 }
