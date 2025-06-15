@@ -2,8 +2,11 @@ package net.lapidist.colony.client.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.graphics.Texture;
 import net.lapidist.colony.util.I18n;
 import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.io.Paths;
@@ -14,10 +17,12 @@ import java.nio.file.Path;
 
 public final class MainMenuScreen extends BaseScreen {
     private final Colony colony;
+    private static final float LOGO_PADDING = 10f;
 
     public MainMenuScreen(final Colony game) {
         this.colony = game;
 
+        Image logo = new Image(new TextureRegionDrawable(new Texture(Gdx.files.internal("textures/logo.png"))));
         TextButton continueButton = new TextButton(I18n.get("main.continue"), getSkin());
         TextButton newGameButton = new TextButton(I18n.get("main.newGame"), getSkin());
         TextButton loadGameButton = new TextButton(I18n.get("main.loadGame"), getSkin());
@@ -38,6 +43,7 @@ public final class MainMenuScreen extends BaseScreen {
 
         continueButton.setDisabled(!canContinue);
 
+        getRoot().add(logo).padBottom(LOGO_PADDING).row();
         getRoot().add(continueButton).row();
         getRoot().add(newGameButton).row();
         getRoot().add(loadGameButton).row();
