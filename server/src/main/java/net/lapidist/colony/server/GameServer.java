@@ -155,6 +155,34 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
                     stateLock
             );
         }
+        if (networkServiceFactory == null) {
+            networkServiceFactory = () -> new net.lapidist.colony.server.services.NetworkService(
+                    server,
+                    net.lapidist.colony.config.NetworkConfig.getTcpPort(),
+                    net.lapidist.colony.config.NetworkConfig.getUdpPort()
+            );
+        }
+        if (autosaveServiceFactory == null) {
+            autosaveServiceFactory = () -> new net.lapidist.colony.server.services.AutosaveService(
+                    autosaveInterval,
+                    saveName,
+                    this::getMapState,
+                    this::getModMetadata,
+                    stateLock
+            );
+        }
+        if (resourceProductionServiceFactory == null) {
+            resourceProductionServiceFactory = () -> new net.lapidist.colony.server.services.ResourceProductionService(
+                    autosaveInterval,
+                    this::getMapState,
+                    this::setMapState,
+                    getNetworkService(),
+                    stateLock
+            );
+        }
+        if (commandBusFactory == null) {
+            commandBusFactory = net.lapidist.colony.server.commands.CommandBus::new;
+        }
         this.mapService = mapServiceFactory.get();
         this.networkService = networkServiceFactory.get();
         this.autosaveService = autosaveServiceFactory.get();

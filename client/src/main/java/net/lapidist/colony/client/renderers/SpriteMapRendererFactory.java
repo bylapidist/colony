@@ -84,7 +84,8 @@ public final class SpriteMapRendererFactory implements MapRendererFactory {
                 cameraSystem,
                 graphics.isSpriteCacheEnabled(),
                 progressCallback,
-                shader
+                shader,
+                world.getSystem(net.lapidist.colony.client.systems.LightingSystem.class)
         );
     }
 }

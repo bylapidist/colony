@@ -18,6 +18,7 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
     private final BuildingRenderer buildingRenderer;
     private final MapEntityRenderers entityRenderers;
     private final ShaderProgram shader;
+    private final net.lapidist.colony.client.graphics.LightMapProvider lightMap;
     private final MapTileCache tileCache = new MapTileCache();
     private final AssetResolver resolver = new DefaultAssetResolver();
     private final boolean cacheEnabled;
@@ -30,7 +31,8 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
             final BuildingRenderer buildingRendererToSet,
             final MapEntityRenderers entityRenderersToSet,
             final boolean cacheEnabledToSet,
-            final ShaderProgram shaderToSet
+            final ShaderProgram shaderToSet,
+            final net.lapidist.colony.client.graphics.LightMapProvider lightMapProvider
     ) {
         this.spriteBatch = spriteBatchToSet;
         this.resourceLoader = resourceLoaderToSet;
@@ -39,6 +41,7 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         this.entityRenderers = entityRenderersToSet;
         this.cacheEnabled = cacheEnabledToSet;
         this.shader = shaderToSet;
+        this.lightMap = lightMapProvider;
     }
     // CHECKSTYLE:ON: ParameterNumber
 
@@ -57,6 +60,10 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         }
         if (shader != null) {
             spriteBatch.setShader(shader);
+            if (lightMap != null) {
+                lightMap.getLightMapTexture().bind(1);
+                shader.setUniformi("u_lightmap", 1);
+            }
         }
         spriteBatch.begin();
 

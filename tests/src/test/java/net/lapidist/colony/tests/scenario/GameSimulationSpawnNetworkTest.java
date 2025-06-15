@@ -29,6 +29,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.when;
 
@@ -58,7 +59,7 @@ public class GameSimulationSpawnNetworkTest {
 
             CountDownLatch latch = new CountDownLatch(1);
             client.start(state -> latch.countDown());
-            latch.await(1, TimeUnit.SECONDS);
+            assertTrue(latch.await(3, TimeUnit.SECONDS));
 
             com.badlogic.gdx.graphics.g2d.Batch batch =
                     org.mockito.Mockito.mock(com.badlogic.gdx.graphics.g2d.Batch.class);

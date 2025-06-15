@@ -115,12 +115,13 @@ public final class MapWorldBuilder {
             final Stage stage,
             final KeyBindings keyBindings
     ) {
+        MapState actual = state == null ? new MapState() : state;
         return createBuilder(
                 client,
                 stage,
                 keyBindings,
-                new ProvidedMapStateProvider(state),
-                state
+                new ProvidedMapStateProvider(actual),
+                actual
         );
     }
 
@@ -198,6 +199,10 @@ public final class MapWorldBuilder {
                     }
                 }
             }
+        }
+
+        if (plugin instanceof net.lapidist.colony.client.graphics.LightingShaderPlugin) {
+            builder.with(new net.lapidist.colony.client.systems.LightingSystem());
         }
 
         World world = new World(builder.build());

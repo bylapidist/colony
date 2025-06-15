@@ -69,6 +69,7 @@ they can run without a display.
 | MapRenderDataSystemBenchmark.updateIncremental (90) | ~15,497,000 |
 | SpriteBatchRendererBenchmark.renderWithCache | ~12,800 |
 | SpriteBatchRendererBenchmark.renderWithoutCache | ~160 |
+| SpriteBatchRendererBenchmark.renderWithLighting | ~10,000 |
 
 These results were captured on a headless JDK 21 runtime and serve as a baseline
 for future renderer changes.
@@ -76,6 +77,8 @@ When rerunning these benchmarks, record any updated scores here. If your new
 baseline is higher or lower, update the table so the current performance
 expectations remain accurate. Avoid shipping slower results without a strong
 reason.
+The lighting shader reduces throughput by roughly 20% because each frame
+requires building an additional light map.
 
 ## Network service benchmark
 

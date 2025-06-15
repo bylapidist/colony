@@ -33,6 +33,20 @@ public final class Colony extends Game {
     private java.util.List<LoadedMod> mods;
     private java.util.List<LoadedMod> selectedMods;
 
+    private void loadMods() throws IOException {
+        if (mods == null) {
+            mods = new java.util.ArrayList<>();
+            for (net.lapidist.colony.mod.GameMod builtin : ServiceLoader.load(net.lapidist.colony.mod.GameMod.class)) {
+                mods.add(new LoadedMod(builtin, ModMetadataUtil.builtinMetadata(builtin.getClass())));
+            }
+            mods.addAll(new ModLoader(Paths.get()).loadMods());
+            for (LoadedMod mod : mods) {
+                mod.mod().init();
+            }
+            selectedMods = new java.util.ArrayList<>(mods);
+        }
+    }
+
     public void returnToMainMenu() {
         if (client != null) {
             client.stop();
@@ -53,6 +67,7 @@ public final class Colony extends Game {
      */
     public void startGame(final String saveName) {
         try {
+            loadMods();
             java.nio.file.Path file = Paths.get().getAutosave(saveName);
             if (java.nio.file.Files.exists(file)) {
                 net.lapidist.colony.save.SaveData data = GameStateIO.loadData(file);
@@ -128,15 +143,7 @@ public final class Colony extends Game {
             Paths.get().createGameFoldersIfNotExists();
             settings = Settings.load();
             I18n.setLocale(settings.getLocale());
-            mods = new java.util.ArrayList<>();
-            for (net.lapidist.colony.mod.GameMod builtin : ServiceLoader.load(net.lapidist.colony.mod.GameMod.class)) {
-                mods.add(new LoadedMod(builtin, ModMetadataUtil.builtinMetadata(builtin.getClass())));
-            }
-            mods.addAll(new ModLoader(Paths.get()).loadMods());
-            for (LoadedMod mod : mods) {
-                mod.mod().init();
-            }
-            selectedMods = new java.util.ArrayList<>(mods);
+            loadMods();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

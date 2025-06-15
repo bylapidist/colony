@@ -57,3 +57,11 @@ public final class GrayShaderPlugin implements ShaderPlugin {
 
 Add `GrayShaderPlugin` to the service descriptor and set
 `graphics.shaderPlugin` to `com.example.GrayShaderPlugin` to enable it.
+
+## Built-in Lighting Shader
+
+The repository ships with a small `LightingShaderPlugin` that multiplies the
+current sprite color with a light map generated each frame. Select it by setting
+`graphics.shaderPlugin` to `lighting` in `settings.properties`. The light map is
+created by `LightingSystem` and passed to the shader as the `u_lightmap`
+uniform.
