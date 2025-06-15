@@ -175,8 +175,6 @@ public final class Colony extends Game {
             id = "base-resources";
         } else if (cls.getName().equals("net.lapidist.colony.base.BaseCommandBusMod")) {
             id = "base-command-bus";
-        } else if (cls.getName().equals("net.lapidist.colony.base.BaseMapGenerationMod")) {
-            id = "base-map-generation";
         } else if (cls.getName().equals("net.lapidist.colony.base.BaseGameplaySystemsMod")) {
             id = "base-systems";
         } else {

@@ -10,5 +10,4 @@ net.lapidist.colony.base.BaseDefinitionsMod
 net.lapidist.colony.base.BaseResourcesMod
 net.lapidist.colony.base.BaseItemsMod
 
-net.lapidist.colony.base.BaseMapGenerationMod
 net.lapidist.colony.base.BaseGameplaySystemsMod
