@@ -2,6 +2,7 @@ package net.lapidist.colony.client.core.io;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.utils.Disposable;
 import net.lapidist.colony.settings.GraphicsSettings;
 
@@ -57,6 +58,19 @@ public interface ResourceLoader extends Disposable {
      * @return matching region or {@code null}
      */
     TextureRegion findRegion(String name);
+
+    /**
+     * Load a particle effect from the given path. Implementations should look
+     * for definitions under an {@code effects/} directory.
+     *
+     * @param effectPath effect definition to load
+     * @return parsed effect
+     * @throws IOException if the file cannot be found or read
+     */
+    ParticleEffect loadEffect(String effectPath) throws IOException;
+
+    /** Returns the file location used to resolve assets. */
+    FileLocation getFileLocation();
 
 
     /**

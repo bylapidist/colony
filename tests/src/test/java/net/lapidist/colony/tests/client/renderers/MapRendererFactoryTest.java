@@ -33,6 +33,15 @@ public class MapRendererFactoryTest {
     private static final class DummyLoader implements ResourceLoader {
         private boolean loaded;
         private boolean updated;
+        @Override
+        public FileLocation getFileLocation() {
+            return FileLocation.INTERNAL;
+        }
+
+        @Override
+        public com.badlogic.gdx.graphics.g2d.ParticleEffect loadEffect(final String path) {
+            return new com.badlogic.gdx.graphics.g2d.ParticleEffect();
+        }
 
         @Override
         public void loadTextures(
@@ -170,6 +179,15 @@ public class MapRendererFactoryTest {
         private int calls;
         private boolean loaded;
         private boolean updated;
+        @Override
+        public FileLocation getFileLocation() {
+            return FileLocation.INTERNAL;
+        }
+
+        @Override
+        public com.badlogic.gdx.graphics.g2d.ParticleEffect loadEffect(final String path) {
+            return new com.badlogic.gdx.graphics.g2d.ParticleEffect();
+        }
 
         @Override
         public void loadTextures(
