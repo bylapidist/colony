@@ -21,8 +21,9 @@ public class CelestialSystemTest {
     private static final float EPSILON = 0.01f;
     @Test
     public void updatesBodyPosition() {
-        EnvironmentState env = new EnvironmentState(TIME, Season.SPRING, 0f);
-        CelestialSystem system = new CelestialSystem(null, env);
+        java.util.concurrent.atomic.AtomicReference<EnvironmentState> ref =
+                new java.util.concurrent.atomic.AtomicReference<>(new EnvironmentState(TIME, Season.SPRING, 0f));
+        CelestialSystem system = new CelestialSystem(null, ref::get);
         World world = new World(new WorldConfigurationBuilder().with(system).build());
         var e = world.createEntity();
         CelestialBodyComponent body = new CelestialBodyComponent();

@@ -13,7 +13,7 @@ public final class DayNightSystem extends BaseSystem {
 
     private final ClearScreenSystem clearScreenSystem;
     private final LightingSystem lightingSystem;
-    private final EnvironmentState environment;
+    private final java.util.function.Supplier<EnvironmentState> environment;
     private float timeOfDay;
 
     private static final float HOURS_PER_DAY = 24f;
@@ -29,7 +29,7 @@ public final class DayNightSystem extends BaseSystem {
 
     public DayNightSystem(final ClearScreenSystem clearSystem,
                           final LightingSystem lighting,
-                          final EnvironmentState env) {
+                          final java.util.function.Supplier<EnvironmentState> env) {
         this.clearScreenSystem = clearSystem;
         this.lightingSystem = lighting;
         this.environment = env;
@@ -47,9 +47,11 @@ public final class DayNightSystem extends BaseSystem {
 
     @Override
     protected void processSystem() {
-        timeOfDay = wrap(timeOfDay + world.getDelta());
+        EnvironmentState env = environment.get();
+        timeOfDay = env != null ? wrap(env.timeOfDay()) : wrap(timeOfDay + world.getDelta());
         Color c = clearScreenSystem.getColor();
-        calculateColor(timeOfDay, environment.moonPhase(), c);
+        float moon = env != null ? env.moonPhase() : 0f;
+        calculateColor(timeOfDay, moon, c);
         RayHandler handler = lightingSystem.getRayHandler();
         if (handler != null) {
             handler.setAmbientLight(c.r, c.g, c.b, 1f);

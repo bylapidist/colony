@@ -9,6 +9,7 @@ import net.lapidist.colony.components.state.BuildingPlacementData;
 import net.lapidist.colony.components.state.BuildingRemovalData;
 import net.lapidist.colony.components.state.ResourceGatherRequestData;
 import net.lapidist.colony.components.state.ResourceUpdateData;
+import net.lapidist.colony.components.state.EnvironmentUpdate;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.ChunkPos;
@@ -131,6 +132,7 @@ public final class GameClient extends AbstractMessageEndpoint implements AutoClo
         Queue<BuildingRemovalData> buildingRemovals = registerQueue(BuildingRemovalData.class);
         Queue<ChatMessage> chatMessages = registerQueue(ChatMessage.class);
         Queue<ResourceUpdateData> resourceUpdates = registerQueue(ResourceUpdateData.class);
+        Queue<EnvironmentUpdate> environmentUpdates = registerQueue(EnvironmentUpdate.class);
 
         this.handlers = java.util.List.of(
                 new MapMetadataHandler(meta -> {
@@ -173,7 +175,8 @@ public final class GameClient extends AbstractMessageEndpoint implements AutoClo
                 new QueueingMessageHandler<>(BuildingData.class, messageQueues),
                 new QueueingMessageHandler<>(BuildingRemovalData.class, messageQueues),
                 new QueueingMessageHandler<>(ChatMessage.class, messageQueues),
-                new ResourceUpdateHandler(messageQueues, () -> mapState, ms -> mapState = ms)
+                new ResourceUpdateHandler(messageQueues, () -> mapState, ms -> mapState = ms),
+                new QueueingMessageHandler<>(EnvironmentUpdate.class, messageQueues)
         );
     }
 
@@ -250,6 +253,11 @@ public final class GameClient extends AbstractMessageEndpoint implements AutoClo
      */
     public MapState getMapState() {
         return mapState;
+    }
+
+    /** Replace the current map state. */
+    public void setMapState(final MapState state) {
+        this.mapState = state;
     }
 
     /**
@@ -414,6 +422,12 @@ public final class GameClient extends AbstractMessageEndpoint implements AutoClo
     @SuppressWarnings("unchecked")
     public void injectResourceUpdate(final ResourceUpdateData data) {
         ((Queue<ResourceUpdateData>) messageQueues.get(ResourceUpdateData.class)).add(data);
+    }
+
+    /** Inject an environment update into the local message queue. */
+    @SuppressWarnings("unchecked")
+    public void injectEnvironmentUpdate(final EnvironmentUpdate data) {
+        ((Queue<EnvironmentUpdate>) messageQueues.get(EnvironmentUpdate.class)).add(data);
     }
 
 

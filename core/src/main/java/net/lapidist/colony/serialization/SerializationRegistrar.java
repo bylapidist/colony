@@ -22,6 +22,7 @@ import net.lapidist.colony.components.state.CameraPosition;
 import net.lapidist.colony.components.state.PlayerPositionUpdate;
 import net.lapidist.colony.mod.ModMetadata;
 import net.lapidist.colony.components.state.EnvironmentState;
+import net.lapidist.colony.components.state.EnvironmentUpdate;
 import net.lapidist.colony.components.state.Season;
 
 /**
@@ -65,7 +66,7 @@ public final class SerializationRegistrar {
     }
 
     /** Precomputed registration hash for quick access. */
-    public static final int REGISTRATION_HASH = -95745047;
+    public static final int REGISTRATION_HASH = -841100379;
 
     private static final Class<?>[] REGISTERED_TYPES = {
             TileData.class,
@@ -93,6 +94,7 @@ public final class SerializationRegistrar {
             PlayerPositionUpdate.class,
             ModMetadata.class,
             EnvironmentState.class,
+            EnvironmentUpdate.class,
             Season.class
     };
 }

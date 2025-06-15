@@ -25,6 +25,8 @@ public class DayNightSystemTest {
     private static final float NIGHT_BLUE = 0.1f;
     private static final float MOON_RED = 0.45f;
     private static final float TOLERANCE = 0.01f;
+    private static final float NOON = 12f;
+    private static final float WRAP_VALUE = 25f;
 
     @Test
     public void updatesLightAndColor() {
@@ -32,10 +34,10 @@ public class DayNightSystemTest {
         LightingSystem lighting = new LightingSystem();
         RayHandler handler = mock(RayHandler.class);
         lighting.setRayHandler(handler);
-        EnvironmentState env = new EnvironmentState(0f, Season.SPRING, 0f);
-        DayNightSystem system = new DayNightSystem(clear, lighting, env);
-        final float noon = 12f;
-        system.setTimeOfDay(noon);
+        java.util.concurrent.atomic.AtomicReference<EnvironmentState> ref =
+                new java.util.concurrent.atomic.AtomicReference<>(new EnvironmentState(0f, Season.SPRING, 0f));
+        DayNightSystem system = new DayNightSystem(clear, lighting, ref::get);
+        ref.set(new EnvironmentState(NOON, Season.SPRING, 0f));
         World world = new World(new WorldConfigurationBuilder()
                 .with(clear, lighting, system)
                 .build());
@@ -43,7 +45,7 @@ public class DayNightSystemTest {
         world.process();
         verify(handler).setAmbientLight(1f, 1f, 1f, 1f);
         assertEquals(1f, clear.getColor().r, TOLERANCE);
-        system.setTimeOfDay(0f);
+        ref.set(new EnvironmentState(0f, Season.SPRING, 0f));
         world.process();
 //CHECKSTYLE:OFF
         verify(handler).setAmbientLight(NIGHT_RED, NIGHT_RED, NIGHT_BLUE, 1f);
@@ -56,10 +58,9 @@ public class DayNightSystemTest {
     public void wrapsTimeOfDay() {
         ClearScreenSystem clear = new ClearScreenSystem(new Color());
         LightingSystem lighting = new LightingSystem();
-        EnvironmentState env = new EnvironmentState(0f, Season.SPRING, 0f);
-        DayNightSystem system = new DayNightSystem(clear, lighting, env);
-        final float wrapValue = 25f;
-        system.setTimeOfDay(wrapValue);
+        java.util.concurrent.atomic.AtomicReference<EnvironmentState> ref =
+                new java.util.concurrent.atomic.AtomicReference<>(new EnvironmentState(WRAP_VALUE, Season.SPRING, 0f));
+        DayNightSystem system = new DayNightSystem(clear, lighting, ref::get);
         World world = new World(new WorldConfigurationBuilder()
                 .with(clear, lighting, system)
                 .build());
@@ -76,12 +77,12 @@ public class DayNightSystemTest {
         LightingSystem lighting = new LightingSystem();
         RayHandler handler = mock(RayHandler.class);
         lighting.setRayHandler(handler);
-        EnvironmentState env = new EnvironmentState(0f, Season.SPRING, 1f);
-        DayNightSystem system = new DayNightSystem(clear, lighting, env);
+        java.util.concurrent.atomic.AtomicReference<EnvironmentState> ref =
+                new java.util.concurrent.atomic.AtomicReference<>(new EnvironmentState(0f, Season.SPRING, 1f));
+        DayNightSystem system = new DayNightSystem(clear, lighting, ref::get);
         World world = new World(new WorldConfigurationBuilder()
                 .with(clear, lighting, system)
                 .build());
-        system.setTimeOfDay(0f);
         world.setDelta(0f);
         world.process();
 //CHECKSTYLE:OFF

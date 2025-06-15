@@ -13,5 +13,6 @@ public final class BaseGameplaySystemsMod implements GameMod {
         if (service != null) {
             srv.registerSystem(service);
         }
+        srv.registerSystem(new net.lapidist.colony.server.systems.EnvironmentSystem(s));
     }
 }

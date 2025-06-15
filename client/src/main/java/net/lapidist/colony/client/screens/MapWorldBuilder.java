@@ -28,6 +28,7 @@ import net.lapidist.colony.client.systems.network.ChunkRequestQueueSystem;
 import net.lapidist.colony.client.systems.network.TileUpdateSystem;
 import net.lapidist.colony.client.systems.network.BuildingUpdateSystem;
 import net.lapidist.colony.client.systems.network.ResourceUpdateSystem;
+import net.lapidist.colony.client.systems.network.EnvironmentUpdateSystem;
 import net.lapidist.colony.client.systems.CelestialSystem;
 import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.client.systems.MapRenderDataSystem;
@@ -169,9 +170,13 @@ public final class MapWorldBuilder {
                         new TileUpdateSystem(client),
                         new BuildingUpdateSystem(client),
                         new ResourceUpdateSystem(client),
+                        new EnvironmentUpdateSystem(client),
                         new ChunkLoadSystem(client),
                         new ChunkRequestQueueSystem(client),
-                        new CelestialSystem(client, state.environment()),
+                        new CelestialSystem(client, () ->
+                                client != null && client.getMapState() != null
+                                        ? client.getMapState().environment()
+                                        : state.environment()),
                         new MapRenderSystem(),
                         particleSystem,
                         lighting,
@@ -179,7 +184,10 @@ public final class MapWorldBuilder {
                 );
 
         if (graphics == null || (graphics.isLightingEnabled() && graphics.isDayNightCycleEnabled())) {
-            builder.with(new DayNightSystem(clear, lighting, state.environment()));
+            builder.with(new DayNightSystem(clear, lighting, () ->
+                    client != null && client.getMapState() != null
+                            ? client.getMapState().environment()
+                            : state.environment()));
         }
 
         if (provider != null) {
