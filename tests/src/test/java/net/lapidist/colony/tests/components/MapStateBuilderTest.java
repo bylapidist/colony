@@ -2,6 +2,7 @@ package net.lapidist.colony.tests.components;
 
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
+import net.lapidist.colony.components.state.EnvironmentState;
 import org.junit.Test;
 
 import net.lapidist.colony.components.state.ChunkPos;
@@ -23,13 +24,15 @@ public class MapStateBuilderTest {
                 .description("d")
                 .chunks(new HashMap<>())
                 .buildings(List.of())
-                .playerResources(new ResourceData());
+                .playerResources(new ResourceData())
+                .environment(new EnvironmentState());
         MapState state = builder.build();
         assertEquals(2, state.version());
         assertEquals("n", state.name());
         assertEquals("s", state.saveName());
         assertEquals("a", state.autosaveName());
         assertEquals("d", state.description());
+        assertNotNull(state.environment());
     }
 
     @Test

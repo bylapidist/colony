@@ -23,6 +23,7 @@ public record MapState(
         ResourceData playerResources,
         PlayerPosition playerPos,
         CameraPosition cameraPos,
+        EnvironmentState environment,
         int width,
         int height
 ) {
@@ -42,6 +43,7 @@ public record MapState(
                 new ResourceData(),
                 new PlayerPosition(DEFAULT_WIDTH / 2, DEFAULT_HEIGHT / 2),
                 new CameraPosition(DEFAULT_WIDTH / 2f, DEFAULT_HEIGHT / 2f),
+                new EnvironmentState(),
                 DEFAULT_WIDTH,
                 DEFAULT_HEIGHT
         );
@@ -129,6 +131,7 @@ public record MapState(
         private ResourceData playerResources;
         private PlayerPosition playerPos;
         private CameraPosition cameraPos;
+        private EnvironmentState environment;
         private int width;
         private int height;
 
@@ -147,6 +150,7 @@ public record MapState(
             this.playerResources = state.playerResources;
             this.playerPos = state.playerPos;
             this.cameraPos = state.cameraPos;
+            this.environment = state.environment;
             this.width = state.width();
             this.height = state.height();
         }
@@ -201,6 +205,11 @@ public record MapState(
             return this;
         }
 
+        public Builder environment(final EnvironmentState newEnvironment) {
+            this.environment = newEnvironment;
+            return this;
+        }
+
         public Builder width(final int newWidth) {
             this.width = newWidth;
             return this;
@@ -223,6 +232,7 @@ public record MapState(
                     playerResources,
                     playerPos,
                     cameraPos,
+                    environment,
                     width,
                     height
             );
