@@ -15,6 +15,7 @@ import net.lapidist.colony.client.TileRotationUtil;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.registry.Registries;
 import net.lapidist.colony.registry.TileDefinition;
+import net.lapidist.colony.settings.GraphicsSettings;
 
 /**
  * Renders tile entities.
@@ -37,6 +38,7 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
     private final Vector2 tmpStart = new Vector2();
     private final Vector2 tmpEnd = new Vector2();
     private final Vector2 worldCoords = new Vector2();
+    private final GraphicsSettings graphicsSettings;
     private boolean overlayOnly;
 
     public TileRenderer(
@@ -44,13 +46,15 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
             final ResourceLoader resourceLoaderToSet,
             final CameraProvider cameraSystemToSet,
             final AssetResolver resolverToSet,
-            final net.lapidist.colony.client.network.GameClient clientToUse
+            final net.lapidist.colony.client.network.GameClient clientToUse,
+            final GraphicsSettings settings
     ) {
         this.client = clientToUse;
         this.spriteBatch = spriteBatchToSet;
         this.resourceLoader = resourceLoaderToSet;
         this.cameraSystem = cameraSystemToSet;
         this.resolver = resolverToSet;
+        this.graphicsSettings = settings;
 
         for (TileDefinition def : Registries.tiles().all()) {
             String ref = resolver.tileAsset(def.id());
@@ -115,11 +119,11 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                         TextureRegion spec = specularRegions.get(type.toUpperCase(java.util.Locale.ROOT));
                         com.badlogic.gdx.graphics.glutils.ShaderProgram shader = spriteBatch.getShader();
                         if (shader != null) {
-                            if (nrm != null) {
+                            if (nrm != null && graphicsSettings.isNormalMapsEnabled()) {
                                 nrm.getTexture().bind(1);
                                 shader.setUniformi("u_normal", 1);
                             }
-                            if (spec != null) {
+                            if (spec != null && graphicsSettings.isSpecularMapsEnabled()) {
                                 spec.getTexture().bind(2);
                                 shader.setUniformi("u_specular", 2);
                             }

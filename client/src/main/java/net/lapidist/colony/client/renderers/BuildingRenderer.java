@@ -14,6 +14,7 @@ import net.lapidist.colony.client.render.data.RenderBuilding;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.registry.BuildingDefinition;
 import net.lapidist.colony.registry.Registries;
+import net.lapidist.colony.settings.GraphicsSettings;
 
 /**
  * Renders building entities.
@@ -32,17 +33,20 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
     private static final float LABEL_OFFSET_Y = 8f;
     private final Rectangle viewBounds = new Rectangle();
     private final Vector2 worldCoords = new Vector2();
+    private final GraphicsSettings graphicsSettings;
 
     public BuildingRenderer(
             final SpriteBatch spriteBatchToSet,
             final ResourceLoader resourceLoaderToSet,
             final CameraProvider cameraSystemToSet,
-            final AssetResolver resolverToSet
+            final AssetResolver resolverToSet,
+            final GraphicsSettings settings
     ) {
         this.spriteBatch = spriteBatchToSet;
         this.resourceLoader = resourceLoaderToSet;
         this.cameraSystem = cameraSystemToSet;
         this.resolver = resolverToSet;
+        this.graphicsSettings = settings;
 
         for (BuildingDefinition def : Registries.buildings().all()) {
             String ref = resolver.buildingAsset(def.id());
@@ -84,11 +88,11 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
                 TextureRegion spec = specularRegions.get(type.toUpperCase(java.util.Locale.ROOT));
                 com.badlogic.gdx.graphics.glutils.ShaderProgram shader = spriteBatch.getShader();
                 if (shader != null) {
-                    if (nrm != null) {
+                    if (nrm != null && graphicsSettings.isNormalMapsEnabled()) {
                         nrm.getTexture().bind(1);
                         shader.setUniformi("u_normal", 1);
                     }
-                    if (spec != null) {
+                    if (spec != null && graphicsSettings.isSpecularMapsEnabled()) {
                         spec.getTexture().bind(2);
                         shader.setUniformi("u_specular", 2);
                     }

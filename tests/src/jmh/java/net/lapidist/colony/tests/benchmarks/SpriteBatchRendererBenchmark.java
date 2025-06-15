@@ -32,6 +32,7 @@ import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.map.MapFactory;
 import net.lapidist.colony.tests.GdxBenchmarkEnvironment;
+import net.lapidist.colony.settings.GraphicsSettings;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Scope;
@@ -63,16 +64,19 @@ public class SpriteBatchRendererBenchmark {
         resolver = new DefaultAssetResolver();
         camera = createCamera();
         SpriteBatch batch = mock(SpriteBatch.class);
-        TileRenderer tileRenderer = new TileRenderer(batch, loader, camera, resolver, null);
-        BuildingRenderer buildingRenderer = new BuildingRenderer(batch, loader, camera, resolver);
+        GraphicsSettings graphics = new GraphicsSettings();
+        TileRenderer tileRenderer = new TileRenderer(batch, loader, camera, resolver, null, graphics);
+        BuildingRenderer buildingRenderer = new BuildingRenderer(batch, loader, camera, resolver, graphics);
         ResourceRenderer resourceRenderer = mock(ResourceRenderer.class);
         PlayerRenderer playerRenderer = mock(PlayerRenderer.class);
         CelestialRenderer celestialRenderer = mock(CelestialRenderer.class);
         MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer, celestialRenderer);
         cachedRenderer = new SpriteBatchMapRenderer(
-                batch, loader, tileRenderer, buildingRenderer, renderers, true, null, null);
+                batch, loader, tileRenderer, buildingRenderer, renderers, true, null);
+        cachedRenderer.setPlugin(null);
         plainRenderer = new SpriteBatchMapRenderer(
-                batch, loader, tileRenderer, buildingRenderer, renderers, false, null, null);
+                batch, loader, tileRenderer, buildingRenderer, renderers, false, null);
+        plainRenderer.setPlugin(null);
         data = createData(MAP_SIZE, MAP_SIZE);
         construction = mockConstruction(SpriteCache.class, (mock, ctx) -> {
             when(mock.getProjectionMatrix()).thenReturn(new Matrix4());
