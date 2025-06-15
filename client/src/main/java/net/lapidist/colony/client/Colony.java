@@ -20,6 +20,8 @@ import net.lapidist.colony.events.Events;
 import net.lapidist.colony.client.events.GameInitEvent;
 import net.lapidist.colony.mod.ModLoader;
 import net.lapidist.colony.mod.ModLoader.LoadedMod;
+import net.lapidist.colony.mod.GameMod;
+import java.util.ServiceLoader;
 
 import java.io.IOException;
 
@@ -112,7 +114,7 @@ public final class Colony extends Game {
             settings = Settings.load();
             I18n.setLocale(settings.getLocale());
             mods = new java.util.ArrayList<>();
-            for (net.lapidist.colony.mod.GameMod builtin : java.util.ServiceLoader.load(net.lapidist.colony.mod.GameMod.class)) {
+            for (GameMod builtin : ServiceLoader.load(GameMod.class)) {
                 mods.add(new LoadedMod(builtin, builtinMetadata(builtin.getClass())));
             }
             mods.addAll(new ModLoader(Paths.get()).loadMods());
