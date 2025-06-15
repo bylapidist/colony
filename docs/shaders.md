@@ -60,7 +60,12 @@ Add `GrayShaderPlugin` to the service descriptor and set
 
 ## Built-in lighting
 
-The `Box2dLightsPlugin` is included with the game and integrates the
-[box2d-lights](https://github.com/libgdx/box2dlights) library. It returns
-no shader program but exposes a `RayHandler` when frame buffers are supported.
-Headless or unsupported environments automatically skip lighting.
+The engine ships with two lighting plugins powered by
+[box2d-lights](https://github.com/libgdx/box2dlights):
+
+* `Box2dLightsPlugin` – exposes a `RayHandler` but uses the default sprite shader.
+* `LightsNormalMapShaderPlugin` – combines the normal mapping shader with the same `RayHandler`.
+
+The second plugin is now selected by default through the
+`graphics.shaderPlugin` setting. Lighting will be skipped automatically when
+frame buffers are unavailable such as in headless tests.
