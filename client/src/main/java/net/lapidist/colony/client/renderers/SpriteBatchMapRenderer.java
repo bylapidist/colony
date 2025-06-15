@@ -85,7 +85,7 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         }
         if (lights != null) {
             lights.setCombinedMatrix(camera.getCamera().combined);
-            lights.updateAndRender();
+            lights.render();
         }
     }
 
@@ -97,9 +97,6 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         spriteBatch.dispose();
         if (shader != null) {
             shader.dispose();
-        }
-        if (lights != null) {
-            lights.dispose();
         }
         tileCache.dispose();
     }

@@ -25,6 +25,7 @@ public class GraphicsSettingsTest {
         gs.setShaderPlugin("custom");
         gs.setRenderer("model");
         gs.setSpriteCacheEnabled(false);
+        gs.setLightingEnabled(false);
         gs.save(prefs);
         prefs.flush();
 
@@ -35,6 +36,7 @@ public class GraphicsSettingsTest {
         assertEquals("custom", loaded.getShaderPlugin());
         assertEquals("model", loaded.getRenderer());
         assertFalse(loaded.isSpriteCacheEnabled());
+        assertFalse(loaded.isLightingEnabled());
     }
 
     @Test
@@ -50,5 +52,6 @@ public class GraphicsSettingsTest {
         assertEquals("none", loaded.getShaderPlugin());
         assertEquals("sprite", loaded.getRenderer());
         assertTrue(loaded.isSpriteCacheEnabled());
+        assertTrue(loaded.isLightingEnabled());
     }
 }

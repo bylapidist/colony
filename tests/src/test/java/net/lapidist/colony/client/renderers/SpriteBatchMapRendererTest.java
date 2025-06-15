@@ -187,9 +187,8 @@ public class SpriteBatchMapRendererTest {
 
         renderer.render(map, camera);
         verify(lights).setCombinedMatrix(any(com.badlogic.gdx.math.Matrix4.class));
-        verify(lights).updateAndRender();
+        verify(lights).render();
 
         renderer.dispose();
-        verify(lights).dispose();
     }
 }

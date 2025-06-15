@@ -16,6 +16,7 @@ import net.lapidist.colony.client.systems.CameraInputSystem;
 import net.lapidist.colony.client.systems.SelectionSystem;
 import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.MapRenderSystem;
+import net.lapidist.colony.client.systems.LightingSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.PlayerMovementSystem;
 import net.lapidist.colony.client.systems.UISystem;
@@ -155,6 +156,7 @@ public final class MapWorldBuilder {
                         new ChunkLoadSystem(client),
                         new ChunkRequestQueueSystem(client),
                         new MapRenderSystem(),
+                        new LightingSystem(),
                         new UISystem(stage)
                 );
 
@@ -206,6 +208,12 @@ public final class MapWorldBuilder {
             MapRenderer renderer = actualFactory.create(world, plugin);
             renderSystem.setMapRenderer(renderer);
             renderSystem.setCameraProvider(world.getSystem(PlayerCameraSystem.class));
+        }
+        LightingSystem lightingSystem = world.getSystem(LightingSystem.class);
+        if (lightingSystem != null && plugin instanceof net.lapidist.colony.client.graphics.Box2dLightsPlugin bl) {
+            if (settings == null || settings.getGraphicsSettings().isLightingEnabled()) {
+                lightingSystem.setRayHandler(bl.getRayHandler());
+            }
         }
         PlayerCameraSystem cameraSystem = world.getSystem(PlayerCameraSystem.class);
         if (cameraSystem != null && cameraPos != null) {
