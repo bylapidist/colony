@@ -8,6 +8,7 @@ import net.lapidist.colony.server.events.AutosaveStartEvent;
 import net.lapidist.colony.server.events.ShutdownSaveEvent;
 import net.mostlyoriginal.api.event.common.Event;
 import net.lapidist.colony.server.io.GameStateIO;
+import net.lapidist.colony.mod.ModMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,17 +32,20 @@ public final class AutosaveService {
     private final String saveName;
     private final Supplier<MapState> supplier;
     private final ReentrantLock lock;
+    private final Supplier<java.util.List<ModMetadata>> modsSupplier;
     private ScheduledExecutorService executor;
 
     public AutosaveService(
             final long intervalToUse,
             final String saveNameToUse,
             final Supplier<MapState> stateSupplier,
+            final Supplier<java.util.List<ModMetadata>> modsSupplierToUse,
             final ReentrantLock lockToUse
     ) {
         this.interval = intervalToUse;
         this.saveName = saveNameToUse;
         this.supplier = stateSupplier;
+        this.modsSupplier = modsSupplierToUse;
         this.lock = lockToUse;
     }
 
@@ -87,7 +91,7 @@ public final class AutosaveService {
             Path file = Paths.get().getAutosave(saveName);
             Events.dispatch(new AutosaveStartEvent(file));
             Events.update();
-            GameStateIO.save(mapState, file);
+            GameStateIO.save(mapState, modsSupplier.get(), file);
             long size = Files.size(file);
             Events.dispatch(creator.apply(file, size));
             Events.update();

@@ -39,6 +39,7 @@ public class AutosaveServiceTest {
                     0,
                     "err",
                     MapState::new,
+                    java.util.List::of,
                     new ReentrantLock()
             );
             service.stop();

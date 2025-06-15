@@ -13,6 +13,7 @@ import net.lapidist.colony.base.ModMetadataUtil;
 import net.lapidist.colony.network.AbstractMessageEndpoint;
 import net.lapidist.colony.network.MessageHandler;
 import net.lapidist.colony.io.Paths;
+import net.lapidist.colony.server.io.GameStateIO;
 import net.lapidist.colony.map.MapGenerator;
 import net.lapidist.colony.server.handlers.TileSelectionRequestHandler;
 import net.lapidist.colony.server.handlers.BuildingPlacementRequestHandler;
@@ -124,6 +125,9 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     public void start() throws IOException, InterruptedException {
         initKryo();
         Events.init(new EventSystem());
+
+        loadMapState();
+
         if (mods == null) {
             mods = new java.util.ArrayList<>();
             for (GameMod builtin : java.util.ServiceLoader.load(GameMod.class)) {
@@ -142,6 +146,15 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         }
 
         // re-create services after mods potentially changed the factories
+        if (mapServiceFactory == null) {
+            mapServiceFactory = () -> new MapService(
+                    mapGenerator,
+                    saveName,
+                    mapWidth,
+                    mapHeight,
+                    stateLock
+            );
+        }
         this.mapService = mapServiceFactory.get();
         this.networkService = networkServiceFactory.get();
         this.autosaveService = autosaveServiceFactory.get();
@@ -152,7 +165,9 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
             mod.mod().registerSystems(this);
         }
 
-        loadMapState();
+        if (mapState == null) {
+            loadMapState();
+        }
         startNetwork();
 
         for (LoadedMod mod : mods) {
@@ -171,7 +186,28 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
 
     private void loadMapState() throws IOException {
         Paths.get().createGameFoldersIfNotExists();
-        mapState = mapService.load();
+        java.nio.file.Path file = Paths.get().getAutosave(saveName);
+        if (java.nio.file.Files.exists(file)) {
+            net.lapidist.colony.save.SaveData data = GameStateIO.loadData(file);
+            mapState = data.mapState();
+            if (mods == null) {
+                mods = new java.util.ArrayList<>();
+                for (GameMod builtin : java.util.ServiceLoader.load(GameMod.class)) {
+                    ModMetadata meta = ModMetadataUtil.builtinMetadata(builtin.getClass());
+                    if (data.mods().stream().anyMatch(m -> m.id().equals(meta.id()))) {
+                        mods.add(new LoadedMod(builtin, meta));
+                    }
+                }
+                java.util.List<LoadedMod> loaded = new ModLoader(Paths.get()).loadMods();
+                for (LoadedMod mod : loaded) {
+                    if (data.mods().stream().anyMatch(m -> m.id().equals(mod.metadata().id()))) {
+                        mods.add(mod);
+                    }
+                }
+            }
+        } else if (mapService != null) {
+            mapState = mapService.load();
+        }
     }
 
     private void startNetwork() throws IOException {
@@ -377,6 +413,16 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
      */
     public void setMods(final java.util.List<LoadedMod> modsToUse) {
         this.mods = modsToUse;
+    }
+
+    /**
+     * Metadata for all currently loaded mods.
+     */
+    public java.util.List<ModMetadata> getModMetadata() {
+        if (mods == null) {
+            return java.util.List.of();
+        }
+        return mods.stream().map(LoadedMod::metadata).toList();
     }
 
     /**
