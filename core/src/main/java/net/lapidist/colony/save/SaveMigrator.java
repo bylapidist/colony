@@ -47,6 +47,7 @@ public final class SaveMigrator {
         register(new V31ToV32Migration());
         register(new V32ToV33Migration());
         register(new V33ToV34Migration());
+        register(new V34ToV35Migration());
     }
 
     private SaveMigrator() {
