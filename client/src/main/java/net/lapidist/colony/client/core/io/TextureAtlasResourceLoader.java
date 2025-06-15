@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.assets.loaders.TextureAtlasLoader;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import net.lapidist.colony.settings.GraphicsSettings;
 
 import java.io.IOException;
@@ -68,6 +69,20 @@ public final class TextureAtlasResourceLoader implements ResourceLoader {
 
     public FileLocation getFileLocation() {
         return fileLocation;
+    }
+
+    @Override
+    public ParticleEffect loadEffect(final String effectPath) throws IOException {
+        if (fileLocation == null) {
+            throw new IOException("file location not set");
+        }
+        var file = fileLocation.getFile(effectPath);
+        if (!file.exists()) {
+            throw new IOException(String.format("%s does not exist", effectPath));
+        }
+        ParticleEffect effect = new ParticleEffect();
+        effect.load(file, file.parent());
+        return effect;
     }
 
     public TextureAtlas getAtlas() {

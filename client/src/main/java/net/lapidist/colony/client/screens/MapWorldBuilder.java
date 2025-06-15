@@ -17,6 +17,7 @@ import net.lapidist.colony.client.systems.SelectionSystem;
 import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.MapRenderSystem;
 import net.lapidist.colony.client.systems.LightingSystem;
+import net.lapidist.colony.client.systems.ParticleSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.PlayerMovementSystem;
 import net.lapidist.colony.client.systems.UISystem;
@@ -139,6 +140,7 @@ public final class MapWorldBuilder {
         cameraInputSystem.addProcessor(stage);
         SelectionSystem selectionSystem = new SelectionSystem(client, keyBindings);
         BuildPlacementSystem buildPlacementSystem = new BuildPlacementSystem(client, keyBindings);
+        ParticleSystem particleSystem = new ParticleSystem(new com.badlogic.gdx.graphics.g2d.SpriteBatch());
         PlayerMovementSystem movementSystem = new PlayerMovementSystem(client, keyBindings);
 
         WorldConfigurationBuilder builder = new WorldConfigurationBuilder()
@@ -156,6 +158,7 @@ public final class MapWorldBuilder {
                         new ChunkLoadSystem(client),
                         new ChunkRequestQueueSystem(client),
                         new MapRenderSystem(),
+                        particleSystem,
                         new LightingSystem(),
                         new UISystem(stage)
                 );

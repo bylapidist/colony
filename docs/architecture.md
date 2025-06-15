@@ -29,8 +29,9 @@ actions, while `BuildPlacementSystem` and `PlayerInitSystem` create entities.
 server messages. `ChunkLoadSystem` and `ChunkRequestQueueSystem` request missing
 chunks. `MapRenderSystem` draws the world using a renderer from
 `SpriteMapRendererFactory`, which loads textures asynchronously as noted in
-[performance.md](performance.md#asynchronous-renderer-loading). The camera is
-managed by `PlayerCameraSystem` and the UI by `UISystem`.
+[performance.md](performance.md#asynchronous-renderer-loading). `ParticleSystem`
+plays back `ParticleEffect` instances for events like building placement. The
+camera is managed by `PlayerCameraSystem` and the UI by `UISystem`.
 
 `GameServer` does not maintain an Artemis world. It initializes an
 `EventSystem` and relies on `NetworkService`, `MapService` and other services to
