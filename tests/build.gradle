@@ -33,15 +33,19 @@ dependencies {
 }
 
 
+tasks.register('copyAssets', Copy) {
+    inputs.dir project(":client").file("src/main/resources/assets")
+    outputs.dir layout.buildDirectory.dir("copiedAssets")
+    destinationDir = outputs.files.singleFile
+    from project(":client").file("src/main/resources/assets")
+}
+
 test {
     testLogging {
         events "PASSED", "STARTED", "FAILED", "SKIPPED"
     }
-}
-
-tasks.register('copyAssets', Copy) {
-    from project(":client").file("src/main/resources/assets")
-    into file(".")
+    workingDir = tasks.named('copyAssets').get().outputs.files.singleFile
+    dependsOn tasks.named('copyAssets')
 }
 
 jmh {
