@@ -91,14 +91,15 @@ public final class ExtraMod implements GameMod {
 
 ## Registries
 
-Core data like tile, building and resource types are stored in simple string keyed registries. Mods can
+Core data like tile, building, resource and item types are stored in simple string keyed registries. Mods can
 register new entries during the `init()` phase:
 
 ```java
 public final class WaterTiles implements GameMod {
     @Override
     public void init() {
-        Registries.tileTypes().register("WATER");
+        Registries.tiles().register(new TileDefinition("WATER", "Water", "water0"));
+        Registries.items().register(new ItemDefinition("bucket", "Bucket", "bucket0"));
     }
 }
 ```
@@ -136,7 +137,7 @@ registers a `WATER` tile type and prints a message whenever the player selects o
 public final class WaterMod implements GameMod {
     @Override
     public void init() {
-        Registries.tileTypes().register("WATER");
+        Registries.tiles().register(new TileDefinition("WATER", "Water", "water0"));
     }
 }
 ```
