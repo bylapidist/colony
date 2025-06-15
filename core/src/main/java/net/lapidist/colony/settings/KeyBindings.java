@@ -1,7 +1,6 @@
 package net.lapidist.colony.settings;
 
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Preferences;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -31,20 +30,22 @@ public final class KeyBindings {
         reset();
     }
 
-    /** Load bindings from preferences using provided prefix. */
-    public static KeyBindings load(final Preferences prefs) {
+    /** Load bindings from a properties object using provided prefix. */
+    public static KeyBindings load(final java.util.Properties props) {
         KeyBindings kb = new KeyBindings();
         for (KeyAction action : KeyAction.values()) {
-            int code = prefs.getInteger(PREFIX + action.name(), kb.getKey(action));
-            kb.setKey(action, code);
+            String value = props.getProperty(PREFIX + action.name());
+            if (value != null) {
+                kb.setKey(action, Integer.parseInt(value));
+            }
         }
         return kb;
     }
 
-    /** Save bindings to preferences. */
-    public void save(final Preferences prefs) {
+    /** Save bindings to a properties object. */
+    public void save(final java.util.Properties props) {
         for (KeyAction action : KeyAction.values()) {
-            prefs.putInteger(PREFIX + action.name(), getKey(action));
+            props.setProperty(PREFIX + action.name(), Integer.toString(getKey(action)));
         }
     }
 

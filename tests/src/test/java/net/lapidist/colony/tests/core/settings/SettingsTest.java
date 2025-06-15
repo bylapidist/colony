@@ -1,7 +1,9 @@
 package net.lapidist.colony.tests.core.settings;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
+import net.lapidist.colony.io.Paths;
+import net.lapidist.colony.io.TestPathService;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.settings.KeyAction;
 import net.lapidist.colony.settings.GraphicsSettings;
@@ -19,39 +21,36 @@ public class SettingsTest {
 
     @Test
     public void savesAndLoadsLocale() throws IOException {
-        Preferences prefs = Gdx.app.getPreferences("settings");
-        prefs.clear();
-        prefs.flush();
+        Path dir = Files.createTempDirectory("settings-test");
+        Paths paths = new Paths(new TestPathService(dir));
 
         Settings settings = new Settings();
         settings.setLocale(Locale.GERMAN);
-        settings.save();
+        settings.save(paths);
 
-        Settings loaded = Settings.load();
+        Settings loaded = Settings.load(paths);
         assertEquals(Locale.GERMAN.getLanguage(), loaded.getLocale().getLanguage());
     }
 
     @Test
-    public void defaultsWhenNoPreferences() {
-        Preferences prefs = Gdx.app.getPreferences("settings");
-        prefs.clear();
-        prefs.flush();
+    public void defaultsWhenNoPreferences() throws IOException {
+        Path dir = Files.createTempDirectory("settings-test-default");
+        Paths paths = new Paths(new TestPathService(dir));
 
-        Settings loaded = Settings.load();
+        Settings loaded = Settings.load(paths);
         assertEquals(Locale.getDefault().getLanguage(), loaded.getLocale().getLanguage());
     }
 
     @Test
     public void savesAndLoadsKeybindings() throws IOException {
-        Preferences prefs = Gdx.app.getPreferences("settings");
-        prefs.clear();
-        prefs.flush();
+        Path dir = Files.createTempDirectory("settings-test-key");
+        Paths paths = new Paths(new TestPathService(dir));
 
         Settings settings = new Settings();
         settings.getKeyBindings().setKey(KeyAction.GATHER, com.badlogic.gdx.Input.Keys.G);
-        settings.save();
+        settings.save(paths);
 
-        Settings loaded = Settings.load();
+        Settings loaded = Settings.load(paths);
         assertEquals(com.badlogic.gdx.Input.Keys.G, loaded.getKeyBindings().getKey(KeyAction.GATHER));
     }
 
@@ -65,9 +64,8 @@ public class SettingsTest {
 
     @Test
     public void savesAndLoadsGraphicsSettings() throws IOException {
-        Preferences prefs = Gdx.app.getPreferences("settings");
-        prefs.clear();
-        prefs.flush();
+        Path dir = Files.createTempDirectory("settings-test-gfx");
+        Paths paths = new Paths(new TestPathService(dir));
 
         Settings settings = new Settings();
         GraphicsSettings graphics = settings.getGraphicsSettings();
@@ -80,9 +78,9 @@ public class SettingsTest {
         graphics.setNormalMapsEnabled(true);
         graphics.setSpecularMapsEnabled(true);
         graphics.setDayNightCycleEnabled(false);
-        settings.save();
+        settings.save(paths);
 
-        Settings loaded = Settings.load();
+        Settings loaded = Settings.load(paths);
         assertEquals(true, loaded.getGraphicsSettings().isAntialiasingEnabled());
         assertEquals(true, loaded.getGraphicsSettings().isMipMapsEnabled());
         assertEquals(true, loaded.getGraphicsSettings().isAnisotropicFilteringEnabled());

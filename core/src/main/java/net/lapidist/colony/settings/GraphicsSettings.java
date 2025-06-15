@@ -1,7 +1,6 @@
 package net.lapidist.colony.settings;
 
-import com.badlogic.gdx.Preferences;
-
+import java.util.Properties;
 /**
  * Graphics configuration flags controlling advanced rendering options.
  */
@@ -110,33 +109,33 @@ public final class GraphicsSettings {
         this.dayNightCycleEnabled = enabled;
     }
 
-    /** Load graphics settings from the given preferences. */
-    public static GraphicsSettings load(final Preferences prefs) {
+    /** Load graphics settings from the given properties. */
+    public static GraphicsSettings load(final Properties props) {
         GraphicsSettings gs = new GraphicsSettings();
-        gs.antialiasingEnabled = prefs.getBoolean(AA_KEY, true);
-        gs.mipMapsEnabled = prefs.getBoolean(MIP_KEY, true);
-        gs.anisotropicFilteringEnabled = prefs.getBoolean(AF_KEY, true);
-        gs.shaderPlugin = prefs.getString(PLUGIN_KEY, "none");
-        gs.renderer = prefs.getString(RENDERER_KEY, "sprite");
-        gs.spriteCacheEnabled = prefs.getBoolean(CACHE_KEY, true);
-        gs.lightingEnabled = prefs.getBoolean(LIGHT_KEY, true);
-        gs.normalMapsEnabled = prefs.getBoolean(NORMAL_KEY, false);
-        gs.specularMapsEnabled = prefs.getBoolean(SPECULAR_KEY, false);
-        gs.dayNightCycleEnabled = prefs.getBoolean(DAY_NIGHT_KEY, true);
+        gs.antialiasingEnabled = Boolean.parseBoolean(props.getProperty(AA_KEY, "true"));
+        gs.mipMapsEnabled = Boolean.parseBoolean(props.getProperty(MIP_KEY, "true"));
+        gs.anisotropicFilteringEnabled = Boolean.parseBoolean(props.getProperty(AF_KEY, "true"));
+        gs.shaderPlugin = props.getProperty(PLUGIN_KEY, "none");
+        gs.renderer = props.getProperty(RENDERER_KEY, "sprite");
+        gs.spriteCacheEnabled = Boolean.parseBoolean(props.getProperty(CACHE_KEY, "true"));
+        gs.lightingEnabled = Boolean.parseBoolean(props.getProperty(LIGHT_KEY, "true"));
+        gs.normalMapsEnabled = Boolean.parseBoolean(props.getProperty(NORMAL_KEY, "false"));
+        gs.specularMapsEnabled = Boolean.parseBoolean(props.getProperty(SPECULAR_KEY, "false"));
+        gs.dayNightCycleEnabled = Boolean.parseBoolean(props.getProperty(DAY_NIGHT_KEY, "true"));
         return gs;
     }
 
-    /** Save graphics settings to the provided preferences. */
-    public void save(final Preferences prefs) {
-        prefs.putBoolean(AA_KEY, antialiasingEnabled);
-        prefs.putBoolean(MIP_KEY, mipMapsEnabled);
-        prefs.putBoolean(AF_KEY, anisotropicFilteringEnabled);
-        prefs.putString(PLUGIN_KEY, shaderPlugin);
-        prefs.putString(RENDERER_KEY, renderer);
-        prefs.putBoolean(CACHE_KEY, spriteCacheEnabled);
-        prefs.putBoolean(LIGHT_KEY, lightingEnabled);
-        prefs.putBoolean(NORMAL_KEY, normalMapsEnabled);
-        prefs.putBoolean(SPECULAR_KEY, specularMapsEnabled);
-        prefs.putBoolean(DAY_NIGHT_KEY, dayNightCycleEnabled);
+    /** Save graphics settings to the provided properties. */
+    public void save(final Properties props) {
+        props.setProperty(AA_KEY, Boolean.toString(antialiasingEnabled));
+        props.setProperty(MIP_KEY, Boolean.toString(mipMapsEnabled));
+        props.setProperty(AF_KEY, Boolean.toString(anisotropicFilteringEnabled));
+        props.setProperty(PLUGIN_KEY, shaderPlugin);
+        props.setProperty(RENDERER_KEY, renderer);
+        props.setProperty(CACHE_KEY, Boolean.toString(spriteCacheEnabled));
+        props.setProperty(LIGHT_KEY, Boolean.toString(lightingEnabled));
+        props.setProperty(NORMAL_KEY, Boolean.toString(normalMapsEnabled));
+        props.setProperty(SPECULAR_KEY, Boolean.toString(specularMapsEnabled));
+        props.setProperty(DAY_NIGHT_KEY, Boolean.toString(dayNightCycleEnabled));
     }
 }

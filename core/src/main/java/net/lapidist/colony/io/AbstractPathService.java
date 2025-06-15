@@ -15,7 +15,7 @@ import java.util.List;
 abstract class AbstractPathService implements PathService {
 
     private static final String AUTOSAVE_SUFFIX = Paths.AUTOSAVE_SUFFIX;
-    private static final String SETTINGS_FILE = "settings.properties";
+    private static final String SETTINGS_FILE = "settings.conf";
 
     protected abstract String getGameFolderPath();
 

@@ -1,7 +1,6 @@
 package net.lapidist.colony.tests.core.settings;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
+import java.util.Properties;
 import net.lapidist.colony.settings.GraphicsSettings;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
@@ -14,9 +13,7 @@ public class GraphicsSettingsTest {
 
     @Test
     public void savesAndLoadsValues() {
-        Preferences prefs = Gdx.app.getPreferences("settings");
-        prefs.clear();
-        prefs.flush();
+        Properties props = new Properties();
 
         GraphicsSettings gs = new GraphicsSettings();
         gs.setAntialiasingEnabled(true);
@@ -29,10 +26,9 @@ public class GraphicsSettingsTest {
         gs.setNormalMapsEnabled(true);
         gs.setSpecularMapsEnabled(true);
         gs.setDayNightCycleEnabled(false);
-        gs.save(prefs);
-        prefs.flush();
+        gs.save(props);
 
-        GraphicsSettings loaded = GraphicsSettings.load(prefs);
+        GraphicsSettings loaded = GraphicsSettings.load(props);
         assertTrue(loaded.isAntialiasingEnabled());
         assertTrue(loaded.isMipMapsEnabled());
         assertTrue(loaded.isAnisotropicFilteringEnabled());
@@ -47,11 +43,9 @@ public class GraphicsSettingsTest {
 
     @Test
     public void defaultsWhenNoPreferences() {
-        Preferences prefs = Gdx.app.getPreferences("settings");
-        prefs.clear();
-        prefs.flush();
+        Properties props = new Properties();
 
-        GraphicsSettings loaded = GraphicsSettings.load(prefs);
+        GraphicsSettings loaded = GraphicsSettings.load(props);
         assertTrue(loaded.isAntialiasingEnabled());
         assertTrue(loaded.isMipMapsEnabled());
         assertTrue(loaded.isAnisotropicFilteringEnabled());

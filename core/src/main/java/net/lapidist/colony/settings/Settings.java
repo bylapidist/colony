@@ -1,8 +1,6 @@
 package net.lapidist.colony.settings;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
-import net.lapidist.colony.util.I18n;
+import net.lapidist.colony.io.Paths;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -35,52 +33,69 @@ public final class Settings {
     }
 
     /**
-     * Load settings from LibGDX preferences. If no preferences are present
-     * defaults are returned.
+     * Load settings from the configuration file located next to the save folder.
+     * Defaults are returned when the file does not exist or cannot be read.
      */
     public static Settings load() {
+        return load(Paths.get());
+    }
+
+    public static Settings load(final Paths paths) {
         Settings settings = new Settings();
-        if (Gdx.app != null) {
-            Preferences prefs = Gdx.app.getPreferences("settings");
-            String lang = prefs.getString(LANGUAGE_KEY, "");
-            if (!lang.isEmpty()) {
-                settings.setLocale(Locale.forLanguageTag(lang));
+        try {
+            java.nio.file.Path file = paths.getSettingsFile();
+            java.util.Properties props = new java.util.Properties();
+            if (java.nio.file.Files.exists(file)) {
+                try (java.io.InputStream in = java.nio.file.Files.newInputStream(file)) {
+                    props.load(in);
+                }
             }
-            KeyBindings loaded = KeyBindings.load(prefs);
+            String lang = props.getProperty(LANGUAGE_KEY);
+            if (lang != null && !lang.isEmpty()) {
+                settings.setLocale(java.util.Locale.forLanguageTag(lang));
+            }
+            KeyBindings loaded = KeyBindings.load(props);
             for (KeyAction action : KeyAction.values()) {
                 settings.keyBindings.setKey(action, loaded.getKey(action));
             }
-            GraphicsSettings gLoaded = GraphicsSettings.load(prefs);
+            GraphicsSettings gLoaded = GraphicsSettings.load(props);
             settings.graphicsSettings.setAntialiasingEnabled(gLoaded.isAntialiasingEnabled());
             settings.graphicsSettings.setMipMapsEnabled(gLoaded.isMipMapsEnabled());
             settings.graphicsSettings.setAnisotropicFilteringEnabled(
                     gLoaded.isAnisotropicFilteringEnabled());
             settings.graphicsSettings.setShaderPlugin(gLoaded.getShaderPlugin());
-            if (prefs.contains(GraphicsSettings.LEGACY_SHADER_KEY)
-                    && !prefs.getBoolean(GraphicsSettings.LEGACY_SHADER_KEY, true)) {
-                settings.graphicsSettings.setShaderPlugin("none");
-            }
             settings.graphicsSettings.setRenderer(gLoaded.getRenderer());
             settings.graphicsSettings.setSpriteCacheEnabled(gLoaded.isSpriteCacheEnabled());
             settings.graphicsSettings.setLightingEnabled(gLoaded.isLightingEnabled());
             settings.graphicsSettings.setNormalMapsEnabled(gLoaded.isNormalMapsEnabled());
             settings.graphicsSettings.setSpecularMapsEnabled(gLoaded.isSpecularMapsEnabled());
             settings.graphicsSettings.setDayNightCycleEnabled(gLoaded.isDayNightCycleEnabled());
+        } catch (IOException e) {
+            // ignore and use defaults
         }
         return settings;
     }
 
     /**
-     * Persist settings using LibGDX preferences.
+     * Persist settings to the configuration file next to the save folder.
      */
     public void save() throws IOException {
-        if (Gdx.app == null) {
-            throw new IOException(I18n.get("error.preferencesUnavailable"));
+        save(Paths.get());
+    }
+
+    public void save(final Paths paths) throws IOException {
+        java.nio.file.Path file = paths.getSettingsFile();
+        java.util.Properties props = new java.util.Properties();
+        if (java.nio.file.Files.exists(file)) {
+            try (java.io.InputStream in = java.nio.file.Files.newInputStream(file)) {
+                props.load(in);
+            }
         }
-        Preferences prefs = Gdx.app.getPreferences("settings");
-        prefs.putString(LANGUAGE_KEY, locale.toLanguageTag());
-        keyBindings.save(prefs);
-        graphicsSettings.save(prefs);
-        prefs.flush();
+        props.setProperty(LANGUAGE_KEY, locale.toLanguageTag());
+        keyBindings.save(props);
+        graphicsSettings.save(props);
+        try (java.io.OutputStream out = java.nio.file.Files.newOutputStream(file)) {
+            props.store(out, null);
+        }
     }
 }

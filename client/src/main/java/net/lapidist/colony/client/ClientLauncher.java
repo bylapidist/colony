@@ -2,12 +2,9 @@ package net.lapidist.colony.client;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Files;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Preferences;
 import com.badlogic.gdx.graphics.glutils.HdpiMode;
 import net.lapidist.colony.client.core.Constants;
 import net.lapidist.colony.settings.GraphicsSettings;
-
 
 public final class ClientLauncher {
 
@@ -34,13 +31,12 @@ public final class ClientLauncher {
         config.setIdleFPS(Constants.TARGET_FPS);
         config.setHdpiMode(HdpiMode.Logical);
 
-        com.badlogic.gdx.Preferences prefs;
-        if (com.badlogic.gdx.Gdx.app != null) {
-            prefs = com.badlogic.gdx.Gdx.app.getPreferences("settings");
-        } else {
-            prefs = new Lwjgl3Preferences("settings", Lwjgl3Files.externalPath + ".prefs/");
+        GraphicsSettings graphics;
+        try {
+            graphics = net.lapidist.colony.settings.Settings.load().getGraphicsSettings();
+        } catch (Exception e) {
+            graphics = new GraphicsSettings();
         }
-        GraphicsSettings graphics = GraphicsSettings.load(prefs);
         if (graphics.isAntialiasingEnabled()) {
             config.setBackBufferConfig(
                     COLOR_BITS,
