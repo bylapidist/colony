@@ -15,7 +15,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Periodically increases player food based on existing farms.
  */
-public final class ResourceProductionService implements net.lapidist.colony.server.GameSystem {
+public final class ResourceProductionService implements net.lapidist.colony.mod.GameSystem {
 
     private final long interval;
     private final Supplier<MapState> supplier;

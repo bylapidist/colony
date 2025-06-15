@@ -2,7 +2,7 @@ package net.lapidist.colony.mod.test;
 
 import net.lapidist.colony.mod.GameMod;
 import net.lapidist.colony.mod.GameServer;
-import net.lapidist.colony.server.GameSystem;
+import net.lapidist.colony.mod.GameSystem;
 import net.lapidist.colony.components.state.MapState;
 
 import java.util.concurrent.Executors;
