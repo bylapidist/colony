@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.client.graphics.ShaderPluginLoader;
-import net.lapidist.colony.i18n.I18n;
+import net.lapidist.colony.util.I18n;
 import net.lapidist.colony.settings.GraphicsSettings;
 
 import java.io.IOException;

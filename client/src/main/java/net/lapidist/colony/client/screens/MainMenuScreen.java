@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import net.lapidist.colony.i18n.I18n;
+import net.lapidist.colony.util.I18n;
 import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.io.Paths;
 

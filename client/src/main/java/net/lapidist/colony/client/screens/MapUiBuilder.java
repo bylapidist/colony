@@ -21,7 +21,7 @@ import net.lapidist.colony.client.ui.AutosaveProgressBar;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
-import net.lapidist.colony.i18n.I18n;
+import net.lapidist.colony.util.I18n;
 import net.lapidist.colony.settings.KeyBindings;
 import net.lapidist.colony.settings.GraphicsSettings;
 import net.lapidist.colony.settings.KeyAction;

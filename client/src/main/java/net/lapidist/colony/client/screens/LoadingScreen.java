@@ -4,7 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
 import com.badlogic.gdx.graphics.Color;
-import net.lapidist.colony.i18n.I18n;
+import net.lapidist.colony.util.I18n;
 
 /**
  * Simple loading screen with a progress bar.

@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import net.lapidist.colony.client.events.ResizeEvent;
-import net.lapidist.colony.i18n.I18n;
+import net.lapidist.colony.util.I18n;
 import net.mostlyoriginal.api.event.common.Subscribe;
 
 public final class UISystem extends BaseSystem {

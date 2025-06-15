@@ -1,6 +1,6 @@
 package net.lapidist.colony.tests.core;
 
-import net.lapidist.colony.i18n.I18n;
+import net.lapidist.colony.util.I18n;
 import org.junit.Test;
 import java.util.Locale;
 

@@ -1,4 +1,4 @@
-package net.lapidist.colony.i18n;
+package net.lapidist.colony.util;
 
 import java.util.Locale;
 import java.util.MissingResourceException;
