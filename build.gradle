@@ -10,7 +10,7 @@ buildscript {
         slf4jVersion = '2.0.17'
         logbackVersion = '1.5.18'
         typesafeConfigVersion = '1.4.3'
-        kotlinVersion = '1.9.24'
+        kotlinVersion = '2.1.21'
     }
 
     repositories {
@@ -23,7 +23,7 @@ buildscript {
 plugins {
     id 'jacoco'
     id 'com.diffplug.spotless' version '7.0.4' apply false
-    id 'org.jetbrains.kotlin.jvm' version '1.9.24' apply false
+    id 'org.jetbrains.kotlin.jvm' version '2.1.21' apply false
 }
 
 
