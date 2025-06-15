@@ -65,6 +65,7 @@ public final class Settings {
             settings.graphicsSettings.setLightingEnabled(gLoaded.isLightingEnabled());
             settings.graphicsSettings.setNormalMapsEnabled(gLoaded.isNormalMapsEnabled());
             settings.graphicsSettings.setSpecularMapsEnabled(gLoaded.isSpecularMapsEnabled());
+            settings.graphicsSettings.setDayNightCycleEnabled(gLoaded.isDayNightCycleEnabled());
         }
         return settings;
     }

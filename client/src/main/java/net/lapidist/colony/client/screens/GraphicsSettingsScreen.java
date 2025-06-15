@@ -30,6 +30,7 @@ public final class GraphicsSettingsScreen extends BaseScreen {
     private final com.badlogic.gdx.utils.Array<String> pluginIds;
     private final CheckBox cacheBox;
     private final CheckBox lightingBox;
+    private final CheckBox dayNightBox;
     private final SelectBox<String> rendererBox;
     private static final float PADDING = 10f;
 
@@ -73,6 +74,8 @@ public final class GraphicsSettingsScreen extends BaseScreen {
         cacheBox.setChecked(graphics.isSpriteCacheEnabled());
         lightingBox = new CheckBox(I18n.get("graphics.lighting"), getSkin());
         lightingBox.setChecked(graphics.isLightingEnabled());
+        dayNightBox = new CheckBox(I18n.get("graphics.dayNightCycle"), getSkin());
+        dayNightBox.setChecked(graphics.isDayNightCycleEnabled());
 
         rendererBox = new SelectBox<>(getSkin());
         rendererBox.setItems("sprite");
@@ -90,6 +93,7 @@ public final class GraphicsSettingsScreen extends BaseScreen {
         options.add(shaderBox).left().row();
         options.add(cacheBox).left().row();
         options.add(lightingBox).left().row();
+        options.add(dayNightBox).left().row();
         options.add(rendererBox).left().row();
 
         ScrollPane scroll = new ScrollPane(options, getSkin());
@@ -114,6 +118,7 @@ public final class GraphicsSettingsScreen extends BaseScreen {
                 graphics.setShaderPlugin(pluginIds.get(idx));
                 graphics.setSpriteCacheEnabled(cacheBox.isChecked());
                 graphics.setLightingEnabled(lightingBox.isChecked());
+                graphics.setDayNightCycleEnabled(dayNightBox.isChecked());
                 graphics.setRenderer(rendererBox.getSelected());
                 save();
             }

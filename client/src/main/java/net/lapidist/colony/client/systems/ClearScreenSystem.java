@@ -13,6 +13,11 @@ public final class ClearScreenSystem extends BaseSystem {
         this.color = colorToClear;
     }
 
+    /** Access the mutable clear color used each frame. */
+    public Color getColor() {
+        return color;
+    }
+
     @Override
     protected void processSystem() {
         Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);

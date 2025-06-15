@@ -30,6 +30,7 @@ public class GraphicsSettingsScreenTest {
     private static final int SCROLL_INDEX = 0;
     private static final int BUTTON_TABLE_INDEX = 1;
     private static final int AA_INDEX = 0;
+    private static final int DAY_NIGHT_INDEX = 8;
     private static final int BACK_INDEX = 0;
     private static final int SAVE_INDEX = 1;
 
@@ -60,10 +61,13 @@ public class GraphicsSettingsScreenTest {
         Table options = getOptions(screen);
         CheckBox aa = (CheckBox) options.getChildren().get(AA_INDEX);
         aa.setChecked(true);
+        CheckBox dn = (CheckBox) options.getChildren().get(DAY_NIGHT_INDEX);
+        dn.setChecked(false);
         Table buttons = getButtons(screen);
         TextButton save = (TextButton) buttons.getChildren().get(SAVE_INDEX);
         save.fire(new ChangeListener.ChangeEvent());
         assertTrue(settings.getGraphicsSettings().isAntialiasingEnabled());
+        assertFalse(settings.getGraphicsSettings().isDayNightCycleEnabled());
     }
 
     @Test

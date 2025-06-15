@@ -9,6 +9,7 @@ import net.lapidist.colony.client.renderers.MapRendererFactory;
 import net.lapidist.colony.client.renderers.MapRenderer;
 import net.lapidist.colony.client.renderers.SpriteMapRendererFactory;
 import net.lapidist.colony.settings.Settings;
+import net.lapidist.colony.settings.GraphicsSettings;
 import net.lapidist.colony.client.graphics.ShaderPluginLoader;
 import net.lapidist.colony.client.graphics.ShaderPlugin;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
@@ -17,6 +18,7 @@ import net.lapidist.colony.client.systems.SelectionSystem;
 import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.MapRenderSystem;
 import net.lapidist.colony.client.systems.LightingSystem;
+import net.lapidist.colony.client.systems.DayNightSystem;
 import net.lapidist.colony.client.systems.ParticleSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.PlayerMovementSystem;
@@ -63,13 +65,14 @@ public final class MapWorldBuilder {
     public static WorldConfigurationBuilder baseBuilder(
             final GameClient client,
             final Stage stage,
-            final KeyBindings keyBindings
+            final KeyBindings keyBindings,
+            final GraphicsSettings graphics
     ) {
-        return baseBuilder(client, stage, keyBindings, new ResourceData());
+        return baseBuilder(client, stage, keyBindings, new ResourceData(), graphics);
     }
 
     /**
-     * Variant of {@link #baseBuilder(GameClient, Stage, KeyBindings)} that also
+     * Variant of {@link #baseBuilder(GameClient, Stage, KeyBindings, GraphicsSettings)} that also
      * specifies the initial player resources.
      *
      * @param client          game client for network updates
@@ -82,12 +85,13 @@ public final class MapWorldBuilder {
             final GameClient client,
             final Stage stage,
             final KeyBindings keyBindings,
-            final ResourceData playerResources
+            final ResourceData playerResources,
+            final GraphicsSettings graphics
     ) {
         MapState state = MapState.builder()
                 .playerResources(playerResources)
                 .build();
-        return createBuilder(client, stage, keyBindings, null, state);
+        return createBuilder(client, stage, keyBindings, null, state, graphics);
     }
 
     /**
@@ -103,9 +107,10 @@ public final class MapWorldBuilder {
             final MapStateProvider provider,
             final GameClient client,
             final Stage stage,
-            final KeyBindings keyBindings
+            final KeyBindings keyBindings,
+            final GraphicsSettings graphics
     ) {
-        return createBuilder(client, stage, keyBindings, provider, new MapState());
+        return createBuilder(client, stage, keyBindings, provider, new MapState(), graphics);
     }
 
     /**
@@ -115,14 +120,16 @@ public final class MapWorldBuilder {
             final MapState state,
             final GameClient client,
             final Stage stage,
-            final KeyBindings keyBindings
+            final KeyBindings keyBindings,
+            final GraphicsSettings graphics
     ) {
         return createBuilder(
                 client,
                 stage,
                 keyBindings,
                 new ProvidedMapStateProvider(state),
-                state
+                state,
+                graphics
         );
     }
 
@@ -131,7 +138,8 @@ public final class MapWorldBuilder {
             final Stage stage,
             final KeyBindings keyBindings,
             final MapStateProvider provider,
-            final MapState state
+            final MapState state,
+            final GraphicsSettings graphics
     ) {
         ResourceData playerResources = state.playerResources();
         PlayerPosition playerPos = state.playerPos();
@@ -143,10 +151,12 @@ public final class MapWorldBuilder {
         ParticleSystem particleSystem = new ParticleSystem(new com.badlogic.gdx.graphics.g2d.SpriteBatch());
         PlayerMovementSystem movementSystem = new PlayerMovementSystem(client, keyBindings);
 
+        ClearScreenSystem clear = new ClearScreenSystem(Color.BLACK);
+        LightingSystem lighting = new LightingSystem();
         WorldConfigurationBuilder builder = new WorldConfigurationBuilder()
                 .with(
                         new EventSystem(),
-                        new ClearScreenSystem(Color.BLACK),
+                        clear,
                         cameraInputSystem,
                         selectionSystem,
                         buildPlacementSystem,
@@ -159,9 +169,13 @@ public final class MapWorldBuilder {
                         new ChunkRequestQueueSystem(client),
                         new MapRenderSystem(),
                         particleSystem,
-                        new LightingSystem(),
+                        lighting,
                         new UISystem(stage)
                 );
+
+        if (graphics == null || (graphics.isLightingEnabled() && graphics.isDayNightCycleEnabled())) {
+            builder.with(new DayNightSystem(clear, lighting));
+        }
 
         if (provider != null) {
             builder.with(

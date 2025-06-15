@@ -28,6 +28,7 @@ public class GraphicsSettingsTest {
         gs.setLightingEnabled(false);
         gs.setNormalMapsEnabled(true);
         gs.setSpecularMapsEnabled(true);
+        gs.setDayNightCycleEnabled(false);
         gs.save(prefs);
         prefs.flush();
 
@@ -41,6 +42,7 @@ public class GraphicsSettingsTest {
         assertFalse(loaded.isLightingEnabled());
         assertTrue(loaded.isNormalMapsEnabled());
         assertTrue(loaded.isSpecularMapsEnabled());
+        assertFalse(loaded.isDayNightCycleEnabled());
     }
 
     @Test
@@ -59,5 +61,6 @@ public class GraphicsSettingsTest {
         assertTrue(loaded.isLightingEnabled());
         assertFalse(loaded.isNormalMapsEnabled());
         assertFalse(loaded.isSpecularMapsEnabled());
+        assertTrue(loaded.isDayNightCycleEnabled());
     }
 }
