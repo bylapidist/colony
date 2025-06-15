@@ -72,6 +72,9 @@ public final class DayNightSystem extends BaseSystem {
     private static void calculateColor(final float time, final float moonPhase, final Color out) {
         gradientColor(time, out);
         float brightness = calculateBrightness(time);
+        out.r *= brightness;
+        out.g *= brightness;
+        out.b *= brightness;
         float nightFactor = 1f - brightness;
         out.r = Math.min(1f, out.r + MOON_COLOR.r * moonPhase * nightFactor);
         out.g = Math.min(1f, out.g + MOON_COLOR.g * moonPhase * nightFactor);
