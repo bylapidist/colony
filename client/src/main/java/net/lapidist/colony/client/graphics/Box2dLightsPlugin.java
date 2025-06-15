@@ -21,6 +21,7 @@ public final class Box2dLightsPlugin implements ShaderPlugin {
         try {
             World world = new World(new Vector2(), false);
             rayHandler = new RayHandler(world);
+            rayHandler.setAmbientLight(1f, 1f, 1f, 1f);
         } catch (Exception ex) {
             rayHandler = null;
         }
