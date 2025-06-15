@@ -31,6 +31,8 @@ import static org.mockito.Mockito.*;
 @RunWith(GdxTestRunner.class)
 public class TileRendererTest {
 
+    private static final int CUSTOM_POWER = 11;
+
     @Test
     public void drawsTileAndOverlay() {
         SpriteBatch batch = mock(SpriteBatch.class);
@@ -319,5 +321,52 @@ public class TileRendererTest {
 
         verify(normalTex, never()).bind(anyInt());
         verify(specTex, never()).bind(anyInt());
+    }
+
+    @Test
+    public void setsSpecularPowerUniform() {
+        SpriteBatch batch = mock(SpriteBatch.class);
+        ShaderProgram shader = mock(ShaderProgram.class);
+        when(batch.getShader()).thenReturn(shader);
+        ResourceLoader loader = mock(ResourceLoader.class);
+        TextureRegion region = mock(TextureRegion.class);
+        TextureRegion overlay = mock(TextureRegion.class);
+        when(loader.findRegion(anyString())).thenReturn(region);
+        when(loader.findRegion(eq("hoveredTile0"))).thenReturn(overlay);
+        when(loader.getSpecularPower(anyString())).thenReturn(CUSTOM_POWER);
+
+        new BaseDefinitionsMod().init();
+
+        CameraProvider camera = mock(CameraProvider.class);
+        com.badlogic.gdx.graphics.OrthographicCamera cam = new com.badlogic.gdx.graphics.OrthographicCamera();
+        com.badlogic.gdx.utils.viewport.ExtendViewport viewport =
+                new com.badlogic.gdx.utils.viewport.ExtendViewport(1f, 1f, cam);
+        cam.update();
+        when(camera.getViewport()).thenReturn(viewport);
+        when(camera.getCamera()).thenReturn(cam);
+
+        GraphicsSettings graphics = new GraphicsSettings();
+        TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver(), null, graphics);
+        reset(loader);
+
+        Array<RenderTile> tiles = new Array<>();
+        RenderTile tile = RenderTile.builder()
+                .x(0)
+                .y(0)
+                .tileType("GRASS")
+                .selected(false)
+                .wood(0)
+                .stone(0)
+                .food(0)
+                .build();
+        tiles.add(tile);
+
+        RenderTile[][] grid = new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT];
+        grid[0][0] = tile;
+        MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);
+
+        renderer.render(map);
+
+        verify(shader).setUniformf("u_specularPower", (float) CUSTOM_POWER);
     }
 }

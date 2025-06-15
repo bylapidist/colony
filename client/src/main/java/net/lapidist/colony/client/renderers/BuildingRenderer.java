@@ -28,6 +28,7 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
     private final java.util.HashMap<String, TextureRegion> buildingRegions = new java.util.HashMap<>();
     private final java.util.HashMap<String, TextureRegion> normalRegions = new java.util.HashMap<>();
     private final java.util.HashMap<String, TextureRegion> specularRegions = new java.util.HashMap<>();
+    private final java.util.HashMap<String, Integer> specularPowers = new java.util.HashMap<>();
     private final BitmapFont font = new BitmapFont();
     private final GlyphLayout layout = new GlyphLayout();
     private static final float LABEL_OFFSET_Y = 8f;
@@ -62,6 +63,8 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
             if (s != null) {
                 specularRegions.put(def.id().toUpperCase(java.util.Locale.ROOT), s);
             }
+            int power = resourceLoader.getSpecularPower(ref);
+            specularPowers.put(def.id().toUpperCase(java.util.Locale.ROOT), power);
         }
     }
 
@@ -96,6 +99,11 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
                         spec.getTexture().bind(2);
                         shader.setUniformi("u_specular", 2);
                     }
+                    Integer power = specularPowers.get(type.toUpperCase(java.util.Locale.ROOT));
+                    shader.setUniformf(
+                            "u_specularPower",
+                            power != null ? (float) power : ResourceLoader.DEFAULT_SPECULAR_POWER
+                    );
                     com.badlogic.gdx.Gdx.gl.glActiveTexture(com.badlogic.gdx.graphics.GL20.GL_TEXTURE0);
                 }
                 spriteBatch.draw(region, worldCoords.x, worldCoords.y);

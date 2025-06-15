@@ -103,6 +103,7 @@ Translation instructions are in [docs/i18n.md](docs/i18n.md).
 Scenario test utilities are covered in [docs/tests.md](docs/tests.md).
 Developer build steps are summarized in [docs/developer_workflow.md](docs/developer_workflow.md).
 Shader plugins are described in [docs/shaders.md](docs/shaders.md).
+The asset pipeline is documented in [docs/asset_pipeline.md](docs/asset_pipeline.md).
 
 ## License
 This project is licensed under the [MIT License](LICENSE).

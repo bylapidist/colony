@@ -10,6 +10,7 @@ grass0
   orig: 32,32
   offset: 0,0
   index: -1
+  specularPower: 8
 
 dirt.png
 size: 32,32
@@ -36,6 +37,7 @@ house0
   orig: 32,32
   offset: 0,0
   index: -1
+  specularPower: 24
 
 hoveredTile.png
 size: 32,32

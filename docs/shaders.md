@@ -75,7 +75,9 @@ additional uniforms:
 
 * `u_lightDir` – normalized direction to the main light source.
 * `u_viewDir` – direction toward the camera.
+* `u_specularPower` – exponent for the specular highlight.
 
-Both values are updated every frame so diffuse and specular terms react to
-camera movement. The specular map supplies the intensity for a Blinn–Phong
-highlight calculation.
+The first two values are updated every frame so diffuse and specular terms react
+to camera movement. The specular map supplies the intensity for a Blinn–Phong
+highlight calculation, while `u_specularPower` controls the falloff. Atlas
+regions may override the default by adding `specularPower: N`.

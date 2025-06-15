@@ -173,6 +173,21 @@ public final class TextureAtlasResourceLoader implements ResourceLoader {
         return atlas.findRegion(name + "_s");
     }
 
+    @Override
+    public int getSpecularPower(final String name) {
+        if (atlas == null) {
+            return ResourceLoader.DEFAULT_SPECULAR_POWER;
+        }
+        TextureAtlas.AtlasRegion region = atlas.findRegion(name);
+        if (region != null) {
+            int[] values = region.findValue("specularPower");
+            if (values != null && values.length > 0) {
+                return values[0];
+            }
+        }
+        return ResourceLoader.DEFAULT_SPECULAR_POWER;
+    }
+
 
     @Override
     public void dispose() {

@@ -10,6 +10,7 @@ uniform sampler2D u_normal;
 uniform sampler2D u_specular;
 uniform vec3 u_lightDir;
 uniform vec3 u_viewDir;
+uniform float u_specularPower;
 
 void main() {
     vec4 diffuse = texture2D(u_texture, v_texCoords);
@@ -18,7 +19,7 @@ void main() {
     vec3 viewDir = normalize(u_viewDir);
     float diff = max(dot(normal, lightDir), 0.0);
     vec3 halfDir = normalize(lightDir + viewDir);
-    float specIntensity = pow(max(dot(normal, halfDir), 0.0), 16.0);
+    float specIntensity = pow(max(dot(normal, halfDir), 0.0), u_specularPower);
     float specMap = texture2D(u_specular, v_texCoords).r;
     vec3 color = diffuse.rgb * diff + vec3(specIntensity * specMap);
     gl_FragColor = vec4(color, diffuse.a) * v_color;

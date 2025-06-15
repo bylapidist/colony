@@ -16,6 +16,8 @@ import static org.junit.Assert.*;
 @RunWith(GdxTestRunner.class)
 public class ResourceLoaderTest {
 
+    private static final int OVERRIDE_POWER = 8;
+
     @Test
     public final void testLoadsResources() throws IOException {
         ResourceLoader resourceLoader = new TextureAtlasResourceLoader();
@@ -37,6 +39,8 @@ public class ResourceLoaderTest {
         assertNotNull(resourceLoader.findSpecularRegion("dirt0"));
         assertNotNull(resourceLoader.findNormalRegion("grass0"));
         assertNotNull(resourceLoader.findSpecularRegion("grass0"));
+        assertEquals(OVERRIDE_POWER, resourceLoader.getSpecularPower("grass0"));
+        assertEquals(ResourceLoader.DEFAULT_SPECULAR_POWER, resourceLoader.getSpecularPower("dirt0"));
     }
 
     @Test

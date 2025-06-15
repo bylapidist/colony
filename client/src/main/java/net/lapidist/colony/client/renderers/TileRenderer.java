@@ -30,6 +30,7 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
     private final java.util.HashMap<String, TextureRegion> tileRegions = new java.util.HashMap<>();
     private final java.util.HashMap<String, TextureRegion> normalRegions = new java.util.HashMap<>();
     private final java.util.HashMap<String, TextureRegion> specularRegions = new java.util.HashMap<>();
+    private final java.util.HashMap<String, Integer> specularPowers = new java.util.HashMap<>();
     private final TextureRegion overlayRegion;
     private final BitmapFont font = new BitmapFont();
     private final GlyphLayout layout = new GlyphLayout();
@@ -70,6 +71,8 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
             if (s != null) {
                 specularRegions.put(def.id().toUpperCase(java.util.Locale.ROOT), s);
             }
+            int power = resourceLoader.getSpecularPower(ref);
+            specularPowers.put(def.id().toUpperCase(java.util.Locale.ROOT), power);
         }
         this.overlayRegion = resourceLoader.findRegion("hoveredTile0");
     }
@@ -123,12 +126,17 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                                 nrm.getTexture().bind(1);
                                 shader.setUniformi("u_normal", 1);
                             }
-                            if (spec != null && graphicsSettings.isSpecularMapsEnabled()) {
-                                spec.getTexture().bind(2);
-                                shader.setUniformi("u_specular", 2);
-                            }
-                            com.badlogic.gdx.Gdx.gl.glActiveTexture(com.badlogic.gdx.graphics.GL20.GL_TEXTURE0);
+                        if (spec != null && graphicsSettings.isSpecularMapsEnabled()) {
+                            spec.getTexture().bind(2);
+                            shader.setUniformi("u_specular", 2);
                         }
+                        Integer power = specularPowers.get(type.toUpperCase(java.util.Locale.ROOT));
+                        shader.setUniformf(
+                                "u_specularPower",
+                                power != null ? (float) power : ResourceLoader.DEFAULT_SPECULAR_POWER
+                        );
+                        com.badlogic.gdx.Gdx.gl.glActiveTexture(com.badlogic.gdx.graphics.GL20.GL_TEXTURE0);
+                    }
                         String upper = type.toUpperCase(java.util.Locale.ROOT);
                         if ("GRASS".equals(upper) || "DIRT".equals(upper)) {
                             float rotation = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
