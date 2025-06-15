@@ -13,6 +13,9 @@ import net.lapidist.colony.map.MapUtils;
 
 /**
  * Applies building placement updates received from the server.
+ *
+ * @see net.lapidist.colony.server.handlers.BuildingPlacementRequestHandler
+ * @see net.lapidist.colony.server.handlers.BuildingRemovalRequestHandler
  */
 public final class BuildingUpdateSystem extends BaseSystem {
     private final GameClient client;

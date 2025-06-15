@@ -5,7 +5,11 @@ import net.lapidist.colony.server.commands.CommandBus;
 import net.lapidist.colony.server.commands.GatherCommand;
 import net.lapidist.colony.network.AbstractMessageHandler;
 
-/** Converts incoming {@link ResourceGatherRequestData} into {@link GatherCommand}. */
+/**
+ * Converts incoming {@link ResourceGatherRequestData} into {@link GatherCommand}.
+ *
+ * Client system: {@code net.lapidist.colony.client.systems.network.ResourceUpdateSystem}
+ */
 public final class ResourceGatherRequestHandler extends AbstractMessageHandler<ResourceGatherRequestData> {
     private final CommandBus commandBus;
 

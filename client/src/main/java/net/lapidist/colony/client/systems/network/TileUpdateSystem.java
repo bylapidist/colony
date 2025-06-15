@@ -11,6 +11,8 @@ import net.lapidist.colony.map.MapUtils;
 
 /**
  * Applies tile selection updates received from the server.
+ *
+ * @see net.lapidist.colony.server.handlers.TileSelectionRequestHandler
  */
 public final class TileUpdateSystem extends BaseSystem {
     private final GameClient client;

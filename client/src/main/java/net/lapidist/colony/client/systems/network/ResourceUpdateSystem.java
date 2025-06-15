@@ -11,7 +11,11 @@ import net.lapidist.colony.components.resources.PlayerResourceComponent;
 import net.lapidist.colony.components.state.ResourceUpdateData;
 import net.lapidist.colony.map.MapUtils;
 
-/** Applies resource updates received from the server. */
+/**
+ * Applies resource updates received from the server.
+ *
+ * @see net.lapidist.colony.server.handlers.ResourceGatherRequestHandler
+ */
 public final class ResourceUpdateSystem extends BaseSystem {
     private final GameClient client;
     private ComponentMapper<ResourceComponent> resourceMapper;

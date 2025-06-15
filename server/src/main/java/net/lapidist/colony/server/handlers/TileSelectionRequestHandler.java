@@ -8,6 +8,8 @@ import net.lapidist.colony.network.AbstractMessageHandler;
 /**
  * Converts incoming {@link TileSelectionData} messages into
  * {@link TileSelectionCommand} instances dispatched on the command bus.
+ *
+ * Client system: {@code net.lapidist.colony.client.systems.network.TileUpdateSystem}
  */
 public final class TileSelectionRequestHandler extends AbstractMessageHandler<TileSelectionData> {
     private final CommandBus commandBus;

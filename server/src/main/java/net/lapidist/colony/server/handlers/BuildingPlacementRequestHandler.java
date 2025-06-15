@@ -7,6 +7,8 @@ import net.lapidist.colony.network.AbstractMessageHandler;
 
 /**
  * Converts incoming {@link BuildingPlacementData} messages into {@link BuildCommand} instances.
+ *
+ * Client system: {@code net.lapidist.colony.client.systems.network.BuildingUpdateSystem}
  */
 public final class BuildingPlacementRequestHandler extends AbstractMessageHandler<BuildingPlacementData> {
     private final CommandBus commandBus;
