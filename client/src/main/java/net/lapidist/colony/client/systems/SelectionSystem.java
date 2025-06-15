@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.artemis.Entity;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.input.TileSelectionHandler;
-import net.lapidist.colony.client.util.CameraUtils;
+import net.lapidist.colony.client.graphics.CameraUtils;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.resources.ResourceComponent;

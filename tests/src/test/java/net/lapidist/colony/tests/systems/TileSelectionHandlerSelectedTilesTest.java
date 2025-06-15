@@ -9,7 +9,7 @@ import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.input.TileSelectionHandler;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
-import net.lapidist.colony.client.util.CameraUtils;
+import net.lapidist.colony.client.graphics.CameraUtils;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;

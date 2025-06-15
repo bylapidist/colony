@@ -5,7 +5,7 @@ import com.artemis.Entity;
 import net.lapidist.colony.components.resources.PlayerResourceComponent;
 import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.entities.PlayerComponent;
-import net.lapidist.colony.client.util.CameraUtils;
+import net.lapidist.colony.client.graphics.CameraUtils;
 import net.lapidist.colony.components.state.PlayerPosition;
 
 /** Creates a player entity with resource storage. */

@@ -18,7 +18,7 @@ import net.lapidist.colony.client.systems.input.ScrollInputProcessor;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.state.ResourceGatherRequestData;
-import net.lapidist.colony.client.util.CameraUtils;
+import net.lapidist.colony.client.graphics.CameraUtils;
 import net.lapidist.colony.map.MapUtils;
 import com.artemis.ComponentMapper;
 import net.lapidist.colony.settings.KeyAction;
