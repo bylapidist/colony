@@ -8,6 +8,7 @@ Colony is a small simulation/strategy prototype built with LibGDX and the Artemi
 - [Quick Start](#quick-start)
   - [Building and Testing](#building-and-testing)
   - [Running the Game](#running-the-game)
+- [Key Entry Points](#key-entry-points)
 - [Controls](#controls)
 - [Architecture](#architecture)
 - [Configuration](#configuration)
@@ -56,6 +57,18 @@ Game data is stored in the mounted `colony-data` directory. An example compose f
 docker compose up
 ```
 
+
+## Key Entry Points
+Useful starting classes for navigating the source tree:
+
+- `client/src/main/java/net/lapidist/colony/client/network/GameClient.java` – networked client logic
+- `server/src/main/java/net/lapidist/colony/server/GameServer.java` – main server entry and message handlers
+- Core mods in `server/src/main/java/net/lapidist/colony/base` – built‑in gameplay modules
+- `core/src/main/java/net/lapidist/colony/map/MapFactory.java` – map generation utilities
+- `client/src/main/java/net/lapidist/colony/client/renderers/MapRendererFactory.java` – renderer abstraction
+- `client/src/main/java/net/lapidist/colony/client/renderers/SpriteMapRendererFactory.java` – default renderer implementation
+- `client/src/main/java/net/lapidist/colony/client/entities/BuildingFactory.java` – creates building entities
+- `client/src/main/java/net/lapidist/colony/client/entities/TileFactory.java` – creates tile entities
 
 ## Controls
 Default keyboard mappings can be remapped in game. See
