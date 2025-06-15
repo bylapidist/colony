@@ -6,6 +6,7 @@ import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
+import net.lapidist.colony.settings.GraphicsSettings;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,8 +32,9 @@ public class LoadingSpriteMapRendererTest {
 
         try (MockedConstruction<SpriteBatchMapRenderer> cons =
                 mockConstruction(SpriteBatchMapRenderer.class)) {
+            GraphicsSettings gs = new GraphicsSettings();
             LoadingSpriteMapRenderer renderer = new LoadingSpriteMapRenderer(
-                    world, batch, loader, camera, false, null, null);
+                    world, batch, loader, camera, false, null, null, gs);
             renderer.setLights(lights);
 
             renderer.render(mock(net.lapidist.colony.client.render.MapRenderData.class), null);

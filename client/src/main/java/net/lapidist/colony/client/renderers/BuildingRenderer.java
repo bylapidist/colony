@@ -14,6 +14,7 @@ import net.lapidist.colony.client.render.data.RenderBuilding;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.registry.BuildingDefinition;
 import net.lapidist.colony.registry.Registries;
+import net.lapidist.colony.settings.GraphicsSettings;
 
 /**
  * Renders building entities.
@@ -24,6 +25,7 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
     private final ResourceLoader resourceLoader;
     private final CameraProvider cameraSystem;
     private final AssetResolver resolver;
+    private final GraphicsSettings graphicsSettings;
     private final java.util.HashMap<String, TextureRegion> buildingRegions = new java.util.HashMap<>();
     private final java.util.HashMap<String, TextureRegion> normalRegions = new java.util.HashMap<>();
     private final java.util.HashMap<String, TextureRegion> specularRegions = new java.util.HashMap<>();
@@ -33,16 +35,20 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
     private final Rectangle viewBounds = new Rectangle();
     private final Vector2 worldCoords = new Vector2();
 
+    // CHECKSTYLE:OFF: ParameterNumber
     public BuildingRenderer(
             final SpriteBatch spriteBatchToSet,
             final ResourceLoader resourceLoaderToSet,
             final CameraProvider cameraSystemToSet,
-            final AssetResolver resolverToSet
+            final AssetResolver resolverToSet,
+            final GraphicsSettings graphicsSettingsToSet
     ) {
+        // CHECKSTYLE:ON: ParameterNumber
         this.spriteBatch = spriteBatchToSet;
         this.resourceLoader = resourceLoaderToSet;
         this.cameraSystem = cameraSystemToSet;
         this.resolver = resolverToSet;
+        this.graphicsSettings = graphicsSettingsToSet;
 
         for (BuildingDefinition def : Registries.buildings().all()) {
             String ref = resolver.buildingAsset(def.id());
@@ -84,11 +90,11 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
                 TextureRegion spec = specularRegions.get(type.toUpperCase(java.util.Locale.ROOT));
                 com.badlogic.gdx.graphics.glutils.ShaderProgram shader = spriteBatch.getShader();
                 if (shader != null) {
-                    if (nrm != null) {
+                    if (nrm != null && graphicsSettings.isNormalMapsEnabled()) {
                         nrm.getTexture().bind(1);
                         shader.setUniformi("u_normal", 1);
                     }
-                    if (spec != null) {
+                    if (spec != null && graphicsSettings.isSpecularMapsEnabled()) {
                         spec.getTexture().bind(2);
                         shader.setUniformi("u_specular", 2);
                     }

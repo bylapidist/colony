@@ -39,6 +39,7 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.TearDown;
 import org.mockito.MockedConstruction;
+import net.lapidist.colony.settings.GraphicsSettings;
 
 import static org.mockito.Mockito.*;
 
@@ -63,8 +64,9 @@ public class SpriteBatchRendererBenchmark {
         resolver = new DefaultAssetResolver();
         camera = createCamera();
         SpriteBatch batch = mock(SpriteBatch.class);
-        TileRenderer tileRenderer = new TileRenderer(batch, loader, camera, resolver, null);
-        BuildingRenderer buildingRenderer = new BuildingRenderer(batch, loader, camera, resolver);
+        GraphicsSettings gs = new GraphicsSettings();
+        TileRenderer tileRenderer = new TileRenderer(batch, loader, camera, resolver, null, gs);
+        BuildingRenderer buildingRenderer = new BuildingRenderer(batch, loader, camera, resolver, gs);
         ResourceRenderer resourceRenderer = mock(ResourceRenderer.class);
         PlayerRenderer playerRenderer = mock(PlayerRenderer.class);
         CelestialRenderer celestialRenderer = mock(CelestialRenderer.class);

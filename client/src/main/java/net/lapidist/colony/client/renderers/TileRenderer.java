@@ -12,6 +12,7 @@ import net.lapidist.colony.client.graphics.CameraUtils;
 import net.lapidist.colony.client.render.data.RenderTile;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.TileRotationUtil;
+import net.lapidist.colony.settings.GraphicsSettings;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.registry.Registries;
 import net.lapidist.colony.registry.TileDefinition;
@@ -26,6 +27,7 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
     private final ResourceLoader resourceLoader;
     private final CameraProvider cameraSystem;
     private final AssetResolver resolver;
+    private final GraphicsSettings graphicsSettings;
     private final java.util.HashMap<String, TextureRegion> tileRegions = new java.util.HashMap<>();
     private final java.util.HashMap<String, TextureRegion> normalRegions = new java.util.HashMap<>();
     private final java.util.HashMap<String, TextureRegion> specularRegions = new java.util.HashMap<>();
@@ -39,18 +41,22 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
     private final Vector2 worldCoords = new Vector2();
     private boolean overlayOnly;
 
+    // CHECKSTYLE:OFF: ParameterNumber
     public TileRenderer(
             final SpriteBatch spriteBatchToSet,
             final ResourceLoader resourceLoaderToSet,
             final CameraProvider cameraSystemToSet,
             final AssetResolver resolverToSet,
-            final net.lapidist.colony.client.network.GameClient clientToUse
+            final net.lapidist.colony.client.network.GameClient clientToUse,
+            final GraphicsSettings graphicsSettingsToUse
     ) {
+        // CHECKSTYLE:ON: ParameterNumber
         this.client = clientToUse;
         this.spriteBatch = spriteBatchToSet;
         this.resourceLoader = resourceLoaderToSet;
         this.cameraSystem = cameraSystemToSet;
         this.resolver = resolverToSet;
+        this.graphicsSettings = graphicsSettingsToUse;
 
         for (TileDefinition def : Registries.tiles().all()) {
             String ref = resolver.tileAsset(def.id());
@@ -115,11 +121,11 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                         TextureRegion spec = specularRegions.get(type.toUpperCase(java.util.Locale.ROOT));
                         com.badlogic.gdx.graphics.glutils.ShaderProgram shader = spriteBatch.getShader();
                         if (shader != null) {
-                            if (nrm != null) {
+                            if (nrm != null && graphicsSettings.isNormalMapsEnabled()) {
                                 nrm.getTexture().bind(1);
                                 shader.setUniformi("u_normal", 1);
                             }
-                            if (spec != null) {
+                            if (spec != null && graphicsSettings.isSpecularMapsEnabled()) {
                                 spec.getTexture().bind(2);
                                 shader.setUniformi("u_specular", 2);
                             }

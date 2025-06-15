@@ -17,6 +17,8 @@ import net.lapidist.colony.client.render.SimpleMapRenderData;
 import net.lapidist.colony.client.render.data.RenderBuilding;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.tests.GdxTestRunner;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import net.lapidist.colony.settings.GraphicsSettings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -47,7 +49,8 @@ public class TileRendererTest {
         when(camera.getViewport()).thenReturn(viewport);
         when(camera.getCamera()).thenReturn(cam);
 
-        TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver(), null);
+        GraphicsSettings gs = new GraphicsSettings();
+        TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver(), null, gs);
         reset(loader);
 
         Array<RenderTile> tiles = new Array<>();
@@ -110,7 +113,8 @@ public class TileRendererTest {
         when(camera.getViewport()).thenReturn(viewport);
         when(camera.getCamera()).thenReturn(cam);
 
-        TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver(), null);
+        GraphicsSettings gs = new GraphicsSettings();
+        TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver(), null, gs);
         reset(loader);
 
         Array<RenderTile> tiles = new Array<>();
@@ -158,7 +162,8 @@ public class TileRendererTest {
         when(resolver.tileAsset(anyString())).thenReturn("dirt0");
         when(resolver.hasTileAsset(anyString())).thenReturn(false);
 
-        TileRenderer renderer = new TileRenderer(batch, loader, camera, resolver, null);
+        GraphicsSettings gs = new GraphicsSettings();
+        TileRenderer renderer = new TileRenderer(batch, loader, camera, resolver, null, gs);
 
         java.lang.reflect.Field fontField = TileRenderer.class.getDeclaredField("font");
         fontField.setAccessible(true);
@@ -207,7 +212,8 @@ public class TileRendererTest {
         when(camera.getViewport()).thenReturn(viewport);
         when(camera.getCamera()).thenReturn(cam);
 
-        TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver(), null);
+        GraphicsSettings gs = new GraphicsSettings();
+        TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver(), null, gs);
         reset(loader);
 
         Array<RenderTile> tiles = new Array<>();
@@ -254,5 +260,65 @@ public class TileRendererTest {
         List<Float> values = rotCaptor.getAllValues();
         assertEquals(2, values.size());
         assertNotEquals(values.get(0), values.get(1));
+    }
+
+    @Test
+    public void doesNotBindTexturesWhenDisabled() {
+        SpriteBatch batch = mock(SpriteBatch.class);
+        ShaderProgram shader = mock(ShaderProgram.class);
+        when(batch.getShader()).thenReturn(shader);
+
+        ResourceLoader loader = mock(ResourceLoader.class);
+        TextureRegion region = mock(TextureRegion.class);
+        TextureRegion overlay = mock(TextureRegion.class);
+        TextureRegion normal = mock(TextureRegion.class);
+        TextureRegion spec = mock(TextureRegion.class);
+        com.badlogic.gdx.graphics.Texture texN = mock(com.badlogic.gdx.graphics.Texture.class);
+        com.badlogic.gdx.graphics.Texture texS = mock(com.badlogic.gdx.graphics.Texture.class);
+        when(normal.getTexture()).thenReturn(texN);
+        when(spec.getTexture()).thenReturn(texS);
+        when(loader.findRegion(anyString())).thenReturn(region);
+        when(loader.findRegion(eq("hoveredTile0"))).thenReturn(overlay);
+        when(loader.findNormalRegion(anyString())).thenReturn(normal);
+        when(loader.findSpecularRegion(anyString())).thenReturn(spec);
+
+        new BaseDefinitionsMod().init();
+
+        CameraProvider camera = mock(CameraProvider.class);
+        com.badlogic.gdx.graphics.OrthographicCamera cam = new com.badlogic.gdx.graphics.OrthographicCamera();
+        com.badlogic.gdx.utils.viewport.ExtendViewport viewport =
+                new com.badlogic.gdx.utils.viewport.ExtendViewport(1f, 1f, cam);
+        cam.update();
+        when(camera.getViewport()).thenReturn(viewport);
+        when(camera.getCamera()).thenReturn(cam);
+
+        GraphicsSettings gs = new GraphicsSettings();
+        gs.setNormalMapsEnabled(false);
+        gs.setSpecularMapsEnabled(false);
+        TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver(), null, gs);
+        reset(loader);
+
+        Array<RenderTile> tiles = new Array<>();
+        RenderTile tile = RenderTile.builder()
+                .x(0)
+                .y(0)
+                .tileType("GRASS")
+                .selected(true)
+                .wood(0)
+                .stone(0)
+                .food(0)
+                .build();
+        tiles.add(tile);
+
+        RenderTile[][] grid = new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT];
+        grid[0][0] = tile;
+        MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);
+
+        renderer.render(map);
+
+        verify(texN, never()).bind(anyInt());
+        verify(texS, never()).bind(anyInt());
+        verify(shader, never()).setUniformi(eq("u_normal"), anyInt());
+        verify(shader, never()).setUniformi(eq("u_specular"), anyInt());
     }
 }

@@ -8,6 +8,7 @@ import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.client.render.MapRenderData;
+import net.lapidist.colony.settings.GraphicsSettings;
 
 import java.util.function.Consumer;
 
@@ -23,10 +24,12 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
     private final boolean cacheEnabled;
     private final Consumer<Float> progressCallback;
     private final com.badlogic.gdx.graphics.glutils.ShaderProgram shader;
+    private final GraphicsSettings graphicsSettings;
     private box2dLight.RayHandler lights;
 
     private MapRenderer delegate;
 
+    // CHECKSTYLE:OFF: ParameterNumber
     public LoadingSpriteMapRenderer(
             final World worldContext,
             final SpriteBatch batchToUse,
@@ -34,7 +37,8 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
             final CameraProvider camera,
             final boolean cache,
             final Consumer<Float> callback,
-            final com.badlogic.gdx.graphics.glutils.ShaderProgram shaderProgram
+            final com.badlogic.gdx.graphics.glutils.ShaderProgram shaderProgram,
+            final GraphicsSettings graphicsSettingsToUse
     ) {
         this.world = worldContext;
         this.spriteBatch = batchToUse;
@@ -43,9 +47,11 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
         this.cacheEnabled = cache;
         this.progressCallback = callback;
         this.shader = shaderProgram;
+        this.graphicsSettings = graphicsSettingsToUse;
         // ensure mapper initialization for render systems
         worldContext.getMapper(MapComponent.class);
     }
+    // CHECKSTYLE:ON: ParameterNumber
 
     /** Assign lighting handler. */
     public void setLights(final box2dLight.RayHandler handler) {
@@ -72,13 +78,15 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
                     resourceLoader,
                     cameraSystem,
                     new DefaultAssetResolver(),
-                    gc
+                    gc,
+                    graphicsSettings
             );
             BuildingRenderer buildingRenderer = new BuildingRenderer(
                     spriteBatch,
                     resourceLoader,
                     cameraSystem,
-                    new DefaultAssetResolver()
+                    new DefaultAssetResolver(),
+                    graphicsSettings
             );
             PlayerRenderer playerRenderer = new PlayerRenderer(
                     spriteBatch,
