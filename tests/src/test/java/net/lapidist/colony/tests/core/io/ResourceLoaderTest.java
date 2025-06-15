@@ -33,6 +33,10 @@ public class ResourceLoaderTest {
             assertTrue(resourceLoader.getProgress() < 1f);
         }
         assertTrue(resourceLoader.isLoaded());
+        assertNotNull(resourceLoader.findNormalRegion("dirt0"));
+        assertNotNull(resourceLoader.findSpecularRegion("dirt0"));
+        assertNotNull(resourceLoader.findNormalRegion("grass0"));
+        assertNotNull(resourceLoader.findSpecularRegion("grass0"));
     }
 
     @Test
