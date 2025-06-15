@@ -23,9 +23,10 @@ public final class MapTickerMod implements GameMod {
     private static final class DescriptionTickSystem implements GameSystem {
         private final net.lapidist.colony.server.GameServer server;
         private ScheduledExecutorService executor;
+        private static final int PERIOD_MS = 10;
 
-        DescriptionTickSystem(final net.lapidist.colony.server.GameServer server) {
-            this.server = server;
+        DescriptionTickSystem(final net.lapidist.colony.server.GameServer srv) {
+            this.server = srv;
         }
 
         @Override
@@ -35,7 +36,7 @@ public final class MapTickerMod implements GameMod {
                 t.setDaemon(true);
                 return t;
             });
-            executor.scheduleAtFixedRate(this::tick, 10, 10, TimeUnit.MILLISECONDS);
+            executor.scheduleAtFixedRate(this::tick, PERIOD_MS, PERIOD_MS, TimeUnit.MILLISECONDS);
         }
 
         @Override

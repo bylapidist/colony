@@ -254,6 +254,10 @@ public final class ModLoader {
                                final String name) throws IOException {
         ScriptEngine engine = new ScriptEngineManager(cl).getEngineByExtension("kts");
         if (engine == null) {
+            // Fallback to the default classloader which contains the scripting engine
+            engine = new ScriptEngineManager().getEngineByExtension("kts");
+        }
+        if (engine == null) {
             LOGGER.warn("Kotlin scripting engine not available, skipping {}", name);
             return;
         }

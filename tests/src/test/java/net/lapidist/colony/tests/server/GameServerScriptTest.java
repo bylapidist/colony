@@ -68,9 +68,16 @@ public class GameServerScriptTest {
         Path script = dir.resolve("scripts/listener.kts");
         Files.writeString(script, String.join(System.lineSeparator(),
                 "import net.lapidist.colony.server.events.TileSelectionEvent",
-                "on<TileSelectionEvent> {",
-                "    System.setProperty(\"script.received\", \"true\")",
-                "}"
+                "import net.lapidist.colony.events.Events",
+                "import net.mostlyoriginal.api.event.common.Subscribe",
+                "",
+                "class ScriptListener {",
+                "    @Subscribe fun handle(event: TileSelectionEvent) {",
+                "        System.setProperty(\"script.received\", \"true\")",
+                "    }",
+                "}",
+                "",
+                "Events.getInstance().registerEvents(ScriptListener())"
         ));
     }
 
