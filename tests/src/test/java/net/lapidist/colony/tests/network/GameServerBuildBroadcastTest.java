@@ -56,7 +56,7 @@ public class GameServerBuildBroadcastTest {
         assertEquals(data.y(), update.y());
         ResourceUpdateData res = clientB.poll(ResourceUpdateData.class);
         assertNotNull(res);
-        assertEquals(0, res.wood());
+        assertEquals(0, res.amounts().getOrDefault("WOOD", 0).intValue());
 
         }
         Thread.sleep(WAIT_MS);
@@ -96,7 +96,7 @@ public class GameServerBuildBroadcastTest {
         assertEquals(data.y(), update.y());
         ResourceUpdateData res = clientB.poll(ResourceUpdateData.class);
         assertNotNull(res);
-        assertEquals(0, res.wood());
+        assertEquals(0, res.amounts().getOrDefault("WOOD", 0).intValue());
 
         }
         Thread.sleep(WAIT_MS);

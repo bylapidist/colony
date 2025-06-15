@@ -60,7 +60,7 @@ public class InputSystemResourceTypeTest {
         ArgumentCaptor<ResourceGatherRequestData> captor =
                 ArgumentCaptor.forClass(ResourceGatherRequestData.class);
         verify(client).sendGatherRequest(captor.capture());
-        assertEquals(Registries.resources().get("STONE").id(), captor.getValue().resourceType());
+        assertEquals(Registries.resources().get("STONE").id(), captor.getValue().resourceId());
     }
 
     @Test
@@ -99,6 +99,6 @@ public class InputSystemResourceTypeTest {
         ArgumentCaptor<ResourceGatherRequestData> captor =
                 ArgumentCaptor.forClass(ResourceGatherRequestData.class);
         verify(client).sendGatherRequest(captor.capture());
-        assertEquals(Registries.resources().get("WOOD").id(), captor.getValue().resourceType());
+        assertEquals(Registries.resources().get("WOOD").id(), captor.getValue().resourceId());
     }
 }

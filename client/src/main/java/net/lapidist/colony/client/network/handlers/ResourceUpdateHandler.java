@@ -41,7 +41,7 @@ public final class ResourceUpdateHandler extends AbstractMessageHandler<Resource
         }
         if (message.x() == -1 && message.y() == -1) {
             MapState updated = state.toBuilder()
-                    .playerResources(new ResourceData(message.wood(), message.stone(), message.food()))
+                    .playerResources(new ResourceData(new java.util.HashMap<>(message.amounts())))
                     .build();
             stateConsumer.accept(updated);
         } else {
@@ -49,7 +49,7 @@ public final class ResourceUpdateHandler extends AbstractMessageHandler<Resource
             TileData tile = state.getTile(pos.x(), pos.y());
             if (tile != null) {
                 TileData newTile = tile.toBuilder()
-                        .resources(new ResourceData(message.wood(), message.stone(), message.food()))
+                        .resources(new ResourceData(new java.util.HashMap<>(message.amounts())))
                         .build();
                 int chunkX = Math.floorDiv(pos.x(), MapChunkData.CHUNK_SIZE);
                 int chunkY = Math.floorDiv(pos.y(), MapChunkData.CHUNK_SIZE);

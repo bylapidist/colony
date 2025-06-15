@@ -16,6 +16,6 @@ public final class ResourceGatherRequestHandler extends AbstractMessageHandler<R
 
     @Override
     public void handle(final ResourceGatherRequestData data) {
-        commandBus.dispatch(new GatherCommand(data.x(), data.y(), data.resourceType()));
+        commandBus.dispatch(new GatherCommand(data.x(), data.y(), data.resourceId()));
     }
 }

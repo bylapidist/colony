@@ -84,7 +84,7 @@ public final class BuildCommandHandler implements CommandHandler<BuildCommand> {
             Events.dispatch(new BuildingPlacedEvent(command.x(), command.y(), type));
             networkService.broadcast(building);
             networkService.broadcast(new ResourceUpdateData(-1, -1,
-                    newResources.wood(), newResources.stone(), newResources.food()));
+                    new java.util.HashMap<>(newResources.amounts())));
         } finally {
             lock.unlock();
         }

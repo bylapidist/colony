@@ -7,10 +7,10 @@ import net.lapidist.colony.serialization.KryoType;
  *
  * @param x            tile x coordinate
  * @param y            tile y coordinate
- * @param resourceType type of resource to gather
+ * @param resourceId  identifier of the resource to gather
  */
 @KryoType
-public record ResourceGatherRequestData(int x, int y, String resourceType) {
+public record ResourceGatherRequestData(int x, int y, String resourceId) {
     public ResourceGatherRequestData() {
         this(0, 0, null);
     }

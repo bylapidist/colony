@@ -80,9 +80,7 @@ public final class ResourceProductionService {
             networkService.broadcast(new ResourceUpdateData(
                     -1,
                     -1,
-                    updated.wood(),
-                    updated.stone(),
-                    updated.food()
+                    new java.util.HashMap<>(updated.amounts())
             ));
         } finally {
             lock.unlock();

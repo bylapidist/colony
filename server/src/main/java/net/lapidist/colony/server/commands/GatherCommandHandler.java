@@ -70,9 +70,7 @@ public final class GatherCommandHandler implements CommandHandler<GatherCommand>
             networkService.broadcast(new ResourceUpdateData(
                     pos.x(),
                     pos.y(),
-                    updated.wood(),
-                    updated.stone(),
-                    updated.food()
+                    new java.util.HashMap<>(updated.amounts())
             ));
         } finally {
             lock.unlock();
