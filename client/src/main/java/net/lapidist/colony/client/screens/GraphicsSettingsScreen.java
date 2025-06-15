@@ -24,6 +24,8 @@ public final class GraphicsSettingsScreen extends BaseScreen {
     private final CheckBox aaBox;
     private final CheckBox mipBox;
     private final CheckBox afBox;
+    private final CheckBox normalBox;
+    private final CheckBox specularBox;
     private final SelectBox<String> shaderBox;
     private final com.badlogic.gdx.utils.Array<String> pluginIds;
     private final CheckBox cacheBox;
@@ -48,6 +50,10 @@ public final class GraphicsSettingsScreen extends BaseScreen {
         mipBox.setChecked(graphics.isMipMapsEnabled());
         afBox = new CheckBox(I18n.get("graphics.anisotropic"), getSkin());
         afBox.setChecked(graphics.isAnisotropicFilteringEnabled());
+        normalBox = new CheckBox(I18n.get("graphics.normalmaps"), getSkin());
+        normalBox.setChecked(graphics.isNormalMapsEnabled());
+        specularBox = new CheckBox(I18n.get("graphics.specularmaps"), getSkin());
+        specularBox.setChecked(graphics.isSpecularMapsEnabled());
         shaderBox = new SelectBox<>(getSkin());
         var plugins = new ShaderPluginLoader().loadPlugins();
         pluginIds = new com.badlogic.gdx.utils.Array<>();
@@ -79,6 +85,8 @@ public final class GraphicsSettingsScreen extends BaseScreen {
         options.add(aaBox).left().row();
         options.add(mipBox).left().row();
         options.add(afBox).left().row();
+        options.add(normalBox).left().row();
+        options.add(specularBox).left().row();
         options.add(shaderBox).left().row();
         options.add(cacheBox).left().row();
         options.add(lightingBox).left().row();
@@ -100,6 +108,8 @@ public final class GraphicsSettingsScreen extends BaseScreen {
                 graphics.setAntialiasingEnabled(aaBox.isChecked());
                 graphics.setMipMapsEnabled(mipBox.isChecked());
                 graphics.setAnisotropicFilteringEnabled(afBox.isChecked());
+                graphics.setNormalMapsEnabled(normalBox.isChecked());
+                graphics.setSpecularMapsEnabled(specularBox.isChecked());
                 int idx = shaderBox.getSelectedIndex();
                 graphics.setShaderPlugin(pluginIds.get(idx));
                 graphics.setSpriteCacheEnabled(cacheBox.isChecked());

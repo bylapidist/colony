@@ -25,6 +25,8 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
     private final CameraProvider cameraSystem;
     private final AssetResolver resolver;
     private final java.util.HashMap<String, TextureRegion> buildingRegions = new java.util.HashMap<>();
+    private final java.util.HashMap<String, TextureRegion> normalRegions = new java.util.HashMap<>();
+    private final java.util.HashMap<String, TextureRegion> specularRegions = new java.util.HashMap<>();
     private final BitmapFont font = new BitmapFont();
     private final GlyphLayout layout = new GlyphLayout();
     private static final float LABEL_OFFSET_Y = 8f;
@@ -48,6 +50,14 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
             if (region != null) {
                 buildingRegions.put(def.id().toUpperCase(java.util.Locale.ROOT), region);
             }
+            TextureRegion n = resourceLoader.findNormalRegion(ref);
+            if (n != null) {
+                normalRegions.put(def.id().toUpperCase(java.util.Locale.ROOT), n);
+            }
+            TextureRegion s = resourceLoader.findSpecularRegion(ref);
+            if (s != null) {
+                specularRegions.put(def.id().toUpperCase(java.util.Locale.ROOT), s);
+            }
         }
     }
 
@@ -70,6 +80,20 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
             String type = building.getBuildingType();
             TextureRegion region = buildingRegions.get(type.toUpperCase(java.util.Locale.ROOT));
             if (region != null) {
+                TextureRegion nrm = normalRegions.get(type.toUpperCase(java.util.Locale.ROOT));
+                TextureRegion spec = specularRegions.get(type.toUpperCase(java.util.Locale.ROOT));
+                com.badlogic.gdx.graphics.glutils.ShaderProgram shader = spriteBatch.getShader();
+                if (shader != null) {
+                    if (nrm != null) {
+                        nrm.getTexture().bind(1);
+                        shader.setUniformi("u_normal", 1);
+                    }
+                    if (spec != null) {
+                        spec.getTexture().bind(2);
+                        shader.setUniformi("u_specular", 2);
+                    }
+                    com.badlogic.gdx.Gdx.gl.glActiveTexture(com.badlogic.gdx.graphics.GL20.GL_TEXTURE0);
+                }
                 spriteBatch.draw(region, worldCoords.x, worldCoords.y);
             }
             if (!resolver.hasBuildingAsset(type)) {
