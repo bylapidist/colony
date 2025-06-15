@@ -62,3 +62,17 @@ public final class V19ToV20Migration implements MapStateMigration {
 3. Register the new migration inside `SaveMigrator`.
 
 Whenever a serialized class list changes, recompute `SerializationRegistrar.REGISTRATION_HASH` using `registrationHash()` so mismatched saves are detected.
+## Graphics Settings
+
+Rendering options are grouped under the `graphics` prefix inside `settings.conf`.
+The most important key is `shaderPlugin` which selects the shader implementation
+used by the map renderer. By default it is set to `lights-normalmap`, a plugin
+that combines dynamic lighting from Box2D-lights with normal map rendering:
+
+```properties
+graphics.shaderPlugin=lights-normalmap
+```
+
+Lighting can be disabled independently with `graphics.lighting=false` if the
+additional frame buffer passes are too costly on low end GPUs.
+
