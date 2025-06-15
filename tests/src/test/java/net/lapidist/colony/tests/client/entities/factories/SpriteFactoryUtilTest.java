@@ -4,7 +4,7 @@ import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.components.entities.BuildingComponent;
-import net.lapidist.colony.client.entities.factories.SpriteFactoryUtil;
+import net.lapidist.colony.client.entities.SpriteFactoryUtil;
 import net.lapidist.colony.components.GameConstants;
 import org.junit.Test;
 

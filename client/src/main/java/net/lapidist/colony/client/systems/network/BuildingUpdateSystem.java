@@ -3,7 +3,7 @@ package net.lapidist.colony.client.systems.network;
 import com.artemis.BaseSystem;
 import com.artemis.ComponentMapper;
 import com.badlogic.gdx.math.Vector2;
-import net.lapidist.colony.client.entities.factories.BuildingFactory;
+import net.lapidist.colony.client.entities.BuildingFactory;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.components.maps.MapComponent;
