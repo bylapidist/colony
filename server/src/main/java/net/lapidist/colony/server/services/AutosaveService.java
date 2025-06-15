@@ -7,7 +7,7 @@ import net.lapidist.colony.server.events.AutosaveEvent;
 import net.lapidist.colony.server.events.AutosaveStartEvent;
 import net.lapidist.colony.server.events.ShutdownSaveEvent;
 import net.mostlyoriginal.api.event.common.Event;
-import net.lapidist.colony.server.io.GameStateIO;
+import net.lapidist.colony.save.io.GameStateIO;
 import net.lapidist.colony.mod.ModMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

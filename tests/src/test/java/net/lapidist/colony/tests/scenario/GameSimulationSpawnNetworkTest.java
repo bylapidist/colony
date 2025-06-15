@@ -15,7 +15,7 @@ import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.PlayerPosition;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
-import net.lapidist.colony.server.io.GameStateIO;
+import net.lapidist.colony.save.io.GameStateIO;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.settings.KeyBindings;
 import net.lapidist.colony.settings.Settings;

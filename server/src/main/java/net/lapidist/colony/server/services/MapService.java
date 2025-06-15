@@ -6,7 +6,7 @@ import net.lapidist.colony.components.state.CameraPosition;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.map.MapGenerator;
 import net.lapidist.colony.map.MapChunkData;
-import net.lapidist.colony.server.io.GameStateIO;
+import net.lapidist.colony.save.io.GameStateIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

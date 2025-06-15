@@ -1,4 +1,4 @@
-package net.lapidist.colony.server.io;
+package net.lapidist.colony.save.io;
 
 import net.lapidist.colony.save.SaveData;
 import net.lapidist.colony.save.SaveVersion;
