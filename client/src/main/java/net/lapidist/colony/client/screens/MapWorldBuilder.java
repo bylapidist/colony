@@ -238,9 +238,9 @@ public final class MapWorldBuilder {
             renderSystem.setCameraProvider(world.getSystem(PlayerCameraSystem.class));
         }
         LightingSystem lightingSystem = world.getSystem(LightingSystem.class);
-        if (lightingSystem != null && plugin instanceof net.lapidist.colony.client.graphics.Box2dLightsPlugin bl) {
+        if (lightingSystem != null && plugin instanceof net.lapidist.colony.client.graphics.LightingPlugin lp) {
             if (settings == null || settings.getGraphicsSettings().isLightingEnabled()) {
-                lightingSystem.setRayHandler(bl.getRayHandler());
+                lightingSystem.setRayHandler(lp.getRayHandler());
             }
         }
         PlayerCameraSystem cameraSystem = world.getSystem(PlayerCameraSystem.class);

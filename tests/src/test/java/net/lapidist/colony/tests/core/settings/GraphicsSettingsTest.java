@@ -49,7 +49,7 @@ public class GraphicsSettingsTest {
         assertTrue(loaded.isAntialiasingEnabled());
         assertTrue(loaded.isMipMapsEnabled());
         assertTrue(loaded.isAnisotropicFilteringEnabled());
-        assertEquals("none", loaded.getShaderPlugin());
+        assertEquals("lights-normalmap", loaded.getShaderPlugin());
         assertEquals("sprite", loaded.getRenderer());
         assertTrue(loaded.isSpriteCacheEnabled());
         assertTrue(loaded.isLightingEnabled());

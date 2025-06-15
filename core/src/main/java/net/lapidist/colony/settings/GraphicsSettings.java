@@ -21,7 +21,7 @@ public final class GraphicsSettings {
     private boolean antialiasingEnabled = true;
     private boolean mipMapsEnabled = true;
     private boolean anisotropicFilteringEnabled = true;
-    private String shaderPlugin = "none";
+    private String shaderPlugin = "lights-normalmap";
     private String renderer = "sprite";
     private boolean spriteCacheEnabled = true;
     private boolean lightingEnabled = true;
@@ -115,7 +115,7 @@ public final class GraphicsSettings {
         gs.antialiasingEnabled = Boolean.parseBoolean(props.getProperty(AA_KEY, "true"));
         gs.mipMapsEnabled = Boolean.parseBoolean(props.getProperty(MIP_KEY, "true"));
         gs.anisotropicFilteringEnabled = Boolean.parseBoolean(props.getProperty(AF_KEY, "true"));
-        gs.shaderPlugin = props.getProperty(PLUGIN_KEY, "none");
+        gs.shaderPlugin = props.getProperty(PLUGIN_KEY, "lights-normalmap");
         gs.renderer = props.getProperty(RENDERER_KEY, "sprite");
         gs.spriteCacheEnabled = Boolean.parseBoolean(props.getProperty(CACHE_KEY, "true"));
         gs.lightingEnabled = Boolean.parseBoolean(props.getProperty(LIGHT_KEY, "true"));

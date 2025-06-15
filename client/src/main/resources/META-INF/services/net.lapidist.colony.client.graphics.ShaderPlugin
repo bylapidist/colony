@@ -1,3 +1,4 @@
 net.lapidist.colony.client.graphics.NullShaderPlugin
 net.lapidist.colony.client.graphics.Box2dLightsPlugin
 net.lapidist.colony.client.graphics.NormalMapShaderPlugin
+net.lapidist.colony.client.graphics.LightsNormalMapShaderPlugin

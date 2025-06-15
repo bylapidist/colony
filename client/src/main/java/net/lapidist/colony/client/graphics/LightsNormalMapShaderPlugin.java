@@ -5,12 +5,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-
+import net.lapidist.colony.client.core.io.FileLocation;
 
 /**
- * Shader plugin that adds Box2DLights rendering support.
+ * Shader plugin that enables Box2DLights along with normal mapping.
  */
-public final class Box2dLightsPlugin implements LightingPlugin {
+public final class LightsNormalMapShaderPlugin implements LightingPlugin {
 
     private RayHandler rayHandler;
 
@@ -23,29 +23,27 @@ public final class Box2dLightsPlugin implements LightingPlugin {
             World world = new World(new Vector2(), false);
             rayHandler = new RayHandler(world);
             rayHandler.setAmbientLight(1f, 1f, 1f, 1f);
+            return manager.load(FileLocation.INTERNAL,
+                    "shaders/normal.vert", "shaders/normal.frag");
         } catch (Exception ex) {
             rayHandler = null;
+            return null;
         }
-        return null;
     }
 
-    /**
-     * Access the created {@link RayHandler} instance.
-     *
-     * @return the handler or {@code null} if {@link #create(ShaderManager)} has not been called
-     */
+    @Override
     public RayHandler getRayHandler() {
         return rayHandler;
     }
 
     @Override
     public String id() {
-        return "box2dlights";
+        return "lights-normalmap";
     }
 
     @Override
     public String displayName() {
-        return "Box2DLights";
+        return "Lighting Normal Map";
     }
 
     @Override
