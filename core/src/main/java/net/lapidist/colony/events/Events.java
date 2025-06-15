@@ -21,6 +21,27 @@ public final class Events {
      * threads are spawned.</p>
      */
     private static volatile EventSystem instance;
+    private static final EventSystem PENDING_SYSTEM = new EventSystem() {
+        @Override
+        public void registerEvents(final Object listener) {
+            PENDING.add(listener);
+        }
+
+        @Override
+        public void dispatch(final Event event) {
+            // ignore events until the real system is initialised
+        }
+
+        @Override
+        public <T extends Event> T dispatch(final Class<T> eventType) {
+            return null;
+        }
+
+        @Override
+        protected void processSystem() {
+            // no-op
+        }
+    };
     private static final Logger LOGGER = LoggerFactory.getLogger(Events.class);
     private static final Map<Class<? extends Event>, List<Consumer<? extends Event>>>
             LISTENERS = new ConcurrentHashMap<>();
@@ -45,7 +66,7 @@ public final class Events {
     }
 
     public static EventSystem getInstance() {
-        return instance;
+        return instance != null ? instance : PENDING_SYSTEM;
     }
 
     /**

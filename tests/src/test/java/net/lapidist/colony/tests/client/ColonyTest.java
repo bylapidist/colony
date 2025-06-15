@@ -175,7 +175,7 @@ public class ColonyTest {
 
             verify(client).stop();
             verify(server).stop();
-            assertNull(Events.getInstance());
+            assertNotNull(Events.getInstance());
         }
         java.nio.file.Files.deleteIfExists(autosave);
     }
