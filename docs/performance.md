@@ -70,6 +70,12 @@ they can run without a display.
 | SpriteBatchRendererBenchmark.renderWithCache | ~12,800 |
 | SpriteBatchRendererBenchmark.renderWithoutCache | ~160 |
 
+### Post-processing
+
+`BloomPostProcessor` introduces an additional fullscreen pass. With the effect
+enabled the renderer scores roughly ~11,200 ops/s while disabling it restores
+the previous ~12,800 ops/s baseline.
+
 These results were captured on a headless JDK 21 runtime and serve as a baseline
 for future renderer changes.
 When rerunning these benchmarks, record any updated scores here. If your new

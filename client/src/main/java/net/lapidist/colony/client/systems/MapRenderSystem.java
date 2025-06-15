@@ -4,6 +4,7 @@ import com.artemis.BaseSystem;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.renderers.MapRenderer;
 import net.lapidist.colony.client.renderers.SpriteBatchMapRenderer;
+import net.lapidist.colony.client.renderers.PostProcessor;
 import com.badlogic.gdx.utils.IntArray;
 
 public final class MapRenderSystem extends BaseSystem {
@@ -13,6 +14,8 @@ public final class MapRenderSystem extends BaseSystem {
     private MapRenderData mapData;
 
     private CameraProvider cameraSystem;
+
+    private PostProcessor postProcessor;
 
     public MapRenderSystem() {
     }
@@ -25,10 +28,17 @@ public final class MapRenderSystem extends BaseSystem {
         this.cameraSystem = provider;
     }
 
+    public void setPostProcessor(final PostProcessor processor) {
+        this.postProcessor = processor;
+    }
+
     @Override
     public void dispose() {
         if (mapRenderer instanceof com.badlogic.gdx.utils.Disposable disposable) {
             disposable.dispose();
+        }
+        if (postProcessor != null) {
+            postProcessor.dispose();
         }
     }
 
@@ -47,7 +57,15 @@ public final class MapRenderSystem extends BaseSystem {
         }
 
         if (mapRenderer != null) {
+            if (postProcessor != null) {
+                postProcessor.resize(com.badlogic.gdx.Gdx.graphics.getWidth(),
+                        com.badlogic.gdx.Gdx.graphics.getHeight());
+                postProcessor.begin();
+            }
             mapRenderer.render(mapData, cameraSystem);
+            if (postProcessor != null) {
+                postProcessor.end();
+            }
         }
     }
 }

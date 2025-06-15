@@ -221,4 +221,55 @@ public class MapRenderSystemTest {
         Mockito.verify(renderer).invalidateTiles(Mockito.any(IntArray.class));
         world.dispose();
     }
+
+    private static final class DummyProcessor implements net.lapidist.colony.client.renderers.PostProcessor {
+        private boolean begun;
+        private boolean ended;
+
+        @Override
+        public void resize(final int width, final int height) {
+        }
+
+        @Override
+        public void begin() {
+            begun = true;
+        }
+
+        @Override
+        public void end() {
+            ended = true;
+        }
+
+        @Override
+        public void dispose() {
+        }
+    }
+
+    @Test
+    public void runsPostProcessorAroundRender() {
+        MapRenderSystem renderSystem = new MapRenderSystem();
+        World world = new World(new WorldConfigurationBuilder()
+                .with(renderSystem)
+                .build());
+        MapRenderer renderer = Mockito.mock(MapRenderer.class);
+        DummyProcessor proc = new DummyProcessor();
+        renderSystem.setMapRenderer(renderer);
+        renderSystem.setCameraProvider(Mockito.mock(PlayerCameraSystem.class));
+        renderSystem.setPostProcessor(proc);
+        world.process();
+        Mockito.verify(renderer, Mockito.never()).render(Mockito.any(), Mockito.any());
+        proc.begun = false;
+        proc.ended = false;
+        try {
+            java.lang.reflect.Field f = MapRenderSystem.class.getDeclaredField("mapData");
+            f.setAccessible(true);
+            f.set(renderSystem, Mockito.mock(MapRenderData.class));
+        } catch (Exception e) {
+            throw new AssertionError(e);
+        }
+        world.process();
+        assertTrue(proc.begun && proc.ended);
+        Mockito.verify(renderer).render(Mockito.any(), Mockito.any());
+        world.dispose();
+    }
 }

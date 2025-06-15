@@ -14,6 +14,7 @@ public final class GraphicsSettings {
     private static final String PLUGIN_KEY = PREFIX + "shaderPlugin";
     private static final String RENDERER_KEY = PREFIX + "renderer";
     private static final String CACHE_KEY = PREFIX + "spritecache";
+    private static final String POST_KEY = PREFIX + "post";
 
     private boolean antialiasingEnabled = true;
     private boolean mipMapsEnabled = true;
@@ -21,6 +22,7 @@ public final class GraphicsSettings {
     private String shaderPlugin = "none";
     private String renderer = "sprite";
     private boolean spriteCacheEnabled = true;
+    private boolean postProcessing = false;
 
     public boolean isAntialiasingEnabled() {
         return antialiasingEnabled;
@@ -70,6 +72,14 @@ public final class GraphicsSettings {
         this.spriteCacheEnabled = enabled;
     }
 
+    public boolean isPostProcessing() {
+        return postProcessing;
+    }
+
+    public void setPostProcessing(final boolean enabled) {
+        this.postProcessing = enabled;
+    }
+
     /** Load graphics settings from the given preferences. */
     public static GraphicsSettings load(final Preferences prefs) {
         GraphicsSettings gs = new GraphicsSettings();
@@ -79,6 +89,7 @@ public final class GraphicsSettings {
         gs.shaderPlugin = prefs.getString(PLUGIN_KEY, "none");
         gs.renderer = prefs.getString(RENDERER_KEY, "sprite");
         gs.spriteCacheEnabled = prefs.getBoolean(CACHE_KEY, true);
+        gs.postProcessing = prefs.getBoolean(POST_KEY, false);
         return gs;
     }
 
@@ -90,5 +101,6 @@ public final class GraphicsSettings {
         prefs.putString(PLUGIN_KEY, shaderPlugin);
         prefs.putString(RENDERER_KEY, renderer);
         prefs.putBoolean(CACHE_KEY, spriteCacheEnabled);
+        prefs.putBoolean(POST_KEY, postProcessing);
     }
 }

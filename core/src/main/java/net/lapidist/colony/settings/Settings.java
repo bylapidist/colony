@@ -62,6 +62,7 @@ public final class Settings {
             }
             settings.graphicsSettings.setRenderer(gLoaded.getRenderer());
             settings.graphicsSettings.setSpriteCacheEnabled(gLoaded.isSpriteCacheEnabled());
+            settings.graphicsSettings.setPostProcessing(gLoaded.isPostProcessing());
         }
         return settings;
     }

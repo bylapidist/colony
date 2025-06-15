@@ -206,6 +206,9 @@ public final class MapWorldBuilder {
             MapRenderer renderer = actualFactory.create(world, plugin);
             renderSystem.setMapRenderer(renderer);
             renderSystem.setCameraProvider(world.getSystem(PlayerCameraSystem.class));
+            if (settings != null && settings.getGraphicsSettings().isPostProcessing()) {
+                renderSystem.setPostProcessor(new net.lapidist.colony.client.graphics.BloomPostProcessor());
+            }
         }
         PlayerCameraSystem cameraSystem = world.getSystem(PlayerCameraSystem.class);
         if (cameraSystem != null && cameraPos != null) {

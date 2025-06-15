@@ -57,3 +57,12 @@ public final class GrayShaderPlugin implements ShaderPlugin {
 
 Add `GrayShaderPlugin` to the service descriptor and set
 `graphics.shaderPlugin` to `com.example.GrayShaderPlugin` to enable it.
+
+## Post processors
+
+Rendering passes can be chained by implementing the `PostProcessor`
+interface in the client module. A processor receives the scene via a
+framebuffer and may apply additional effects before drawing the final
+texture to the back buffer. The provided `BloomPostProcessor` performs
+a simple blur over the captured frame. Enable post processing with the
+`graphics.post` setting or from the graphics settings screen.

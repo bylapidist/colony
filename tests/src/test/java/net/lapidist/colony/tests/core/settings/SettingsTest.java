@@ -76,6 +76,7 @@ public class SettingsTest {
         graphics.setRenderer("model");
         graphics.setShaderPlugin("test");
         graphics.setSpriteCacheEnabled(false);
+        graphics.setPostProcessing(true);
         settings.save();
 
         Settings loaded = Settings.load();
@@ -85,5 +86,6 @@ public class SettingsTest {
         assertEquals("test", loaded.getGraphicsSettings().getShaderPlugin());
         assertEquals("model", loaded.getGraphicsSettings().getRenderer());
         assertEquals(false, loaded.getGraphicsSettings().isSpriteCacheEnabled());
+        assertEquals(true, loaded.getGraphicsSettings().isPostProcessing());
     }
 }
