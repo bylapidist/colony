@@ -30,6 +30,6 @@ public final class ResourceStubMod implements GameMod {
 
     @Override
     public void registerSystems(final GameServer server) {
-        ((net.lapidist.colony.server.GameServer) server).registerSystem(service);
+        server.registerSystem(service);
     }
 }

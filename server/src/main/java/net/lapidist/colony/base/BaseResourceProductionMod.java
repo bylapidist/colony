@@ -21,6 +21,6 @@ public final class BaseResourceProductionMod implements GameMod {
     @Override
     public void registerSystems(final GameServer srv) {
         net.lapidist.colony.server.GameServer s = (net.lapidist.colony.server.GameServer) srv;
-        s.registerSystem(s.getResourceProductionService());
+        srv.registerSystem(s.getResourceProductionService());
     }
 }

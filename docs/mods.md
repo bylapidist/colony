@@ -118,9 +118,22 @@ After registration the new ID can be referenced by map generators or scripts.
 
 ## System hooks
 
-`GameMod` also defines lifecycle methods `init()` and `dispose()` which run when a mod is loaded and
-unloaded. Use them to add or remove registry entries and release resources. The service and handler
-registration hooks run between these stages during server startup.
+`GameMod` exposes several lifecycle hooks used during server startup:
+
+```
+void init()
+void registerServices(GameServer server)
+void registerSystems(GameServer server)
+void registerHandlers(CommandBus bus)
+void dispose()
+```
+
+`registerSystems` lets mods schedule background tasks by providing implementations of
+`GameSystem`. The server automatically starts registered systems once initialisation completes and
+stops them when shutting down.
+
+The `init()` and `dispose()` methods run when a mod is loaded and unloaded. Use them to register
+definitions and release resources. Service and handler registration occurs between these stages.
 
 ## Scripting
 
