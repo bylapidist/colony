@@ -16,6 +16,8 @@ import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.render.SimpleMapRenderData;
 import net.lapidist.colony.client.render.data.RenderBuilding;
 import net.lapidist.colony.components.state.MapState;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.graphics.Texture;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -254,5 +256,56 @@ public class TileRendererTest {
         List<Float> values = rotCaptor.getAllValues();
         assertEquals(2, values.size());
         assertNotEquals(values.get(0), values.get(1));
+    }
+
+    @Test
+    public void setsSpecularPowerUniform() {
+        SpriteBatch batch = mock(SpriteBatch.class);
+        ResourceLoader loader = mock(ResourceLoader.class);
+        TextureRegion region = mock(TextureRegion.class);
+        TextureRegion overlay = mock(TextureRegion.class);
+        TextureRegion normal = mock(TextureRegion.class);
+        TextureRegion spec = mock(TextureRegion.class);
+        when(loader.findRegion(anyString())).thenReturn(region);
+        when(loader.findRegion(eq("hoveredTile0"))).thenReturn(overlay);
+        when(loader.findNormalRegion(anyString())).thenReturn(normal);
+        when(loader.findSpecularRegion(anyString())).thenReturn(spec);
+        when(normal.getTexture()).thenReturn(mock(Texture.class));
+        when(spec.getTexture()).thenReturn(mock(Texture.class));
+        final float power = 4f;
+        when(loader.getSpecularPower(anyString())).thenReturn(power);
+
+        CameraProvider camera = mock(CameraProvider.class);
+        com.badlogic.gdx.graphics.OrthographicCamera cam = new com.badlogic.gdx.graphics.OrthographicCamera();
+        com.badlogic.gdx.utils.viewport.ExtendViewport viewport =
+                new com.badlogic.gdx.utils.viewport.ExtendViewport(1f, 1f, cam);
+        cam.update();
+        when(camera.getViewport()).thenReturn(viewport);
+        when(camera.getCamera()).thenReturn(cam);
+
+        ShaderProgram shader = mock(ShaderProgram.class);
+        when(batch.getShader()).thenReturn(shader);
+
+        TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver(), null);
+
+        Array<RenderTile> tiles = new Array<>();
+        RenderTile tile = RenderTile.builder()
+                .x(0)
+                .y(0)
+                .tileType("GRASS")
+                .selected(false)
+                .wood(0)
+                .stone(0)
+                .food(0)
+                .build();
+        tiles.add(tile);
+
+        RenderTile[][] grid = new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT];
+        grid[0][0] = tile;
+        MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);
+
+        renderer.render(map);
+
+        verify(shader).setUniformf("u_specularPower", power);
     }
 }

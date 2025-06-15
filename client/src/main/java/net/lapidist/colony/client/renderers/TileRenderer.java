@@ -29,6 +29,7 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
     private final java.util.HashMap<String, TextureRegion> tileRegions = new java.util.HashMap<>();
     private final java.util.HashMap<String, TextureRegion> normalRegions = new java.util.HashMap<>();
     private final java.util.HashMap<String, TextureRegion> specularRegions = new java.util.HashMap<>();
+    private final java.util.HashMap<String, Float> specularPowers = new java.util.HashMap<>();
     private final TextureRegion overlayRegion;
     private final BitmapFont font = new BitmapFont();
     private final GlyphLayout layout = new GlyphLayout();
@@ -66,6 +67,8 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
             if (s != null) {
                 specularRegions.put(def.id().toUpperCase(java.util.Locale.ROOT), s);
             }
+            float power = resourceLoader.getSpecularPower(ref);
+            specularPowers.put(def.id().toUpperCase(java.util.Locale.ROOT), power);
         }
         this.overlayRegion = resourceLoader.findRegion("hoveredTile0");
     }
@@ -123,6 +126,10 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                                 spec.getTexture().bind(2);
                                 shader.setUniformi("u_specular", 2);
                             }
+                            float p = specularPowers.getOrDefault(
+                                    type.toUpperCase(java.util.Locale.ROOT),
+                                    ResourceLoader.DEFAULT_SPECULAR_POWER);
+                            shader.setUniformf("u_specularPower", p);
                             com.badlogic.gdx.Gdx.gl.glActiveTexture(com.badlogic.gdx.graphics.GL20.GL_TEXTURE0);
                         }
                         String upper = type.toUpperCase(java.util.Locale.ROOT);

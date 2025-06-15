@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -18,6 +19,7 @@ import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.render.SimpleMapRenderData;
 import net.lapidist.colony.client.render.data.RenderTile;
 import net.lapidist.colony.components.state.MapState;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -133,5 +135,47 @@ public class BuildingRendererTest {
         renderer.render(map);
 
         verify(font).draw(eq(batch), eq(layout), anyFloat(), anyFloat());
+    }
+
+    @Test
+    public void setsSpecularPowerUniform() {
+        SpriteBatch batch = mock(SpriteBatch.class);
+        ResourceLoader loader = mock(ResourceLoader.class);
+        TextureRegion region = mock(TextureRegion.class);
+        TextureRegion normal = mock(TextureRegion.class);
+        TextureRegion spec = mock(TextureRegion.class);
+        when(loader.findRegion(anyString())).thenReturn(region);
+        when(loader.findNormalRegion(anyString())).thenReturn(normal);
+        when(loader.findSpecularRegion(anyString())).thenReturn(spec);
+        when(normal.getTexture()).thenReturn(mock(Texture.class));
+        when(spec.getTexture()).thenReturn(mock(Texture.class));
+        final float power = 32f;
+        when(loader.getSpecularPower(anyString())).thenReturn(power);
+
+        new BaseDefinitionsMod().init();
+
+        CameraProvider camera = mock(CameraProvider.class);
+        OrthographicCamera cam = new OrthographicCamera();
+        ExtendViewport viewport = new ExtendViewport(VIEW_SIZE, VIEW_SIZE, cam);
+        viewport.update(VIEW_SIZE, VIEW_SIZE, true);
+        cam.update();
+        when(camera.getCamera()).thenReturn(cam);
+        when(camera.getViewport()).thenReturn(viewport);
+
+        ShaderProgram shader = mock(ShaderProgram.class);
+        when(batch.getShader()).thenReturn(shader);
+
+        BuildingRenderer renderer = new BuildingRenderer(batch, loader, camera, new DefaultAssetResolver());
+
+        Array<RenderBuilding> buildings = new Array<>();
+        RenderBuilding building = RenderBuilding.builder().x(0).y(0).buildingType("house").build();
+        buildings.add(building);
+
+        MapRenderData map = new SimpleMapRenderData(new Array<RenderTile>(), buildings,
+                new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT]);
+
+        renderer.render(map);
+
+        verify(shader).setUniformf("u_specularPower", power);
     }
 }

@@ -13,6 +13,9 @@ import java.io.IOException;
  */
 public interface ResourceLoader extends Disposable {
 
+    /** Default exponent for specular highlights. */
+    float DEFAULT_SPECULAR_POWER = 16f;
+
     /**
      * Load texture regions from the given atlas.
      *
@@ -77,6 +80,16 @@ public interface ResourceLoader extends Disposable {
      */
     default TextureRegion findSpecularRegion(final String name) {
         return null;
+    }
+
+    /**
+     * Retrieve the specular power associated with a region if present.
+     *
+     * @param name base region identifier
+     * @return exponent controlling specular highlights
+     */
+    default float getSpecularPower(final String name) {
+        return DEFAULT_SPECULAR_POWER;
     }
 
     /**

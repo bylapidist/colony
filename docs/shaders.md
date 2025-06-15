@@ -79,3 +79,14 @@ additional uniforms:
 Both values are updated every frame so diffuse and specular terms react to
 camera movement. The specular map supplies the intensity for a Blinn–Phong
 highlight calculation.
+
+Each texture region may optionally define a `specularPower` value in a
+`textures.properties` file placed next to the atlas. Entries use the region name
+followed by `.specularPower`:
+
+```
+grass0.specularPower=32
+```
+
+Renderers read this value and update the `u_specularPower` uniform, defaulting
+to `16` when not specified.

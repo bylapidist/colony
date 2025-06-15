@@ -25,6 +25,7 @@ public final class TextureAtlasResourceLoader implements ResourceLoader {
     private TextureAtlas atlas;
     private String pendingAtlasPath;
     private GraphicsSettings pendingSettings;
+    private final java.util.Map<String, Float> specularPowers = new java.util.HashMap<>();
 
     /**
      * Load all texture regions from the specified atlas file.
@@ -42,6 +43,24 @@ public final class TextureAtlasResourceLoader implements ResourceLoader {
 
         if (!fileLocation.getFile(atlasPath).exists()) {
             throw new IOException(String.format("%s does not exist", atlasPath));
+        }
+
+        specularPowers.clear();
+        var propsFile = fileLocation.getFile(atlasPath.replaceFirst("\\.atlas$", ".properties"));
+        if (propsFile.exists()) {
+            java.util.Properties props = new java.util.Properties();
+            try (var reader = propsFile.reader()) {
+                props.load(reader);
+            }
+            for (String key : props.stringPropertyNames()) {
+                if (key.endsWith(".specularPower")) {
+                    String id = key.substring(0, key.indexOf('.'));
+                    try {
+                        specularPowers.put(id, Float.parseFloat(props.getProperty(key)));
+                    } catch (NumberFormatException ignored) {
+                    }
+                }
+            }
         }
 
         assetManager = new AssetManager(fileLocation.getResolver());
@@ -171,6 +190,12 @@ public final class TextureAtlasResourceLoader implements ResourceLoader {
             return null;
         }
         return atlas.findRegion(name + "_s");
+    }
+
+    @Override
+    public float getSpecularPower(final String name) {
+        Float value = specularPowers.get(name);
+        return value != null ? value : ResourceLoader.DEFAULT_SPECULAR_POWER;
     }
 
 
