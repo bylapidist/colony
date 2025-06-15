@@ -7,8 +7,8 @@ public final class Constants {
 
     public static final String NAME = "Colony";
     public static final String VERSION = Version.get();
-    public static final int WIDTH = 1080;
-    public static final int HEIGHT = 720;
+    public static final int WIDTH = 1600;
+    public static final int HEIGHT = 900;
     public static final int TARGET_FPS = 60;
 
     private static final class Version {
