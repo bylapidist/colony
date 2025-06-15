@@ -8,7 +8,11 @@ import net.lapidist.colony.server.services.NetworkService;
 import java.util.function.Supplier;
 import java.util.concurrent.locks.ReentrantLock;
 
-/** Handles incoming {@link MapChunkRequest} messages by sending the requested chunk. */
+/**
+ * Handles incoming {@link MapChunkRequest} messages by sending the requested chunk.
+ *
+ * Client system: {@code net.lapidist.colony.client.systems.network.ChunkRequestQueueSystem}
+ */
 public final class MapChunkRequestHandler extends AbstractMessageHandler<MapChunkRequest> {
     private final Supplier<MapState> stateSupplier;
     private final NetworkService networkService;

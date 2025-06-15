@@ -40,12 +40,12 @@ commands processed by these services.
 
 ### Client ↔ Server Systems
 
-| Client System | Server Handler | Purpose |
-|---------------|---------------|---------|
-| `TileUpdateSystem` | `TileSelectionRequestHandler` | Tile selection updates |
-| `BuildingUpdateSystem` | `BuildingPlacementRequestHandler`, `BuildingRemovalRequestHandler` | Building placement and removal |
-| `ResourceUpdateSystem` | `ResourceGatherRequestHandler` | Resource changes |
-| `ChunkRequestQueueSystem` | `MapChunkRequestHandler` | Map chunk loading |
+| Client System | Client File | Server Handler | Server File | Purpose |
+|---------------|------------|---------------|------------|---------|
+| `TileUpdateSystem` | `client/.../TileUpdateSystem.java` | `TileSelectionRequestHandler` | `server/.../TileSelectionRequestHandler.java` | Tile selection updates |
+| `BuildingUpdateSystem` | `client/.../BuildingUpdateSystem.java` | `BuildingPlacementRequestHandler`, `BuildingRemovalRequestHandler` | `server/.../BuildingPlacementRequestHandler.java`, `server/.../BuildingRemovalRequestHandler.java` | Building placement and removal |
+| `ResourceUpdateSystem` | `client/.../ResourceUpdateSystem.java` | `ResourceGatherRequestHandler` | `server/.../ResourceGatherRequestHandler.java` | Resource changes |
+| `ChunkRequestQueueSystem` | `client/.../ChunkRequestQueueSystem.java` | `MapChunkRequestHandler` | `server/.../MapChunkRequestHandler.java` | Map chunk loading |
 
 Responses are queued on the client and processed by these systems during the
 normal update loop.
