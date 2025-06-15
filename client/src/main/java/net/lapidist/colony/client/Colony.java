@@ -20,6 +20,7 @@ import net.lapidist.colony.events.Events;
 import net.lapidist.colony.client.events.GameInitEvent;
 import net.lapidist.colony.mod.ModLoader;
 import net.lapidist.colony.mod.ModLoader.LoadedMod;
+import java.util.ServiceLoader;
 
 import java.io.IOException;
 
@@ -29,6 +30,7 @@ public final class Colony extends Game {
     private GameServer server;
     private Settings settings;
     private java.util.List<LoadedMod> mods;
+    private java.util.List<LoadedMod> selectedMods;
 
     public void returnToMainMenu() {
         if (client != null) {
@@ -74,6 +76,7 @@ public final class Colony extends Game {
                             .height(height)
                             .build()
             );
+            server.setMods(selectedMods);
             server.start();
             client = new GameClient();
             client.setConnectionErrorCallback(e -> Gdx.app.postRunnable(() -> {
@@ -104,6 +107,14 @@ public final class Colony extends Game {
         return settings;
     }
 
+    public java.util.List<LoadedMod> getMods() {
+        return mods;
+    }
+
+    public void setSelectedMods(final java.util.List<LoadedMod> modsToUse) {
+        this.selectedMods = new java.util.ArrayList<>(modsToUse);
+    }
+
     @Override
     public void create() {
         // Do global initialisation
@@ -112,13 +123,14 @@ public final class Colony extends Game {
             settings = Settings.load();
             I18n.setLocale(settings.getLocale());
             mods = new java.util.ArrayList<>();
-            for (net.lapidist.colony.mod.GameMod builtin : java.util.ServiceLoader.load(net.lapidist.colony.mod.GameMod.class)) {
+            for (net.lapidist.colony.mod.GameMod builtin : ServiceLoader.load(net.lapidist.colony.mod.GameMod.class)) {
                 mods.add(new LoadedMod(builtin, builtinMetadata(builtin.getClass())));
             }
             mods.addAll(new ModLoader(Paths.get()).loadMods());
             for (LoadedMod mod : mods) {
                 mod.mod().init();
             }
+            selectedMods = new java.util.ArrayList<>(mods);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

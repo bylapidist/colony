@@ -57,7 +57,7 @@ public final class MainMenuScreen extends BaseScreen {
         newGameButton.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                colony.setScreen(new NewGameScreen(colony));
+                colony.setScreen(new ModSelectionScreen(colony));
             }
         });
 
