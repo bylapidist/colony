@@ -69,3 +69,13 @@ The engine ships with two lighting plugins powered by
 The second plugin is now selected by default through the
 `graphics.shaderPlugin` setting. Lighting will be skipped automatically when
 frame buffers are unavailable such as in headless tests.
+
+The fragment shader used by `LightsNormalMapShaderPlugin` defines two
+additional uniforms:
+
+* `u_lightDir` – normalized direction to the main light source.
+* `u_viewDir` – direction toward the camera.
+
+Both values are updated every frame so diffuse and specular terms react to
+camera movement. The specular map supplies the intensity for a Blinn–Phong
+highlight calculation.

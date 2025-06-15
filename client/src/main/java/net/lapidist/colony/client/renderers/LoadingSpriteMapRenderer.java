@@ -23,6 +23,7 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
     private final boolean cacheEnabled;
     private final Consumer<Float> progressCallback;
     private final com.badlogic.gdx.graphics.glutils.ShaderProgram shader;
+    private final net.lapidist.colony.client.graphics.ShaderPlugin plugin;
     private box2dLight.RayHandler lights;
 
     private MapRenderer delegate;
@@ -34,7 +35,8 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
             final CameraProvider camera,
             final boolean cache,
             final Consumer<Float> callback,
-            final com.badlogic.gdx.graphics.glutils.ShaderProgram shaderProgram
+            final com.badlogic.gdx.graphics.glutils.ShaderProgram shaderProgram,
+            final net.lapidist.colony.client.graphics.ShaderPlugin pluginParam
     ) {
         this.world = worldContext;
         this.spriteBatch = batchToUse;
@@ -43,6 +45,7 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
         this.cacheEnabled = cache;
         this.progressCallback = callback;
         this.shader = shaderProgram;
+        this.plugin = pluginParam;
         // ensure mapper initialization for render systems
         worldContext.getMapper(MapComponent.class);
     }
@@ -103,7 +106,8 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
                     buildingRenderer,
                     renderers,
                     cacheEnabled,
-                    shader
+                    shader,
+                    plugin
             );
             if (lights != null && delegate instanceof SpriteBatchMapRenderer sb) {
                 sb.setLights(lights);

@@ -70,9 +70,9 @@ public class SpriteBatchRendererBenchmark {
         CelestialRenderer celestialRenderer = mock(CelestialRenderer.class);
         MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer, celestialRenderer);
         cachedRenderer = new SpriteBatchMapRenderer(
-                batch, loader, tileRenderer, buildingRenderer, renderers, true, null);
+                batch, loader, tileRenderer, buildingRenderer, renderers, true, null, null);
         plainRenderer = new SpriteBatchMapRenderer(
-                batch, loader, tileRenderer, buildingRenderer, renderers, false, null);
+                batch, loader, tileRenderer, buildingRenderer, renderers, false, null, null);
         data = createData(MAP_SIZE, MAP_SIZE);
         construction = mockConstruction(SpriteCache.class, (mock, ctx) -> {
             when(mock.getProjectionMatrix()).thenReturn(new Matrix4());
