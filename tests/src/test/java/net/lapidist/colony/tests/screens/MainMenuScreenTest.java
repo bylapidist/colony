@@ -22,9 +22,9 @@ import static org.mockito.Mockito.*;
 @RunWith(GdxTestRunner.class)
 public class MainMenuScreenTest {
 
-    private static final int NEW_GAME_INDEX = 1;
-    private static final int LOAD_GAME_INDEX = 2;
-    private static final int SETTINGS_INDEX = 3;
+    private static final int NEW_GAME_INDEX = 2;
+    private static final int LOAD_GAME_INDEX = 3;
+    private static final int SETTINGS_INDEX = 4;
 
     private static Table getRoot(final MainMenuScreen screen) throws Exception {
         Field f = screen.getClass().getSuperclass().getDeclaredField("root");

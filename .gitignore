@@ -148,3 +148,4 @@ tests/skin
 tests/textures
 tests/textures/textures.atlas
 tests/models
+tests/shaders
