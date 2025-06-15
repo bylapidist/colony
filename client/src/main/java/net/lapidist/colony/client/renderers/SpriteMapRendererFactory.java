@@ -89,9 +89,9 @@ public final class SpriteMapRendererFactory implements MapRendererFactory {
                 cameraSystem,
                 graphics.isSpriteCacheEnabled(),
                 progressCallback,
-                shader,
-                plugin
+                shader
         );
+        renderer.setPlugin(plugin);
         if (lights != null) {
             renderer.setLights(lights);
         }

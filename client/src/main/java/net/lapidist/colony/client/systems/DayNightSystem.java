@@ -3,6 +3,7 @@ package net.lapidist.colony.client.systems;
 import com.artemis.BaseSystem;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector3;
 import box2dLight.RayHandler;
 import net.lapidist.colony.components.state.EnvironmentState;
 
@@ -15,6 +16,7 @@ public final class DayNightSystem extends BaseSystem {
     private final LightingSystem lightingSystem;
     private final EnvironmentState environment;
     private float timeOfDay;
+    private final Vector3 sunDirection = new Vector3();
 
     private static final float HOURS_PER_DAY = 24f;
     private static final float FULL_ROTATION = 360f;
@@ -43,6 +45,16 @@ public final class DayNightSystem extends BaseSystem {
     /** Set the time of day, values wrap to the 0-24 range. */
     public void setTimeOfDay(final float time) {
         timeOfDay = wrap(time);
+    }
+
+    /**
+     * Returns a normalized direction vector pointing toward the sun based on
+     * the current time of day.
+     */
+    public Vector3 getSunDirection() {
+        float angle = (timeOfDay / HOURS_PER_DAY) * FULL_ROTATION - DAWN_OFFSET;
+        sunDirection.set(MathUtils.cosDeg(angle), 0f, MathUtils.sinDeg(angle)).nor();
+        return sunDirection;
     }
 
     @Override

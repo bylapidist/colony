@@ -20,6 +20,7 @@ import net.lapidist.colony.client.systems.MapRenderSystem;
 import net.lapidist.colony.client.systems.LightingSystem;
 import net.lapidist.colony.client.systems.DynamicLightSystem;
 import net.lapidist.colony.client.systems.DayNightSystem;
+import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.systems.ParticleSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.PlayerMovementSystem;
@@ -236,6 +237,16 @@ public final class MapWorldBuilder {
             MapRenderer renderer = actualFactory.create(world, plugin);
             renderSystem.setMapRenderer(renderer);
             renderSystem.setCameraProvider(world.getSystem(PlayerCameraSystem.class));
+        }
+        if (plugin instanceof net.lapidist.colony.client.graphics.LightsNormalMapShaderPlugin lnmp) {
+            DayNightSystem dns = world.getSystem(DayNightSystem.class);
+            if (dns != null) {
+                lnmp.setDayNightSystem(dns);
+            }
+            CameraProvider cp = world.getSystem(PlayerCameraSystem.class);
+            if (cp != null) {
+                lnmp.setCameraProvider(cp);
+            }
         }
         LightingSystem lightingSystem = world.getSystem(LightingSystem.class);
         if (lightingSystem != null && plugin instanceof net.lapidist.colony.client.graphics.LightingPlugin lp) {

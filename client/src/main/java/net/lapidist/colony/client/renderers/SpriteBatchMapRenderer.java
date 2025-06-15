@@ -19,13 +19,13 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
     private final BuildingRenderer buildingRenderer;
     private final MapEntityRenderers entityRenderers;
     private final ShaderProgram shader;
-    private final net.lapidist.colony.client.graphics.ShaderPlugin plugin;
+    private net.lapidist.colony.client.graphics.ShaderPlugin plugin;
     private final MapTileCache tileCache = new MapTileCache();
     private final AssetResolver resolver = new DefaultAssetResolver();
     private final boolean cacheEnabled;
     private RayHandler lights;
 
-    // CHECKSTYLE:OFF: ParameterNumber
+// CHECKSTYLE:OFF: ParameterNumber
     public SpriteBatchMapRenderer(
             final SpriteBatch spriteBatchToSet,
             final ResourceLoader resourceLoaderToSet,
@@ -33,8 +33,7 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
             final BuildingRenderer buildingRendererToSet,
             final MapEntityRenderers entityRenderersToSet,
             final boolean cacheEnabledToSet,
-            final ShaderProgram shaderToSet,
-            final net.lapidist.colony.client.graphics.ShaderPlugin pluginToSet
+            final ShaderProgram shaderToSet
     ) {
         this.spriteBatch = spriteBatchToSet;
         this.resourceLoader = resourceLoaderToSet;
@@ -43,9 +42,14 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         this.entityRenderers = entityRenderersToSet;
         this.cacheEnabled = cacheEnabledToSet;
         this.shader = shaderToSet;
+        this.plugin = null;
+    }
+// CHECKSTYLE:ON: ParameterNumber
+
+    /** Assign optional shader plugin. */
+    public void setPlugin(final net.lapidist.colony.client.graphics.ShaderPlugin pluginToSet) {
         this.plugin = pluginToSet;
     }
-    // CHECKSTYLE:ON: ParameterNumber
 
     /** Invalidate cache segments for the given tile indices. */
     public void invalidateTiles(final com.badlogic.gdx.utils.IntArray indices) {

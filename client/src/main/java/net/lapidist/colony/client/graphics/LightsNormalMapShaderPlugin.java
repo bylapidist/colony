@@ -4,6 +4,8 @@ import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
+import net.lapidist.colony.client.systems.CameraProvider;
+import net.lapidist.colony.client.systems.DayNightSystem;
 import com.badlogic.gdx.physics.box2d.World;
 import net.lapidist.colony.client.core.io.FileLocation;
 
@@ -13,6 +15,8 @@ import net.lapidist.colony.client.core.io.FileLocation;
 public final class LightsNormalMapShaderPlugin implements LightingPlugin, UniformUpdater {
 
     private RayHandler rayHandler;
+    private DayNightSystem dayNightSystem;
+    private CameraProvider cameraProvider;
     private final com.badlogic.gdx.math.Vector3 lightDir = new com.badlogic.gdx.math.Vector3(0f, 0f, 1f);
     private final com.badlogic.gdx.math.Vector3 viewDir = new com.badlogic.gdx.math.Vector3(0f, 0f, 1f);
 
@@ -38,6 +42,16 @@ public final class LightsNormalMapShaderPlugin implements LightingPlugin, Unifor
         return rayHandler;
     }
 
+    /** Inject the {@link DayNightSystem} used for lighting calculations. */
+    public void setDayNightSystem(final DayNightSystem system) {
+        this.dayNightSystem = system;
+    }
+
+    /** Inject the {@link CameraProvider} used to derive view direction. */
+    public void setCameraProvider(final CameraProvider provider) {
+        this.cameraProvider = provider;
+    }
+
     @Override
     public String id() {
         return "lights-normalmap";
@@ -58,6 +72,12 @@ public final class LightsNormalMapShaderPlugin implements LightingPlugin, Unifor
 
     @Override
     public void applyUniforms(final ShaderProgram program) {
+        if (dayNightSystem != null) {
+            lightDir.set(dayNightSystem.getSunDirection());
+        }
+        if (cameraProvider != null) {
+            viewDir.set(cameraProvider.getCamera().direction).scl(-1f).nor();
+        }
         program.setUniformf("u_lightDir", lightDir);
         program.setUniformf("u_viewDir", viewDir);
     }

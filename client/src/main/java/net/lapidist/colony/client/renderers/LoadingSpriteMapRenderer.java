@@ -23,11 +23,12 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
     private final boolean cacheEnabled;
     private final Consumer<Float> progressCallback;
     private final com.badlogic.gdx.graphics.glutils.ShaderProgram shader;
-    private final net.lapidist.colony.client.graphics.ShaderPlugin plugin;
+    private net.lapidist.colony.client.graphics.ShaderPlugin plugin;
     private box2dLight.RayHandler lights;
 
     private MapRenderer delegate;
 
+// CHECKSTYLE:OFF: ParameterNumber
     public LoadingSpriteMapRenderer(
             final World worldContext,
             final SpriteBatch batchToUse,
@@ -35,8 +36,7 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
             final CameraProvider camera,
             final boolean cache,
             final Consumer<Float> callback,
-            final com.badlogic.gdx.graphics.glutils.ShaderProgram shaderProgram,
-            final net.lapidist.colony.client.graphics.ShaderPlugin pluginParam
+            final com.badlogic.gdx.graphics.glutils.ShaderProgram shaderProgram
     ) {
         this.world = worldContext;
         this.spriteBatch = batchToUse;
@@ -45,9 +45,15 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
         this.cacheEnabled = cache;
         this.progressCallback = callback;
         this.shader = shaderProgram;
-        this.plugin = pluginParam;
+        this.plugin = null;
         // ensure mapper initialization for render systems
         worldContext.getMapper(MapComponent.class);
+    }
+// CHECKSTYLE:ON: ParameterNumber
+
+    /** Assign optional shader plugin. */
+    public void setPlugin(final net.lapidist.colony.client.graphics.ShaderPlugin pluginParam) {
+        this.plugin = pluginParam;
     }
 
     /** Assign lighting handler. */
@@ -106,9 +112,11 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
                     buildingRenderer,
                     renderers,
                     cacheEnabled,
-                    shader,
-                    plugin
+                    shader
             );
+            if (delegate instanceof SpriteBatchMapRenderer sb) {
+                sb.setPlugin(plugin);
+            }
             if (lights != null && delegate instanceof SpriteBatchMapRenderer sb) {
                 sb.setLights(lights);
             }
