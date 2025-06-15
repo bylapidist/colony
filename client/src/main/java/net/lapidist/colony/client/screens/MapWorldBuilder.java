@@ -174,7 +174,7 @@ public final class MapWorldBuilder {
                 );
 
         if (graphics == null || (graphics.isLightingEnabled() && graphics.isDayNightCycleEnabled())) {
-            builder.with(new DayNightSystem(clear, lighting));
+            builder.with(new DayNightSystem(clear, lighting, state.environment()));
         }
 
         if (provider != null) {

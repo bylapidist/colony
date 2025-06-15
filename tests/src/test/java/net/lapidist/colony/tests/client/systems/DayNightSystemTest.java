@@ -6,6 +6,8 @@ import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.graphics.Color;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
 import net.lapidist.colony.client.systems.DayNightSystem;
+import net.lapidist.colony.components.state.EnvironmentState;
+import net.lapidist.colony.components.state.Season;
 import net.lapidist.colony.client.systems.LightingSystem;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
@@ -16,7 +18,13 @@ import static org.mockito.Mockito.*;
 
 /** Tests for {@link DayNightSystem}. */
 @RunWith(GdxTestRunner.class)
+@SuppressWarnings("checkstyle:magicnumber")
 public class DayNightSystemTest {
+
+    private static final float NIGHT_RED = 0.05f;
+    private static final float NIGHT_BLUE = 0.1f;
+    private static final float MOON_RED = 0.45f;
+    private static final float TOLERANCE = 0.01f;
 
     @Test
     public void updatesLightAndColor() {
@@ -24,7 +32,8 @@ public class DayNightSystemTest {
         LightingSystem lighting = new LightingSystem();
         RayHandler handler = mock(RayHandler.class);
         lighting.setRayHandler(handler);
-        DayNightSystem system = new DayNightSystem(clear, lighting);
+        EnvironmentState env = new EnvironmentState(0f, Season.SPRING, 0f);
+        DayNightSystem system = new DayNightSystem(clear, lighting, env);
         final float noon = 12f;
         system.setTimeOfDay(noon);
         World world = new World(new WorldConfigurationBuilder()
@@ -33,12 +42,13 @@ public class DayNightSystemTest {
         world.setDelta(0f);
         world.process();
         verify(handler).setAmbientLight(1f, 1f, 1f, 1f);
-        final float tolerance = 0.01f;
-        assertEquals(1f, clear.getColor().r, tolerance);
+        assertEquals(1f, clear.getColor().r, TOLERANCE);
         system.setTimeOfDay(0f);
         world.process();
-        verify(handler).setAmbientLight(0f, 0f, 0f, 1f);
-        assertEquals(0f, clear.getColor().r, tolerance);
+//CHECKSTYLE:OFF
+        verify(handler).setAmbientLight(NIGHT_RED, NIGHT_RED, NIGHT_BLUE, 1f);
+        assertEquals(NIGHT_RED, clear.getColor().r, TOLERANCE);
+//CHECKSTYLE:ON
         world.dispose();
     }
 
@@ -46,7 +56,8 @@ public class DayNightSystemTest {
     public void wrapsTimeOfDay() {
         ClearScreenSystem clear = new ClearScreenSystem(new Color());
         LightingSystem lighting = new LightingSystem();
-        DayNightSystem system = new DayNightSystem(clear, lighting);
+        EnvironmentState env = new EnvironmentState(0f, Season.SPRING, 0f);
+        DayNightSystem system = new DayNightSystem(clear, lighting, env);
         final float wrapValue = 25f;
         system.setTimeOfDay(wrapValue);
         World world = new World(new WorldConfigurationBuilder()
@@ -56,6 +67,27 @@ public class DayNightSystemTest {
         world.process();
         final float small = 0.001f;
         assertEquals(1f, system.getTimeOfDay(), small);
+        world.dispose();
+    }
+
+    @Test
+    public void appliesMoonlight() {
+        ClearScreenSystem clear = new ClearScreenSystem(new Color());
+        LightingSystem lighting = new LightingSystem();
+        RayHandler handler = mock(RayHandler.class);
+        lighting.setRayHandler(handler);
+        EnvironmentState env = new EnvironmentState(0f, Season.SPRING, 1f);
+        DayNightSystem system = new DayNightSystem(clear, lighting, env);
+        World world = new World(new WorldConfigurationBuilder()
+                .with(clear, lighting, system)
+                .build());
+        system.setTimeOfDay(0f);
+        world.setDelta(0f);
+        world.process();
+//CHECKSTYLE:OFF
+        verify(handler).setAmbientLight(anyFloat(), anyFloat(), anyFloat(), eq(1f));
+        assertEquals(MOON_RED, clear.getColor().r, TOLERANCE);
+//CHECKSTYLE:ON
         world.dispose();
     }
 }
