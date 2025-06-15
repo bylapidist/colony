@@ -22,10 +22,10 @@ public final class DayNightSystem extends BaseSystem {
     private static final float SUNRISE_TIME = 6f;
     private static final float NOON_TIME = 12f;
     private static final float SUNSET_TIME = 18f;
-    private static final Color NIGHT_COLOR = new Color(0.02f, 0.02f, 0.05f, 1f);
-    private static final Color SUNRISE_COLOR = new Color(0.8f, 0.55f, 0.35f, 1f);
-    private static final Color DAY_COLOR = new Color(0.9f, 0.95f, 1f, 1f);
-    private static final Color MOON_COLOR = new Color(0.3f, 0.3f, 0.35f, 1f);
+    private static final Color NIGHT_COLOR = new Color(0.01f, 0.01f, 0.025f, 1f);
+    private static final Color SUNRISE_COLOR = new Color(0.6f, 0.5f, 0.4f, 1f);
+    private static final Color DAY_COLOR = new Color(0.8f, 0.85f, 0.9f, 1f);
+    private static final Color MOON_COLOR = new Color(0.2f, 0.2f, 0.25f, 1f);
 
     public DayNightSystem(final ClearScreenSystem clearSystem,
                           final LightingSystem lighting,
