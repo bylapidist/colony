@@ -150,5 +150,46 @@ public class SpriteBatchMapRendererTest {
         verify(batch, never()).setShader(any());
 
         renderer.dispose();
+}
+
+    @Test
+    public void rendersLightsWhenAvailable() {
+        SpriteBatch batch = mock(SpriteBatch.class);
+        ResourceLoader loader = mock(ResourceLoader.class);
+        TileRenderer tileRenderer = mock(TileRenderer.class);
+        BuildingRenderer buildingRenderer = mock(BuildingRenderer.class);
+        ResourceRenderer resourceRenderer = mock(ResourceRenderer.class);
+        PlayerRenderer playerRenderer = mock(PlayerRenderer.class);
+        MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer);
+        box2dLight.RayHandler lights = mock(box2dLight.RayHandler.class);
+
+        SpriteBatchMapRenderer renderer = new SpriteBatchMapRenderer(
+                batch, loader, tileRenderer, buildingRenderer, renderers, false, null);
+        renderer.setLights(lights);
+
+        MapRenderData map = mock(MapRenderData.class);
+        CameraProvider camera = new CameraProvider() {
+            private final OrthographicCamera cam = new OrthographicCamera();
+            private final ExtendViewport vp = new ExtendViewport(1, 1, cam);
+            {
+                vp.update(1, 1, true);
+                cam.update();
+            }
+            @Override
+            public com.badlogic.gdx.graphics.Camera getCamera() {
+                return cam;
+            }
+            @Override
+            public com.badlogic.gdx.utils.viewport.Viewport getViewport() {
+                return vp;
+            }
+        };
+
+        renderer.render(map, camera);
+        verify(lights).setCombinedMatrix(any(com.badlogic.gdx.math.Matrix4.class));
+        verify(lights).updateAndRender();
+
+        renderer.dispose();
+        verify(lights).dispose();
     }
 }

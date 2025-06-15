@@ -3,6 +3,7 @@ package net.lapidist.colony.client.renderers;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Disposable;
+import box2dLight.RayHandler;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.render.MapRenderData;
@@ -21,6 +22,7 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
     private final MapTileCache tileCache = new MapTileCache();
     private final AssetResolver resolver = new DefaultAssetResolver();
     private final boolean cacheEnabled;
+    private RayHandler lights;
 
     // CHECKSTYLE:OFF: ParameterNumber
     public SpriteBatchMapRenderer(
@@ -47,6 +49,11 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         if (cacheEnabled) {
             tileCache.invalidateTiles(indices);
         }
+    }
+
+    /** Set optional lighting handler. */
+    public void setLights(final RayHandler handler) {
+        this.lights = handler;
     }
 
     @Override
@@ -76,6 +83,10 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         if (shader != null) {
             spriteBatch.setShader(null);
         }
+        if (lights != null) {
+            lights.setCombinedMatrix(camera.getCamera().combined);
+            lights.updateAndRender();
+        }
     }
 
     @Override
@@ -86,6 +97,9 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         spriteBatch.dispose();
         if (shader != null) {
             shader.dispose();
+        }
+        if (lights != null) {
+            lights.dispose();
         }
         tileCache.dispose();
     }

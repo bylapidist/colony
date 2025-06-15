@@ -10,6 +10,9 @@ dependencies {
     implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+    implementation "com.badlogicgames.box2dlights:box2dlights:$box2dLightsVersion"
 
     runtimeOnly "ch.qos.logback:logback-classic:$logbackVersion"
 
@@ -20,6 +23,9 @@ dependencies {
     jmhImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     jmhImplementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
     jmhImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+    jmhImplementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+    jmhImplementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+    jmhImplementation "com.badlogicgames.box2dlights:box2dlights:$box2dLightsVersion"
 
     testImplementation "junit:junit:$jUnitVersion"
     testImplementation "org.mockito:mockito-core:$mockitoVersion"

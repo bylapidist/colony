@@ -1,1 +1,2 @@
 net.lapidist.colony.client.graphics.NullShaderPlugin
+net.lapidist.colony.client.graphics.Box2dLightsPlugin

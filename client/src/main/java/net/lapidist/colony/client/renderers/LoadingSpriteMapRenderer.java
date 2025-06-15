@@ -23,6 +23,7 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
     private final boolean cacheEnabled;
     private final Consumer<Float> progressCallback;
     private final com.badlogic.gdx.graphics.glutils.ShaderProgram shader;
+    private box2dLight.RayHandler lights;
 
     private MapRenderer delegate;
 
@@ -44,6 +45,11 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
         this.shader = shaderProgram;
         // ensure mapper initialization for render systems
         worldContext.getMapper(MapComponent.class);
+    }
+
+    /** Assign lighting handler. */
+    public void setLights(final box2dLight.RayHandler handler) {
+        this.lights = handler;
     }
 
     @Override
@@ -94,6 +100,9 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
                     cacheEnabled,
                     shader
             );
+            if (lights != null && delegate instanceof SpriteBatchMapRenderer sb) {
+                sb.setLights(lights);
+            }
             if (progressCallback != null) {
                 progressCallback.accept(1f);
             }
@@ -110,6 +119,9 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
         } else {
             resourceLoader.dispose();
             spriteBatch.dispose();
+        }
+        if (lights != null) {
+            lights.dispose();
         }
     }
 }

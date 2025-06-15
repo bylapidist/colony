@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.lapidist.colony.client.renderers.MapRenderer;
 import net.lapidist.colony.client.renderers.MapRendererFactory;
 import net.lapidist.colony.client.renderers.SpriteMapRendererFactory;
+import net.lapidist.colony.client.graphics.Box2dLightsPlugin;
+import net.lapidist.colony.client.renderers.SpriteBatchMapRenderer;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.core.io.FileLocation;
 import net.lapidist.colony.client.core.io.ResourceLoader;
@@ -101,6 +103,40 @@ public class MapRendererFactoryTest {
             renderer.render(null, null);
             assertTrue(loader.updated);
             assertTrue(progressCalls.get() > 0);
+            ((com.badlogic.gdx.utils.Disposable) renderer).dispose();
+        }
+        world.dispose();
+    }
+
+    @Test
+    public void pluginLightsAreApplied() {
+        ResourceLoader loader = mock(ResourceLoader.class);
+        when(loader.update()).thenReturn(true);
+        when(loader.getProgress()).thenReturn(1f);
+
+        World world = new World(new WorldConfigurationBuilder()
+                .with(new PlayerCameraSystem())
+                .build());
+        Box2dLightsPlugin plugin = new Box2dLightsPlugin();
+
+        try (MockedConstruction<SpriteBatchMapRenderer> sbCons =
+                     mockConstruction(SpriteBatchMapRenderer.class);
+             MockedConstruction<SpriteBatch> ignored =
+                     mockConstruction(SpriteBatch.class)) {
+            MapRendererFactory factory = new SpriteMapRendererFactory(
+                    loader,
+                    FileLocation.INTERNAL,
+                    "textures/textures.atlas"
+            );
+            MapRenderer renderer = factory.create(world, plugin);
+
+            renderer.render(mock(net.lapidist.colony.client.render.MapRenderData.class), null);
+
+            SpriteBatchMapRenderer sb = sbCons.constructed().get(0);
+            // plugin fails to initialize lights in headless tests
+            assertNull(plugin.getRayHandler());
+            verify(sb, never()).setLights(any());
+
             ((com.badlogic.gdx.utils.Disposable) renderer).dispose();
         }
         world.dispose();
