@@ -111,7 +111,11 @@ public final class Colony extends Game {
             Paths.get().createGameFoldersIfNotExists();
             settings = Settings.load();
             I18n.setLocale(settings.getLocale());
-            mods = new ModLoader(Paths.get()).loadMods();
+            mods = new java.util.ArrayList<>();
+            for (net.lapidist.colony.mod.GameMod builtin : java.util.ServiceLoader.load(net.lapidist.colony.mod.GameMod.class)) {
+                mods.add(new LoadedMod(builtin, builtinMetadata(builtin.getClass())));
+            }
+            mods.addAll(new ModLoader(Paths.get()).loadMods());
             for (LoadedMod mod : mods) {
                 mod.mod().init();
             }
@@ -139,5 +143,33 @@ public final class Colony extends Game {
             }
         }
         Events.dispose();
+    }
+
+    private static net.lapidist.colony.mod.ModMetadata builtinMetadata(final Class<?> cls) {
+        String id;
+        if (cls.getName().equals("net.lapidist.colony.base.BaseMapServiceMod")) {
+            id = "base-map-service";
+        } else if (cls.getName().equals("net.lapidist.colony.base.BaseNetworkMod")) {
+            id = "base-network";
+        } else if (cls.getName().equals("net.lapidist.colony.base.BaseAutosaveMod")) {
+            id = "base-autosave";
+        } else if (cls.getName().equals("net.lapidist.colony.base.BaseResourceProductionMod")) {
+            id = "base-resource-production";
+        } else if (cls.getName().equals("net.lapidist.colony.base.BaseHandlersMod")) {
+            id = "base-handlers";
+        } else if (cls.getName().equals("net.lapidist.colony.base.BaseDefinitionsMod")) {
+            id = "base-definitions";
+        } else if (cls.getName().equals("net.lapidist.colony.base.BaseResourcesMod")) {
+            id = "base-resources";
+        } else if (cls.getName().equals("net.lapidist.colony.base.BaseCommandBusMod")) {
+            id = "base-command-bus";
+        } else if (cls.getName().equals("net.lapidist.colony.base.BaseMapGenerationMod")) {
+            id = "base-map-generation";
+        } else if (cls.getName().equals("net.lapidist.colony.base.BaseGameplaySystemsMod")) {
+            id = "base-systems";
+        } else {
+            id = cls.getSimpleName();
+        }
+        return new net.lapidist.colony.mod.ModMetadata(id, "1.0.0", java.util.List.of());
     }
 }
