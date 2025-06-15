@@ -8,6 +8,8 @@ import net.lapidist.colony.events.Events;
 import net.lapidist.colony.serialization.KryoRegistry;
 import net.lapidist.colony.mod.ModLoader;
 import net.lapidist.colony.mod.ModLoader.LoadedMod;
+import net.lapidist.colony.mod.ModMetadata;
+import net.lapidist.colony.mod.GameMod;
 import net.lapidist.colony.network.AbstractMessageEndpoint;
 import net.lapidist.colony.network.MessageHandler;
 import net.lapidist.colony.io.Paths;
@@ -141,22 +143,11 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     public void start() throws IOException, InterruptedException {
         initKryo();
         Events.init(new EventSystem());
-        mods = new ModLoader(Paths.get()).loadMods();
-        mods = new java.util.ArrayList<>(mods);
-        mods.add(new LoadedMod(new net.lapidist.colony.base.BaseDefinitionsMod(),
-                new net.lapidist.colony.mod.ModMetadata("base-definitions", "1.0.0", java.util.List.of())));
-        mods.add(new LoadedMod(new net.lapidist.colony.base.BaseResourcesMod(),
-                new net.lapidist.colony.mod.ModMetadata("base-resources", "1.0.0", java.util.List.of())));
-        mods.add(new LoadedMod(new net.lapidist.colony.base.BaseMapServiceMod(),
-                new net.lapidist.colony.mod.ModMetadata("base-map-service", "1.0.0", java.util.List.of())));
-        mods.add(new LoadedMod(new net.lapidist.colony.base.BaseNetworkMod(),
-                new net.lapidist.colony.mod.ModMetadata("base-network", "1.0.0", java.util.List.of())));
-        mods.add(new LoadedMod(new net.lapidist.colony.base.BaseAutosaveMod(),
-                new net.lapidist.colony.mod.ModMetadata("base-autosave", "1.0.0", java.util.List.of())));
-        mods.add(new LoadedMod(new net.lapidist.colony.base.BaseResourceProductionMod(),
-                new net.lapidist.colony.mod.ModMetadata("base-resource-production", "1.0.0", java.util.List.of())));
-        mods.add(new LoadedMod(new net.lapidist.colony.base.BaseHandlersMod(),
-                new net.lapidist.colony.mod.ModMetadata("base-handlers", "1.0.0", java.util.List.of())));
+        mods = new java.util.ArrayList<>(new ModLoader(Paths.get()).loadMods());
+        for (GameMod builtin : java.util.ServiceLoader.load(GameMod.class)) {
+            ModMetadata meta = builtinMetadata(builtin.getClass());
+            mods.add(new LoadedMod(builtin, meta));
+        }
 
         for (LoadedMod mod : mods) {
             mod.mod().init();
@@ -363,5 +354,29 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
      */
     public void close() {
         stop();
+    }
+
+    private static ModMetadata builtinMetadata(final Class<?> cls) {
+        String id;
+        if (cls.getName().equals("net.lapidist.colony.base.BaseMapServiceMod")) {
+            id = "base-map-service";
+        } else if (cls.getName().equals("net.lapidist.colony.base.BaseNetworkMod")) {
+            id = "base-network";
+        } else if (cls.getName().equals("net.lapidist.colony.base.BaseAutosaveMod")) {
+            id = "base-autosave";
+        } else if (cls.getName().equals("net.lapidist.colony.base.BaseResourceProductionMod")) {
+            id = "base-resource-production";
+        } else if (cls.getName().equals("net.lapidist.colony.base.BaseHandlersMod")) {
+            id = "base-handlers";
+        } else if (cls.getName().equals("net.lapidist.colony.base.BaseDefinitionsMod")) {
+            id = "base-definitions";
+        } else if (cls.getName().equals("net.lapidist.colony.base.BaseResourcesMod")) {
+            id = "base-resources";
+        } else if (cls.getName().equals("net.lapidist.colony.base.BaseCommandBusMod")) {
+            id = "base-command-bus";
+        } else {
+            id = cls.getSimpleName();
+        }
+        return new ModMetadata(id, "1.0.0", java.util.List.of());
     }
 }

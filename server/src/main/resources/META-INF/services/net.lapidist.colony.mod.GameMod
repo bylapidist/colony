@@ -3,6 +3,7 @@ net.lapidist.colony.base.BaseNetworkMod
 net.lapidist.colony.base.BaseAutosaveMod
 net.lapidist.colony.base.BaseResourceProductionMod
 net.lapidist.colony.base.BaseHandlersMod
+net.lapidist.colony.base.BaseCommandBusMod
 
 net.lapidist.colony.base.BaseDefinitionsMod
 
