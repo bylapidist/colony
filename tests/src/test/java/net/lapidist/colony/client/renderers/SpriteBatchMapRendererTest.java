@@ -28,7 +28,8 @@ public class SpriteBatchMapRendererTest {
         BuildingRenderer buildingRenderer = mock(BuildingRenderer.class);
         ResourceRenderer resourceRenderer = mock(ResourceRenderer.class);
         PlayerRenderer playerRenderer = mock(PlayerRenderer.class);
-        MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer);
+        CelestialRenderer celestialRenderer = mock(CelestialRenderer.class);
+        MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer, celestialRenderer);
 
         SpriteBatchMapRenderer renderer = new SpriteBatchMapRenderer(
                 batch, loader, tileRenderer, buildingRenderer, renderers, true, null);
@@ -52,7 +53,8 @@ public class SpriteBatchMapRendererTest {
         BuildingRenderer buildingRenderer = mock(BuildingRenderer.class);
         ResourceRenderer resourceRenderer = mock(ResourceRenderer.class);
         PlayerRenderer playerRenderer = mock(PlayerRenderer.class);
-        MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer);
+        CelestialRenderer celestialRenderer = mock(CelestialRenderer.class);
+        MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer, celestialRenderer);
 
         SpriteBatchMapRenderer renderer = new SpriteBatchMapRenderer(
                 batch, loader, tileRenderer, buildingRenderer, renderers, false, null);
@@ -75,8 +77,9 @@ public class SpriteBatchMapRendererTest {
         BuildingRenderer buildingRenderer = mock(BuildingRenderer.class);
         ResourceRenderer resourceRenderer = mock(ResourceRenderer.class);
         PlayerRenderer playerRenderer = mock(PlayerRenderer.class);
+        CelestialRenderer celestialRenderer = mock(CelestialRenderer.class);
         ShaderProgram shader = mock(ShaderProgram.class);
-        MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer);
+        MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer, celestialRenderer);
 
         SpriteBatchMapRenderer renderer = new SpriteBatchMapRenderer(
                 batch, loader, tileRenderer, buildingRenderer, renderers, false, shader);
@@ -121,7 +124,8 @@ public class SpriteBatchMapRendererTest {
         BuildingRenderer buildingRenderer = mock(BuildingRenderer.class);
         ResourceRenderer resourceRenderer = mock(ResourceRenderer.class);
         PlayerRenderer playerRenderer = mock(PlayerRenderer.class);
-        MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer);
+        CelestialRenderer celestialRenderer = mock(CelestialRenderer.class);
+        MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer, celestialRenderer);
 
         SpriteBatchMapRenderer renderer = new SpriteBatchMapRenderer(
                 batch, loader, tileRenderer, buildingRenderer, renderers, false, null);
@@ -160,7 +164,8 @@ public class SpriteBatchMapRendererTest {
         BuildingRenderer buildingRenderer = mock(BuildingRenderer.class);
         ResourceRenderer resourceRenderer = mock(ResourceRenderer.class);
         PlayerRenderer playerRenderer = mock(PlayerRenderer.class);
-        MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer);
+        CelestialRenderer celestialRenderer = mock(CelestialRenderer.class);
+        MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer, celestialRenderer);
         box2dLight.RayHandler lights = mock(box2dLight.RayHandler.class);
 
         SpriteBatchMapRenderer renderer = new SpriteBatchMapRenderer(

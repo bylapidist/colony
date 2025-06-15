@@ -23,6 +23,7 @@ import net.lapidist.colony.client.renderers.SpriteBatchMapRenderer;
 import net.lapidist.colony.client.renderers.TileRenderer;
 import net.lapidist.colony.client.renderers.PlayerRenderer;
 import net.lapidist.colony.client.renderers.MapEntityRenderers;
+import net.lapidist.colony.client.renderers.CelestialRenderer;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.maps.MapComponent;
@@ -66,7 +67,8 @@ public class SpriteBatchRendererBenchmark {
         BuildingRenderer buildingRenderer = new BuildingRenderer(batch, loader, camera, resolver);
         ResourceRenderer resourceRenderer = mock(ResourceRenderer.class);
         PlayerRenderer playerRenderer = mock(PlayerRenderer.class);
-        MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer);
+        CelestialRenderer celestialRenderer = mock(CelestialRenderer.class);
+        MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer, celestialRenderer);
         cachedRenderer = new SpriteBatchMapRenderer(
                 batch, loader, tileRenderer, buildingRenderer, renderers, true, null);
         plainRenderer = new SpriteBatchMapRenderer(
