@@ -32,6 +32,7 @@ import net.lapidist.colony.server.services.MapService;
 import net.lapidist.colony.server.services.NetworkService;
 import net.lapidist.colony.server.services.ResourceProductionService;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.Optional;
 import net.mostlyoriginal.api.event.common.EventSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -415,6 +416,8 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
     }
 
     private static ModMetadata builtinMetadata(final Class<?> cls) {
+        String version = Optional.ofNullable(GameServer.class.getPackage().getImplementationVersion())
+                .orElse("dev");
         String id;
         if (cls.getName().equals("net.lapidist.colony.base.BaseMapServiceMod")) {
             id = "base-map-service";
@@ -439,6 +442,6 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
         } else {
             id = cls.getSimpleName();
         }
-        return new ModMetadata(id, "1.0.0", java.util.List.of());
+        return new ModMetadata(id, version, java.util.List.of());
     }
 }

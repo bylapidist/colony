@@ -42,19 +42,17 @@ A minimal `mod.json` looks like:
 ### Built-in server mods
 
 The dedicated server bundles several mods providing the default functionality.
-These are loaded automatically and do not need to be placed inside the `mods/` folder:
+These use the same version as the running server and are loaded automatically, so they do not need to be placed inside the `mods/` folder:
 
 ```json
-{ "id": "base-map-service", "version": "1.0.0" }
-{ "id": "base-network", "version": "1.0.0" }
-{ "id": "base-autosave", "version": "1.0.0" }
-{ "id": "base-resource-production", "version": "1.0.0" }
-{ "id": "base-handlers", "version": "1.0.0" }
-{ "id": "base-definitions", "version": "1.0.0" }
-{ "id": "base-resources", "version": "1.0.0" }
-{ "id": "base-items", "version": "1.0.0" }
-{ "id": "base-map-generation", "version": "1.0.0" }
-{ "id": "base-systems", "version": "1.0.0" }
+{ "id": "base-map-service" }
+{ "id": "base-network" }
+{ "id": "base-autosave" }
+{ "id": "base-resource-production" }
+{ "id": "base-handlers" }
+{ "id": "base-definitions" }
+{ "id": "base-resources" }
+{ "id": "base-items" }
 ```
 
 ## How mods are discovered
