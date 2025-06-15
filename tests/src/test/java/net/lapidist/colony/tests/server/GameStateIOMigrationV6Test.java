@@ -9,7 +9,7 @@ import net.lapidist.colony.serialization.KryoRegistry;
 import net.lapidist.colony.save.SaveData;
 import net.lapidist.colony.save.SaveVersion;
 import net.lapidist.colony.serialization.SerializationRegistrar;
-import net.lapidist.colony.server.io.GameStateIO;
+import net.lapidist.colony.save.io.GameStateIO;
 import net.lapidist.colony.map.MapChunkData;
 import net.lapidist.colony.components.state.ChunkPos;
 import org.junit.Test;

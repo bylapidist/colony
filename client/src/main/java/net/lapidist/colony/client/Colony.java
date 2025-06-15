@@ -13,7 +13,7 @@ import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
-import net.lapidist.colony.server.io.GameStateIO;
+import net.lapidist.colony.save.io.GameStateIO;
 import net.lapidist.colony.config.ColonyConfig;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.events.Events;

@@ -2,7 +2,7 @@ package net.lapidist.colony.tests.server;
 
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
-import net.lapidist.colony.server.io.GameStateIO;
+import net.lapidist.colony.save.io.GameStateIO;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.components.state.CameraPosition;
 import org.junit.Test;

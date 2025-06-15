@@ -1,6 +1,6 @@
 # Save Format
 
-Game state is serialized into a `SaveData` record containing the save version, a Kryo registration hash, the `MapState` and the list of loaded mods. Files are written and read via `GameStateIO`.
+Game state is serialized into a `SaveData` record containing the save version, a Kryo registration hash, the `MapState` and the list of loaded mods. Files are written and read via `net.lapidist.colony.save.io.GameStateIO`.
 
 The `mods` field captures the `id` and `version` of every loaded mod when the save was created. When the game is loaded these mods are automatically restored if present on the system.
 

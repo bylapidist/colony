@@ -13,7 +13,7 @@ import net.lapidist.colony.base.ModMetadataUtil;
 import net.lapidist.colony.network.AbstractMessageEndpoint;
 import net.lapidist.colony.network.MessageHandler;
 import net.lapidist.colony.io.Paths;
-import net.lapidist.colony.server.io.GameStateIO;
+import net.lapidist.colony.save.io.GameStateIO;
 import net.lapidist.colony.map.MapGenerator;
 import net.lapidist.colony.server.handlers.TileSelectionRequestHandler;
 import net.lapidist.colony.server.handlers.BuildingPlacementRequestHandler;

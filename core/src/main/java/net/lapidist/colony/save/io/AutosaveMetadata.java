@@ -1,4 +1,4 @@
-package net.lapidist.colony.server.io;
+package net.lapidist.colony.save.io;
 
 /**
  * Minimal metadata read from an autosave file.

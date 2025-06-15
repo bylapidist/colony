@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import net.lapidist.colony.util.I18n;
 import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.io.Paths;
-import net.lapidist.colony.server.io.GameStateIO;
+import net.lapidist.colony.save.io.GameStateIO;
 
 import java.io.IOException;
 import java.util.ArrayList;

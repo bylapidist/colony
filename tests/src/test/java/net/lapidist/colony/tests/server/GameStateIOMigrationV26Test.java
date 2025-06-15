@@ -7,7 +7,7 @@ import net.lapidist.colony.serialization.KryoRegistry;
 import net.lapidist.colony.save.SaveData;
 import net.lapidist.colony.save.SaveVersion;
 import net.lapidist.colony.serialization.SerializationRegistrar;
-import net.lapidist.colony.server.io.GameStateIO;
+import net.lapidist.colony.save.io.GameStateIO;
 import org.junit.Test;
 
 import java.nio.file.Files;
