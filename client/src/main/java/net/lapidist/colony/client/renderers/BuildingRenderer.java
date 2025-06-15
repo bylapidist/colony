@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.util.CameraUtils;
-import net.lapidist.colony.client.render.data.RenderBuilding;
+import net.lapidist.colony.client.render.RenderBuilding;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.registry.BuildingDefinition;
 import net.lapidist.colony.registry.Registries;

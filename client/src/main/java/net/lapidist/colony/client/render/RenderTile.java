@@ -1,4 +1,4 @@
-package net.lapidist.colony.client.render.data;
+package net.lapidist.colony.client.render;
 
 /** Render data object for a map tile. */
 public final class RenderTile {

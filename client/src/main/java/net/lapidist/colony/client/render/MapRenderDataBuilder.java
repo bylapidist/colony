@@ -4,8 +4,6 @@ import com.artemis.ComponentMapper;
 import com.artemis.World;
 import com.artemis.Entity;
 import com.badlogic.gdx.utils.Array;
-import net.lapidist.colony.client.render.data.RenderBuilding;
-import net.lapidist.colony.client.render.data.RenderTile;
 import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;

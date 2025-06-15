@@ -1,8 +1,6 @@
 package net.lapidist.colony.client.render;
 
 import com.badlogic.gdx.utils.Array;
-import net.lapidist.colony.client.render.data.RenderBuilding;
-import net.lapidist.colony.client.render.data.RenderTile;
 
 /**
  * Basic immutable implementation of {@link MapRenderData}.

@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.util.CameraUtils;
-import net.lapidist.colony.client.render.data.RenderTile;
+import net.lapidist.colony.client.render.RenderTile;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.TileRotationUtil;
 import net.lapidist.colony.components.state.MapState;

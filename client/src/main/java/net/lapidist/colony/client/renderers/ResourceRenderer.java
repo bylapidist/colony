@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.client.systems.CameraProvider;
 import net.lapidist.colony.client.util.CameraUtils;
-import net.lapidist.colony.client.render.data.RenderTile;
+import net.lapidist.colony.client.render.RenderTile;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import com.badlogic.gdx.utils.Disposable;

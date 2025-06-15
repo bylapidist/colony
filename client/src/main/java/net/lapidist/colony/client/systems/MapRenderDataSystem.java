@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.IntArray;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.render.MapRenderDataBuilder;
 import net.lapidist.colony.client.render.SimpleMapRenderData;
-import net.lapidist.colony.client.render.data.RenderBuilding;
+import net.lapidist.colony.client.render.RenderBuilding;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.resources.ResourceComponent;
