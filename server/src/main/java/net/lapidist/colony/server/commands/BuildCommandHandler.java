@@ -10,8 +10,6 @@ import net.lapidist.colony.server.events.BuildingPlacedEvent;
 import net.lapidist.colony.server.services.NetworkService;
 import net.lapidist.colony.registry.Registries;
 import net.lapidist.colony.registry.BuildingDefinition;
-
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.concurrent.locks.ReentrantLock;
@@ -20,28 +18,6 @@ import java.util.concurrent.locks.ReentrantLock;
  * Applies a {@link BuildCommand} to the game state and broadcasts the change.
  */
 public final class BuildCommandHandler implements CommandHandler<BuildCommand> {
-    private static final Map<String, ResourceData> COSTS = Map.of(
-            "house", new ResourceData(new java.util.HashMap<>(Map.of(
-                    "WOOD", 1,
-                    "STONE", 0,
-                    "FOOD", 0
-            ))),
-            "market", new ResourceData(new java.util.HashMap<>(Map.of(
-                    "WOOD", 5,
-                    "STONE", 2,
-                    "FOOD", 0
-            ))),
-            "factory", new ResourceData(new java.util.HashMap<>(Map.of(
-                    "WOOD", 10,
-                    "STONE", 5,
-                    "FOOD", 0
-            ))),
-            "farm", new ResourceData(new java.util.HashMap<>(Map.of(
-                    "WOOD", 2,
-                    "STONE", 0,
-                    "FOOD", 0
-            )))
-    );
 
     private final Supplier<MapState> stateSupplier;
     private final Consumer<MapState> stateConsumer;
@@ -79,7 +55,7 @@ public final class BuildCommandHandler implements CommandHandler<BuildCommand> {
                 return;
             }
             String type = def.id();
-            ResourceData cost = COSTS.getOrDefault(type, new ResourceData());
+            ResourceData cost = def.cost() != null ? def.cost() : new ResourceData();
             ResourceData player = state.playerResources();
             java.util.Map<String, Integer> playerAmounts = new java.util.HashMap<>(player.amounts());
             for (var entry : cost.amounts().entrySet()) {
