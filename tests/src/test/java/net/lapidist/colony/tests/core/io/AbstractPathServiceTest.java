@@ -42,7 +42,7 @@ public class AbstractPathServiceTest {
         assertTrue(java.nio.file.Files.exists(gameFolder));
         assertTrue(java.nio.file.Files.exists(gameFolder.resolve("saves")));
         assertTrue(java.nio.file.Files.exists(gameFolder.resolve("mods")));
-        assertEquals(gameFolder.resolve("settings.properties"), settings);
+        assertEquals(gameFolder.resolve("settings.conf"), settings);
     }
 
     @Test

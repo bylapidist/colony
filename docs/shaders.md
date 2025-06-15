@@ -34,7 +34,7 @@ an entry for `NullShaderPlugin`.
 
 The chosen shader is stored in the `graphics.shaderPlugin` setting. It
 holds the class name from the service file. This value can be edited in
-`settings.properties` or selected through the graphics settings screen.
+`settings.conf` or selected through the graphics settings screen.
 
 ## Example
 

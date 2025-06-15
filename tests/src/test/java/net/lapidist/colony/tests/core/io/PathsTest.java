@@ -71,7 +71,7 @@ public class PathsTest {
     @Test
     public void delegatesGetSettingsFile() throws Exception {
         PathService service = mock(PathService.class);
-        Path expected = java.nio.file.Paths.get("settings.properties");
+        Path expected = java.nio.file.Paths.get("settings.conf");
         when(service.getSettingsFile()).thenReturn(expected);
         Paths paths = new Paths(service);
 
