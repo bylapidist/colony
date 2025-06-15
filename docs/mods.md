@@ -173,3 +173,18 @@ public final class WaterMod implements GameMod {
 Place the `tileSelect.kts` script from the previous section in the mod's `scripts/` directory to respond to
 `TileSelectionEvent`.
 
+
+### Example: Hello World mod
+
+A complete example is provided in the `examples/mods/hello-world` directory.
+Compile the class and copy the folder into your game's `mods/` directory:
+
+```bash
+cd examples/mods/hello-world
+javac -d . src/main/java/net/lapidist/colony/example/HelloWorldMod.java
+cp -r . ../../../../mods/hello-world
+```
+
+Start the server with `./gradlew :server:run`. When the mod loads it prints
+`Hello world from HelloWorldMod` to the console.
+
