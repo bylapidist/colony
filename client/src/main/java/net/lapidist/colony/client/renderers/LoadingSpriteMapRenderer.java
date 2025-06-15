@@ -81,14 +81,15 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
                     cameraSystem,
                     world.getSystem(MapRenderDataSystem.class)
             );
+            MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer);
             delegate = new SpriteBatchMapRenderer(
                     spriteBatch,
                     resourceLoader,
                     tileRenderer,
                     buildingRenderer,
-                    resourceRenderer,
-                    playerRenderer,
-                    cacheEnabled
+                    renderers,
+                    cacheEnabled,
+                    null
             );
             if (progressCallback != null) {
                 progressCallback.accept(1f);

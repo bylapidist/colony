@@ -1,6 +1,7 @@
 package net.lapidist.colony.client.renderers;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Disposable;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
@@ -15,29 +16,31 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
     private final ResourceLoader resourceLoader;
     private final TileRenderer tileRenderer;
     private final BuildingRenderer buildingRenderer;
-    private final ResourceRenderer resourceRenderer;
-    private final PlayerRenderer playerRenderer;
+    private final MapEntityRenderers entityRenderers;
+    private final ShaderProgram shader;
     private final MapTileCache tileCache = new MapTileCache();
     private final AssetResolver resolver = new DefaultAssetResolver();
     private final boolean cacheEnabled;
 
+    // CHECKSTYLE:OFF: ParameterNumber
     public SpriteBatchMapRenderer(
             final SpriteBatch spriteBatchToSet,
             final ResourceLoader resourceLoaderToSet,
             final TileRenderer tileRendererToSet,
             final BuildingRenderer buildingRendererToSet,
-            final ResourceRenderer resourceRendererToSet,
-            final PlayerRenderer playerRendererToSet,
-            final boolean cacheEnabledToSet
+            final MapEntityRenderers entityRenderersToSet,
+            final boolean cacheEnabledToSet,
+            final ShaderProgram shaderToSet
     ) {
         this.spriteBatch = spriteBatchToSet;
         this.resourceLoader = resourceLoaderToSet;
         this.tileRenderer = tileRendererToSet;
         this.buildingRenderer = buildingRendererToSet;
-        this.resourceRenderer = resourceRendererToSet;
-        this.playerRenderer = playerRendererToSet;
+        this.entityRenderers = entityRenderersToSet;
         this.cacheEnabled = cacheEnabledToSet;
+        this.shader = shaderToSet;
     }
+    // CHECKSTYLE:ON: ParameterNumber
 
     /** Invalidate cache segments for the given tile indices. */
     public void invalidateTiles(final com.badlogic.gdx.utils.IntArray indices) {
@@ -52,6 +55,9 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         if (cacheEnabled) {
             tileCache.ensureCache(resourceLoader, map, resolver, camera);
         }
+        if (shader != null) {
+            spriteBatch.setShader(shader);
+        }
         spriteBatch.begin();
 
         if (cacheEnabled) {
@@ -63,18 +69,24 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
 
         tileRenderer.render(map);
         buildingRenderer.render(map);
-        resourceRenderer.render(map);
-        playerRenderer.render(map);
+        entityRenderers.resourceRenderer().render(map);
+        entityRenderers.playerRenderer().render(map);
 
         spriteBatch.end();
+        if (shader != null) {
+            spriteBatch.setShader(null);
+        }
     }
 
     @Override
     public void dispose() {
         resourceLoader.dispose();
-        resourceRenderer.dispose();
-        playerRenderer.dispose();
+        entityRenderers.resourceRenderer().dispose();
+        entityRenderers.playerRenderer().dispose();
         spriteBatch.dispose();
+        if (shader != null) {
+            shader.dispose();
+        }
         tileCache.dispose();
     }
 }
