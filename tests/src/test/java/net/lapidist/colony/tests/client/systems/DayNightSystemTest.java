@@ -21,9 +21,12 @@ import static org.mockito.Mockito.*;
 @SuppressWarnings("checkstyle:magicnumber")
 public class DayNightSystemTest {
 
-    private static final float NIGHT_RED = 0.05f;
-    private static final float NIGHT_BLUE = 0.1f;
-    private static final float MOON_RED = 0.45f;
+    private static final float DAY_RED = 0.9f;
+    private static final float DAY_GREEN = 0.95f;
+    private static final float DAY_BLUE = 1f;
+    private static final float NIGHT_RED = 0.02f;
+    private static final float NIGHT_BLUE = 0.05f;
+    private static final float MOON_RED = 0.32f;
     private static final float TOLERANCE = 0.01f;
 
     @Test
@@ -41,8 +44,8 @@ public class DayNightSystemTest {
                 .build());
         world.setDelta(0f);
         world.process();
-        verify(handler).setAmbientLight(1f, 1f, 1f, 1f);
-        assertEquals(1f, clear.getColor().r, TOLERANCE);
+        verify(handler).setAmbientLight(DAY_RED, DAY_GREEN, DAY_BLUE, 1f);
+        assertEquals(DAY_RED, clear.getColor().r, TOLERANCE);
         system.setTimeOfDay(0f);
         world.process();
 //CHECKSTYLE:OFF
