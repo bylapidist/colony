@@ -4,8 +4,8 @@ import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.serialization.KryoType;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Random;
 
 /**
@@ -17,7 +17,7 @@ public final class MapChunkData {
     public static final int CHUNK_SIZE = 32;
     private static final double NOISE_SCALE = 0.1;
 
-    private final Map<TilePos, TileData> tiles = new HashMap<>();
+    private final Map<TilePos, TileData> tiles = new ConcurrentHashMap<>();
     private final long seed;
     private transient PerlinNoise noise;
     private final int baseX;

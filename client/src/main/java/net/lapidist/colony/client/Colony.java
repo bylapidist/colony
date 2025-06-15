@@ -56,10 +56,17 @@ public final class Colony extends Game {
             java.nio.file.Path file = Paths.get().getAutosave(saveName);
             if (java.nio.file.Files.exists(file)) {
                 net.lapidist.colony.save.SaveData data = GameStateIO.loadData(file);
-                java.util.Set<String> ids = data.mods().stream().map(m -> m.id()).collect(java.util.stream.Collectors.toSet());
-                selectedMods = mods.stream()
-                        .filter(m -> ids.contains(m.metadata().id()))
-                        .toList();
+                java.util.Set<String> ids = data.mods()
+                        .stream()
+                        .map(m -> m.id())
+                        .collect(java.util.stream.Collectors.toSet());
+                if (mods != null) {
+                    selectedMods = mods.stream()
+                            .filter(m -> ids.contains(m.metadata().id()))
+                            .toList();
+                } else {
+                    selectedMods = java.util.Collections.emptyList();
+                }
                 MapState state = data.mapState();
                 startGame(saveName, state.width(), state.height());
             } else {

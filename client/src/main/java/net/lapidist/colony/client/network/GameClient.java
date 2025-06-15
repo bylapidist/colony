@@ -276,7 +276,7 @@ public final class GameClient extends AbstractMessageEndpoint implements AutoClo
     }
 
     private static java.util.Map<ChunkPos, MapChunkData> buildChunks(final java.util.Map<TilePos, TileData> tiles) {
-        java.util.Map<ChunkPos, MapChunkData> chunks = new java.util.HashMap<>();
+        java.util.Map<ChunkPos, MapChunkData> chunks = new java.util.concurrent.ConcurrentHashMap<>();
         for (var entry : tiles.entrySet()) {
             TilePos pos = entry.getKey();
             TileData data = entry.getValue();

@@ -6,7 +6,6 @@ import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.components.state.ChunkPos;
 import net.lapidist.colony.map.MapChunkData;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /** Migration from save version 6 to version 7 converting tile maps to chunks. */
@@ -27,7 +26,7 @@ public final class V6ToV7Migration implements MapStateMigration {
         if (!existing.isEmpty() && existing.keySet().iterator().next() instanceof ChunkPos) {
             return state.toBuilder().version(toVersion()).build();
         }
-        Map<ChunkPos, MapChunkData> chunks = new HashMap<>();
+        Map<ChunkPos, MapChunkData> chunks = new java.util.concurrent.ConcurrentHashMap<>();
         for (Map.Entry<?, ?> e : existing.entrySet()) {
             Object key = e.getKey();
             Object value = e.getValue();

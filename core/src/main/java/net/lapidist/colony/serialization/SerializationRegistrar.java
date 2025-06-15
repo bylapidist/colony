@@ -44,6 +44,7 @@ public final class SerializationRegistrar {
         kryo.register(java.util.ArrayList.class);
         kryo.register(java.util.List.class);
         kryo.register(java.util.HashMap.class);
+        kryo.register(java.util.concurrent.ConcurrentHashMap.class);
         com.esotericsoftware.kryo.serializers.ImmutableCollectionsSerializers.registerSerializers(kryo);
         kryo.register(java.util.Map.class);
         kryo.register(byte[].class);

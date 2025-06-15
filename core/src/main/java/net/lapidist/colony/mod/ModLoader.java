@@ -217,7 +217,9 @@ public final class ModLoader {
 
     private ModMetadata readMetadata(final BufferedReader reader) {
         Config config = ConfigFactory.parseReader(reader);
-        List<String> deps = config.hasPath("dependencies") ? new java.util.ArrayList<>(config.getStringList("dependencies")) : new java.util.ArrayList<>();
+        List<String> deps = config.hasPath("dependencies")
+                ? new java.util.ArrayList<>(config.getStringList("dependencies"))
+                : new java.util.ArrayList<>();
         return new ModMetadata(config.getString("id"), config.getString("version"), deps);
     }
 
