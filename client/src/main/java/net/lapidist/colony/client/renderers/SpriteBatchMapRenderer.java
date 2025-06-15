@@ -1,6 +1,7 @@
 package net.lapidist.colony.client.renderers;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Disposable;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.CameraProvider;
@@ -17,10 +18,12 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
     private final BuildingRenderer buildingRenderer;
     private final ResourceRenderer resourceRenderer;
     private final PlayerRenderer playerRenderer;
+    private final ShaderProgram shaderProgram;
     private final MapTileCache tileCache = new MapTileCache();
     private final AssetResolver resolver = new DefaultAssetResolver();
     private final boolean cacheEnabled;
 
+    @SuppressWarnings("checkstyle:ParameterNumber")
     public SpriteBatchMapRenderer(
             final SpriteBatch spriteBatchToSet,
             final ResourceLoader resourceLoaderToSet,
@@ -28,7 +31,8 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
             final BuildingRenderer buildingRendererToSet,
             final ResourceRenderer resourceRendererToSet,
             final PlayerRenderer playerRendererToSet,
-            final boolean cacheEnabledToSet
+            final boolean cacheEnabledToSet,
+            final ShaderProgram shaderProgramToUse
     ) {
         this.spriteBatch = spriteBatchToSet;
         this.resourceLoader = resourceLoaderToSet;
@@ -37,6 +41,7 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         this.resourceRenderer = resourceRendererToSet;
         this.playerRenderer = playerRendererToSet;
         this.cacheEnabled = cacheEnabledToSet;
+        this.shaderProgram = shaderProgramToUse;
     }
 
     /** Invalidate cache segments for the given tile indices. */
@@ -51,6 +56,11 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         spriteBatch.setProjectionMatrix(camera.getCamera().combined);
         if (cacheEnabled) {
             tileCache.ensureCache(resourceLoader, map, resolver, camera);
+        }
+        ShaderProgram oldShader = null;
+        if (shaderProgram != null) {
+            oldShader = spriteBatch.getShader();
+            spriteBatch.setShader(shaderProgram);
         }
         spriteBatch.begin();
 
@@ -67,6 +77,9 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         playerRenderer.render(map);
 
         spriteBatch.end();
+        if (shaderProgram != null) {
+            spriteBatch.setShader(oldShader);
+        }
     }
 
     @Override
@@ -76,5 +89,8 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         playerRenderer.dispose();
         spriteBatch.dispose();
         tileCache.dispose();
+        if (shaderProgram != null) {
+            shaderProgram.dispose();
+        }
     }
 }

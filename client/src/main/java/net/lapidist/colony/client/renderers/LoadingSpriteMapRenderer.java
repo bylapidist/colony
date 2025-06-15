@@ -88,7 +88,8 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
                     buildingRenderer,
                     resourceRenderer,
                     playerRenderer,
-                    cacheEnabled
+                    cacheEnabled,
+                    null
             );
             if (progressCallback != null) {
                 progressCallback.accept(1f);

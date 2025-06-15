@@ -66,9 +66,9 @@ public class SpriteBatchRendererBenchmark {
         ResourceRenderer resourceRenderer = mock(ResourceRenderer.class);
         PlayerRenderer playerRenderer = mock(PlayerRenderer.class);
         cachedRenderer = new SpriteBatchMapRenderer(
-                batch, loader, tileRenderer, buildingRenderer, resourceRenderer, playerRenderer, true);
+                batch, loader, tileRenderer, buildingRenderer, resourceRenderer, playerRenderer, true, null);
         plainRenderer = new SpriteBatchMapRenderer(
-                batch, loader, tileRenderer, buildingRenderer, resourceRenderer, playerRenderer, false);
+                batch, loader, tileRenderer, buildingRenderer, resourceRenderer, playerRenderer, false, null);
         data = createData(MAP_SIZE, MAP_SIZE);
         construction = mockConstruction(SpriteCache.class, (mock, ctx) -> {
             when(mock.getProjectionMatrix()).thenReturn(new Matrix4());
