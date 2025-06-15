@@ -69,6 +69,7 @@ public class MapWorldBuilderConfigurationTest {
             assertNull(world.getSystem(MapInitSystem.class));
             assertNull(world.getSystem(MapRenderDataSystem.class));
             assertNotNull(world.getSystem(DayNightSystem.class));
+            assertNotNull(world.getSystem(net.lapidist.colony.client.systems.CelestialSystem.class));
 
             world.dispose();
         }
@@ -106,6 +107,7 @@ public class MapWorldBuilderConfigurationTest {
             assertNotNull(world.getSystem(PlayerCameraSystem.class));
             assertNotNull(world.getSystem(PlayerMovementSystem.class));
             assertNotNull(world.getSystem(MapRenderDataSystem.class));
+            assertNotNull(world.getSystem(net.lapidist.colony.client.systems.CelestialSystem.class));
             assertEquals(1, world.getAspectSubscriptionManager()
                     .get(Aspect.all(PlayerResourceComponent.class))
                     .getEntities().size());

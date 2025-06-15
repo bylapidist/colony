@@ -78,6 +78,7 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         buildingRenderer.render(map);
         entityRenderers.resourceRenderer().render(map);
         entityRenderers.playerRenderer().render(map);
+        entityRenderers.celestialRenderer().render(map);
 
         spriteBatch.end();
         if (shader != null) {
@@ -94,6 +95,7 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         resourceLoader.dispose();
         entityRenderers.resourceRenderer().dispose();
         entityRenderers.playerRenderer().dispose();
+        entityRenderers.celestialRenderer().dispose();
         spriteBatch.dispose();
         if (shader != null) {
             shader.dispose();

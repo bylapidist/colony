@@ -28,9 +28,11 @@ import net.lapidist.colony.client.systems.network.ChunkRequestQueueSystem;
 import net.lapidist.colony.client.systems.network.TileUpdateSystem;
 import net.lapidist.colony.client.systems.network.BuildingUpdateSystem;
 import net.lapidist.colony.client.systems.network.ResourceUpdateSystem;
+import net.lapidist.colony.client.systems.CelestialSystem;
 import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.client.systems.PlayerInitSystem;
+import net.lapidist.colony.components.entities.CelestialBodyComponent;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.state.PlayerPosition;
@@ -50,6 +52,8 @@ public final class MapWorldBuilder {
 
     private MapWorldBuilder() {
     }
+
+    private static final float HALF_ROTATION = 180f;
 
     /**
      * Create a base {@link WorldConfigurationBuilder} containing the default
@@ -167,6 +171,7 @@ public final class MapWorldBuilder {
                         new ResourceUpdateSystem(client),
                         new ChunkLoadSystem(client),
                         new ChunkRequestQueueSystem(client),
+                        new CelestialSystem(client, state.environment()),
                         new MapRenderSystem(),
                         particleSystem,
                         lighting,
@@ -238,6 +243,24 @@ public final class MapWorldBuilder {
             cameraSystem.getCamera().update();
         }
         Events.init(world.getSystem(EventSystem.class));
+        createCelestialEntities(world);
         return world;
+    }
+
+    private static void createCelestialEntities(final World world) {
+        float radius = 0f; // auto-calculated by system when zero
+        var sun = world.createEntity();
+        var sunComp = new CelestialBodyComponent();
+        sunComp.setTexture("player0");
+        sunComp.setOrbitRadius(radius);
+        sunComp.setOrbitOffset(0f);
+        sun.edit().add(sunComp);
+
+        var moon = world.createEntity();
+        var moonComp = new CelestialBodyComponent();
+        moonComp.setTexture("player0");
+        moonComp.setOrbitRadius(radius);
+        moonComp.setOrbitOffset(HALF_ROTATION);
+        moon.edit().add(moonComp);
     }
 }

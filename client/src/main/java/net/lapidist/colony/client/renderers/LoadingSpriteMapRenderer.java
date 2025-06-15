@@ -85,12 +85,17 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
                     resourceLoader,
                     world
             );
+            CelestialRenderer celestialRenderer = new CelestialRenderer(
+                    spriteBatch,
+                    resourceLoader,
+                    world
+            );
             ResourceRenderer resourceRenderer = new ResourceRenderer(
                     spriteBatch,
                     cameraSystem,
                     world.getSystem(MapRenderDataSystem.class)
             );
-            MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer);
+            MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer, celestialRenderer);
             delegate = new SpriteBatchMapRenderer(
                     spriteBatch,
                     resourceLoader,
