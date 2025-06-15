@@ -94,7 +94,7 @@ public class MapRendererFactoryTest {
                     "textures/textures.atlas",
                     p -> progressCalls.incrementAndGet()
             );
-            MapRenderer renderer = factory.create(world);
+            MapRenderer renderer = factory.create(world, null);
 
             assertNotNull(renderer);
             assertFalse(loader.updated);
@@ -119,7 +119,7 @@ public class MapRendererFactoryTest {
                     FileLocation.INTERNAL,
                     "textures/textures.atlas"
             );
-            MapRenderer renderer = factory.create(world);
+            MapRenderer renderer = factory.create(world, null);
 
             assertNotNull(renderer);
             assertFalse(loader.updated);
@@ -203,7 +203,7 @@ public class MapRendererFactoryTest {
                     "textures/textures.atlas",
                     progress::set
             );
-            MapRenderer renderer = factory.create(world);
+            MapRenderer renderer = factory.create(world, null);
 
             assertNotNull(renderer);
             renderer.render(null, null);
@@ -236,7 +236,7 @@ public class MapRendererFactoryTest {
                     FileLocation.INTERNAL,
                     "textures/missing.atlas"
             );
-            MapRenderer renderer = factory.create(world);
+            MapRenderer renderer = factory.create(world, null);
 
             assertNotNull(renderer);
         }

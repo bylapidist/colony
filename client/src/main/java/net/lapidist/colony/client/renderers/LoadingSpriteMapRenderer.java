@@ -22,6 +22,7 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
     private final CameraProvider cameraSystem;
     private final boolean cacheEnabled;
     private final Consumer<Float> progressCallback;
+    private final com.badlogic.gdx.graphics.glutils.ShaderProgram shader;
 
     private MapRenderer delegate;
 
@@ -31,7 +32,8 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
             final ResourceLoader loaderToUse,
             final CameraProvider camera,
             final boolean cache,
-            final Consumer<Float> callback
+            final Consumer<Float> callback,
+            final com.badlogic.gdx.graphics.glutils.ShaderProgram shaderProgram
     ) {
         this.world = worldContext;
         this.spriteBatch = batchToUse;
@@ -39,6 +41,7 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
         this.cameraSystem = camera;
         this.cacheEnabled = cache;
         this.progressCallback = callback;
+        this.shader = shaderProgram;
         // ensure mapper initialization for render systems
         worldContext.getMapper(MapComponent.class);
     }
@@ -89,7 +92,7 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
                     buildingRenderer,
                     renderers,
                     cacheEnabled,
-                    null
+                    shader
             );
             if (progressCallback != null) {
                 progressCallback.accept(1f);
