@@ -10,9 +10,11 @@ import net.lapidist.colony.client.core.io.FileLocation;
 /**
  * Shader plugin that enables Box2DLights along with normal mapping.
  */
-public final class LightsNormalMapShaderPlugin implements LightingPlugin {
+public final class LightsNormalMapShaderPlugin implements LightingPlugin, UniformUpdater {
 
     private RayHandler rayHandler;
+    private final com.badlogic.gdx.math.Vector3 lightDir = new com.badlogic.gdx.math.Vector3(0f, 0f, 1f);
+    private final com.badlogic.gdx.math.Vector3 viewDir = new com.badlogic.gdx.math.Vector3(0f, 0f, 1f);
 
     @Override
     public ShaderProgram create(final ShaderManager manager) {
@@ -52,5 +54,11 @@ public final class LightsNormalMapShaderPlugin implements LightingPlugin {
             rayHandler.dispose();
             rayHandler = null;
         }
+    }
+
+    @Override
+    public void applyUniforms(final ShaderProgram program) {
+        program.setUniformf("u_lightDir", lightDir);
+        program.setUniformf("u_viewDir", viewDir);
     }
 }

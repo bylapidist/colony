@@ -19,6 +19,7 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
     private final BuildingRenderer buildingRenderer;
     private final MapEntityRenderers entityRenderers;
     private final ShaderProgram shader;
+    private final net.lapidist.colony.client.graphics.ShaderPlugin plugin;
     private final MapTileCache tileCache = new MapTileCache();
     private final AssetResolver resolver = new DefaultAssetResolver();
     private final boolean cacheEnabled;
@@ -32,7 +33,8 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
             final BuildingRenderer buildingRendererToSet,
             final MapEntityRenderers entityRenderersToSet,
             final boolean cacheEnabledToSet,
-            final ShaderProgram shaderToSet
+            final ShaderProgram shaderToSet,
+            final net.lapidist.colony.client.graphics.ShaderPlugin pluginToSet
     ) {
         this.spriteBatch = spriteBatchToSet;
         this.resourceLoader = resourceLoaderToSet;
@@ -41,6 +43,7 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         this.entityRenderers = entityRenderersToSet;
         this.cacheEnabled = cacheEnabledToSet;
         this.shader = shaderToSet;
+        this.plugin = pluginToSet;
     }
     // CHECKSTYLE:ON: ParameterNumber
 
@@ -66,6 +69,9 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
             spriteBatch.setShader(shader);
         }
         spriteBatch.begin();
+        if (shader != null && plugin instanceof net.lapidist.colony.client.graphics.UniformUpdater updater) {
+            updater.applyUniforms(shader);
+        }
 
         if (cacheEnabled) {
             tileCache.draw(spriteBatch, camera);
@@ -101,5 +107,8 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
             shader.dispose();
         }
         tileCache.dispose();
+        if (plugin != null) {
+            plugin.dispose();
+        }
     }
 }

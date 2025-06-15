@@ -32,7 +32,7 @@ public class SpriteBatchMapRendererTest {
         MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer, celestialRenderer);
 
         SpriteBatchMapRenderer renderer = new SpriteBatchMapRenderer(
-                batch, loader, tileRenderer, buildingRenderer, renderers, true, null);
+                batch, loader, tileRenderer, buildingRenderer, renderers, true, null, null);
 
         Field cacheField = SpriteBatchMapRenderer.class.getDeclaredField("tileCache");
         cacheField.setAccessible(true);
@@ -57,7 +57,7 @@ public class SpriteBatchMapRendererTest {
         MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer, celestialRenderer);
 
         SpriteBatchMapRenderer renderer = new SpriteBatchMapRenderer(
-                batch, loader, tileRenderer, buildingRenderer, renderers, false, null);
+                batch, loader, tileRenderer, buildingRenderer, renderers, false, null, null);
 
         Field cacheField = SpriteBatchMapRenderer.class.getDeclaredField("tileCache");
         cacheField.setAccessible(true);
@@ -82,7 +82,7 @@ public class SpriteBatchMapRendererTest {
         MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer, celestialRenderer);
 
         SpriteBatchMapRenderer renderer = new SpriteBatchMapRenderer(
-                batch, loader, tileRenderer, buildingRenderer, renderers, false, shader);
+                batch, loader, tileRenderer, buildingRenderer, renderers, false, shader, null);
 
         MapRenderData map = mock(MapRenderData.class);
         CameraProvider camera = new CameraProvider() {
@@ -128,7 +128,7 @@ public class SpriteBatchMapRendererTest {
         MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer, celestialRenderer);
 
         SpriteBatchMapRenderer renderer = new SpriteBatchMapRenderer(
-                batch, loader, tileRenderer, buildingRenderer, renderers, false, null);
+                batch, loader, tileRenderer, buildingRenderer, renderers, false, null, null);
 
         MapRenderData map = mock(MapRenderData.class);
         CameraProvider camera = new CameraProvider() {
@@ -169,7 +169,7 @@ public class SpriteBatchMapRendererTest {
         box2dLight.RayHandler lights = mock(box2dLight.RayHandler.class);
 
         SpriteBatchMapRenderer renderer = new SpriteBatchMapRenderer(
-                batch, loader, tileRenderer, buildingRenderer, renderers, false, null);
+                batch, loader, tileRenderer, buildingRenderer, renderers, false, null, null);
         renderer.setLights(lights);
 
         MapRenderData map = mock(MapRenderData.class);

@@ -32,7 +32,7 @@ public class LoadingSpriteMapRendererTest {
         try (MockedConstruction<SpriteBatchMapRenderer> cons =
                 mockConstruction(SpriteBatchMapRenderer.class)) {
             LoadingSpriteMapRenderer renderer = new LoadingSpriteMapRenderer(
-                    world, batch, loader, camera, false, null, null);
+                    world, batch, loader, camera, false, null, null, null);
             renderer.setLights(lights);
 
             renderer.render(mock(net.lapidist.colony.client.render.MapRenderData.class), null);
