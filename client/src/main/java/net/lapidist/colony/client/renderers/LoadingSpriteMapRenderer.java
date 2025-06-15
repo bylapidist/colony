@@ -120,8 +120,5 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
             resourceLoader.dispose();
             spriteBatch.dispose();
         }
-        if (lights != null) {
-            lights.dispose();
-        }
     }
 }

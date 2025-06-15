@@ -14,12 +14,7 @@ public class Box2dLightsPluginTest {
         Box2dLightsPlugin plugin = new Box2dLightsPlugin();
         assertNull(plugin.getRayHandler());
 
-        try {
-            plugin.create(new ShaderManager());
-            fail("Expected failure when creating RayHandler");
-        } catch (IllegalStateException ex) {
-            // expected when FBO unsupported in headless tests
-        }
+        assertNull(plugin.create(new ShaderManager()));
 
         assertNull(plugin.getRayHandler());
         assertEquals("box2dlights", plugin.id());

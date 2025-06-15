@@ -57,3 +57,10 @@ public final class GrayShaderPlugin implements ShaderPlugin {
 
 Add `GrayShaderPlugin` to the service descriptor and set
 `graphics.shaderPlugin` to `com.example.GrayShaderPlugin` to enable it.
+
+## Built-in lighting
+
+The `Box2dLightsPlugin` is included with the game and integrates the
+[box2d-lights](https://github.com/libgdx/box2dlights) library. It returns
+no shader program but exposes a `RayHandler` when frame buffers are supported.
+Headless or unsupported environments automatically skip lighting.

@@ -27,6 +27,7 @@ public final class GraphicsSettingsScreen extends BaseScreen {
     private final SelectBox<String> shaderBox;
     private final com.badlogic.gdx.utils.Array<String> pluginIds;
     private final CheckBox cacheBox;
+    private final CheckBox lightingBox;
     private final SelectBox<String> rendererBox;
     private static final float PADDING = 10f;
 
@@ -64,6 +65,8 @@ public final class GraphicsSettingsScreen extends BaseScreen {
         }
         cacheBox = new CheckBox(I18n.get("graphics.spritecache"), getSkin());
         cacheBox.setChecked(graphics.isSpriteCacheEnabled());
+        lightingBox = new CheckBox(I18n.get("graphics.lighting"), getSkin());
+        lightingBox.setChecked(graphics.isLightingEnabled());
 
         rendererBox = new SelectBox<>(getSkin());
         rendererBox.setItems("sprite");
@@ -78,6 +81,7 @@ public final class GraphicsSettingsScreen extends BaseScreen {
         options.add(afBox).left().row();
         options.add(shaderBox).left().row();
         options.add(cacheBox).left().row();
+        options.add(lightingBox).left().row();
         options.add(rendererBox).left().row();
 
         ScrollPane scroll = new ScrollPane(options, getSkin());
@@ -99,6 +103,7 @@ public final class GraphicsSettingsScreen extends BaseScreen {
                 int idx = shaderBox.getSelectedIndex();
                 graphics.setShaderPlugin(pluginIds.get(idx));
                 graphics.setSpriteCacheEnabled(cacheBox.isChecked());
+                graphics.setLightingEnabled(lightingBox.isChecked());
                 graphics.setRenderer(rendererBox.getSelected());
                 save();
             }

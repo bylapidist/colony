@@ -41,7 +41,6 @@ public class LoadingSpriteMapRendererTest {
             verify(sb).setLights(lights);
 
             renderer.dispose();
-            verify(lights).dispose();
             verify(sb).dispose();
             verify(loader, never()).dispose();
         }

@@ -30,6 +30,12 @@ per-frame lookups. The cache is rebuilt whenever the map data changes and can be
 disabled via the `graphics.spritecache` setting. Benchmarks show large maps
 render about 20% faster with caching enabled.
 
+## Lighting
+
+Dynamic lighting uses the box2d-lights library and requires additional frame buffer passes.
+On low end GPUs this can noticeably reduce frame rate. Disable the feature with
+`graphics.lighting=false` if performance is a concern.
+
 ## Asynchronous renderer loading
 
 `SpriteMapRendererFactory` now loads assets using LibGDX's `AssetManager` and
