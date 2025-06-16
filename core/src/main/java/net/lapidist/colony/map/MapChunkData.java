@@ -16,6 +16,9 @@ import java.util.Random;
 public final class MapChunkData {
     public static final int CHUNK_SIZE = 32;
     private static final double NOISE_SCALE = 0.1;
+    private static final int DEFAULT_WOOD = 10;
+    private static final int DEFAULT_STONE = 5;
+    private static final int DEFAULT_FOOD = 3;
 
     private final Map<TilePos, TileData> tiles = new ConcurrentHashMap<>();
     private final long seed;
@@ -71,6 +74,8 @@ public final class MapChunkData {
                 .y(worldY)
                 .tileType(type)
                 .passable(true)
+                .resources(new net.lapidist.colony.components.state.ResourceData(
+                        DEFAULT_WOOD, DEFAULT_STONE, DEFAULT_FOOD))
                 .build();
     }
 
