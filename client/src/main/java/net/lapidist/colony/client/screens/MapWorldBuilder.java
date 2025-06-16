@@ -191,7 +191,7 @@ public final class MapWorldBuilder {
 
         if (graphics == null || (graphics.isLightingEnabled() && graphics.isDayNightCycleEnabled())) {
             builder.with(
-                    new DayNightSystem(clear, lighting, environment),
+                    new DayNightSystem(clear, lighting),
                     new SeasonCycleSystem(environment)
             );
         }

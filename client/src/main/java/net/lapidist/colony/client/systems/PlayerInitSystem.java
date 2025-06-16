@@ -6,6 +6,7 @@ import net.lapidist.colony.components.resources.PlayerResourceComponent;
 import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.entities.PlayerComponent;
 import net.lapidist.colony.client.graphics.CameraUtils;
+import net.lapidist.colony.components.light.PointLightComponent;
 import net.lapidist.colony.components.state.PlayerPosition;
 
 /** Creates a player entity with resource storage. */
@@ -51,7 +52,10 @@ public final class PlayerInitSystem extends BaseSystem {
                     : CameraUtils.getWorldCenter(width, height);
             pc.setX(pos.x);
             pc.setY(pos.y);
-            player.edit().add(pr).add(pc);
+            PointLightComponent light = new PointLightComponent();
+            light.setRadius(3f);
+            light.setIntensity(0.6f);
+            player.edit().add(pr).add(pc).add(light);
             created = true;
         }
     }

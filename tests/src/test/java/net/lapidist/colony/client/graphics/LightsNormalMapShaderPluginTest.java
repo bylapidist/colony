@@ -44,8 +44,7 @@ public class LightsNormalMapShaderPluginTest {
         LightsNormalMapShaderPlugin plugin = new LightsNormalMapShaderPlugin();
         DayNightSystem system = new DayNightSystem(
                 new ClearScreenSystem(new Color()),
-                new LightingSystem(),
-                new MutableEnvironmentState(new EnvironmentState(0f, Season.SPRING, 0f))
+                new LightingSystem()
         );
         plugin.setDayNightSystem(system);
         ShaderProgram shader = mock(ShaderProgram.class);
