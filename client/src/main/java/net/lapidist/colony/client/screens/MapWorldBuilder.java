@@ -237,6 +237,11 @@ public final class MapWorldBuilder {
             renderSystem.setMapRenderer(renderer);
             renderSystem.setCameraProvider(world.getSystem(PlayerCameraSystem.class));
         }
+        DayNightSystem dayNightSystem = world.getSystem(DayNightSystem.class);
+        if (plugin instanceof net.lapidist.colony.client.graphics.LightsNormalMapShaderPlugin ln
+                && dayNightSystem != null) {
+            ln.setDayNightSystem(dayNightSystem);
+        }
         LightingSystem lightingSystem = world.getSystem(LightingSystem.class);
         if (lightingSystem != null && plugin instanceof net.lapidist.colony.client.graphics.LightingPlugin lp) {
             if (settings == null || settings.getGraphicsSettings().isLightingEnabled()) {
