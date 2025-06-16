@@ -23,9 +23,9 @@ public final class DayNightSystem extends BaseSystem {
     private static final float SUNRISE_TIME = 6f;
     private static final float NOON_TIME = 12f;
     private static final float SUNSET_TIME = 18f;
-    private static final Color NIGHT_COLOR = new Color(0.01f, 0.01f, 0.025f, 1f);
+    private static final Color NIGHT_COLOR = new Color(0f, 0f, 0f, 1f);
     private static final Color SUNRISE_COLOR = new Color(0.6f, 0.5f, 0.4f, 1f);
-    private static final Color DAY_COLOR = new Color(0.8f, 0.85f, 0.9f, 1f);
+    private static final Color DAY_COLOR = new Color(1f, 1f, 1f, 1f);
     private static final Color MOON_COLOR = new Color(0.2f, 0.2f, 0.25f, 1f);
 
     public DayNightSystem(final ClearScreenSystem clearSystem,
@@ -77,8 +77,9 @@ public final class DayNightSystem extends BaseSystem {
     }
 
     private static float calculateBrightness(final float time) {
-        float angle = (time / HOURS_PER_DAY) * FULL_ROTATION - DAWN_OFFSET;
-        return (MathUtils.sinDeg(angle) + 1f) / 2f;
+        float t = wrap(time);
+        float dayProgress = MathUtils.clamp((t - SUNRISE_TIME) / (SUNSET_TIME - SUNRISE_TIME), 0f, 1f);
+        return MathUtils.sin(dayProgress * MathUtils.PI);
     }
 
     private static void calculateColor(final float time, final float moonPhase, final Color out) {
