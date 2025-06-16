@@ -22,9 +22,9 @@ import static org.mockito.Mockito.*;
 @SuppressWarnings("checkstyle:magicnumber")
 public class DayNightSystemTest {
 
-    private static final float DAY_RED = 0.8f;
-    private static final float DAY_GREEN = 0.85f;
-    private static final float DAY_BLUE = 0.9f;
+    private static final float DAY_RED = 1f;
+    private static final float DAY_GREEN = 1f;
+    private static final float DAY_BLUE = 1f;
     private static final float NIGHT_RED = 0f;
     private static final float NIGHT_BLUE = 0f;
     private static final float MOON_RED = 0.2f;
