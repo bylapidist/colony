@@ -78,6 +78,8 @@ public class SettingsTest {
         graphics.setNormalMapsEnabled(true);
         graphics.setSpecularMapsEnabled(true);
         graphics.setDayNightCycleEnabled(false);
+        final int rays = 20;
+        graphics.setLightRays(rays);
         settings.save(paths);
 
         Settings loaded = Settings.load(paths);
@@ -91,5 +93,6 @@ public class SettingsTest {
         assertEquals(true, loaded.getGraphicsSettings().isNormalMapsEnabled());
         assertEquals(true, loaded.getGraphicsSettings().isSpecularMapsEnabled());
         assertEquals(false, loaded.getGraphicsSettings().isDayNightCycleEnabled());
+        assertEquals(rays, loaded.getGraphicsSettings().getLightRays());
     }
 }

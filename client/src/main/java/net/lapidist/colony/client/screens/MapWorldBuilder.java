@@ -158,7 +158,8 @@ public final class MapWorldBuilder {
 
         ClearScreenSystem clear = new ClearScreenSystem(Color.BLACK);
         LightingSystem lighting = new LightingSystem();
-        DynamicLightSystem dynamicLights = new DynamicLightSystem(lighting);
+        int rays = graphics != null ? graphics.getLightRays() : DynamicLightSystem.DEFAULT_RAYS;
+        DynamicLightSystem dynamicLights = new DynamicLightSystem(lighting, rays);
         WorldConfigurationBuilder builder = new WorldConfigurationBuilder()
                 .with(
                         new EventSystem(),
