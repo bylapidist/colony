@@ -222,7 +222,8 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
             commandHandlers = java.util.List.of(
                     new TileSelectionCommandHandler(() -> mapState, networkService, stateLock),
                     new BuildCommandHandler(() -> mapState, s -> mapState = s, networkService, stateLock),
-                    new GatherCommandHandler(() -> mapState, s -> mapState = s, networkService, stateLock),
+                    new GatherCommandHandler(() -> mapState, s -> mapState = s,
+                            networkService, new net.lapidist.colony.server.services.InventoryService(), stateLock),
                     new RemoveBuildingCommandHandler(() -> mapState, s -> mapState = s, networkService, stateLock),
                     new PlayerPositionCommandHandler(() -> mapState, s -> mapState = s, stateLock)
             );
