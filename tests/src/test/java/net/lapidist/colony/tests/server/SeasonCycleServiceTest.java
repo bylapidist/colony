@@ -1,6 +1,5 @@
 package net.lapidist.colony.tests.server;
 
-import net.lapidist.colony.components.state.EnvironmentState;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.Season;
 import net.lapidist.colony.server.services.SeasonCycleService;
@@ -14,6 +13,7 @@ import static org.junit.Assert.*;
 public class SeasonCycleServiceTest {
     private static final int INTERVAL = 10;
     private static final int WAIT_MS = 30;
+    private static final float SEASON_LENGTH = 0.02f;
 
     @Test
     public void advancesSeason() throws Exception {
@@ -21,7 +21,7 @@ public class SeasonCycleServiceTest {
         AtomicReference<MapState> ref = new AtomicReference<>(state);
         SeasonCycleService service = new SeasonCycleService(
                 INTERVAL,
-                0.02f,
+                SEASON_LENGTH,
                 ref::get,
                 ref::set,
                 new ReentrantLock()

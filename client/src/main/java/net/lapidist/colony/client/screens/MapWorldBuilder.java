@@ -34,6 +34,7 @@ import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.client.systems.PlayerInitSystem;
 import net.lapidist.colony.components.entities.CelestialBodyComponent;
+import net.lapidist.colony.components.state.CameraPosition;
 import net.lapidist.colony.components.state.MutableEnvironmentState;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
@@ -150,9 +151,8 @@ public final class MapWorldBuilder {
     ) {
         ResourceData playerResources = state.playerResources();
         PlayerPosition playerPos = state.playerPos();
-        net.lapidist.colony.components.state.CameraPosition cameraPos = state.cameraPos();
-        net.lapidist.colony.components.state.MutableEnvironmentState environment =
-                new net.lapidist.colony.components.state.MutableEnvironmentState(state.environment());
+        CameraPosition cameraPos = state.cameraPos();
+        MutableEnvironmentState environment = new MutableEnvironmentState(state.environment());
         CameraInputSystem cameraInputSystem = new CameraInputSystem(client, keyBindings);
         cameraInputSystem.addProcessor(stage);
         SelectionSystem selectionSystem = new SelectionSystem(client, keyBindings);
@@ -217,7 +217,7 @@ public final class MapWorldBuilder {
             final WorldConfigurationBuilder builder,
             final MapRendererFactory factory,
             final Settings settings,
-            final net.lapidist.colony.components.state.CameraPosition cameraPos
+            final CameraPosition cameraPos
     ) {
         MapRendererFactory actualFactory = factory;
         if (actualFactory == null) {

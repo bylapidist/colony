@@ -98,8 +98,9 @@ public class SelectionSystemResourceTypeTest {
         );
         camera.getCamera().update();
 
-        com.badlogic.gdx.math.Vector2 screenCoords = net.lapidist.colony.client.graphics.CameraUtils.worldToScreenCoords(
-                camera.getViewport(), 0, 0);
+        com.badlogic.gdx.math.Vector2 screenCoords =
+                net.lapidist.colony.client.graphics.CameraUtils.worldToScreenCoords(
+                        camera.getViewport(), 0, 0);
         system.tap(screenCoords.x, screenCoords.y);
 
         ArgumentCaptor<ResourceGatherRequestData> captor =
