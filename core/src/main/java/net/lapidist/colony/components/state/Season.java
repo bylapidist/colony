@@ -8,5 +8,11 @@ public enum Season {
     SPRING,
     SUMMER,
     AUTUMN,
-    WINTER
+    WINTER;
+
+    /** Next season in the cycle. */
+    public Season next() {
+        Season[] values = values();
+        return values[(ordinal() + 1) % values.length];
+    }
 }

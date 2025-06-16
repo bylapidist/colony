@@ -7,13 +7,13 @@ import com.artemis.Entity;
 import com.badlogic.gdx.math.MathUtils;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.entities.CelestialBodyComponent;
-import net.lapidist.colony.components.state.EnvironmentState;
+import net.lapidist.colony.components.state.MutableEnvironmentState;
 import net.lapidist.colony.components.state.MapState;
 
 /** Updates celestial body positions based on the current environment. */
 public final class CelestialSystem extends BaseSystem {
     private final net.lapidist.colony.client.network.GameClient client;
-    private final EnvironmentState environment;
+    private final MutableEnvironmentState environment;
     private ComponentMapper<CelestialBodyComponent> bodyMapper;
 
     private static final float HOURS_PER_DAY = 24f;
@@ -21,7 +21,7 @@ public final class CelestialSystem extends BaseSystem {
     private static final float DAWN_OFFSET = 90f;
 
     public CelestialSystem(final net.lapidist.colony.client.network.GameClient clientToUse,
-                           final EnvironmentState env) {
+                           final MutableEnvironmentState env) {
         this.client = clientToUse;
         this.environment = env;
     }
@@ -46,7 +46,7 @@ public final class CelestialSystem extends BaseSystem {
             float radius = body.getOrbitRadius() > 0
                     ? body.getOrbitRadius()
                     : Math.max(width, height) * GameConstants.TILE_SIZE;
-            float angle = (environment.timeOfDay() / HOURS_PER_DAY) * FULL_ROTATION - DAWN_OFFSET
+            float angle = (environment.getTimeOfDay() / HOURS_PER_DAY) * FULL_ROTATION - DAWN_OFFSET
                     + body.getOrbitOffset();
             body.setX(centerX + MathUtils.cosDeg(angle) * radius);
             body.setY(centerY + MathUtils.sinDeg(angle) * radius);

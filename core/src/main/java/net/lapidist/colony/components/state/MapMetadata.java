@@ -18,6 +18,7 @@ public record MapMetadata(
         ResourceData playerResources,
         PlayerPosition playerPos,
         CameraPosition cameraPos,
+        EnvironmentState environment,
         int width,
         int height,
         int chunkCount

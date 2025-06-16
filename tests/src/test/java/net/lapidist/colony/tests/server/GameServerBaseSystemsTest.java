@@ -3,6 +3,7 @@ package net.lapidist.colony.tests.server;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
 import net.lapidist.colony.server.services.ResourceProductionService;
+import net.lapidist.colony.server.services.SeasonCycleService;
 import net.lapidist.colony.io.Paths;
 import org.junit.Test;
 
@@ -29,6 +30,17 @@ public class GameServerBaseSystemsTest {
         server.start();
 
         assertTrue(systems(server).stream().anyMatch(s -> s instanceof ResourceProductionService));
+        server.stop();
+    }
+
+    @Test
+    public void seasonCycleSystemRegistered() throws Exception {
+        String name = "season-systems";
+        Paths.get().deleteAutosave(name);
+        GameServer server = new GameServer(GameServerConfig.builder().saveName(name).build());
+        server.start();
+
+        assertTrue(systems(server).stream().anyMatch(s -> s instanceof SeasonCycleService));
         server.stop();
     }
 }

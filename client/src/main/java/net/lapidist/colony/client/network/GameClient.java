@@ -148,7 +148,8 @@ public final class GameClient extends AbstractMessageEndpoint implements AutoClo
                             .buildings(new java.util.ArrayList<>(meta.buildings()))
                             .playerResources(meta.playerResources())
                             .playerPos(meta.playerPos())
-                            .cameraPos(meta.cameraPos());
+                            .cameraPos(meta.cameraPos())
+                            .environment(meta.environment());
                     tileBuffer = new java.util.HashMap<>();
                     expectedChunks = meta.chunkCount();
                     mapWidth = meta.width();

@@ -18,6 +18,7 @@ import net.lapidist.colony.client.systems.PlayerInitSystem;
 import net.lapidist.colony.client.systems.MapRenderSystem;
 import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.client.systems.DayNightSystem;
+import net.lapidist.colony.client.systems.SeasonCycleSystem;
 import net.lapidist.colony.components.resources.PlayerResourceComponent;
 import net.lapidist.colony.components.entities.PlayerComponent;
 import net.lapidist.colony.components.state.MapState;
@@ -70,6 +71,7 @@ public class MapWorldBuilderConfigurationTest {
             assertNull(world.getSystem(MapRenderDataSystem.class));
             assertNotNull(world.getSystem(DayNightSystem.class));
             assertNotNull(world.getSystem(net.lapidist.colony.client.systems.CelestialSystem.class));
+            assertNotNull(world.getSystem(SeasonCycleSystem.class));
 
             world.dispose();
         }
@@ -108,6 +110,7 @@ public class MapWorldBuilderConfigurationTest {
             assertNotNull(world.getSystem(PlayerMovementSystem.class));
             assertNotNull(world.getSystem(MapRenderDataSystem.class));
             assertNotNull(world.getSystem(net.lapidist.colony.client.systems.CelestialSystem.class));
+            assertNotNull(world.getSystem(SeasonCycleSystem.class));
             assertEquals(1, world.getAspectSubscriptionManager()
                     .get(Aspect.all(PlayerResourceComponent.class))
                     .getEntities().size());
