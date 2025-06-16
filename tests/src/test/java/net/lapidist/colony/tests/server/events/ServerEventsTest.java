@@ -1,6 +1,6 @@
 package net.lapidist.colony.tests.server.events;
 
-import net.lapidist.colony.server.events.AutosaveEvent;
+import net.lapidist.colony.events.autosave.AutosaveEvent;
 import net.lapidist.colony.events.Events;
 import net.lapidist.colony.server.events.ShutdownSaveEvent;
 import net.lapidist.colony.server.events.TileSelectionEvent;

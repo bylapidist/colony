@@ -1,4 +1,4 @@
-package net.lapidist.colony.server.events;
+package net.lapidist.colony.events.autosave;
 
 import net.mostlyoriginal.api.event.common.Event;
 
