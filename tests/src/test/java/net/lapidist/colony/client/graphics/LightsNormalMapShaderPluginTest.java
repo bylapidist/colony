@@ -89,4 +89,25 @@ public class LightsNormalMapShaderPluginTest {
         assertNull(worldField.get(plugin));
         assertNull(handlerField.get(plugin));
     }
+
+    @Test
+    public void failedCreationCleansUpWorld() throws Exception {
+        LightsNormalMapShaderPlugin plugin = new LightsNormalMapShaderPlugin();
+
+        java.lang.reflect.Field worldField = LightsNormalMapShaderPlugin.class.getDeclaredField("world");
+        worldField.setAccessible(true);
+        java.lang.reflect.Field handlerField = LightsNormalMapShaderPlugin.class.getDeclaredField("rayHandler");
+        handlerField.setAccessible(true);
+
+        ShaderProgram program = mock(ShaderProgram.class);
+        when(program.isCompiled()).thenReturn(false);
+        when(program.getLog()).thenReturn("err");
+
+        ShaderManager manager = new ShaderManager((v, f) -> program);
+
+        assertNull(plugin.create(manager));
+
+        assertNull(worldField.get(plugin));
+        assertNull(handlerField.get(plugin));
+    }
 }
