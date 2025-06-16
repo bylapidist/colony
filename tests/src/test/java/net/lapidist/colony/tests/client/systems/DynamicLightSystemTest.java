@@ -54,4 +54,12 @@ public class DynamicLightSystemTest {
         world.dispose();
         handler.dispose();
     }
+
+    @Test
+    public void usesConfiguredRayCount() {
+        LightingSystem lighting = new LightingSystem();
+        final int rays = 24;
+        DynamicLightSystem system = new DynamicLightSystem(lighting, rays);
+        assertEquals(rays, system.getRayCount());
+    }
 }

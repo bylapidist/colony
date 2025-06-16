@@ -76,3 +76,7 @@ graphics.shaderPlugin=lights-normalmap
 Lighting can be disabled independently with `graphics.lighting=false` if the
 additional frame buffer passes are too costly on low end GPUs.
 
+The number of rays per dynamic light can be tuned with `graphics.lightRays`.
+Higher values produce smoother shadows but reduce performance. The default is
+`16`.
+

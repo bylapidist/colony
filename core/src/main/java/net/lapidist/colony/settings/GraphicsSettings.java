@@ -17,6 +17,9 @@ public final class GraphicsSettings {
     private static final String NORMAL_KEY = PREFIX + "normalmaps";
     private static final String SPECULAR_KEY = PREFIX + "specularmaps";
     private static final String DAY_NIGHT_KEY = PREFIX + "dayNightCycle";
+    private static final String RAYS_KEY = PREFIX + "lightRays";
+
+    private static final int DEFAULT_RAYS = 16;
 
     private boolean antialiasingEnabled = true;
     private boolean mipMapsEnabled = true;
@@ -28,6 +31,7 @@ public final class GraphicsSettings {
     private boolean normalMapsEnabled;
     private boolean specularMapsEnabled;
     private boolean dayNightCycleEnabled = true;
+    private int lightRays = DEFAULT_RAYS;
 
     public boolean isAntialiasingEnabled() {
         return antialiasingEnabled;
@@ -109,6 +113,14 @@ public final class GraphicsSettings {
         this.dayNightCycleEnabled = enabled;
     }
 
+    public int getLightRays() {
+        return lightRays;
+    }
+
+    public void setLightRays(final int rays) {
+        this.lightRays = rays;
+    }
+
     /** Load graphics settings from the given properties. */
     public static GraphicsSettings load(final Properties props) {
         GraphicsSettings gs = new GraphicsSettings();
@@ -122,6 +134,7 @@ public final class GraphicsSettings {
         gs.normalMapsEnabled = Boolean.parseBoolean(props.getProperty(NORMAL_KEY, "false"));
         gs.specularMapsEnabled = Boolean.parseBoolean(props.getProperty(SPECULAR_KEY, "false"));
         gs.dayNightCycleEnabled = Boolean.parseBoolean(props.getProperty(DAY_NIGHT_KEY, "true"));
+        gs.lightRays = Integer.parseInt(props.getProperty(RAYS_KEY, Integer.toString(DEFAULT_RAYS)));
         return gs;
     }
 
@@ -137,5 +150,6 @@ public final class GraphicsSettings {
         props.setProperty(NORMAL_KEY, Boolean.toString(normalMapsEnabled));
         props.setProperty(SPECULAR_KEY, Boolean.toString(specularMapsEnabled));
         props.setProperty(DAY_NIGHT_KEY, Boolean.toString(dayNightCycleEnabled));
+        props.setProperty(RAYS_KEY, Integer.toString(lightRays));
     }
 }

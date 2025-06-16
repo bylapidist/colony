@@ -21,7 +21,9 @@ public final class DynamicLightSystem extends BaseSystem implements Disposable {
         PointLight create(RayHandler handler, PointLightComponent comp);
     }
 
-    private static final int DEFAULT_RAYS = 16;
+    public static final int DEFAULT_RAYS = 16;
+
+    private final int rays;
 
     private final LightingSystem lightingSystem;
     private final LightFactory factory;
@@ -30,12 +32,26 @@ public final class DynamicLightSystem extends BaseSystem implements Disposable {
     private final IntMap<PointLight> lights = new IntMap<>();
 
     public DynamicLightSystem(final LightingSystem lighting) {
-        this(lighting, (h, c) -> new PointLight(h, DEFAULT_RAYS, c.getColor(), c.getRadius(), 0f, 0f));
+        this(lighting, DEFAULT_RAYS);
+    }
+
+    public DynamicLightSystem(final LightingSystem lighting, final int rayCount) {
+        this(lighting, (h, c) -> new PointLight(h, rayCount, c.getColor(), c.getRadius(), 0f, 0f), rayCount);
     }
 
     public DynamicLightSystem(final LightingSystem lighting, final LightFactory factoryParam) {
+        this(lighting, factoryParam, DEFAULT_RAYS);
+    }
+
+    /** Number of rays used when creating each light. */
+    public int getRayCount() {
+        return rays;
+    }
+
+    private DynamicLightSystem(final LightingSystem lighting, final LightFactory factoryParam, final int rayCount) {
         this.lightingSystem = lighting;
         this.factory = factoryParam;
+        this.rays = rayCount;
     }
 
     /** Number of active lights. */

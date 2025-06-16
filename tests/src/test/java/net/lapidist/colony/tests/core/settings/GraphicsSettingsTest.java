@@ -16,6 +16,7 @@ public class GraphicsSettingsTest {
         Properties props = new Properties();
 
         GraphicsSettings gs = new GraphicsSettings();
+        final int rays = 32;
         gs.setAntialiasingEnabled(true);
         gs.setMipMapsEnabled(true);
         gs.setAnisotropicFilteringEnabled(true);
@@ -26,6 +27,7 @@ public class GraphicsSettingsTest {
         gs.setNormalMapsEnabled(true);
         gs.setSpecularMapsEnabled(true);
         gs.setDayNightCycleEnabled(false);
+        gs.setLightRays(rays);
         gs.save(props);
 
         GraphicsSettings loaded = GraphicsSettings.load(props);
@@ -39,6 +41,7 @@ public class GraphicsSettingsTest {
         assertTrue(loaded.isNormalMapsEnabled());
         assertTrue(loaded.isSpecularMapsEnabled());
         assertFalse(loaded.isDayNightCycleEnabled());
+        assertEquals(rays, loaded.getLightRays());
     }
 
     @Test
@@ -56,5 +59,6 @@ public class GraphicsSettingsTest {
         assertFalse(loaded.isNormalMapsEnabled());
         assertFalse(loaded.isSpecularMapsEnabled());
         assertTrue(loaded.isDayNightCycleEnabled());
+        assertEquals(GraphicsSettings.load(new Properties()).getLightRays(), loaded.getLightRays());
     }
 }
