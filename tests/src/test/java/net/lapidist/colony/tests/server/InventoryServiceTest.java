@@ -19,7 +19,8 @@ public class InventoryServiceTest {
     public void addsItemsOnlyWhenRegistered() {
         InventoryService inv = new InventoryService();
         inv.addItem("stone", 2);
-        inv.addItem("unknown", 5);
+        final int unknownAmount = 5;
+        inv.addItem("unknown", unknownAmount);
 
         assertEquals(2, inv.getAmount("stone"));
         assertEquals(0, inv.getAmount("unknown"));

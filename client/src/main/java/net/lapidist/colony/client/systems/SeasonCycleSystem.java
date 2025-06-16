@@ -2,7 +2,6 @@ package net.lapidist.colony.client.systems;
 
 import com.artemis.BaseSystem;
 import net.lapidist.colony.components.state.MutableEnvironmentState;
-import net.lapidist.colony.components.state.Season;
 
 /**
  * Cycles the game season after a fixed interval of real time.
@@ -11,6 +10,8 @@ public final class SeasonCycleSystem extends BaseSystem {
     private final MutableEnvironmentState environment;
     private final float seasonLength;
     private float elapsed;
+
+    private static final float DEFAULT_LENGTH_SECONDS = 60f;
 
     /**
      * @param env          environment to update
@@ -23,7 +24,7 @@ public final class SeasonCycleSystem extends BaseSystem {
 
     /** Default constructor using 60 seconds per season. */
     public SeasonCycleSystem(final MutableEnvironmentState env) {
-        this(env, 60f);
+        this(env, DEFAULT_LENGTH_SECONDS);
     }
 
     @Override

@@ -51,7 +51,8 @@ public class GatherCommandHandlerTest {
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .resources(res)
                 .build());
-        java.util.concurrent.atomic.AtomicReference<MapState> ref = new java.util.concurrent.atomic.AtomicReference<>(state);
+        java.util.concurrent.atomic.AtomicReference<MapState> ref =
+                new java.util.concurrent.atomic.AtomicReference<>(state);
         InventoryService inv = new InventoryService();
         GatherCommandHandler handler = new GatherCommandHandler(
                 ref::get,

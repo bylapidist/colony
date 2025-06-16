@@ -14,6 +14,7 @@ import java.util.function.Supplier;
 
 /** Service that periodically advances the world season. */
 public final class SeasonCycleService implements GameSystem {
+    private static final float MS_TO_SECONDS = 1000f;
     private final long period;
     private final float seasonLength;
     private final Supplier<MapState> supplier;
@@ -54,7 +55,7 @@ public final class SeasonCycleService implements GameSystem {
     private void tick() {
         lock.lock();
         try {
-            elapsed += period / 1000f;
+            elapsed += period / MS_TO_SECONDS;
             if (elapsed < seasonLength) {
                 return;
             }
