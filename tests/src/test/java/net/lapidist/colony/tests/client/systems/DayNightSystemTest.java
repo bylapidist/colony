@@ -27,6 +27,7 @@ public class DayNightSystemTest {
     private static final float DAY_BLUE = 1f;
     private static final float NIGHT_RED = 0f;
     private static final float NIGHT_BLUE = 0f;
+    private static final float NIGHT_AMBIENT = 0.5f;
     private static final float TOLERANCE = 0.01f;
 
     @Test
@@ -44,12 +45,12 @@ public class DayNightSystemTest {
                 .build());
         world.setDelta(0f);
         world.process();
-        verify(handler).setAmbientLight(1f, 1f, 1f, 1f);
+        verify(handler).setAmbientLight(0f, 0f, 0f, 1f);
         assertEquals(DAY_RED, clear.getColor().r, TOLERANCE);
         system.setTimeOfDay(0f);
         world.process();
 //CHECKSTYLE:OFF
-        verify(handler).setAmbientLight(NIGHT_RED, NIGHT_RED, NIGHT_BLUE, 1f);
+        verify(handler).setAmbientLight(NIGHT_AMBIENT, NIGHT_AMBIENT, NIGHT_AMBIENT, 1f);
         assertEquals(NIGHT_RED, clear.getColor().r, TOLERANCE);
 //CHECKSTYLE:ON
         world.dispose();

@@ -16,6 +16,9 @@ import static org.junit.Assert.*;
 @RunWith(GdxTestRunner.class)
 public class PlayerInitSystemTest {
 
+    private static final float EXPECTED_RADIUS = 3f;
+    private static final float EXPECTED_INTENSITY = 0.6f;
+
     @Test
     public void addsLightToPlayer() {
         World world = new World(new WorldConfigurationBuilder()
@@ -29,7 +32,7 @@ public class PlayerInitSystemTest {
         var light = world.getMapper(PointLightComponent.class)
                 .get(world.getEntity(ids.get(0)));
         assertNotNull(light);
-        assertEquals(3f, light.getRadius(), 0f);
-        assertEquals(0.6f, light.getIntensity(), 0f);
+        assertEquals(EXPECTED_RADIUS, light.getRadius(), 0f);
+        assertEquals(EXPECTED_INTENSITY, light.getIntensity(), 0f);
     }
 }
