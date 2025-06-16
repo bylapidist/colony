@@ -36,6 +36,8 @@ public final class SelectionSystem extends BaseSystem {
 
     private TileSelectionHandler tileSelectionHandler;
 
+    private String resourceId = "WOOD";
+
     public SelectionSystem(final GameClient clientToUse, final KeyBindings bindings) {
         this.client = clientToUse;
         this.keyBindings = bindings;
@@ -74,13 +76,25 @@ public final class SelectionSystem extends BaseSystem {
                 }
             }
         }
+        if (Gdx.input.isKeyJustPressed(keyBindings.getKey(KeyAction.SELECT_WOOD))) {
+            resourceId = "WOOD";
+        }
+        if (Gdx.input.isKeyJustPressed(keyBindings.getKey(KeyAction.SELECT_STONE))) {
+            resourceId = "STONE";
+        }
+        if (Gdx.input.isKeyJustPressed(keyBindings.getKey(KeyAction.SELECT_FOOD))) {
+            resourceId = "FOOD";
+        }
         if (map != null && Gdx.input.isKeyJustPressed(keyBindings.getKey(KeyAction.GATHER))) {
             for (int i = 0; i < selectedTiles.size; i++) {
                 var tile = selectedTiles.get(i);
                 TileComponent tc = tileMapper.get(tile);
-                ResourceGatherRequestData msg = new ResourceGatherRequestData(
-                        tc.getX(), tc.getY(), "WOOD");
-                client.sendGatherRequest(msg);
+                ResourceComponent rc = resourceMapper.get(tile);
+                if (rc.getAmount(resourceId) > 0) {
+                    ResourceGatherRequestData msg = new ResourceGatherRequestData(
+                            tc.getX(), tc.getY(), resourceId);
+                    client.sendGatherRequest(msg);
+                }
             }
         }
     }
@@ -101,9 +115,9 @@ public final class SelectionSystem extends BaseSystem {
                 .ifPresent(tile -> {
                     TileComponent tc = tileMapper.get(tile);
                     ResourceComponent rc = resourceMapper.get(tile);
-                    if (rc.getWood() > 0) {
+                    if (rc.getAmount(resourceId) > 0) {
                         ResourceGatherRequestData msg = new ResourceGatherRequestData(
-                                tc.getX(), tc.getY(), "WOOD");
+                                tc.getX(), tc.getY(), resourceId);
                         client.sendGatherRequest(msg);
                     }
                 });

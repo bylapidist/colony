@@ -13,7 +13,10 @@ public enum KeyAction {
     REMOVE("remove"),
     CHAT("chat"),
     MINIMAP("minimap"),
-    TOGGLE_CAMERA("toggleCamera");
+    TOGGLE_CAMERA("toggleCamera"),
+    SELECT_WOOD("selectWood"),
+    SELECT_STONE("selectStone"),
+    SELECT_FOOD("selectFood");
 
     private final String i18nKey;
 

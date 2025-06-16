@@ -11,17 +11,20 @@ import java.util.Map;
 public final class KeyBindings {
     private static final String PREFIX = "key.";
 
-    private static final Map<KeyAction, Integer> DEFAULTS = Map.of(
-            KeyAction.MOVE_UP, Input.Keys.W,
-            KeyAction.MOVE_DOWN, Input.Keys.S,
-            KeyAction.MOVE_LEFT, Input.Keys.A,
-            KeyAction.MOVE_RIGHT, Input.Keys.D,
-            KeyAction.GATHER, Input.Keys.H,
-            KeyAction.BUILD, Input.Keys.B,
-            KeyAction.REMOVE, Input.Keys.R,
-            KeyAction.CHAT, Input.Keys.T,
-            KeyAction.MINIMAP, Input.Keys.M,
-            KeyAction.TOGGLE_CAMERA, Input.Keys.F
+    private static final Map<KeyAction, Integer> DEFAULTS = Map.ofEntries(
+            Map.entry(KeyAction.MOVE_UP, Input.Keys.W),
+            Map.entry(KeyAction.MOVE_DOWN, Input.Keys.S),
+            Map.entry(KeyAction.MOVE_LEFT, Input.Keys.A),
+            Map.entry(KeyAction.MOVE_RIGHT, Input.Keys.D),
+            Map.entry(KeyAction.GATHER, Input.Keys.H),
+            Map.entry(KeyAction.BUILD, Input.Keys.B),
+            Map.entry(KeyAction.REMOVE, Input.Keys.R),
+            Map.entry(KeyAction.CHAT, Input.Keys.T),
+            Map.entry(KeyAction.MINIMAP, Input.Keys.M),
+            Map.entry(KeyAction.TOGGLE_CAMERA, Input.Keys.F),
+            Map.entry(KeyAction.SELECT_WOOD, Input.Keys.NUM_1),
+            Map.entry(KeyAction.SELECT_STONE, Input.Keys.NUM_2),
+            Map.entry(KeyAction.SELECT_FOOD, Input.Keys.NUM_3)
     );
 
     private final EnumMap<KeyAction, Integer> bindings = new EnumMap<>(KeyAction.class);
