@@ -4,6 +4,7 @@ import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.state.ResourceUpdateData;
+import net.lapidist.colony.base.BaseResourcesMod;
 import net.lapidist.colony.server.services.NetworkService;
 import net.lapidist.colony.server.services.ResourceProductionService;
 import org.junit.Test;
@@ -21,6 +22,7 @@ public class ResourceProductionServiceTest {
 
     @Test
     public void increasesFoodWhenFarmsExist() throws Exception {
+        new BaseResourcesMod().init();
         MapState state = new MapState();
         state.buildings().add(new BuildingData(0, 0, "farm"));
         state = state.toBuilder().playerResources(new ResourceData()).build();

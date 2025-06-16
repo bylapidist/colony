@@ -4,6 +4,8 @@ import net.lapidist.colony.components.state.BuildingData;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.state.ResourceUpdateData;
+import net.lapidist.colony.registry.Registries;
+import net.lapidist.colony.registry.ResourceDefinition;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -67,9 +69,13 @@ public final class ResourceProductionService implements net.lapidist.colony.mod.
             if (farms == 0) {
                 return;
             }
+            ResourceDefinition food = Registries.resources().get("FOOD");
+            if (food == null) {
+                return;
+            }
             ResourceData player = state.playerResources();
             java.util.Map<String, Integer> amounts = new java.util.HashMap<>(player.amounts());
-            amounts.merge("FOOD", (int) farms, Integer::sum);
+            amounts.merge(food.id(), (int) farms, Integer::sum);
             ResourceData updated = new ResourceData(new java.util.HashMap<>(amounts));
             MapState newState = state.toBuilder()
                     .playerResources(updated)

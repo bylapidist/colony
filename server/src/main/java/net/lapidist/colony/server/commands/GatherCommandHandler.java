@@ -7,6 +7,9 @@ import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.map.MapChunkData;
 import net.lapidist.colony.server.services.NetworkService;
+import net.lapidist.colony.server.services.InventoryService;
+import net.lapidist.colony.registry.Registries;
+import java.util.Locale;
 
 import java.util.function.Supplier;
 import java.util.concurrent.locks.ReentrantLock;
@@ -16,15 +19,18 @@ public final class GatherCommandHandler implements CommandHandler<GatherCommand>
     private final Supplier<MapState> stateSupplier;
     private final java.util.function.Consumer<MapState> stateConsumer;
     private final NetworkService networkService;
+    private final InventoryService inventoryService;
     private final ReentrantLock lock;
 
     public GatherCommandHandler(final Supplier<MapState> stateSupplierToUse,
                                final java.util.function.Consumer<MapState> stateConsumerToUse,
                                final NetworkService networkServiceToUse,
+                               final InventoryService inventoryServiceToUse,
                                final ReentrantLock lockToUse) {
         this.stateSupplier = stateSupplierToUse;
         this.stateConsumer = stateConsumerToUse;
         this.networkService = networkServiceToUse;
+        this.inventoryService = inventoryServiceToUse;
         this.lock = lockToUse;
     }
 
@@ -38,6 +44,9 @@ public final class GatherCommandHandler implements CommandHandler<GatherCommand>
         lock.lock();
         try {
             MapState state = stateSupplier.get();
+            if (Registries.resources().get(command.resourceId()) == null) {
+                return;
+            }
             TileData tile = state.getTile(command.x(), command.y());
             TilePos pos = new TilePos(command.x(), command.y());
             if (tile == null) {
@@ -58,6 +67,7 @@ public final class GatherCommandHandler implements CommandHandler<GatherCommand>
             ResourceData player = state.playerResources();
             java.util.Map<String, Integer> playerAmounts = new java.util.HashMap<>(player.amounts());
             playerAmounts.merge(command.resourceId(), current - updatedValue, Integer::sum);
+            inventoryService.addItem(command.resourceId().toLowerCase(Locale.ROOT), current - updatedValue);
             ResourceData newPlayer = new ResourceData(new java.util.HashMap<>(playerAmounts));
             MapState updatedState = state.toBuilder()
                     .playerResources(newPlayer)
