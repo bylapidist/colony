@@ -15,6 +15,8 @@ public final class PlayerInitSystem extends BaseSystem {
     private final ResourceData initialResources;
     private final PlayerPosition initialPosition;
     private final net.lapidist.colony.client.network.GameClient client;
+    private static final float DEFAULT_LIGHT_RADIUS = 3f;
+    private static final float DEFAULT_LIGHT_INTENSITY = 0.6f;
 
     public PlayerInitSystem() {
         this(null, new ResourceData(), null);
@@ -53,8 +55,8 @@ public final class PlayerInitSystem extends BaseSystem {
             pc.setX(pos.x);
             pc.setY(pos.y);
             PointLightComponent light = new PointLightComponent();
-            light.setRadius(3f);
-            light.setIntensity(0.6f);
+            light.setRadius(DEFAULT_LIGHT_RADIUS);
+            light.setIntensity(DEFAULT_LIGHT_INTENSITY);
             player.edit().add(pr).add(pc).add(light);
             created = true;
         }

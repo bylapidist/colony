@@ -24,6 +24,7 @@ public final class DayNightSystem extends BaseSystem {
     private static final Color NIGHT_COLOR = new Color(0f, 0f, 0f, 1f);
     private static final Color SUNRISE_COLOR = new Color(0.6f, 0.5f, 0.4f, 1f);
     private static final Color DAY_COLOR = new Color(0.6f, 0.7f, 1f, 1f);
+    private static final float NIGHT_AMBIENT_SCALE = 0.5f;
 
     public DayNightSystem(final ClearScreenSystem clearSystem,
                           final LightingSystem lighting) {
@@ -57,10 +58,11 @@ public final class DayNightSystem extends BaseSystem {
         timeOfDay = wrap(timeOfDay + world.getDelta());
         Color c = clearScreenSystem.getColor();
         gradientColor(timeOfDay, c);
-        float brightness = calculateBrightness(timeOfDay);
+        float brightness = 1f - calculateBrightness(timeOfDay);
+        float ambient = brightness * NIGHT_AMBIENT_SCALE;
         RayHandler handler = lightingSystem.getRayHandler();
         if (handler != null) {
-            handler.setAmbientLight(brightness, brightness, brightness, 1f);
+            handler.setAmbientLight(ambient, ambient, ambient, 1f);
         }
     }
 
