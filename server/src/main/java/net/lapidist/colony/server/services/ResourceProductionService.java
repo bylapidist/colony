@@ -6,6 +6,7 @@ import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.state.ResourceUpdateData;
 import net.lapidist.colony.registry.Registries;
 import net.lapidist.colony.registry.ResourceDefinition;
+import net.lapidist.colony.registry.BuildingDefinition;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -24,6 +25,7 @@ public final class ResourceProductionService implements net.lapidist.colony.mod.
     private final Consumer<MapState> consumer;
     private final NetworkService networkService;
     private final ReentrantLock lock;
+    private final BuildingDefinition farmDef;
     private ScheduledExecutorService executor;
 
     public ResourceProductionService(
@@ -38,6 +40,7 @@ public final class ResourceProductionService implements net.lapidist.colony.mod.
         this.consumer = stateConsumer;
         this.networkService = networkServiceToUse;
         this.lock = lockToUse;
+        this.farmDef = Registries.buildings().get("farm");
     }
 
     /** Starts periodic production on a daemon thread. */
@@ -62,9 +65,12 @@ public final class ResourceProductionService implements net.lapidist.colony.mod.
         lock.lock();
         try {
             state = supplier.get();
+            if (farmDef == null) {
+                return;
+            }
             long farms = state.buildings().stream()
                     .map(BuildingData::buildingType)
-                    .filter(t -> "farm".equalsIgnoreCase(t))
+                    .filter(t -> farmDef.id().equalsIgnoreCase(t))
                     .count();
             if (farms == 0) {
                 return;
