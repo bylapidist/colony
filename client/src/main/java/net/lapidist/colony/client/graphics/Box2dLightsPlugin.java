@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.World;
 public final class Box2dLightsPlugin implements LightingPlugin {
 
     private RayHandler rayHandler;
+    private World world;
 
     @Override
     public ShaderProgram create(final ShaderManager manager) {
@@ -20,7 +21,7 @@ public final class Box2dLightsPlugin implements LightingPlugin {
             return null;
         }
         try {
-            World world = new World(new Vector2(), false);
+            world = new World(new Vector2(), false);
             rayHandler = new RayHandler(world);
             rayHandler.setAmbientLight(1f, 1f, 1f, 1f);
         } catch (Exception ex) {
@@ -50,6 +51,10 @@ public final class Box2dLightsPlugin implements LightingPlugin {
 
     @Override
     public void dispose() {
+        if (world != null) {
+            world.dispose();
+            world = null;
+        }
         if (rayHandler != null) {
             rayHandler.dispose();
             rayHandler = null;
