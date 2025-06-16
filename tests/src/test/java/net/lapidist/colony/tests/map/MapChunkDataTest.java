@@ -13,6 +13,9 @@ public class MapChunkDataTest {
     private static final long SEED_TWO = 123L;
     private static final int SAMPLE_X = 5;
     private static final int SAMPLE_Y = 5;
+    private static final int DEFAULT_WOOD = 10;
+    private static final int DEFAULT_STONE = 5;
+    private static final int DEFAULT_FOOD = 3;
 
     @Test
     public void generatesTilesLazily() {
@@ -45,5 +48,14 @@ public class MapChunkDataTest {
         assertSame(tile, chunk.getTiles().get(new TilePos(1, 2)));
         assertFalse(chunk.isGenerated());
         assertEquals(1, chunk.getTiles().size());
+    }
+
+    @Test
+    public void tilesHaveDefaultResources() {
+        MapChunkData chunk = new MapChunkData(SEED_ONE);
+        TileData tile = chunk.getTile(0, 0);
+        assertEquals(DEFAULT_WOOD, tile.resources().wood());
+        assertEquals(DEFAULT_STONE, tile.resources().stone());
+        assertEquals(DEFAULT_FOOD, tile.resources().food());
     }
 }

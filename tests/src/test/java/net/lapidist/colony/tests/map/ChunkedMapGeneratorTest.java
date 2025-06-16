@@ -1,13 +1,17 @@
 package net.lapidist.colony.tests.map;
 
 import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.ChunkPos;
 import net.lapidist.colony.map.ChunkedMapGenerator;
+import net.lapidist.colony.map.MapChunkData;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ChunkedMapGeneratorTest {
+
+    private static final int DEFAULT_WOOD = 10;
 
     @Test
     public void generatesExpectedTileCount() {
@@ -45,5 +49,16 @@ public class ChunkedMapGeneratorTest {
         }
         assertTrue(grass > 0);
         assertTrue(dirt > 0);
+    }
+
+    @Test
+    public void resourcesGeneratedOnDemand() {
+        ChunkedMapGenerator generator = new ChunkedMapGenerator();
+        MapState state = generator.generate(2, 2);
+        MapChunkData chunk = state.chunks().get(new ChunkPos(0, 0));
+        assertTrue(chunk.getTiles().isEmpty());
+
+        var tile = state.getTile(0, 0);
+        assertEquals(DEFAULT_WOOD, tile.resources().wood());
     }
 }
