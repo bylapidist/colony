@@ -8,6 +8,11 @@ import net.lapidist.colony.client.renderers.MapRendererFactory;
 import net.lapidist.colony.client.renderers.SpriteMapRendererFactory;
 import net.lapidist.colony.client.graphics.Box2dLightsPlugin;
 import net.lapidist.colony.client.renderers.SpriteBatchMapRenderer;
+import net.lapidist.colony.client.graphics.LightingPlugin;
+import net.lapidist.colony.client.graphics.ShaderManager;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import net.lapidist.colony.settings.Settings;
+import org.mockito.MockedStatic;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.core.io.FileLocation;
 import net.lapidist.colony.client.core.io.ResourceLoader;
@@ -145,6 +150,77 @@ public class MapRendererFactoryTest {
             // plugin fails to initialize lights in headless tests
             assertNull(plugin.getRayHandler());
             verify(sb, never()).setLights(any());
+
+            ((com.badlogic.gdx.utils.Disposable) renderer).dispose();
+        }
+        world.dispose();
+    }
+
+    private static final class DummyLightingPlugin implements LightingPlugin {
+        private final box2dLight.RayHandler handler;
+
+        DummyLightingPlugin(final box2dLight.RayHandler rayHandler) {
+            this.handler = rayHandler;
+        }
+
+        @Override
+        public ShaderProgram create(final ShaderManager manager) {
+            return null;
+        }
+
+        @Override
+        public box2dLight.RayHandler getRayHandler() {
+            return handler;
+        }
+
+        @Override
+        public String id() {
+            return "dummy";
+        }
+
+        @Override
+        public String displayName() {
+            return "Dummy";
+        }
+
+        @Override
+        public void dispose() {
+        }
+    }
+
+    @Test
+    public void pluginLightsDisabledDisposesHandler() {
+        ResourceLoader loader = mock(ResourceLoader.class);
+        when(loader.update()).thenReturn(true);
+        when(loader.getProgress()).thenReturn(1f);
+
+        Settings settings = new Settings();
+        settings.getGraphicsSettings().setLightingEnabled(false);
+
+        World world = new World(new WorldConfigurationBuilder()
+                .with(new PlayerCameraSystem())
+                .build());
+        box2dLight.RayHandler handler = mock(box2dLight.RayHandler.class);
+        DummyLightingPlugin plugin = new DummyLightingPlugin(handler);
+
+        try (MockedStatic<Settings> settingsStatic = mockStatic(Settings.class);
+             MockedConstruction<SpriteBatchMapRenderer> sbCons =
+                     mockConstruction(SpriteBatchMapRenderer.class);
+             MockedConstruction<SpriteBatch> ignored =
+                     mockConstruction(SpriteBatch.class)) {
+            settingsStatic.when(Settings::load).thenReturn(settings);
+
+            MapRendererFactory factory = new SpriteMapRendererFactory(
+                    loader,
+                    FileLocation.INTERNAL,
+                    "textures/textures.atlas"
+            );
+            MapRenderer renderer = factory.create(world, plugin);
+            renderer.render(null, null);
+
+            SpriteBatchMapRenderer sb = sbCons.constructed().get(0);
+            verify(sb, never()).setLights(any());
+            verify(handler).dispose();
 
             ((com.badlogic.gdx.utils.Disposable) renderer).dispose();
         }
