@@ -94,7 +94,11 @@ public final class SpriteMapRendererFactory implements MapRendererFactory {
         renderer.setShader(shader);
         renderer.setGraphicsSettings(graphics);
         if (lights != null) {
-            renderer.setLights(lights);
+            if (graphics.isLightingEnabled()) {
+                renderer.setLights(lights);
+            } else {
+                lights.dispose();
+            }
         }
         return renderer;
     }
