@@ -14,6 +14,7 @@ import net.lapidist.colony.client.core.io.FileLocation;
 public final class LightsNormalMapShaderPlugin implements LightingPlugin, UniformUpdater {
 
     private RayHandler rayHandler;
+    private World world;
     private DayNightSystem dayNightSystem;
     private final com.badlogic.gdx.math.Vector3 lightDir = new com.badlogic.gdx.math.Vector3(0f, 0f, 1f);
     private final com.badlogic.gdx.math.Vector3 viewDir = new com.badlogic.gdx.math.Vector3(0f, 0f, 1f);
@@ -29,7 +30,7 @@ public final class LightsNormalMapShaderPlugin implements LightingPlugin, Unifor
             return null;
         }
         try {
-            World world = new World(new Vector2(), false);
+            world = new World(new Vector2(), false);
             rayHandler = new RayHandler(world);
             rayHandler.setAmbientLight(1f, 1f, 1f, 1f);
             return manager.load(FileLocation.INTERNAL,
@@ -57,6 +58,10 @@ public final class LightsNormalMapShaderPlugin implements LightingPlugin, Unifor
 
     @Override
     public void dispose() {
+        if (world != null) {
+            world.dispose();
+            world = null;
+        }
         if (rayHandler != null) {
             rayHandler.dispose();
             rayHandler = null;

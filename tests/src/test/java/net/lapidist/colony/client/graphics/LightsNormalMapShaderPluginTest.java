@@ -9,6 +9,8 @@ import net.lapidist.colony.components.state.EnvironmentState;
 import net.lapidist.colony.components.state.Season;
 import com.badlogic.gdx.math.Vector3;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
+import box2dLight.RayHandler;
 import static org.mockito.Mockito.*;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
@@ -62,5 +64,29 @@ public class LightsNormalMapShaderPluginTest {
         Vector3 second = new Vector3(secondCap.getValue());
 
         assertNotEquals(first.x, second.x);
+    }
+
+    @Test
+    public void disposeCleansUpResources() throws Exception {
+        LightsNormalMapShaderPlugin plugin = new LightsNormalMapShaderPlugin();
+
+        java.lang.reflect.Field worldField = LightsNormalMapShaderPlugin.class.getDeclaredField("world");
+        worldField.setAccessible(true);
+        java.lang.reflect.Field handlerField = LightsNormalMapShaderPlugin.class.getDeclaredField("rayHandler");
+        handlerField.setAccessible(true);
+
+        com.badlogic.gdx.physics.box2d.World world = mock(com.badlogic.gdx.physics.box2d.World.class);
+        RayHandler handler = mock(RayHandler.class);
+        worldField.set(plugin, world);
+        handlerField.set(plugin, handler);
+
+        plugin.dispose();
+
+        InOrder order = inOrder(world, handler);
+        order.verify(world).dispose();
+        order.verify(handler).dispose();
+
+        assertNull(worldField.get(plugin));
+        assertNull(handlerField.get(plugin));
     }
 }
