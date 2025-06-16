@@ -22,12 +22,11 @@ import static org.mockito.Mockito.*;
 @SuppressWarnings("checkstyle:magicnumber")
 public class DayNightSystemTest {
 
-    private static final float DAY_RED = 1f;
-    private static final float DAY_GREEN = 1f;
+    private static final float DAY_RED = 0.6f;
+    private static final float DAY_GREEN = 0.7f;
     private static final float DAY_BLUE = 1f;
     private static final float NIGHT_RED = 0f;
     private static final float NIGHT_BLUE = 0f;
-    private static final float MOON_RED = 0.2f;
     private static final float TOLERANCE = 0.01f;
 
     @Test
@@ -37,7 +36,7 @@ public class DayNightSystemTest {
         RayHandler handler = mock(RayHandler.class);
         lighting.setRayHandler(handler);
         MutableEnvironmentState env = new MutableEnvironmentState(new EnvironmentState(0f, Season.SPRING, 0f));
-        DayNightSystem system = new DayNightSystem(clear, lighting, env);
+        DayNightSystem system = new DayNightSystem(clear, lighting);
         final float noon = 12f;
         system.setTimeOfDay(noon);
         World world = new World(new WorldConfigurationBuilder()
@@ -45,7 +44,7 @@ public class DayNightSystemTest {
                 .build());
         world.setDelta(0f);
         world.process();
-        verify(handler).setAmbientLight(DAY_RED, DAY_GREEN, DAY_BLUE, 1f);
+        verify(handler).setAmbientLight(1f, 1f, 1f, 1f);
         assertEquals(DAY_RED, clear.getColor().r, TOLERANCE);
         system.setTimeOfDay(0f);
         world.process();
@@ -61,7 +60,7 @@ public class DayNightSystemTest {
         ClearScreenSystem clear = new ClearScreenSystem(new Color());
         LightingSystem lighting = new LightingSystem();
         MutableEnvironmentState env = new MutableEnvironmentState(new EnvironmentState(0f, Season.SPRING, 0f));
-        DayNightSystem system = new DayNightSystem(clear, lighting, env);
+        DayNightSystem system = new DayNightSystem(clear, lighting);
         final float wrapValue = 25f;
         system.setTimeOfDay(wrapValue);
         World world = new World(new WorldConfigurationBuilder()
@@ -81,7 +80,7 @@ public class DayNightSystemTest {
         RayHandler handler = mock(RayHandler.class);
         lighting.setRayHandler(handler);
         MutableEnvironmentState env = new MutableEnvironmentState(new EnvironmentState(0f, Season.SPRING, 1f));
-        DayNightSystem system = new DayNightSystem(clear, lighting, env);
+        DayNightSystem system = new DayNightSystem(clear, lighting);
         World world = new World(new WorldConfigurationBuilder()
                 .with(clear, lighting, system)
                 .build());
@@ -90,7 +89,7 @@ public class DayNightSystemTest {
         world.process();
 //CHECKSTYLE:OFF
         verify(handler).setAmbientLight(anyFloat(), anyFloat(), anyFloat(), eq(1f));
-        assertEquals(MOON_RED, clear.getColor().r, TOLERANCE);
+        assertEquals(NIGHT_RED, clear.getColor().r, TOLERANCE);
 //CHECKSTYLE:ON
         world.dispose();
     }

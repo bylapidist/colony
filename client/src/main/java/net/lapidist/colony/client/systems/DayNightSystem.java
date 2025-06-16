@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import box2dLight.RayHandler;
-import net.lapidist.colony.components.state.MutableEnvironmentState;
 
 /**
  * System that updates ambient lighting and clear color based on the time of day.
@@ -14,7 +13,6 @@ public final class DayNightSystem extends BaseSystem {
 
     private final ClearScreenSystem clearScreenSystem;
     private final LightingSystem lightingSystem;
-    private final MutableEnvironmentState environment;
     private float timeOfDay;
 
     private static final float HOURS_PER_DAY = 24f;
@@ -25,15 +23,12 @@ public final class DayNightSystem extends BaseSystem {
     private static final float SUNSET_TIME = 18f;
     private static final Color NIGHT_COLOR = new Color(0f, 0f, 0f, 1f);
     private static final Color SUNRISE_COLOR = new Color(0.6f, 0.5f, 0.4f, 1f);
-    private static final Color DAY_COLOR = new Color(1f, 1f, 1f, 1f);
-    private static final Color MOON_COLOR = new Color(0.2f, 0.2f, 0.25f, 1f);
+    private static final Color DAY_COLOR = new Color(0.6f, 0.7f, 1f, 1f);
 
     public DayNightSystem(final ClearScreenSystem clearSystem,
-                          final LightingSystem lighting,
-                          final MutableEnvironmentState env) {
+                          final LightingSystem lighting) {
         this.clearScreenSystem = clearSystem;
         this.lightingSystem = lighting;
-        this.environment = env;
     }
 
     /** Current time of day between 0 and 24. */
@@ -61,10 +56,11 @@ public final class DayNightSystem extends BaseSystem {
     protected void processSystem() {
         timeOfDay = wrap(timeOfDay + world.getDelta());
         Color c = clearScreenSystem.getColor();
-        calculateColor(timeOfDay, environment.getMoonPhase(), c);
+        gradientColor(timeOfDay, c);
+        float brightness = calculateBrightness(timeOfDay);
         RayHandler handler = lightingSystem.getRayHandler();
         if (handler != null) {
-            handler.setAmbientLight(c.r, c.g, c.b, 1f);
+            handler.setAmbientLight(brightness, brightness, brightness, 1f);
         }
     }
 
@@ -82,17 +78,6 @@ public final class DayNightSystem extends BaseSystem {
         return MathUtils.sin(dayProgress * MathUtils.PI);
     }
 
-    private static void calculateColor(final float time, final float moonPhase, final Color out) {
-        gradientColor(time, out);
-        float brightness = calculateBrightness(time);
-        out.r *= brightness;
-        out.g *= brightness;
-        out.b *= brightness;
-        float nightFactor = 1f - brightness;
-        out.r = Math.min(1f, out.r + MOON_COLOR.r * moonPhase * nightFactor);
-        out.g = Math.min(1f, out.g + MOON_COLOR.g * moonPhase * nightFactor);
-        out.b = Math.min(1f, out.b + MOON_COLOR.b * moonPhase * nightFactor);
-    }
 
     private static void gradientColor(final float time, final Color out) {
         float t = wrap(time);
