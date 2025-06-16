@@ -7,6 +7,9 @@ import com.badlogic.gdx.input.GestureDetector;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.input.BuildingPlacementHandler;
 import net.lapidist.colony.client.systems.input.BuildingRemovalHandler;
+import net.lapidist.colony.registry.Registries;
+import net.lapidist.colony.registry.BuildingDefinition;
+import com.badlogic.gdx.Input;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.entities.BuildingComponent;
@@ -18,6 +21,18 @@ import net.lapidist.colony.settings.KeyBindings;
  * Handles building placement when build mode is enabled.
  */
 public final class BuildPlacementSystem extends BaseSystem {
+
+    private static final int[] NUMBER_KEYS = {
+            Input.Keys.NUM_1,
+            Input.Keys.NUM_2,
+            Input.Keys.NUM_3,
+            Input.Keys.NUM_4,
+            Input.Keys.NUM_5,
+            Input.Keys.NUM_6,
+            Input.Keys.NUM_7,
+            Input.Keys.NUM_8,
+            Input.Keys.NUM_9
+    };
 
     private final GameClient client;
     private final KeyBindings keyBindings;
@@ -31,10 +46,39 @@ public final class BuildPlacementSystem extends BaseSystem {
     private ComponentMapper<BuildingComponent> buildingMapper;
     private BuildingPlacementHandler buildingPlacementHandler;
     private BuildingRemovalHandler buildingRemovalHandler;
+    private java.util.List<String> buildingIds;
+    private int selectedIndex;
 
     public BuildPlacementSystem(final GameClient clientToUse, final KeyBindings bindings) {
         this.client = clientToUse;
         this.keyBindings = bindings;
+    }
+
+    /** Select building by list index and update placement handler. */
+    private void selectBuilding(final int index) {
+        if (index < 0 || index >= buildingIds.size()) {
+            return;
+        }
+        selectedIndex = index;
+        buildingPlacementHandler.setBuildingId(buildingIds.get(selectedIndex));
+    }
+
+    /** Set building id directly if present in registry. */
+    public void setSelectedBuilding(final String id) {
+        if (id == null) {
+            return;
+        }
+        for (int i = 0; i < buildingIds.size(); i++) {
+            if (buildingIds.get(i).equalsIgnoreCase(id)) {
+                selectBuilding(i);
+                break;
+            }
+        }
+    }
+
+    /** @return currently selected building identifier. */
+    public String getSelectedBuilding() {
+        return buildingIds.isEmpty() ? null : buildingIds.get(selectedIndex);
     }
 
     @Override
@@ -46,6 +90,14 @@ public final class BuildPlacementSystem extends BaseSystem {
         map = MapUtils.findMap(world).orElse(null);
         buildingPlacementHandler = new BuildingPlacementHandler(client, cameraSystem);
         buildingRemovalHandler = new BuildingRemovalHandler(client, cameraSystem);
+        buildingIds = new java.util.ArrayList<>();
+        for (BuildingDefinition def : Registries.buildings().all()) {
+            buildingIds.add(def.id());
+        }
+        selectedIndex = 0;
+        if (!buildingIds.isEmpty()) {
+            buildingPlacementHandler.setBuildingId(buildingIds.get(selectedIndex));
+        }
         cameraInputSystem.addProcessor(1, new GestureDetector(new BuildGestureListener()));
     }
 
@@ -64,6 +116,16 @@ public final class BuildPlacementSystem extends BaseSystem {
             removeMode = !removeMode;
             if (removeMode) {
                 buildMode = false;
+            }
+        }
+
+        // Hotkeys 1-9 to choose building type
+        if (buildingIds != null) {
+            int max = Math.min(NUMBER_KEYS.length, buildingIds.size());
+            for (int i = 0; i < max; i++) {
+                if (Gdx.input.isKeyJustPressed(NUMBER_KEYS[i])) {
+                    selectBuilding(i);
+                }
             }
         }
     }

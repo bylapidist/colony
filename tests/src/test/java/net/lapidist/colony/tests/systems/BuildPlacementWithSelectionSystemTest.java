@@ -45,6 +45,7 @@ public class BuildPlacementWithSelectionSystemTest {
         world.process();
 
         buildSystem.setBuildMode(true);
+        buildSystem.setSelectedBuilding("farm");
 
         PlayerCameraSystem camera = world.getSystem(PlayerCameraSystem.class);
         ((com.badlogic.gdx.graphics.OrthographicCamera) camera.getCamera()).position.set(
@@ -57,7 +58,10 @@ public class BuildPlacementWithSelectionSystemTest {
         Vector2 screen = CameraUtils.worldToScreenCoords(camera.getViewport(), 0, 0);
         buildSystem.tap(screen.x, screen.y);
 
-        verify(client).sendBuildRequest(any());
+        org.mockito.ArgumentCaptor<net.lapidist.colony.components.state.BuildingPlacementData> captor =
+                org.mockito.ArgumentCaptor.forClass(net.lapidist.colony.components.state.BuildingPlacementData.class);
+        verify(client).sendBuildRequest(captor.capture());
+        assertEquals("farm", captor.getValue().buildingId());
         assertFalse(world.getMapper(net.lapidist.colony.components.maps.TileComponent.class)
                 .get(MapUtils.findMap(world).get().getTiles().get(0)).isSelected());
     }

@@ -16,10 +16,23 @@ import net.lapidist.colony.components.state.BuildingPlacementData;
 public final class BuildingPlacementHandler {
     private final GameClient client;
     private final PlayerCameraSystem cameraSystem;
+    private String buildingId = "house";
 
     public BuildingPlacementHandler(final GameClient clientToSet, final PlayerCameraSystem cameraSystemToSet) {
         this.client = clientToSet;
         this.cameraSystem = cameraSystemToSet;
+    }
+
+    /**
+     * Set the building identifier used when sending placement requests.
+     */
+    public void setBuildingId(final String id) {
+        this.buildingId = id;
+    }
+
+    /** @return the currently selected building identifier. */
+    public String getBuildingId() {
+        return buildingId;
     }
 
     public boolean handleTap(
@@ -42,7 +55,7 @@ public final class BuildingPlacementHandler {
                     BuildingPlacementData msg = new BuildingPlacementData(
                             tc.getX(),
                             tc.getY(),
-                            "house"
+                            buildingId
                     );
                     client.sendBuildRequest(msg);
                     return true;

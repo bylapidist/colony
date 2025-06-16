@@ -16,6 +16,7 @@ import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 
 import java.util.HashMap;
 
@@ -51,11 +52,15 @@ public class BuildingPlacementHandlerTest {
         );
         cameraSystem.getCamera().update();
 
+        handler.setBuildingId("farm");
         Vector2 screen = CameraUtils.worldToScreenCoords(cameraSystem.getViewport(), 0, 0);
         boolean handled = handler.handleTap(screen.x, screen.y, map, world.getMapper(TileComponent.class));
 
         assertTrue(handled);
-        verify(client).sendBuildRequest(any());
+        ArgumentCaptor<net.lapidist.colony.components.state.BuildingPlacementData> captor =
+                ArgumentCaptor.forClass(net.lapidist.colony.components.state.BuildingPlacementData.class);
+        verify(client).sendBuildRequest(captor.capture());
+        org.junit.Assert.assertEquals("farm", captor.getValue().buildingId());
         world.dispose();
     }
 }
