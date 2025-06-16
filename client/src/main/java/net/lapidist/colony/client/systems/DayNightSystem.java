@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import box2dLight.RayHandler;
-import net.lapidist.colony.components.state.EnvironmentState;
+import net.lapidist.colony.components.state.MutableEnvironmentState;
 
 /**
  * System that updates ambient lighting and clear color based on the time of day.
@@ -14,7 +14,7 @@ public final class DayNightSystem extends BaseSystem {
 
     private final ClearScreenSystem clearScreenSystem;
     private final LightingSystem lightingSystem;
-    private final EnvironmentState environment;
+    private final MutableEnvironmentState environment;
     private float timeOfDay;
 
     private static final float HOURS_PER_DAY = 24f;
@@ -30,7 +30,7 @@ public final class DayNightSystem extends BaseSystem {
 
     public DayNightSystem(final ClearScreenSystem clearSystem,
                           final LightingSystem lighting,
-                          final EnvironmentState env) {
+                          final MutableEnvironmentState env) {
         this.clearScreenSystem = clearSystem;
         this.lightingSystem = lighting;
         this.environment = env;
@@ -61,7 +61,7 @@ public final class DayNightSystem extends BaseSystem {
     protected void processSystem() {
         timeOfDay = wrap(timeOfDay + world.getDelta());
         Color c = clearScreenSystem.getColor();
-        calculateColor(timeOfDay, environment.moonPhase(), c);
+        calculateColor(timeOfDay, environment.getMoonPhase(), c);
         RayHandler handler = lightingSystem.getRayHandler();
         if (handler != null) {
             handler.setAmbientLight(c.r, c.g, c.b, 1f);

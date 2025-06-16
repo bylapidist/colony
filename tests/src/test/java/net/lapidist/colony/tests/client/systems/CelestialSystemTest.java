@@ -5,6 +5,7 @@ import com.artemis.WorldConfigurationBuilder;
 import net.lapidist.colony.client.systems.CelestialSystem;
 import net.lapidist.colony.components.entities.CelestialBodyComponent;
 import net.lapidist.colony.components.state.EnvironmentState;
+import net.lapidist.colony.components.state.MutableEnvironmentState;
 import net.lapidist.colony.components.state.Season;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.state.MapState;
@@ -21,7 +22,7 @@ public class CelestialSystemTest {
     private static final float EPSILON = 0.01f;
     @Test
     public void updatesBodyPosition() {
-        EnvironmentState env = new EnvironmentState(TIME, Season.SPRING, 0f);
+        MutableEnvironmentState env = new MutableEnvironmentState(new EnvironmentState(TIME, Season.SPRING, 0f));
         CelestialSystem system = new CelestialSystem(null, env);
         World world = new World(new WorldConfigurationBuilder().with(system).build());
         var e = world.createEntity();

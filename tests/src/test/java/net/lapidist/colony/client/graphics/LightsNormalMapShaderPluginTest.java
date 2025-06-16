@@ -6,6 +6,7 @@ import net.lapidist.colony.client.systems.ClearScreenSystem;
 import net.lapidist.colony.client.systems.DayNightSystem;
 import net.lapidist.colony.client.systems.LightingSystem;
 import net.lapidist.colony.components.state.EnvironmentState;
+import net.lapidist.colony.components.state.MutableEnvironmentState;
 import net.lapidist.colony.components.state.Season;
 import com.badlogic.gdx.math.Vector3;
 import org.mockito.ArgumentCaptor;
@@ -44,7 +45,7 @@ public class LightsNormalMapShaderPluginTest {
         DayNightSystem system = new DayNightSystem(
                 new ClearScreenSystem(new Color()),
                 new LightingSystem(),
-                new EnvironmentState(0f, Season.SPRING, 0f)
+                new MutableEnvironmentState(new EnvironmentState(0f, Season.SPRING, 0f))
         );
         plugin.setDayNightSystem(system);
         ShaderProgram shader = mock(ShaderProgram.class);

@@ -34,9 +34,11 @@ import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.client.systems.PlayerInitSystem;
 import net.lapidist.colony.components.entities.CelestialBodyComponent;
+import net.lapidist.colony.components.state.MutableEnvironmentState;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.state.PlayerPosition;
+import net.lapidist.colony.client.systems.SeasonCycleSystem;
 import net.lapidist.colony.map.MapStateProvider;
 import net.lapidist.colony.map.ProvidedMapStateProvider;
 import net.lapidist.colony.events.Events;
@@ -149,6 +151,8 @@ public final class MapWorldBuilder {
         ResourceData playerResources = state.playerResources();
         PlayerPosition playerPos = state.playerPos();
         net.lapidist.colony.components.state.CameraPosition cameraPos = state.cameraPos();
+        net.lapidist.colony.components.state.MutableEnvironmentState environment =
+                new net.lapidist.colony.components.state.MutableEnvironmentState(state.environment());
         CameraInputSystem cameraInputSystem = new CameraInputSystem(client, keyBindings);
         cameraInputSystem.addProcessor(stage);
         SelectionSystem selectionSystem = new SelectionSystem(client, keyBindings);
@@ -174,7 +178,7 @@ public final class MapWorldBuilder {
                         new ResourceUpdateSystem(client),
                         new ChunkLoadSystem(client),
                         new ChunkRequestQueueSystem(client),
-                        new CelestialSystem(client, state.environment()),
+                        new CelestialSystem(client, environment),
                         new MapRenderSystem(),
                         particleSystem,
                         lighting,
@@ -186,7 +190,10 @@ public final class MapWorldBuilder {
         }
 
         if (graphics == null || (graphics.isLightingEnabled() && graphics.isDayNightCycleEnabled())) {
-            builder.with(new DayNightSystem(clear, lighting, state.environment()));
+            builder.with(
+                    new DayNightSystem(clear, lighting, environment),
+                    new SeasonCycleSystem(environment)
+            );
         }
 
         if (provider != null) {
