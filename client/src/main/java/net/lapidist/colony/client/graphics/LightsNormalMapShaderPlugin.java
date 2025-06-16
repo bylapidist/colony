@@ -36,6 +36,10 @@ public final class LightsNormalMapShaderPlugin implements LightingPlugin, Unifor
             return manager.load(FileLocation.INTERNAL,
                     "shaders/normal.vert", "shaders/normal.frag");
         } catch (Exception ex) {
+            if (world != null) {
+                world.dispose();
+                world = null;
+            }
             rayHandler = null;
             return null;
         }
