@@ -11,3 +11,4 @@ net.lapidist.colony.base.BaseResourcesMod
 net.lapidist.colony.base.BaseItemsMod
 
 net.lapidist.colony.base.BaseGameplaySystemsMod
+net.lapidist.colony.base.BaseSeasonCycleMod

@@ -6,6 +6,7 @@ import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.graphics.Color;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
 import net.lapidist.colony.client.systems.DayNightSystem;
+import net.lapidist.colony.components.state.MutableEnvironmentState;
 import net.lapidist.colony.components.state.EnvironmentState;
 import net.lapidist.colony.components.state.Season;
 import net.lapidist.colony.client.systems.LightingSystem;
@@ -35,7 +36,7 @@ public class DayNightSystemTest {
         LightingSystem lighting = new LightingSystem();
         RayHandler handler = mock(RayHandler.class);
         lighting.setRayHandler(handler);
-        EnvironmentState env = new EnvironmentState(0f, Season.SPRING, 0f);
+        MutableEnvironmentState env = new MutableEnvironmentState(new EnvironmentState(0f, Season.SPRING, 0f));
         DayNightSystem system = new DayNightSystem(clear, lighting, env);
         final float noon = 12f;
         system.setTimeOfDay(noon);
@@ -59,7 +60,7 @@ public class DayNightSystemTest {
     public void wrapsTimeOfDay() {
         ClearScreenSystem clear = new ClearScreenSystem(new Color());
         LightingSystem lighting = new LightingSystem();
-        EnvironmentState env = new EnvironmentState(0f, Season.SPRING, 0f);
+        MutableEnvironmentState env = new MutableEnvironmentState(new EnvironmentState(0f, Season.SPRING, 0f));
         DayNightSystem system = new DayNightSystem(clear, lighting, env);
         final float wrapValue = 25f;
         system.setTimeOfDay(wrapValue);
@@ -79,7 +80,7 @@ public class DayNightSystemTest {
         LightingSystem lighting = new LightingSystem();
         RayHandler handler = mock(RayHandler.class);
         lighting.setRayHandler(handler);
-        EnvironmentState env = new EnvironmentState(0f, Season.SPRING, 1f);
+        MutableEnvironmentState env = new MutableEnvironmentState(new EnvironmentState(0f, Season.SPRING, 1f));
         DayNightSystem system = new DayNightSystem(clear, lighting, env);
         World world = new World(new WorldConfigurationBuilder()
                 .with(clear, lighting, system)
