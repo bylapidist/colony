@@ -5,8 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import net.lapidist.colony.events.Events;
-import net.lapidist.colony.server.events.AutosaveEvent;
-import net.lapidist.colony.server.events.AutosaveStartEvent;
+import net.lapidist.colony.events.autosave.AutosaveEvent;
+import net.lapidist.colony.events.autosave.AutosaveStartEvent;
 import net.mostlyoriginal.api.event.common.Subscribe;
 
 /** Progress bar displayed while the game state is being autosaved. */
