@@ -79,6 +79,7 @@ public class BuildPlacementSystemTest {
         world.process();
 
         system.setBuildMode(true);
+        system.setSelectedBuilding("farm");
 
         PlayerCameraSystem camera = world.getSystem(PlayerCameraSystem.class);
         ((com.badlogic.gdx.graphics.OrthographicCamera) camera.getCamera()).position.set(
@@ -91,7 +92,10 @@ public class BuildPlacementSystemTest {
         Vector2 screen = CameraUtils.worldToScreenCoords(camera.getViewport(), 0, 0);
         system.tap(screen.x, screen.y);
 
-        verify(client).sendBuildRequest(any());
+        org.mockito.ArgumentCaptor<net.lapidist.colony.components.state.BuildingPlacementData> captor =
+                org.mockito.ArgumentCaptor.forClass(net.lapidist.colony.components.state.BuildingPlacementData.class);
+        verify(client).sendBuildRequest(captor.capture());
+        assertEquals("farm", captor.getValue().buildingId());
     }
 
     @Test
