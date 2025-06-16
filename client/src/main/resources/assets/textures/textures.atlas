@@ -116,3 +116,81 @@ dirt0_s
   orig: 32,32
   offset: 0,0
   index: -1
+
+house_n.png
+size: 32,32
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+house0_n
+  rotate: false
+  xy: 0,0
+  size: 32,32
+  orig: 32,32
+  offset: 0,0
+  index: -1
+
+house_s.png
+size: 32,32
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+house0_s
+  rotate: false
+  xy: 0,0
+  size: 32,32
+  orig: 32,32
+  offset: 0,0
+  index: -1
+
+hoveredTile_n.png
+size: 32,32
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+hoveredTile0_n
+  rotate: false
+  xy: 0,0
+  size: 32,32
+  orig: 32,32
+  offset: 0,0
+  index: -1
+
+hoveredTile_s.png
+size: 32,32
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+hoveredTile0_s
+  rotate: false
+  xy: 0,0
+  size: 32,32
+  orig: 32,32
+  offset: 0,0
+  index: -1
+
+player_n.png
+size: 64,64
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+player0_n
+  rotate: false
+  xy: 0,0
+  size: 64,64
+  orig: 64,64
+  offset: 0,0
+  index: -1
+
+player_s.png
+size: 64,64
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+player0_s
+  rotate: false
+  xy: 0,0
+  size: 64,64
+  orig: 64,64
+  offset: 0,0
+  index: -1
