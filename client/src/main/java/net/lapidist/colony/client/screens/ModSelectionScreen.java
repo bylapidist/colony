@@ -48,7 +48,7 @@ public final class ModSelectionScreen extends BaseScreen {
             String label = mod.metadata().id();
             CheckBox box = new CheckBox(label, getSkin());
             box.setChecked(true);
-            if (label.startsWith("base-") || "base-colony".equals(label)) {
+            if (label.startsWith("base-")) {
                 box.setDisabled(true);
             }
             boxes.put(mod, box);

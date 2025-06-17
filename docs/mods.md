@@ -42,7 +42,7 @@ A minimal `mod.json` looks like:
 ### Built-in server mods
 
 The dedicated server bundles several mods providing the default functionality.
-These use the same version as the running server and are loaded automatically, so they do not need to be placed inside the `mods/` folder:
+These use the same version as the running server, are loaded automatically, and cannot be disabled:
 
 ```json
 { "id": "base-map-service" }
