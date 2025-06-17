@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="LauncherWindowsSecond" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="net.lapidist.colony.client.ClientLauncher" />
+    <module name="colony.client.main" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/client/src/main/resources/assets" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

@@ -41,6 +41,7 @@ For more details on the developer workflow, see [docs/developer_workflow.md](doc
 Both the client and dedicated server can be started directly from Gradle:
 
 - `./gradlew :client:run` – launches the game client.
+- `./scripts/second_client.sh` – launches a second client instance.
 - `./gradlew :server:run` – starts a headless server.
 
 ### Docker
