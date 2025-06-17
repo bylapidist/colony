@@ -24,7 +24,7 @@ tested without a graphical context.
 
 `MapWorldBuilder` assembles the client's Artemis‑ODB world. Input systems like
 `CameraInputSystem`, `SelectionSystem` and `PlayerMovementSystem` handle user
-actions, while `BuildPlacementSystem` and `PlayerInitSystem` create entities.
+actions, while `BuildPlacementSystem` and `PlayerFactory` create entities.
 `TileUpdateSystem`, `BuildingUpdateSystem` and `ResourceUpdateSystem` apply
 server messages. `ChunkLoadSystem` and `ChunkRequestQueueSystem` request missing
 chunks. `MapRenderSystem` draws the world using a renderer from
