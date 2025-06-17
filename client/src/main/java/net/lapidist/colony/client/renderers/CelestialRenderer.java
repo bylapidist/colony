@@ -6,13 +6,12 @@ import com.artemis.Entity;
 import com.artemis.World;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.Disposable;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.components.entities.CelestialBodyComponent;
 
 /** Draws celestial bodies like the sun and moon. */
-public final class CelestialRenderer implements EntityRenderer<Void>, Disposable {
+public final class CelestialRenderer implements EntityRenderer<Void> {
     private final SpriteBatch spriteBatch;
     private final ResourceLoader resourceLoader;
     private final World world;
@@ -42,8 +41,5 @@ public final class CelestialRenderer implements EntityRenderer<Void>, Disposable
         }
     }
 
-    @Override
-    public void dispose() {
-        // no-op
-    }
+    // CelestialRenderer does not own disposable resources
 }
