@@ -15,6 +15,7 @@ public final class GraphicsSettings {
     private static final String LIGHT_KEY = PREFIX + "lighting";
     private static final String NORMAL_KEY = PREFIX + "normalmaps";
     private static final String SPECULAR_KEY = PREFIX + "specularmaps";
+    private static final String NORMAL_STRENGTH_KEY = PREFIX + "normalStrength";
     private static final String DAY_NIGHT_KEY = PREFIX + "dayNightCycle";
     private static final String RAYS_KEY = PREFIX + "lightRays";
 
@@ -28,6 +29,7 @@ public final class GraphicsSettings {
     private boolean lightingEnabled = true;
     private boolean normalMapsEnabled;
     private boolean specularMapsEnabled;
+    private float normalMapStrength = 1f;
     private boolean dayNightCycleEnabled = true;
     private int lightRays = DEFAULT_RAYS;
 
@@ -96,6 +98,14 @@ public final class GraphicsSettings {
         this.specularMapsEnabled = enabled;
     }
 
+    public float getNormalMapStrength() {
+        return normalMapStrength;
+    }
+
+    public void setNormalMapStrength(final float strength) {
+        this.normalMapStrength = strength;
+    }
+
     public boolean isDayNightCycleEnabled() {
         return dayNightCycleEnabled;
     }
@@ -123,6 +133,7 @@ public final class GraphicsSettings {
         gs.lightingEnabled = Boolean.parseBoolean(props.getProperty(LIGHT_KEY, "true"));
         gs.normalMapsEnabled = Boolean.parseBoolean(props.getProperty(NORMAL_KEY, "false"));
         gs.specularMapsEnabled = Boolean.parseBoolean(props.getProperty(SPECULAR_KEY, "false"));
+        gs.normalMapStrength = Float.parseFloat(props.getProperty(NORMAL_STRENGTH_KEY, "1"));
         gs.dayNightCycleEnabled = Boolean.parseBoolean(props.getProperty(DAY_NIGHT_KEY, "true"));
         gs.lightRays = Integer.parseInt(props.getProperty(RAYS_KEY, Integer.toString(DEFAULT_RAYS)));
         return gs;
@@ -138,6 +149,7 @@ public final class GraphicsSettings {
         props.setProperty(LIGHT_KEY, Boolean.toString(lightingEnabled));
         props.setProperty(NORMAL_KEY, Boolean.toString(normalMapsEnabled));
         props.setProperty(SPECULAR_KEY, Boolean.toString(specularMapsEnabled));
+        props.setProperty(NORMAL_STRENGTH_KEY, Float.toString(normalMapStrength));
         props.setProperty(DAY_NIGHT_KEY, Boolean.toString(dayNightCycleEnabled));
         props.setProperty(RAYS_KEY, Integer.toString(lightRays));
     }

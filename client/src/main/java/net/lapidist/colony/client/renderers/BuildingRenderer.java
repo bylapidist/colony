@@ -104,6 +104,7 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
                             "u_specularPower",
                             power != null ? (float) power : ResourceLoader.DEFAULT_SPECULAR_POWER
                     );
+                    shader.setUniformf("u_normalStrength", graphicsSettings.getNormalMapStrength());
                     com.badlogic.gdx.Gdx.gl.glActiveTexture(com.badlogic.gdx.graphics.GL20.GL_TEXTURE0);
                 }
                 spriteBatch.draw(region, worldCoords.x, worldCoords.y);

@@ -135,6 +135,7 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                                 "u_specularPower",
                                 power != null ? (float) power : ResourceLoader.DEFAULT_SPECULAR_POWER
                         );
+                        shader.setUniformf("u_normalStrength", graphicsSettings.getNormalMapStrength());
                         com.badlogic.gdx.Gdx.gl.glActiveTexture(com.badlogic.gdx.graphics.GL20.GL_TEXTURE0);
                     }
                         String upper = type.toUpperCase(java.util.Locale.ROOT);
