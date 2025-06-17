@@ -5,6 +5,7 @@ import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
 import net.lapidist.colony.tests.GdxTestRunner;
 import net.lapidist.colony.client.systems.LightingSystem;
+import net.lapidist.colony.client.systems.ClearScreenSystem;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -17,10 +18,11 @@ public class LightingSystemTest {
     @Test
     public void updatesAndDisposesHandler() {
         RayHandler handler = mock(RayHandler.class);
-        LightingSystem system = new LightingSystem();
+        ClearScreenSystem clear = new ClearScreenSystem(new com.badlogic.gdx.graphics.Color());
+        LightingSystem system = new LightingSystem(clear);
         system.setRayHandler(handler);
 
-        World world = new World(new WorldConfigurationBuilder().with(system).build());
+        World world = new World(new WorldConfigurationBuilder().with(clear, system).build());
         world.setDelta(0f);
         world.process();
 
@@ -32,8 +34,9 @@ public class LightingSystemTest {
 
     @Test
     public void skipsWhenHandlerMissing() {
-        LightingSystem system = new LightingSystem();
-        World world = new World(new WorldConfigurationBuilder().with(system).build());
+        ClearScreenSystem clear = new ClearScreenSystem(new com.badlogic.gdx.graphics.Color());
+        LightingSystem system = new LightingSystem(clear);
+        World world = new World(new WorldConfigurationBuilder().with(clear, system).build());
         world.setDelta(0f);
         world.process();
         system.dispose();

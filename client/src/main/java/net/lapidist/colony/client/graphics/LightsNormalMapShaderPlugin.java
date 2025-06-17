@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-import net.lapidist.colony.client.systems.DayNightSystem;
+import net.lapidist.colony.client.systems.LightingSystem;
 import net.lapidist.colony.client.core.io.FileLocation;
 
 /**
@@ -15,13 +15,13 @@ public final class LightsNormalMapShaderPlugin implements LightingPlugin, Unifor
 
     private RayHandler rayHandler;
     private World world;
-    private DayNightSystem dayNightSystem;
+    private LightingSystem lightingSystem;
     private final com.badlogic.gdx.math.Vector3 lightDir = new com.badlogic.gdx.math.Vector3(0f, 0f, 1f);
     private final com.badlogic.gdx.math.Vector3 viewDir = new com.badlogic.gdx.math.Vector3(0f, 0f, 1f);
 
     /** Assign the system providing the sun direction. */
-    public void setDayNightSystem(final DayNightSystem system) {
-        this.dayNightSystem = system;
+    public void setLightingSystem(final LightingSystem system) {
+        this.lightingSystem = system;
     }
 
     @Override
@@ -74,8 +74,8 @@ public final class LightsNormalMapShaderPlugin implements LightingPlugin, Unifor
 
     @Override
     public void applyUniforms(final ShaderProgram program) {
-        if (dayNightSystem != null) {
-            program.setUniformf("u_lightDir", dayNightSystem.getSunDirection(lightDir));
+        if (lightingSystem != null) {
+            program.setUniformf("u_lightDir", lightingSystem.getSunDirection(lightDir));
         } else {
             program.setUniformf("u_lightDir", lightDir);
         }
