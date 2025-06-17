@@ -19,7 +19,8 @@ public final class ModMetadataUtil {
             Map.entry("net.lapidist.colony.base.BaseResourcesMod", "base-resources"),
             Map.entry("net.lapidist.colony.base.BaseItemsMod", "base-items"),
             Map.entry("net.lapidist.colony.base.BaseCommandBusMod", "base-command-bus"),
-            Map.entry("net.lapidist.colony.base.BaseGameplaySystemsMod", "base-systems")
+            Map.entry("net.lapidist.colony.base.BaseGameplaySystemsMod", "base-systems"),
+            Map.entry("net.lapidist.colony.base.BaseSeasonCycleMod", "base-season-cycle")
     );
 
     private ModMetadataUtil() {
