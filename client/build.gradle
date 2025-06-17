@@ -16,6 +16,10 @@ dependencies {
 
 application {
     mainClass = 'net.lapidist.colony.client.ClientLauncher'
+    // macOS requires starting on the first thread when using GLFW
+    if (System.getProperty('os.name').toLowerCase().contains('mac')) {
+        applicationDefaultJvmArgs = ['-XstartOnFirstThread']
+    }
 }
 
 eclipse.project.name = "$appName-client"
