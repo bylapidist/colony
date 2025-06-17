@@ -2,6 +2,9 @@ package net.lapidist.colony.tests.server;
 
 import net.lapidist.colony.base.BaseItemsMod;
 import net.lapidist.colony.server.services.InventoryService;
+import net.lapidist.colony.components.state.MapState;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.ReentrantLock;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,7 +20,10 @@ public class InventoryServiceTest {
 
     @Test
     public void addsItemsOnlyWhenRegistered() {
-        InventoryService inv = new InventoryService();
+        MapState state = new MapState();
+        AtomicReference<MapState> ref = new AtomicReference<>(state);
+        ReentrantLock lock = new ReentrantLock();
+        InventoryService inv = new InventoryService(ref::get, ref::set, lock);
         inv.addItem("stone", 2);
         final int unknownAmount = 5;
         inv.addItem("unknown", unknownAmount);

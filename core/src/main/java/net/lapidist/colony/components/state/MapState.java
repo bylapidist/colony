@@ -21,6 +21,7 @@ public record MapState(
         Map<ChunkPos, MapChunkData> chunks,
         List<BuildingData> buildings,
         ResourceData playerResources,
+        Map<String, Integer> inventory,
         PlayerPosition playerPos,
         CameraPosition cameraPos,
         EnvironmentState environment,
@@ -41,6 +42,7 @@ public record MapState(
                 new ConcurrentHashMap<>(),
                 new ArrayList<>(),
                 new ResourceData(),
+                new java.util.HashMap<>(),
                 new PlayerPosition(DEFAULT_WIDTH / 2, DEFAULT_HEIGHT / 2),
                 new CameraPosition(DEFAULT_WIDTH / 2f, DEFAULT_HEIGHT / 2f),
                 new EnvironmentState(),
@@ -129,6 +131,7 @@ public record MapState(
         private Map<ChunkPos, MapChunkData> chunks;
         private List<BuildingData> buildings;
         private ResourceData playerResources;
+        private Map<String, Integer> inventory;
         private PlayerPosition playerPos;
         private CameraPosition cameraPos;
         private EnvironmentState environment;
@@ -148,6 +151,7 @@ public record MapState(
             this.chunks = state.chunks;
             this.buildings = state.buildings;
             this.playerResources = state.playerResources;
+            this.inventory = state.inventory;
             this.playerPos = state.playerPos;
             this.cameraPos = state.cameraPos;
             this.environment = state.environment;
@@ -195,6 +199,11 @@ public record MapState(
             return this;
         }
 
+        public Builder inventory(final Map<String, Integer> newInventory) {
+            this.inventory = newInventory;
+            return this;
+        }
+
         public Builder playerPos(final PlayerPosition newPos) {
             this.playerPos = newPos;
             return this;
@@ -230,6 +239,7 @@ public record MapState(
                     chunks,
                     buildings,
                     playerResources,
+                    inventory,
                     playerPos,
                     cameraPos,
                     environment,

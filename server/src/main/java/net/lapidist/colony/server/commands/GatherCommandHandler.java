@@ -68,6 +68,7 @@ public final class GatherCommandHandler implements CommandHandler<GatherCommand>
             java.util.Map<String, Integer> playerAmounts = new java.util.HashMap<>(player.amounts());
             playerAmounts.merge(command.resourceId(), current - updatedValue, Integer::sum);
             inventoryService.addItem(command.resourceId().toLowerCase(Locale.ROOT), current - updatedValue);
+            state = stateSupplier.get();
             ResourceData newPlayer = new ResourceData(new java.util.HashMap<>(playerAmounts));
             MapState updatedState = state.toBuilder()
                     .playerResources(newPlayer)
