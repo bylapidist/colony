@@ -32,13 +32,13 @@ import net.lapidist.colony.client.systems.network.ResourceUpdateSystem;
 import net.lapidist.colony.client.systems.CelestialSystem;
 import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.client.systems.MapRenderDataSystem;
-import net.lapidist.colony.client.systems.PlayerInitSystem;
 import net.lapidist.colony.components.entities.CelestialBodyComponent;
 import net.lapidist.colony.components.state.CameraPosition;
 import net.lapidist.colony.components.state.MutableEnvironmentState;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.state.PlayerPosition;
+import net.lapidist.colony.client.entities.PlayerFactory;
 import net.lapidist.colony.client.systems.SeasonCycleSystem;
 import net.lapidist.colony.map.MapStateProvider;
 import net.lapidist.colony.map.ProvidedMapStateProvider;
@@ -171,7 +171,6 @@ public final class MapWorldBuilder {
                         cameraInputSystem,
                         selectionSystem,
                         buildPlacementSystem,
-                        new PlayerInitSystem(client, playerResources, playerPos),
                         movementSystem,
                         new TileUpdateSystem(client),
                         new BuildingUpdateSystem(client),
@@ -209,15 +208,23 @@ public final class MapWorldBuilder {
     /**
      * Build a world using the supplied configuration.
      *
-     * @param builder preconfigured world builder with all desired systems
-     * @param factory optional factory for creating the map renderer
+     * @param builder         preconfigured world builder with all desired systems
+     * @param factory         optional factory for creating the map renderer
+     * @param settings        user settings for renderer and graphics options
+     * @param cameraPos       initial camera position or {@code null} for default
+     * @param client          game client for map size information
+     * @param playerResources starting resources for the player
+     * @param playerPos       initial player tile position
      * @return configured world instance
      */
     public static World build(
             final WorldConfigurationBuilder builder,
             final MapRendererFactory factory,
             final Settings settings,
-            final CameraPosition cameraPos
+            final CameraPosition cameraPos,
+            final GameClient client,
+            final ResourceData playerResources,
+            final PlayerPosition playerPos
     ) {
         MapRendererFactory actualFactory = factory;
         if (actualFactory == null) {
@@ -261,6 +268,7 @@ public final class MapWorldBuilder {
             cameraSystem.getCamera().position.set(cameraPos.x(), cameraPos.y(), 0);
             cameraSystem.getCamera().update();
         }
+        PlayerFactory.create(world, client, playerResources, playerPos);
         Events.init(world.getSystem(EventSystem.class));
         createCelestialEntities(world);
         return world;

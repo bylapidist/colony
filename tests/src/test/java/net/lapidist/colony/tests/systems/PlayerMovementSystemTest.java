@@ -3,7 +3,6 @@ package net.lapidist.colony.tests.systems;
 import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
-import net.lapidist.colony.client.systems.PlayerInitSystem;
 import net.lapidist.colony.client.systems.PlayerMovementSystem;
 import net.lapidist.colony.settings.KeyBindings;
 import net.lapidist.colony.tests.GdxTestRunner;
@@ -20,8 +19,14 @@ public class PlayerMovementSystemTest {
         PlayerCameraSystem camera = new PlayerCameraSystem();
         PlayerMovementSystem movement = new PlayerMovementSystem(keys);
         World world = new World(new WorldConfigurationBuilder()
-                .with(camera, new PlayerInitSystem(), movement)
+                .with(camera, movement)
                 .build());
+        net.lapidist.colony.client.entities.PlayerFactory.create(
+                world,
+                null,
+                new net.lapidist.colony.components.state.ResourceData(),
+                null
+        );
         world.process();
 
         int count = world.getAspectSubscriptionManager()

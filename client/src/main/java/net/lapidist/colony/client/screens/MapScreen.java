@@ -34,7 +34,10 @@ public final class MapScreen implements Screen {
                 ),
                 null,
                 colony.getSettings(),
-                state.cameraPos()
+                state.cameraPos(),
+                client,
+                state.playerResources(),
+                state.playerPos()
         );
         var cameraSystem = world.getSystem(net.lapidist.colony.client.systems.PlayerCameraSystem.class);
         if (cameraSystem != null) {

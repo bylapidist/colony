@@ -4,7 +4,6 @@ import com.artemis.Aspect;
 import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
-import net.lapidist.colony.client.systems.PlayerInitSystem;
 import net.lapidist.colony.client.systems.PlayerMovementSystem;
 import net.lapidist.colony.components.entities.PlayerComponent;
 import net.lapidist.colony.settings.KeyBindings;
@@ -20,8 +19,14 @@ public class PlayerCameraFollowTest {
     public void cameraFollowsPlayerInPlayerMode() {
         KeyBindings keys = new KeyBindings();
         World world = new World(new WorldConfigurationBuilder()
-                .with(new PlayerCameraSystem(), new PlayerInitSystem(), new PlayerMovementSystem(keys))
+                .with(new PlayerCameraSystem(), new PlayerMovementSystem(keys))
                 .build());
+        net.lapidist.colony.client.entities.PlayerFactory.create(
+                world,
+                null,
+                new net.lapidist.colony.components.state.ResourceData(),
+                null
+        );
         world.process();
         world.setDelta(1f);
         PlayerCameraSystem camera = world.getSystem(PlayerCameraSystem.class);

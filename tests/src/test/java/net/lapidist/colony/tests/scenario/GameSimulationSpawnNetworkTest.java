@@ -77,7 +77,10 @@ public class GameSimulationSpawnNetworkTest {
                         ),
                         null,
                         settings,
-                        client.getMapState().cameraPos()
+                        client.getMapState().cameraPos(),
+                        client,
+                        client.getMapState().playerResources(),
+                        client.getMapState().playerPos()
                 );
                 PlayerCameraSystem camera = world.getSystem(PlayerCameraSystem.class);
                 camera.toggleMode();

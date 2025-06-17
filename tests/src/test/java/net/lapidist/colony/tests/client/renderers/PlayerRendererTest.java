@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import net.lapidist.colony.client.renderers.PlayerRenderer;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
-import net.lapidist.colony.client.systems.PlayerInitSystem;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,8 +23,14 @@ public class PlayerRendererTest {
         when(loader.findRegion(anyString())).thenReturn(region);
 
         World world = new World(new WorldConfigurationBuilder()
-                .with(new PlayerCameraSystem(), new PlayerInitSystem())
+                .with(new PlayerCameraSystem())
                 .build());
+        net.lapidist.colony.client.entities.PlayerFactory.create(
+                world,
+                null,
+                new net.lapidist.colony.components.state.ResourceData(),
+                null
+        );
         world.process();
 
         PlayerRenderer renderer = new PlayerRenderer(batch, loader, world);

@@ -32,7 +32,15 @@ public class MapWorldBuilderTest {
         WorldConfigurationBuilder builder = new WorldConfigurationBuilder()
                 .with(new EventSystem(), dummy);
 
-        World world = MapWorldBuilder.build(builder, null, new net.lapidist.colony.settings.Settings(), null);
+        World world = MapWorldBuilder.build(
+                builder,
+                null,
+                new net.lapidist.colony.settings.Settings(),
+                null,
+                null,
+                new net.lapidist.colony.components.state.ResourceData(),
+                null
+        );
         world.setDelta(0f);
         world.process();
 

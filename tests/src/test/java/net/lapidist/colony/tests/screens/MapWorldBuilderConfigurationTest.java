@@ -14,7 +14,6 @@ import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.PlayerMovementSystem;
 import net.lapidist.colony.client.systems.SelectionSystem;
-import net.lapidist.colony.client.systems.PlayerInitSystem;
 import net.lapidist.colony.client.systems.MapRenderSystem;
 import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.client.systems.DayNightSystem;
@@ -58,6 +57,9 @@ public class MapWorldBuilderConfigurationTest {
                     MapWorldBuilder.baseBuilder(client, stage, keys, settings.getGraphicsSettings()),
                     null,
                     settings,
+                    null,
+                    client,
+                    new ResourceData(),
                     null
             );
 
@@ -65,7 +67,6 @@ public class MapWorldBuilderConfigurationTest {
             assertNotNull(world.getSystem(SelectionSystem.class));
             assertNotNull(world.getSystem(BuildPlacementSystem.class));
             assertNotNull(world.getSystem(PlayerMovementSystem.class));
-            assertNotNull(world.getSystem(PlayerInitSystem.class));
             assertNotNull(world.getSystem(MapRenderSystem.class));
             assertNull(world.getSystem(MapInitSystem.class));
             assertNull(world.getSystem(MapRenderDataSystem.class));
@@ -101,7 +102,10 @@ public class MapWorldBuilderConfigurationTest {
                     ),
                     null,
                     settings,
-                    null
+                    null,
+                    client,
+                    state.playerResources(),
+                    state.playerPos()
             );
             world.process();
 
@@ -137,7 +141,10 @@ public class MapWorldBuilderConfigurationTest {
                     MapWorldBuilder.builder(state, client, stage, keys, settings.getGraphicsSettings()),
                     null,
                     settings,
-                    null
+                    null,
+                    client,
+                    state.playerResources(),
+                    state.playerPos()
             );
             PlayerCameraSystem camera = world.getSystem(PlayerCameraSystem.class);
             camera.toggleMode();
@@ -171,6 +178,9 @@ public class MapWorldBuilderConfigurationTest {
                     MapWorldBuilder.baseBuilder(client, stage, keys, resources, settings.getGraphicsSettings()),
                     null,
                     settings,
+                    null,
+                    client,
+                    resources,
                     null
             );
             world.process();
@@ -208,7 +218,10 @@ public class MapWorldBuilderConfigurationTest {
                     MapWorldBuilder.builder(state, client, stage, keys, settings.getGraphicsSettings()),
                     null,
                     settings,
-                    null
+                    null,
+                    client,
+                    state.playerResources(),
+                    state.playerPos()
             );
             PlayerCameraSystem camera = world.getSystem(PlayerCameraSystem.class);
             camera.toggleMode();
@@ -231,7 +244,15 @@ public class MapWorldBuilderConfigurationTest {
     public void selectsCameraSystemFromSettings() {
         net.lapidist.colony.settings.Settings settings = new net.lapidist.colony.settings.Settings();
         settings.getGraphicsSettings().setRenderer("sprite");
-        World world = MapWorldBuilder.build(new com.artemis.WorldConfigurationBuilder(), null, settings, null);
+        World world = MapWorldBuilder.build(
+                new com.artemis.WorldConfigurationBuilder(),
+                null,
+                settings,
+                null,
+                null,
+                new ResourceData(),
+                null
+        );
         assertNotNull(world.getSystem(PlayerCameraSystem.class));
         world.dispose();
     }
@@ -251,6 +272,9 @@ public class MapWorldBuilderConfigurationTest {
                     MapWorldBuilder.baseBuilder(client, stage, keys, settings.getGraphicsSettings()),
                     null,
                     settings,
+                    null,
+                    client,
+                    new ResourceData(),
                     null
             );
             assertNull(world.getSystem(DayNightSystem.class));

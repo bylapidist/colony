@@ -3,7 +3,7 @@ package net.lapidist.colony.tests.systems;
 import com.artemis.Aspect;
 import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
-import net.lapidist.colony.client.systems.PlayerInitSystem;
+import net.lapidist.colony.client.entities.PlayerFactory;
 import net.lapidist.colony.components.entities.PlayerComponent;
 import net.lapidist.colony.components.light.PointLightComponent;
 import net.lapidist.colony.tests.GdxTestRunner;
@@ -12,18 +12,22 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
-/** Tests for {@link PlayerInitSystem}. */
+/** Tests for {@link PlayerFactory}. */
 @RunWith(GdxTestRunner.class)
-public class PlayerInitSystemTest {
+public class PlayerFactoryTest {
 
     private static final float EXPECTED_RADIUS = 3f;
     private static final float EXPECTED_INTENSITY = 0.6f;
 
     @Test
     public void addsLightToPlayer() {
-        World world = new World(new WorldConfigurationBuilder()
-                .with(new PlayerInitSystem())
-                .build());
+        World world = new World(new WorldConfigurationBuilder().build());
+        PlayerFactory.create(
+                world,
+                null,
+                new net.lapidist.colony.components.state.ResourceData(),
+                null
+        );
         world.process();
         var ids = world.getAspectSubscriptionManager()
                 .get(Aspect.all(PlayerComponent.class))

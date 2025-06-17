@@ -50,13 +50,18 @@ public final class GameSimulation {
                         new CameraInputSystem(keys),
                         new SelectionSystem(client, keys),
                         new BuildPlacementSystem(client, keys),
-                        new net.lapidist.colony.client.systems.PlayerInitSystem(),
                         new net.lapidist.colony.client.systems.PlayerMovementSystem(keys),
                         new TileUpdateSystem(client),
                         new BuildingUpdateSystem(client),
                         new ResourceUpdateSystem(client)
                 )
                 .build());
+        net.lapidist.colony.client.entities.PlayerFactory.create(
+                world,
+                client,
+                state.playerResources(),
+                state.playerPos()
+        );
         // run once so systems initialise
         world.process();
         cameraInputSystem = world.getSystem(CameraInputSystem.class);
