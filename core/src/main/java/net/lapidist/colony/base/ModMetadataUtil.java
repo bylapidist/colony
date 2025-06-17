@@ -9,6 +9,7 @@ import net.lapidist.colony.mod.ModMetadata;
 /** Utility to build metadata for built-in mods. */
 public final class ModMetadataUtil {
     private static final Map<String, String> IDS = Map.ofEntries(
+            Map.entry("net.lapidist.colony.base.BaseColonyMod", "base-colony"),
             Map.entry("net.lapidist.colony.base.BaseMapServiceMod", "base-map-service"),
             Map.entry("net.lapidist.colony.base.BaseNetworkMod", "base-network"),
             Map.entry("net.lapidist.colony.base.BaseAutosaveMod", "base-autosave"),
@@ -35,5 +36,9 @@ public final class ModMetadataUtil {
         String version = Optional.ofNullable(cls.getPackage().getImplementationVersion())
                 .orElse("dev");
         return new ModMetadata(id, version, new java.util.ArrayList<>());
+    }
+
+    public static String builtinParent(final Class<? extends GameMod> cls) {
+        return cls == BaseColonyMod.class ? null : "base-colony";
     }
 }

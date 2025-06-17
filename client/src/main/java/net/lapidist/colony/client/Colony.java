@@ -137,7 +137,9 @@ public final class Colony extends Game {
             I18n.setLocale(settings.getLocale());
             mods = new java.util.ArrayList<>();
             for (net.lapidist.colony.mod.GameMod builtin : ServiceLoader.load(net.lapidist.colony.mod.GameMod.class)) {
-                mods.add(new LoadedMod(builtin, ModMetadataUtil.builtinMetadata(builtin.getClass())));
+                var meta = ModMetadataUtil.builtinMetadata(builtin.getClass());
+                String parent = ModMetadataUtil.builtinParent(builtin.getClass());
+                mods.add(new LoadedMod(builtin, meta, parent));
             }
             mods.addAll(new ModLoader(Paths.get()).loadMods());
             for (LoadedMod mod : mods) {

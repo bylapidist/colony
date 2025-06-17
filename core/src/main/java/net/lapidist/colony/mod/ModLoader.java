@@ -34,8 +34,9 @@ import javax.script.ScriptException;
  */
 public final class ModLoader {
 
-    /** Pair of a loaded {@link GameMod} and its associated metadata. */
-    public record LoadedMod(GameMod mod, ModMetadata metadata) { }
+    /** Pair of a loaded {@link GameMod}, its associated metadata and parent id. */
+    public record LoadedMod(GameMod mod, ModMetadata metadata, String parent) {
+    }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModLoader.class);
 
@@ -45,7 +46,7 @@ public final class ModLoader {
         this.paths = pathsToUse;
     }
 
-    private record ScannedMod(Path path, boolean jar, ModMetadata metadata) {
+    private record ScannedMod(Path path, boolean jar, ModMetadata metadata, String parent) {
     }
 
     /**
@@ -82,20 +83,20 @@ public final class ModLoader {
         List<LoadedMod> loaded = new ArrayList<>();
         for (ScannedMod mod : ordered) {
             if (mod.jar()) {
-                loadFromJar(mod.path(), mod.metadata(), loaded);
+                loadFromJar(mod.path(), mod.metadata(), mod.parent(), loaded);
             } else {
-                loadFromDirectory(mod.path(), mod.metadata(), loaded);
+                loadFromDirectory(mod.path(), mod.metadata(), mod.parent(), loaded);
             }
         }
         return loaded;
     }
 
-    private void loadFromDirectory(final Path dir, final ModMetadata metadata, final List<LoadedMod> out)
-            throws IOException {
+    private void loadFromDirectory(final Path dir, final ModMetadata metadata, final String parent,
+            final List<LoadedMod> out) throws IOException {
         URLClassLoader cl = new URLClassLoader(new URL[]{dir.toUri().toURL()}, getClass().getClassLoader());
         executeDirectoryScripts(dir, cl);
         for (GameMod mod : ServiceLoader.load(GameMod.class, cl)) {
-            out.add(new LoadedMod(mod, metadata));
+            out.add(new LoadedMod(mod, metadata, parent));
         }
     }
 
@@ -104,12 +105,13 @@ public final class ModLoader {
         if (!Files.isRegularFile(meta)) {
             return null;
         }
-        ModMetadata metadata = readMetadata(Files.newBufferedReader(meta, StandardCharsets.UTF_8));
-        return new ScannedMod(dir, false, metadata);
+        var metaReader = Files.newBufferedReader(meta, StandardCharsets.UTF_8);
+        MetadataWithParent data = readMetadata(metaReader);
+        return new ScannedMod(dir, false, data.metadata(), data.parent());
     }
 
     private ScannedMod scanJar(final Path jar) throws IOException {
-        ModMetadata metadata;
+        MetadataWithParent data;
         try (JarFile jf = new JarFile(jar.toFile())) {
             ZipEntry entry = jf.getEntry("mod.json");
             if (entry == null) {
@@ -117,10 +119,10 @@ public final class ModLoader {
             }
             try (BufferedReader reader = new BufferedReader(
                     new InputStreamReader(jf.getInputStream(entry), StandardCharsets.UTF_8))) {
-                metadata = readMetadata(reader);
+                data = readMetadata(reader);
             }
         }
-        return new ScannedMod(jar, true, metadata);
+        return new ScannedMod(jar, true, data.metadata(), data.parent());
     }
 
     private List<ScannedMod> resolveOrder(final List<ScannedMod> scanned) {
@@ -206,22 +208,27 @@ public final class ModLoader {
         return ordered;
     }
 
-    private void loadFromJar(final Path jar, final ModMetadata metadata, final List<LoadedMod> out)
-            throws IOException {
+    private void loadFromJar(final Path jar, final ModMetadata metadata, final String parent,
+            final List<LoadedMod> out) throws IOException {
         URLClassLoader cl = new URLClassLoader(new URL[]{jar.toUri().toURL()}, getClass().getClassLoader());
         executeJarScripts(jar, cl);
         for (GameMod mod : ServiceLoader.load(GameMod.class, cl)) {
-            out.add(new LoadedMod(mod, metadata));
+            out.add(new LoadedMod(mod, metadata, parent));
         }
     }
 
-    private ModMetadata readMetadata(final BufferedReader reader) {
+    private MetadataWithParent readMetadata(final BufferedReader reader) {
         Config config = ConfigFactory.parseReader(reader);
         List<String> deps = config.hasPath("dependencies")
                 ? new java.util.ArrayList<>(config.getStringList("dependencies"))
                 : new java.util.ArrayList<>();
-        return new ModMetadata(config.getString("id"), config.getString("version"), deps);
+        String parent = config.hasPath("parent") ? config.getString("parent") : config.getString("id");
+        return new MetadataWithParent(
+                new ModMetadata(config.getString("id"), config.getString("version"), deps),
+                parent);
     }
+
+    private record MetadataWithParent(ModMetadata metadata, String parent) { }
 
     private void executeDirectoryScripts(final Path dir, final ClassLoader cl) throws IOException {
         Path scripts = dir.resolve("scripts");

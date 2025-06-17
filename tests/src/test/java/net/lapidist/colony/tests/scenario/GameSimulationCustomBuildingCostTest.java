@@ -46,7 +46,7 @@ public class GameSimulationCustomBuildingCostTest {
         net.lapidist.colony.io.Paths.get().deleteAutosave("scenario-custom-cost");
         try (MockedConstruction<ModLoader> loader = mockConstruction(ModLoader.class,
                 (m, c) -> when(m.loadMods()).thenReturn(List.of(
-                        new LoadedMod(new BuildingCostMod(), new ModMetadata("cost", "1", List.of())))));
+                        new LoadedMod(new BuildingCostMod(), new ModMetadata("cost", "1", List.of()), null))));
              GameServer server = new GameServer(config);
              GameClient sender = new GameClient();
              GameClient receiver = new GameClient()) {
