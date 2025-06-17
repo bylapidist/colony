@@ -5,8 +5,8 @@ import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.graphics.Color;
 import static org.mockito.Mockito.*;
-import net.lapidist.colony.client.systems.DynamicLightSystem;
 import net.lapidist.colony.client.systems.LightingSystem;
+import net.lapidist.colony.client.systems.ClearScreenSystem;
 import net.lapidist.colony.components.entities.PlayerComponent;
 import net.lapidist.colony.components.light.PointLightComponent;
 import net.lapidist.colony.tests.GdxTestRunner;
@@ -15,20 +15,20 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
-/** Tests for {@link DynamicLightSystem}. */
+/** Tests dynamic light management in {@link LightingSystem}. */
 @RunWith(GdxTestRunner.class)
-public class DynamicLightSystemTest {
+public class LightingSystemDynamicTest {
 
     private static final float RADIUS = 5f;
     private static final float INTENSITY = 0.5f;
 
     @Test
     public void createsAndRemovesLights() {
-        LightingSystem lighting = new LightingSystem();
-        DynamicLightSystem.LightFactory factory = (h, c) -> mock(box2dLight.PointLight.class);
-        DynamicLightSystem system = new DynamicLightSystem(lighting, factory);
+        ClearScreenSystem clear = new ClearScreenSystem(new Color());
+        LightingSystem.LightFactory factory = (h, c) -> mock(box2dLight.PointLight.class);
+        LightingSystem lighting = new LightingSystem(clear, factory);
         World world = new World(new WorldConfigurationBuilder()
-                .with(lighting, system)
+                .with(clear, lighting)
                 .build());
         RayHandler handler = mock(RayHandler.class);
         lighting.setRayHandler(handler);
@@ -45,11 +45,11 @@ public class DynamicLightSystemTest {
 
         world.setDelta(0f);
         world.process();
-        assertEquals(1, system.getLightCount());
+        assertEquals(1, lighting.getLightCount());
 
         e.deleteFromWorld();
         world.process();
-        assertEquals(0, system.getLightCount());
+        assertEquals(0, lighting.getLightCount());
 
         world.dispose();
         handler.dispose();
@@ -57,9 +57,8 @@ public class DynamicLightSystemTest {
 
     @Test
     public void usesConfiguredRayCount() {
-        LightingSystem lighting = new LightingSystem();
         final int rays = 24;
-        DynamicLightSystem system = new DynamicLightSystem(lighting, rays);
-        assertEquals(rays, system.getRayCount());
+        LightingSystem lighting = new LightingSystem(new ClearScreenSystem(new Color()), rays);
+        assertEquals(rays, lighting.getRayCount());
     }
 }

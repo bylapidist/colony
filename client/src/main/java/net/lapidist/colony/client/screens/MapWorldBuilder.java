@@ -18,8 +18,6 @@ import net.lapidist.colony.client.systems.SelectionSystem;
 import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.MapRenderSystem;
 import net.lapidist.colony.client.systems.LightingSystem;
-import net.lapidist.colony.client.systems.DynamicLightSystem;
-import net.lapidist.colony.client.systems.DayNightSystem;
 import net.lapidist.colony.client.systems.ParticleSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.PlayerMovementSystem;
@@ -161,9 +159,14 @@ public final class MapWorldBuilder {
         PlayerMovementSystem movementSystem = new PlayerMovementSystem(client, keyBindings);
 
         ClearScreenSystem clear = new ClearScreenSystem(Color.BLACK);
-        LightingSystem lighting = new LightingSystem();
-        int rays = graphics != null ? graphics.getLightRays() : DynamicLightSystem.DEFAULT_RAYS;
-        DynamicLightSystem dynamicLights = new DynamicLightSystem(lighting, rays);
+        int rays = graphics != null ? graphics.getLightRays() : LightingSystem.DEFAULT_RAYS;
+        boolean lightingEnabled = graphics != null && graphics.isLightingEnabled();
+        boolean dayNightEnabled = graphics == null
+                || (graphics.isLightingEnabled() && graphics.isDayNightCycleEnabled());
+        LightingSystem lighting = null;
+        if (lightingEnabled || dayNightEnabled) {
+            lighting = new LightingSystem(clear, rays);
+        }
         WorldConfigurationBuilder builder = new WorldConfigurationBuilder()
                 .with(
                         new EventSystem(),
@@ -180,19 +183,13 @@ public final class MapWorldBuilder {
                         new CelestialSystem(client, environment),
                         new MapRenderSystem(),
                         particleSystem,
-                        lighting,
                         new UISystem(stage)
                 );
-
-        if (graphics != null && graphics.isLightingEnabled()) {
-            builder.with(dynamicLights);
+        if (lighting != null) {
+            builder.with(lighting);
         }
-
-        if (graphics == null || (graphics.isLightingEnabled() && graphics.isDayNightCycleEnabled())) {
-            builder.with(
-                    new DayNightSystem(clear, lighting),
-                    new SeasonCycleSystem(environment)
-            );
+        if (dayNightEnabled) {
+            builder.with(new SeasonCycleSystem(environment));
         }
 
         if (provider != null) {
@@ -252,12 +249,11 @@ public final class MapWorldBuilder {
             renderSystem.setMapRenderer(renderer);
             renderSystem.setCameraProvider(world.getSystem(PlayerCameraSystem.class));
         }
-        DayNightSystem dayNightSystem = world.getSystem(DayNightSystem.class);
-        if (plugin instanceof net.lapidist.colony.client.graphics.LightsNormalMapShaderPlugin ln
-                && dayNightSystem != null) {
-            ln.setDayNightSystem(dayNightSystem);
-        }
         LightingSystem lightingSystem = world.getSystem(LightingSystem.class);
+        if (plugin instanceof net.lapidist.colony.client.graphics.LightsNormalMapShaderPlugin ln
+                && lightingSystem != null) {
+            ln.setLightingSystem(lightingSystem);
+        }
         if (lightingSystem != null && plugin instanceof net.lapidist.colony.client.graphics.LightingPlugin lp) {
             if (settings == null || settings.getGraphicsSettings().isLightingEnabled()) {
                 lightingSystem.setRayHandler(lp.getRayHandler());

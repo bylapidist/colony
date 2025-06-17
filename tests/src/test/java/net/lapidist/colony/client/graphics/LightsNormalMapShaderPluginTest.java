@@ -3,7 +3,6 @@ package net.lapidist.colony.client.graphics;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.Color;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
-import net.lapidist.colony.client.systems.DayNightSystem;
 import net.lapidist.colony.client.systems.LightingSystem;
 import com.badlogic.gdx.math.Vector3;
 import org.mockito.ArgumentCaptor;
@@ -39,11 +38,10 @@ public class LightsNormalMapShaderPluginTest {
     @SuppressWarnings("checkstyle:magicnumber")
     public void updatesLightDirectionWhenTimeChanges() {
         LightsNormalMapShaderPlugin plugin = new LightsNormalMapShaderPlugin();
-        DayNightSystem system = new DayNightSystem(
-                new ClearScreenSystem(new Color()),
-                new LightingSystem()
+        LightingSystem system = new LightingSystem(
+                new ClearScreenSystem(new Color())
         );
-        plugin.setDayNightSystem(system);
+        plugin.setLightingSystem(system);
         ShaderProgram shader = mock(ShaderProgram.class);
 
         system.setTimeOfDay(0f);
