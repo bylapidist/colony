@@ -63,7 +63,6 @@ public final class Settings {
             settings.graphicsSettings.setMipMapsEnabled(gLoaded.isMipMapsEnabled());
             settings.graphicsSettings.setAnisotropicFilteringEnabled(
                     gLoaded.isAnisotropicFilteringEnabled());
-            settings.graphicsSettings.setShaderPlugin(gLoaded.getShaderPlugin());
             settings.graphicsSettings.setRenderer(gLoaded.getRenderer());
             settings.graphicsSettings.setSpriteCacheEnabled(gLoaded.isSpriteCacheEnabled());
             settings.graphicsSettings.setLightingEnabled(gLoaded.isLightingEnabled());

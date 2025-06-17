@@ -20,7 +20,6 @@ public class GraphicsSettingsTest {
         gs.setAntialiasingEnabled(true);
         gs.setMipMapsEnabled(true);
         gs.setAnisotropicFilteringEnabled(true);
-        gs.setShaderPlugin("custom");
         gs.setRenderer("model");
         gs.setSpriteCacheEnabled(false);
         gs.setLightingEnabled(false);
@@ -34,7 +33,6 @@ public class GraphicsSettingsTest {
         assertTrue(loaded.isAntialiasingEnabled());
         assertTrue(loaded.isMipMapsEnabled());
         assertTrue(loaded.isAnisotropicFilteringEnabled());
-        assertEquals("custom", loaded.getShaderPlugin());
         assertEquals("model", loaded.getRenderer());
         assertFalse(loaded.isSpriteCacheEnabled());
         assertFalse(loaded.isLightingEnabled());
@@ -52,7 +50,6 @@ public class GraphicsSettingsTest {
         assertTrue(loaded.isAntialiasingEnabled());
         assertTrue(loaded.isMipMapsEnabled());
         assertTrue(loaded.isAnisotropicFilteringEnabled());
-        assertEquals("lights-normalmap", loaded.getShaderPlugin());
         assertEquals("sprite", loaded.getRenderer());
         assertTrue(loaded.isSpriteCacheEnabled());
         assertTrue(loaded.isLightingEnabled());

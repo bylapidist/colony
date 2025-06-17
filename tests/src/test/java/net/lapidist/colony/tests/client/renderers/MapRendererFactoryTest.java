@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.lapidist.colony.client.renderers.MapRenderer;
 import net.lapidist.colony.client.renderers.MapRendererFactory;
 import net.lapidist.colony.client.renderers.SpriteMapRendererFactory;
-import net.lapidist.colony.client.graphics.Box2dLightsPlugin;
+import net.lapidist.colony.client.graphics.LightsNormalMapShaderPlugin;
 import net.lapidist.colony.client.renderers.SpriteBatchMapRenderer;
 import net.lapidist.colony.client.graphics.LightingPlugin;
 import net.lapidist.colony.client.graphics.ShaderManager;
@@ -131,7 +131,7 @@ public class MapRendererFactoryTest {
         World world = new World(new WorldConfigurationBuilder()
                 .with(new PlayerCameraSystem())
                 .build());
-        Box2dLightsPlugin plugin = new Box2dLightsPlugin();
+        LightsNormalMapShaderPlugin plugin = new LightsNormalMapShaderPlugin();
 
         try (MockedConstruction<SpriteBatchMapRenderer> sbCons =
                      mockConstruction(SpriteBatchMapRenderer.class);

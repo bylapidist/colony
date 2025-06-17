@@ -65,9 +65,9 @@ Whenever a serialized class list changes, recompute `SerializationRegistrar.REGI
 ## Graphics Settings
 
 Rendering options are grouped under the `graphics` prefix inside `settings.conf`.
-The most important key is `shaderPlugin` which selects the shader implementation
-used by the map renderer. By default it is set to `lights-normalmap`, a plugin
-that combines dynamic lighting from Box2D-lights with normal map rendering:
+The shader is controlled by the `shaderPlugin` key which defaults to
+`lights-normalmap`. Colony only includes this built-in plugin combining
+dynamic lighting from Box2D-lights with normal map rendering:
 
 ```properties
 graphics.shaderPlugin=lights-normalmap

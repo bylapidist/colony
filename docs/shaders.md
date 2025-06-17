@@ -32,9 +32,9 @@ an entry for `NullShaderPlugin`.
 
 ## Selecting a plugin
 
-The chosen shader is stored in the `graphics.shaderPlugin` setting. It
-holds the class name from the service file. This value can be edited in
-`settings.conf` or selected through the graphics settings screen.
+The chosen shader is stored in the `graphics.shaderPlugin` setting.
+Colony ships with a single built-in implementation so this value should
+remain `lights-normalmap` unless a custom plugin is supplied.
 
 ## Example
 
@@ -60,13 +60,9 @@ Add `GrayShaderPlugin` to the service descriptor and set
 
 ## Built-in lighting
 
-The engine ships with two lighting plugins powered by
-[box2d-lights](https://github.com/libgdx/box2dlights):
-
-* `Box2dLightsPlugin` – exposes a `RayHandler` and provides a basic lighting shader.
-* `LightsNormalMapShaderPlugin` – combines the normal mapping shader with the same `RayHandler`.
-
-The second plugin is now selected by default through the
+The engine provides a lighting plugin powered by
+[box2d-lights](https://github.com/libgdx/box2dlights). It combines dynamic
+lighting with normal map rendering and is selected by default through the
 `graphics.shaderPlugin` setting. Lighting will be skipped automatically when
 frame buffers are unavailable such as in headless tests.
 

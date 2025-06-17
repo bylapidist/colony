@@ -10,7 +10,6 @@ import net.lapidist.colony.client.renderers.MapRenderer;
 import net.lapidist.colony.client.renderers.SpriteMapRendererFactory;
 import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.settings.GraphicsSettings;
-import net.lapidist.colony.client.graphics.ShaderPluginLoader;
 import net.lapidist.colony.client.graphics.ShaderPlugin;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
 import net.lapidist.colony.client.systems.CameraInputSystem;
@@ -229,18 +228,7 @@ public final class MapWorldBuilder {
         }
         builder.with(new PlayerCameraSystem());
 
-        ShaderPlugin plugin = null;
-        if (settings != null) {
-            String id = settings.getGraphicsSettings().getShaderPlugin();
-            if (!"none".equals(id)) {
-                for (ShaderPlugin p : new ShaderPluginLoader().loadPlugins()) {
-                    if (p.id().equals(id)) {
-                        plugin = p;
-                        break;
-                    }
-                }
-            }
-        }
+        ShaderPlugin plugin = new net.lapidist.colony.client.graphics.LightsNormalMapShaderPlugin();
 
         World world = new World(builder.build());
         MapRenderSystem renderSystem = world.getSystem(MapRenderSystem.class);

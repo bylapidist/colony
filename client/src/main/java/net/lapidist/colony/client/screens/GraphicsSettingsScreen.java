@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import net.lapidist.colony.client.Colony;
-import net.lapidist.colony.client.graphics.ShaderPluginLoader;
 import net.lapidist.colony.util.I18n;
 import net.lapidist.colony.settings.GraphicsSettings;
 
@@ -26,12 +25,10 @@ public final class GraphicsSettingsScreen extends BaseScreen {
     private final CheckBox afBox;
     private final CheckBox normalBox;
     private final CheckBox specularBox;
-    private final SelectBox<String> shaderBox;
-    private final com.badlogic.gdx.utils.Array<String> pluginIds;
+    private final SelectBox<String> rendererBox;
     private final CheckBox cacheBox;
     private final CheckBox lightingBox;
     private final CheckBox dayNightBox;
-    private final SelectBox<String> rendererBox;
     private static final float PADDING = 10f;
 
     public GraphicsSettingsScreen(final Colony game) {
@@ -55,31 +52,15 @@ public final class GraphicsSettingsScreen extends BaseScreen {
         normalBox.setChecked(graphics.isNormalMapsEnabled());
         specularBox = new CheckBox(I18n.get("graphics.specularmaps"), getSkin());
         specularBox.setChecked(graphics.isSpecularMapsEnabled());
-        shaderBox = new SelectBox<>(getSkin());
-        var plugins = new ShaderPluginLoader().loadPlugins();
-        pluginIds = new com.badlogic.gdx.utils.Array<>();
-        com.badlogic.gdx.utils.Array<String> names = new com.badlogic.gdx.utils.Array<>();
-        pluginIds.add("none");
-        names.add("None");
-        for (var p : plugins) {
-            pluginIds.add(p.id());
-            names.add(p.displayName());
-        }
-        shaderBox.setItems(names);
-        int selected = pluginIds.indexOf(graphics.getShaderPlugin(), false);
-        if (selected >= 0) {
-            shaderBox.setSelectedIndex(selected);
-        }
+        rendererBox = new SelectBox<>(getSkin());
+        rendererBox.setItems("sprite");
+        rendererBox.setSelected(graphics.getRenderer());
         cacheBox = new CheckBox(I18n.get("graphics.spritecache"), getSkin());
         cacheBox.setChecked(graphics.isSpriteCacheEnabled());
         lightingBox = new CheckBox(I18n.get("graphics.lighting"), getSkin());
         lightingBox.setChecked(graphics.isLightingEnabled());
         dayNightBox = new CheckBox(I18n.get("graphics.dayNightCycle"), getSkin());
         dayNightBox.setChecked(graphics.isDayNightCycleEnabled());
-
-        rendererBox = new SelectBox<>(getSkin());
-        rendererBox.setItems("sprite");
-        rendererBox.setSelected(graphics.getRenderer());
 
         TextButton save = new TextButton(I18n.get("common.save"), getSkin());
         TextButton back = new TextButton(I18n.get("common.back"), getSkin());
@@ -90,7 +71,6 @@ public final class GraphicsSettingsScreen extends BaseScreen {
         options.add(afBox).left().row();
         options.add(normalBox).left().row();
         options.add(specularBox).left().row();
-        options.add(shaderBox).left().row();
         options.add(cacheBox).left().row();
         options.add(lightingBox).left().row();
         options.add(dayNightBox).left().row();
@@ -114,8 +94,6 @@ public final class GraphicsSettingsScreen extends BaseScreen {
                 graphics.setAnisotropicFilteringEnabled(afBox.isChecked());
                 graphics.setNormalMapsEnabled(normalBox.isChecked());
                 graphics.setSpecularMapsEnabled(specularBox.isChecked());
-                int idx = shaderBox.getSelectedIndex();
-                graphics.setShaderPlugin(pluginIds.get(idx));
                 graphics.setSpriteCacheEnabled(cacheBox.isChecked());
                 graphics.setLightingEnabled(lightingBox.isChecked());
                 graphics.setDayNightCycleEnabled(dayNightBox.isChecked());
