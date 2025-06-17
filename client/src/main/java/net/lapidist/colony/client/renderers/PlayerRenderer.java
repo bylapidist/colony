@@ -6,12 +6,11 @@ import com.artemis.Entity;
 import com.artemis.World;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.Disposable;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.components.entities.PlayerComponent;
 
 /** Draws the player sprite at the player component position. */
-public final class PlayerRenderer implements EntityRenderer<Void>, Disposable {
+public final class PlayerRenderer implements EntityRenderer<Void> {
     private final SpriteBatch spriteBatch;
     private final ComponentMapper<PlayerComponent> playerMapper;
     private final World world;
@@ -47,8 +46,5 @@ public final class PlayerRenderer implements EntityRenderer<Void>, Disposable {
         spriteBatch.draw(region, pc.getX(), pc.getY());
     }
 
-    @Override
-    public void dispose() {
-        // no-op
-    }
+    // PlayerRenderer does not own disposable resources
 }
