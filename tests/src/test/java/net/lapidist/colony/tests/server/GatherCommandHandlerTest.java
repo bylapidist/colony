@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -29,13 +30,15 @@ public class GatherCommandHandlerTest {
     @Test
     public void ignoresUnknownResource() {
         MapState state = new MapState();
-        InventoryService inv = new InventoryService();
+        AtomicReference<MapState> ref = new AtomicReference<>(state);
+        ReentrantLock lock = new ReentrantLock();
+        InventoryService inv = new InventoryService(ref::get, ref::set, lock);
         GatherCommandHandler handler = new GatherCommandHandler(
-                () -> state,
-                s -> { },
+                ref::get,
+                ref::set,
                 mock(NetworkService.class),
                 inv,
-                new ReentrantLock()
+                lock
         );
 
         handler.handle(new GatherCommand(0, 0, "missing"));
@@ -51,15 +54,15 @@ public class GatherCommandHandlerTest {
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .resources(res)
                 .build());
-        java.util.concurrent.atomic.AtomicReference<MapState> ref =
-                new java.util.concurrent.atomic.AtomicReference<>(state);
-        InventoryService inv = new InventoryService();
+        AtomicReference<MapState> ref = new AtomicReference<>(state);
+        ReentrantLock lock = new ReentrantLock();
+        InventoryService inv = new InventoryService(ref::get, ref::set, lock);
         GatherCommandHandler handler = new GatherCommandHandler(
                 ref::get,
                 ref::set,
                 mock(NetworkService.class),
                 inv,
-                new ReentrantLock()
+                lock
         );
 
         handler.handle(new GatherCommand(0, 0, Registries.resources().get("STONE").id()));
