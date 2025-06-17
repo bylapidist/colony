@@ -18,6 +18,8 @@ import net.lapidist.colony.components.state.ResourceData;
 public final class PlayerFactory {
     private static final float DEFAULT_LIGHT_RADIUS = 3f;
     private static final float DEFAULT_LIGHT_INTENSITY = 0.6f;
+    private static final com.badlogic.gdx.graphics.Color DEFAULT_LIGHT_COLOR =
+            new com.badlogic.gdx.graphics.Color(1f, 0.6f, 0.2f, 1f);
 
     private PlayerFactory() {
     }
@@ -55,6 +57,7 @@ public final class PlayerFactory {
         PointLightComponent light = new PointLightComponent();
         light.setRadius(DEFAULT_LIGHT_RADIUS);
         light.setIntensity(DEFAULT_LIGHT_INTENSITY);
+        light.setColor(DEFAULT_LIGHT_COLOR);
         player.edit().add(pr).add(pc).add(light);
         return player;
     }

@@ -37,15 +37,13 @@ public final class LightingSystem extends BaseSystem implements Disposable {
     private ComponentMapper<PlayerComponent> playerMapper;
 
     private static final float HOURS_PER_DAY = 24f;
-    private static final float FULL_ROTATION = 360f;
-    private static final float DAWN_OFFSET = 90f;
     private static final float SUNRISE_TIME = 6f;
     private static final float NOON_TIME = 12f;
     private static final float SUNSET_TIME = 18f;
     private static final Color NIGHT_COLOR = new Color(0f, 0f, 0f, 1f);
     private static final Color SUNRISE_COLOR = new Color(0.6f, 0.5f, 0.4f, 1f);
     private static final Color DAY_COLOR = new Color(0.6f, 0.7f, 1f, 1f);
-    private static final float NIGHT_AMBIENT_SCALE = 0.5f;
+    private static final float NIGHT_AMBIENT_SCALE = 0.1f;
 
     public LightingSystem(final ClearScreenSystem clearSystem) {
         this(clearSystem, DEFAULT_RAYS);
@@ -97,8 +95,8 @@ public final class LightingSystem extends BaseSystem implements Disposable {
 
     /** Calculate the direction of the sun for the current time of day. */
     public Vector3 getSunDirection(final Vector3 out) {
-        float angle = (timeOfDay / HOURS_PER_DAY) * FULL_ROTATION - DAWN_OFFSET;
-        return out.set(MathUtils.cosDeg(angle), MathUtils.sinDeg(angle), 1f).nor();
+        float angle = (timeOfDay / HOURS_PER_DAY) * MathUtils.PI2 - MathUtils.HALF_PI;
+        return out.set(0f, MathUtils.cos(angle), MathUtils.sin(angle)).nor();
     }
 
     @Override
