@@ -1,5 +1,10 @@
 apply plugin: 'application'
 
+processResources {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    exclude 'assets/**'
+    from('src/main/resources/assets') { into '' }
+}
 dependencies {
     implementation project(":core")
     implementation project(":server")
