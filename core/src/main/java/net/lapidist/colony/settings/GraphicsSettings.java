@@ -10,7 +10,6 @@ public final class GraphicsSettings {
     private static final String MIP_KEY = PREFIX + "mipmaps";
     private static final String AF_KEY = PREFIX + "anisotropic";
     static final String LEGACY_SHADER_KEY = PREFIX + "shaders";
-    private static final String PLUGIN_KEY = PREFIX + "shaderPlugin";
     private static final String RENDERER_KEY = PREFIX + "renderer";
     private static final String CACHE_KEY = PREFIX + "spritecache";
     private static final String LIGHT_KEY = PREFIX + "lighting";
@@ -24,7 +23,6 @@ public final class GraphicsSettings {
     private boolean antialiasingEnabled = true;
     private boolean mipMapsEnabled = true;
     private boolean anisotropicFilteringEnabled = true;
-    private String shaderPlugin = "lights-normalmap";
     private String renderer = "sprite";
     private boolean spriteCacheEnabled = true;
     private boolean lightingEnabled = true;
@@ -57,13 +55,6 @@ public final class GraphicsSettings {
         this.anisotropicFilteringEnabled = enabled;
     }
 
-    public String getShaderPlugin() {
-        return shaderPlugin;
-    }
-
-    public void setShaderPlugin(final String plugin) {
-        this.shaderPlugin = plugin;
-    }
 
     public String getRenderer() {
         return renderer;
@@ -127,7 +118,6 @@ public final class GraphicsSettings {
         gs.antialiasingEnabled = Boolean.parseBoolean(props.getProperty(AA_KEY, "true"));
         gs.mipMapsEnabled = Boolean.parseBoolean(props.getProperty(MIP_KEY, "true"));
         gs.anisotropicFilteringEnabled = Boolean.parseBoolean(props.getProperty(AF_KEY, "true"));
-        gs.shaderPlugin = props.getProperty(PLUGIN_KEY, "lights-normalmap");
         gs.renderer = props.getProperty(RENDERER_KEY, "sprite");
         gs.spriteCacheEnabled = Boolean.parseBoolean(props.getProperty(CACHE_KEY, "true"));
         gs.lightingEnabled = Boolean.parseBoolean(props.getProperty(LIGHT_KEY, "true"));
@@ -143,7 +133,6 @@ public final class GraphicsSettings {
         props.setProperty(AA_KEY, Boolean.toString(antialiasingEnabled));
         props.setProperty(MIP_KEY, Boolean.toString(mipMapsEnabled));
         props.setProperty(AF_KEY, Boolean.toString(anisotropicFilteringEnabled));
-        props.setProperty(PLUGIN_KEY, shaderPlugin);
         props.setProperty(RENDERER_KEY, renderer);
         props.setProperty(CACHE_KEY, Boolean.toString(spriteCacheEnabled));
         props.setProperty(LIGHT_KEY, Boolean.toString(lightingEnabled));

@@ -30,7 +30,7 @@ public class GraphicsSettingsScreenTest {
     private static final int SCROLL_INDEX = 0;
     private static final int BUTTON_TABLE_INDEX = 1;
     private static final int AA_INDEX = 0;
-    private static final int DAY_NIGHT_INDEX = 8;
+    private static final int DAY_NIGHT_INDEX = 7;
     private static final int BACK_INDEX = 0;
     private static final int SAVE_INDEX = 1;
 
