@@ -1,4 +1,3 @@
-net.lapidist.colony.base.BaseColonyMod
 net.lapidist.colony.base.BaseMapServiceMod
 net.lapidist.colony.base.BaseNetworkMod
 net.lapidist.colony.base.BaseAutosaveMod
