@@ -49,20 +49,26 @@ public class MapUiButtonStateTest {
 
         TextButton buildButton = stage.getRoot().findActor("buildButton");
         TextButton removeButton = stage.getRoot().findActor("removeButton");
+        net.lapidist.colony.client.ui.BuildMenuActor buildMenu = stage.getRoot().findActor("buildMenu");
+        assertFalse(buildMenu.isVisible());
 
         // enable build mode
         buildButton.toggle();
+        stage.act(0f);
         assertTrue(buildSystem.isBuildMode());
         assertTrue(buildButton.isChecked());
         assertFalse(buildSystem.isRemoveMode());
         assertFalse(removeButton.isChecked());
+        assertTrue(buildMenu.isVisible());
 
         // enable remove mode, should disable build
         removeButton.toggle();
+        stage.act(0f);
         assertTrue(buildSystem.isRemoveMode());
         assertTrue(removeButton.isChecked());
         assertFalse(buildSystem.isBuildMode());
         assertFalse(buildButton.isChecked());
+        assertFalse(buildMenu.isVisible());
 
         // disable remove mode
         removeButton.toggle();

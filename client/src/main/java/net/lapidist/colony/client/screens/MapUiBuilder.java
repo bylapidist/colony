@@ -16,6 +16,7 @@ import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.client.ui.MinimapActor;
 import net.lapidist.colony.client.ui.ChatBox;
 import net.lapidist.colony.client.ui.PlayerResourcesActor;
+import net.lapidist.colony.client.ui.BuildMenuActor;
 import net.lapidist.colony.client.ui.AutosaveLabel;
 import net.lapidist.colony.client.ui.AutosaveProgressBar;
 import net.lapidist.colony.client.network.GameClient;
@@ -79,6 +80,12 @@ public final class MapUiBuilder {
         minimapButton.setChecked(minimapActor.isVisible());
         ChatBox chatBox = new ChatBox(skin, client);
         PlayerResourcesActor resourcesActor = new PlayerResourcesActor(skin, world);
+        BuildPlacementSystem buildSystem = world.getSystem(BuildPlacementSystem.class);
+        BuildMenuActor buildMenu = null;
+        if (buildSystem != null) {
+            buildMenu = new BuildMenuActor(skin, buildSystem, graphics);
+            stage.addActor(buildMenu);
+        }
 
         setButtonText(buildButton, "map.build", keyBindings.getKey(KeyAction.BUILD));
         setButtonText(removeButton, "map.remove", keyBindings.getKey(KeyAction.REMOVE));
@@ -92,7 +99,6 @@ public final class MapUiBuilder {
             }
         });
 
-        BuildPlacementSystem buildSystem = world.getSystem(BuildPlacementSystem.class);
         PlayerCameraSystem cameraSystem = world.getSystem(PlayerCameraSystem.class);
         if (cameraSystem != null) {
             mapButton.setChecked(cameraSystem.getMode() == PlayerCameraSystem.Mode.MAP_OVERVIEW);
@@ -151,7 +157,7 @@ public final class MapUiBuilder {
         chatTable.add(chatBox).pad(PADDING).growX();
 
         stage.addActor(new ShortcutUpdater(keyBindings, buildButton, removeButton, mapButton, minimapButton));
-        stage.addActor(new ModeUpdater(buildSystem, buildButton, removeButton));
+        stage.addActor(new ModeUpdater(buildSystem, buildButton, removeButton, buildMenu));
         if (cameraSystem != null) {
             stage.addActor(new CameraModeUpdater(cameraSystem, mapButton));
         }
@@ -272,15 +278,18 @@ public final class MapUiBuilder {
         private final BuildPlacementSystem buildSystem;
         private final TextButton buildButton;
         private final TextButton removeButton;
+        private final Actor buildMenu;
 
         ModeUpdater(
                 final BuildPlacementSystem buildSystemToUse,
                 final TextButton buildBtn,
-                final TextButton removeBtn
+                final TextButton removeBtn,
+                final Actor menu
         ) {
             this.buildSystem = buildSystemToUse;
             this.buildButton = buildBtn;
             this.removeButton = removeBtn;
+            this.buildMenu = menu;
         }
 
         @Override
@@ -297,6 +306,9 @@ public final class MapUiBuilder {
                 removeButton.setProgrammaticChangeEvents(false);
                 removeButton.setChecked(remove);
                 removeButton.setProgrammaticChangeEvents(true);
+            }
+            if (buildMenu != null) {
+                buildMenu.setVisible(build);
             }
         }
     }
