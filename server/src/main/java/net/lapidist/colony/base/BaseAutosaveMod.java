@@ -9,7 +9,7 @@ public final class BaseAutosaveMod implements GameMod {
     @Override
     public void registerServices(final GameServer srv) {
         net.lapidist.colony.server.GameServer s = (net.lapidist.colony.server.GameServer) srv;
-        s.setAutosaveServiceFactory(() -> new AutosaveService(
+        srv.setAutosaveServiceFactory(() -> new AutosaveService(
                 s.getAutosaveInterval(),
                 s.getSaveName(),
                 s::getMapState,

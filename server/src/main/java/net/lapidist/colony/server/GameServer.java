@@ -338,8 +338,10 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
      * Override the factory for creating {@link MapService} instances.
      * Modifications must occur before calling {@link #start()}.
      */
-    public void setMapServiceFactory(final java.util.function.Supplier<MapService> factory) {
-        this.mapServiceFactory = factory;
+    @Override
+    public void setMapServiceFactory(final java.util.function.Supplier<?> factory) {
+        //noinspection unchecked
+        this.mapServiceFactory = (java.util.function.Supplier<MapService>) factory;
     }
 
     /**
@@ -353,9 +355,11 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
      * Override the factory for creating {@link NetworkService} instances.
      * Modifications must occur before calling {@link #start()}.
      */
+    @Override
     public void setNetworkServiceFactory(
-            final java.util.function.Supplier<NetworkService> factory) {
-        this.networkServiceFactory = factory;
+            final java.util.function.Supplier<?> factory) {
+        //noinspection unchecked
+        this.networkServiceFactory = (java.util.function.Supplier<NetworkService>) factory;
     }
 
     /**
@@ -369,9 +373,11 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
      * Override the factory for creating {@link AutosaveService} instances.
      * Modifications must occur before calling {@link #start()}.
      */
+    @Override
     public void setAutosaveServiceFactory(
-            final java.util.function.Supplier<AutosaveService> factory) {
-        this.autosaveServiceFactory = factory;
+            final java.util.function.Supplier<?> factory) {
+        //noinspection unchecked
+        this.autosaveServiceFactory = (java.util.function.Supplier<AutosaveService>) factory;
     }
 
     /**
@@ -385,9 +391,11 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
      * Override the factory for creating {@link ResourceProductionService} instances.
      * Modifications must occur before calling {@link #start()}.
      */
+    @Override
     public void setResourceProductionServiceFactory(
-            final java.util.function.Supplier<ResourceProductionService> factory) {
-        this.resourceProductionServiceFactory = factory;
+            final java.util.function.Supplier<?> factory) {
+        //noinspection unchecked
+        this.resourceProductionServiceFactory = (java.util.function.Supplier<ResourceProductionService>) factory;
     }
 
     /**
@@ -401,9 +409,11 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
      * Override the factory for creating {@link CommandBus} instances.
      * Modifications must occur before calling {@link #start()}.
      */
+    @Override
     public void setCommandBusFactory(
-            final java.util.function.Supplier<CommandBus> factory) {
-        this.commandBusFactory = factory;
+            final java.util.function.Supplier<?> factory) {
+        //noinspection unchecked
+        this.commandBusFactory = (java.util.function.Supplier<CommandBus>) factory;
     }
 
     /**
@@ -435,6 +445,7 @@ public final class GameServer extends AbstractMessageEndpoint implements AutoClo
      *
      * @param message message to send
      */
+    @Override
     public void broadcast(final Object message) {
         networkService.broadcast(message);
     }
