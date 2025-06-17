@@ -52,8 +52,21 @@ public final class PlayerMovementSystem extends BaseSystem {
 
     @Override
     protected void processSystem() {
-        if (!cameraSystem.isPlayerMode() || player == null) {
+        if (!cameraSystem.isPlayerMode()) {
             return;
+        }
+        if (player == null) {
+            var players = world.getAspectSubscriptionManager()
+                    .get(com.artemis.Aspect.all(PlayerComponent.class))
+                    .getEntities();
+            if (players.size() > 0) {
+                player = world.getEntity(players.get(0));
+                PlayerComponent pc = playerMapper.get(player);
+                lastTileX = Math.floorDiv((int) pc.getX(), GameConstants.TILE_SIZE);
+                lastTileY = Math.floorDiv((int) pc.getY(), GameConstants.TILE_SIZE);
+            } else {
+                return;
+            }
         }
         PlayerComponent pc = playerMapper.get(player);
         float move = SPEED * world.getDelta();
