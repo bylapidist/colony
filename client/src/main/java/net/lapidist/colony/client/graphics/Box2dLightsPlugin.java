@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import net.lapidist.colony.client.core.io.FileLocation;
 
 
 /**
@@ -24,10 +25,13 @@ public final class Box2dLightsPlugin implements LightingPlugin {
             world = new World(new Vector2(), false);
             rayHandler = new RayHandler(world);
             rayHandler.setAmbientLight(1f, 1f, 1f, 1f);
+
+            return manager.load(FileLocation.INTERNAL,
+                    "shaders/lighting.vert", "shaders/lighting.frag");
         } catch (Exception ex) {
-            rayHandler = null;
+            dispose();
+            return null;
         }
-        return null;
     }
 
     /**

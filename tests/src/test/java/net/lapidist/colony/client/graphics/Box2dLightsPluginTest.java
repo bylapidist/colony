@@ -2,6 +2,7 @@ package net.lapidist.colony.client.graphics;
 
 import box2dLight.RayHandler;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,8 +21,8 @@ public class Box2dLightsPluginTest {
         Box2dLightsPlugin plugin = new Box2dLightsPlugin();
         assertNull(plugin.getRayHandler());
 
-        assertNull(plugin.create(new ShaderManager()));
-        if (plugin.getRayHandler() != null) {
+        ShaderProgram program = plugin.create(new ShaderManager());
+        if (program != null) {
             try {
                 java.lang.reflect.Field field = RayHandler.class.getDeclaredField("ambientLight");
                 field.setAccessible(true);
@@ -33,6 +34,7 @@ public class Box2dLightsPluginTest {
             } catch (Exception ex) {
                 fail("Could not access ambient light: " + ex.getMessage());
             }
+            program.dispose();
         } else {
             assertNull(plugin.getRayHandler());
         }

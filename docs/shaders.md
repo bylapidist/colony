@@ -63,7 +63,7 @@ Add `GrayShaderPlugin` to the service descriptor and set
 The engine ships with two lighting plugins powered by
 [box2d-lights](https://github.com/libgdx/box2dlights):
 
-* `Box2dLightsPlugin` – exposes a `RayHandler` but uses the default sprite shader.
+* `Box2dLightsPlugin` – exposes a `RayHandler` and provides a basic lighting shader.
 * `LightsNormalMapShaderPlugin` – combines the normal mapping shader with the same `RayHandler`.
 
 The second plugin is now selected by default through the
