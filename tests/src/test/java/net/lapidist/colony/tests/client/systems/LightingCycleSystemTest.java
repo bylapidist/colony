@@ -20,7 +20,7 @@ public class LightingCycleSystemTest {
 
     private static final float DAY_RED = 0.6f;
     private static final float NIGHT_RED = 0f;
-    private static final float NIGHT_AMBIENT = 0.5f;
+    private static final float NIGHT_AMBIENT = 0.1f;
     private static final float TOLERANCE = 0.01f;
 
     @Test

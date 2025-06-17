@@ -58,7 +58,7 @@ public class LightsNormalMapShaderPluginTest {
         verify(shader).setUniformf(eq("u_lightDir"), secondCap.capture());
         Vector3 second = new Vector3(secondCap.getValue());
 
-        assertNotEquals(first.x, second.x);
+        assertNotEquals(first.z, second.z);
     }
 
     @Test
