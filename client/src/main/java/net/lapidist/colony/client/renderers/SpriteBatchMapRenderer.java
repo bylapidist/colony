@@ -76,10 +76,8 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
 
         if (cacheEnabled) {
             tileCache.draw(spriteBatch, camera);
-            tileRenderer.setOverlayOnly(true);
-        } else {
-            tileRenderer.setOverlayOnly(false);
         }
+        tileRenderer.setOverlayOnly(false);
 
         tileRenderer.render(map);
         buildingRenderer.render(map);
