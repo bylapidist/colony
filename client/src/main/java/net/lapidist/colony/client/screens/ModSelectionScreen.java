@@ -34,15 +34,36 @@ public final class ModSelectionScreen extends BaseScreen {
                 I18n.get("modSelect.title"), getSkin())).row();
 
         Table list = new Table();
+        java.util.List<LoadedMod> rootMods = new java.util.ArrayList<>();
+        java.util.Map<String, java.util.List<LoadedMod>> children = new java.util.LinkedHashMap<>();
         for (LoadedMod mod : mods) {
+            if (mod.parent() == null) {
+                rootMods.add(mod);
+            } else {
+                children.computeIfAbsent(mod.parent(), k -> new java.util.ArrayList<>()).add(mod);
+            }
+        }
+
+        for (LoadedMod mod : rootMods) {
             String label = mod.metadata().id();
             CheckBox box = new CheckBox(label, getSkin());
             box.setChecked(true);
-            if (label.startsWith("base-")) {
+            if (label.startsWith("base-") || "base-colony".equals(label)) {
                 box.setDisabled(true);
             }
             boxes.put(mod, box);
             list.add(box).left().row();
+
+            java.util.List<LoadedMod> subs = children.get(label);
+            if (subs != null) {
+                for (LoadedMod child : subs) {
+                    CheckBox sub = new CheckBox(child.metadata().id(), getSkin());
+                    sub.setChecked(true);
+                    sub.setDisabled(true);
+                    boxes.put(child, sub);
+                    list.add(sub).padLeft(PADDING * 2).left().row();
+                }
+            }
         }
 
         ScrollPane scroll = new ScrollPane(list, getSkin());

@@ -50,7 +50,7 @@ public class GameSimulationResourceProductionOverrideTest {
         ResourceStubMod.START_CALLS.set(0);
         try (MockedConstruction<ModLoader> loader = mockConstruction(ModLoader.class,
                 (m, c) -> when(m.loadMods()).thenReturn(List.of(
-                        new LoadedMod(new ResourceStubMod(), new ModMetadata("stub", "1", List.of())))));
+                        new LoadedMod(new ResourceStubMod(), new ModMetadata("stub", "1", List.of()), null))));
              GameServer server = new GameServer(config);
              GameClient client = new GameClient()) {
             server.start();

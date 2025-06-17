@@ -35,7 +35,7 @@ public class GameSimulationPeriodicSystemTest {
         PeriodicServiceCheckMod.SERVICES_AVAILABLE.set(false);
         try (MockedConstruction<ModLoader> loader = mockConstruction(ModLoader.class,
                 (m, c) -> when(m.loadMods()).thenReturn(List.of(
-                        new LoadedMod(new PeriodicServiceCheckMod(), new ModMetadata("svc", "1", List.of())))));
+                        new LoadedMod(new PeriodicServiceCheckMod(), new ModMetadata("svc", "1", List.of()), null))));
              GameServer server = new GameServer(config)) {
             server.start();
             Thread.sleep(SLEEP_MS);

@@ -34,7 +34,7 @@ public class GameSimulationCustomSystemTest {
         MapTickerMod.TICKS.set(0);
         try (MockedConstruction<ModLoader> loader = mockConstruction(ModLoader.class,
                 (m, c) -> when(m.loadMods()).thenReturn(List.of(
-                        new LoadedMod(new MapTickerMod(), new ModMetadata("tick", "1", List.of())))));
+                        new LoadedMod(new MapTickerMod(), new ModMetadata("tick", "1", List.of()), null))));
              GameServer server = new GameServer(config)) {
             server.start();
             Thread.sleep(SLEEP_MS);

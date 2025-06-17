@@ -117,7 +117,7 @@ public class GameServerCoverageTest {
         }
         DummyMod mod = new DummyMod();
         field("mods").set(server,
-                java.util.List.of(new LoadedMod(mod, new ModMetadata("dummy", "1", java.util.List.of()))));
+                java.util.List.of(new LoadedMod(mod, new ModMetadata("dummy", "1", java.util.List.of()), null)));
 
         server.stop();
 
