@@ -72,8 +72,11 @@ additional uniforms:
 * `u_lightDir` – normalized direction to the main light source.
 * `u_viewDir` – direction toward the camera.
 * `u_specularPower` – exponent for the specular highlight.
+* `u_normalStrength` – blend factor for normal maps.
 
 The first two values are updated every frame so diffuse and specular terms react
 to camera movement. The specular map supplies the intensity for a Blinn–Phong
 highlight calculation, while `u_specularPower` controls the falloff. Atlas
 regions may override the default by adding `specularPower: N`.
+`u_normalStrength` mixes between a flat surface and the stored normal values so
+lower numbers soften the bump effect.

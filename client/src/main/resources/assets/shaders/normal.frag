@@ -11,10 +11,12 @@ uniform sampler2D u_specular;
 uniform vec3 u_lightDir;
 uniform vec3 u_viewDir;
 uniform float u_specularPower;
+uniform float u_normalStrength;
 
 void main() {
     vec4 diffuse = texture2D(u_texture, v_texCoords);
-    vec3 normal = texture2D(u_normal, v_texCoords).xyz * 2.0 - 1.0;
+    vec3 map = texture2D(u_normal, v_texCoords).xyz * 2.0 - 1.0;
+    vec3 normal = normalize(mix(vec3(0.0, 0.0, 1.0), map, u_normalStrength));
     vec3 lightDir = normalize(u_lightDir);
     vec3 viewDir = normalize(u_viewDir);
     float diff = max(dot(normal, lightDir), 0.0);
