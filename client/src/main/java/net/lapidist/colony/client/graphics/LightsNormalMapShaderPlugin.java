@@ -75,10 +75,11 @@ public final class LightsNormalMapShaderPlugin implements LightingPlugin, Unifor
     @Override
     public void applyUniforms(final ShaderProgram program) {
         if (dayNightSystem != null) {
-            dayNightSystem.getSunDirection(lightDir);
+            program.setUniformf("u_lightDir", dayNightSystem.getSunDirection(lightDir));
+        } else {
+            program.setUniformf("u_lightDir", lightDir);
         }
         viewDir.set(0f, 0f, 1f);
-        program.setUniformf("u_lightDir", lightDir);
         program.setUniformf("u_viewDir", viewDir);
     }
 }
