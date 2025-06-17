@@ -9,6 +9,6 @@ public final class BaseCommandBusMod implements GameMod {
     @Override
     public void registerServices(final GameServer srv) {
         net.lapidist.colony.server.GameServer s = (net.lapidist.colony.server.GameServer) srv;
-        s.setCommandBusFactory(CommandBus::new);
+        srv.setCommandBusFactory(CommandBus::new);
     }
 }

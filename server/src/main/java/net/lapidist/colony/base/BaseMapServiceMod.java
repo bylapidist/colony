@@ -9,7 +9,7 @@ public final class BaseMapServiceMod implements GameMod {
     @Override
     public void registerServices(final GameServer srv) {
         net.lapidist.colony.server.GameServer s = (net.lapidist.colony.server.GameServer) srv;
-        s.setMapServiceFactory(() -> new MapService(
+        srv.setMapServiceFactory(() -> new MapService(
                 s.getMapGenerator(),
                 s.getSaveName(),
                 s.getMapWidth(),

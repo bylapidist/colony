@@ -96,6 +96,13 @@ public final class ExtraMod implements GameMod {
 }
 ```
 
+`GameServer` also exposes convenience methods for lifecycle management and
+service customization. Mods may call `start`, `stop` or `broadcast` on the
+provided instance. Core services can be replaced via the corresponding factory
+setters: `setMapServiceFactory`, `setNetworkServiceFactory`,
+`setAutosaveServiceFactory`, `setResourceProductionServiceFactory` and
+`setCommandBusFactory`.
+
 ## Registries
 
 Core game data is looked up from string keyed registries. Four registries are

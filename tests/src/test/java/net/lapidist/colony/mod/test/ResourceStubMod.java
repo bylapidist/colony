@@ -24,8 +24,7 @@ public final class ResourceStubMod implements GameMod {
             START_CALLS.incrementAndGet();
             return null;
         }).when(service).start();
-        ((net.lapidist.colony.server.GameServer) server)
-                .setResourceProductionServiceFactory(() -> service);
+        server.setResourceProductionServiceFactory(() -> service);
     }
 
     @Override

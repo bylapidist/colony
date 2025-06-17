@@ -9,7 +9,7 @@ public final class BaseResourceProductionMod implements GameMod {
     @Override
     public void registerServices(final GameServer srv) {
         net.lapidist.colony.server.GameServer s = (net.lapidist.colony.server.GameServer) srv;
-        s.setResourceProductionServiceFactory(() -> new ResourceProductionService(
+        srv.setResourceProductionServiceFactory(() -> new ResourceProductionService(
                 s.getAutosaveInterval(),
                 s::getMapState,
                 s::setMapState,
