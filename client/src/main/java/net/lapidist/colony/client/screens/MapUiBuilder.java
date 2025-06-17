@@ -151,8 +151,7 @@ public final class MapUiBuilder {
         table.add(removeButton).pad(PADDING).left().top();
         table.add(mapButton).pad(PADDING).left().top();
         table.add(minimapButton).pad(PADDING).left().top();
-        table.add(resourcesActor).pad(PADDING).expandX().left().top();
-        table.add(minimapActor).pad(PADDING).right().top();
+        table.add(minimapActor).pad(PADDING).expandX().right().top();
         table.row();
         chatTable.add(chatBox).pad(PADDING).growX();
 
@@ -170,11 +169,13 @@ public final class MapUiBuilder {
         stage.addActor(savingTable);
 
         AutosaveProgressBar progressBar = new AutosaveProgressBar(skin);
-        Table progressTable = new Table();
-        progressTable.setFillParent(true);
-        progressTable.bottom().right();
-        progressTable.add(progressBar).pad(PADDING);
-        stage.addActor(progressTable);
+        Table infoTable = new Table();
+        infoTable.setFillParent(true);
+        infoTable.bottom().right();
+        infoTable.add(resourcesActor).pad(PADDING);
+        infoTable.row();
+        infoTable.add(progressBar).pad(PADDING);
+        stage.addActor(infoTable);
 
         stage.addListener(new InputListener() {
             @Override
