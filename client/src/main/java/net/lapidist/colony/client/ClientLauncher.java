@@ -5,6 +5,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.glutils.HdpiMode;
 import net.lapidist.colony.client.core.Constants;
 import net.lapidist.colony.settings.GraphicsSettings;
+import net.lapidist.colony.settings.Settings;
 
 public final class ClientLauncher {
 
@@ -27,16 +28,29 @@ public final class ClientLauncher {
                 new Lwjgl3ApplicationConfiguration();
 
         config.setTitle(Constants.NAME + " " + Constants.VERSION);
-        config.setWindowedMode(Constants.WIDTH, Constants.HEIGHT);
+
+        Settings settings;
+        GraphicsSettings graphics;
+        try {
+            settings = Settings.load();
+            graphics = settings.getGraphicsSettings();
+        } catch (Exception e) {
+            settings = new Settings();
+            graphics = settings.getGraphicsSettings();
+        }
+
+        if (settings.isFullscreen()) {
+            try {
+                config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
+            } catch (com.badlogic.gdx.utils.GdxRuntimeException e) {
+                config.setWindowedMode(settings.getWidth(), settings.getHeight());
+            }
+        } else {
+            config.setWindowedMode(settings.getWidth(), settings.getHeight());
+        }
         config.setIdleFPS(Constants.TARGET_FPS);
         config.setHdpiMode(HdpiMode.Logical);
 
-        GraphicsSettings graphics;
-        try {
-            graphics = net.lapidist.colony.settings.Settings.load().getGraphicsSettings();
-        } catch (Exception e) {
-            graphics = new GraphicsSettings();
-        }
         if (graphics.isAntialiasingEnabled()) {
             config.setBackBufferConfig(
                     COLOR_BITS,

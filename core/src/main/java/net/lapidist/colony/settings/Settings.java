@@ -10,11 +10,19 @@ import java.util.Locale;
  */
 public final class Settings {
     private static final String LANGUAGE_KEY = "language";
+    private static final int DEFAULT_WIDTH = 1600;
+    private static final int DEFAULT_HEIGHT = 900;
+    private static final String WIDTH_KEY = "width";
+    private static final String HEIGHT_KEY = "height";
+    private static final String FULLSCREEN_KEY = "fullscreen";
 
     private final KeyBindings keyBindings = new KeyBindings();
     private final GraphicsSettings graphicsSettings = new GraphicsSettings();
 
     private Locale locale = Locale.getDefault();
+    private int width = DEFAULT_WIDTH;
+    private int height = DEFAULT_HEIGHT;
+    private boolean fullscreen;
 
     public KeyBindings getKeyBindings() {
         return keyBindings;
@@ -30,6 +38,30 @@ public final class Settings {
 
     public void setLocale(final Locale localeToSet) {
         this.locale = localeToSet;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(final int widthToSet) {
+        this.width = widthToSet;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(final int heightToSet) {
+        this.height = heightToSet;
+    }
+
+    public boolean isFullscreen() {
+        return fullscreen;
+    }
+
+    public void setFullscreen(final boolean fullscreenToSet) {
+        this.fullscreen = fullscreenToSet;
     }
 
     /**
@@ -54,6 +86,15 @@ public final class Settings {
             if (lang != null && !lang.isEmpty()) {
                 settings.setLocale(java.util.Locale.forLanguageTag(lang));
             }
+            String widthStr = props.getProperty(WIDTH_KEY);
+            if (widthStr != null) {
+                settings.setWidth(Integer.parseInt(widthStr));
+            }
+            String heightStr = props.getProperty(HEIGHT_KEY);
+            if (heightStr != null) {
+                settings.setHeight(Integer.parseInt(heightStr));
+            }
+            settings.setFullscreen(Boolean.parseBoolean(props.getProperty(FULLSCREEN_KEY, "false")));
             KeyBindings loaded = KeyBindings.load(props);
             for (KeyAction action : KeyAction.values()) {
                 settings.keyBindings.setKey(action, loaded.getKey(action));
@@ -93,6 +134,9 @@ public final class Settings {
             }
         }
         props.setProperty(LANGUAGE_KEY, locale.toLanguageTag());
+        props.setProperty(WIDTH_KEY, Integer.toString(width));
+        props.setProperty(HEIGHT_KEY, Integer.toString(height));
+        props.setProperty(FULLSCREEN_KEY, Boolean.toString(fullscreen));
         keyBindings.save(props);
         graphicsSettings.save(props);
         try (java.io.OutputStream out = java.nio.file.Files.newOutputStream(file)) {
