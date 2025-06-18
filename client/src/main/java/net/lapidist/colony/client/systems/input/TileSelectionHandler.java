@@ -55,12 +55,11 @@ public final class TileSelectionHandler {
                             Entity selected = selectedTiles.get(i);
                             TileComponent comp = tileMapper.get(selected);
                             if (comp.isSelected()) {
-                                TileSelectionData deselectMsg = new TileSelectionData(
+                                client.sendTileSelectionRequest(new TileSelectionData(
                                         comp.getX(),
                                         comp.getY(),
                                         false
-                                );
-                                client.sendTileSelectionRequest(deselectMsg);
+                                ));
                                 comp.setSelected(false);
                                 map.incrementVersion();
                             }
