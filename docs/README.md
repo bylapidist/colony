@@ -21,5 +21,6 @@ This directory contains all guides for the Colony project. References are groupe
 - [Contributing Guide](../CONTRIBUTING.md) – coding conventions and contribution process.
 - [Performance Notes](performance.md) – benchmarking of data structures and renderer performance.
   Update the numbers whenever benchmarks change and strive to keep them from increasing.
+- [Background Tasks](background_tasks.md) – running heavy operations in worker threads with progress callbacks.
 - [Scenario Test Harness](tests.md) – explains `GameSimulation` and the headless test setup.
 - [Shader Plugin Guide](shaders.md) – how to register custom GLSL programs.

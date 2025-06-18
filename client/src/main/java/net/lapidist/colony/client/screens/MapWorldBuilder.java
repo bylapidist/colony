@@ -97,7 +97,7 @@ public final class MapWorldBuilder {
         MapState state = MapState.builder()
                 .playerResources(playerResources)
                 .build();
-        return createBuilder(client, stage, keyBindings, null, state, graphics);
+        return createBuilder(client, stage, keyBindings, null, state, graphics, null);
     }
 
     /**
@@ -114,9 +114,10 @@ public final class MapWorldBuilder {
             final GameClient client,
             final Stage stage,
             final KeyBindings keyBindings,
-            final GraphicsSettings graphics
+            final GraphicsSettings graphics,
+            final java.util.function.Consumer<Float> progress
     ) {
-        return createBuilder(client, stage, keyBindings, provider, new MapState(), graphics);
+        return createBuilder(client, stage, keyBindings, provider, new MapState(), graphics, progress);
     }
 
     /**
@@ -135,7 +136,8 @@ public final class MapWorldBuilder {
                 keyBindings,
                 new ProvidedMapStateProvider(state),
                 state,
-                graphics
+                graphics,
+                null
         );
     }
 
@@ -145,7 +147,8 @@ public final class MapWorldBuilder {
             final KeyBindings keyBindings,
             final MapStateProvider provider,
             final MapState state,
-            final GraphicsSettings graphics
+            final GraphicsSettings graphics,
+            final java.util.function.Consumer<Float> progress
     ) {
         ResourceData playerResources = state.playerResources();
         PlayerPosition playerPos = state.playerPos();
@@ -194,7 +197,7 @@ public final class MapWorldBuilder {
 
         if (provider != null) {
             builder.with(
-                    new MapInitSystem(provider),
+                    new MapInitSystem(provider, progress),
                     new MapRenderDataSystem(client)
             );
         }

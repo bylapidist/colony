@@ -36,7 +36,7 @@ public class MinimapCacheTest {
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .build());
         World world = new World(new WorldConfigurationBuilder().build());
-        MapFactory.create(world, state);
+        MapFactory.create(world, state, null);
         return world;
     }
 
@@ -95,7 +95,7 @@ public class MinimapCacheTest {
         state.putTile(TileData.builder()
                 .x(1).y(0).tileType("DIRT").passable(true).build());
         World world = new World(new WorldConfigurationBuilder().build());
-        MapFactory.create(world, state);
+        MapFactory.create(world, state, null);
         int mapId = world.getAspectSubscriptionManager()
                 .get(com.artemis.Aspect.all(MapComponent.class))
                 .getEntities().get(0);

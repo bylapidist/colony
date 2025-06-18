@@ -98,7 +98,7 @@ public class MapTileCacheBenchmark {
             }
         }
         World world = new World(new WorldConfigurationBuilder().build());
-        Entity map = MapFactory.create(world, state);
+        Entity map = MapFactory.create(world, state, null);
         ComponentMapper<MapComponent> mapper = world.getMapper(MapComponent.class);
         world.process();
         return MapRenderDataBuilder.fromMap(mapper.get(map), world);

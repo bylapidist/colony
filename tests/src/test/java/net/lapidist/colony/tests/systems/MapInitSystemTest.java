@@ -77,7 +77,7 @@ public class MapInitSystemTest {
                 .build());
 
         World world = new World(new WorldConfigurationBuilder().build());
-        var map = MapFactory.create(world, state).getComponent(MapComponent.class);
+        var map = MapFactory.create(world, state, null).getComponent(MapComponent.class);
         var tile = map.getTiles().get(0);
 
         TileComponent tc = world.getMapper(TileComponent.class).get(tile);

@@ -98,7 +98,8 @@ public class MapWorldBuilderConfigurationTest {
                             client,
                             stage,
                             keys,
-                            settings.getGraphicsSettings()
+                            settings.getGraphicsSettings(),
+                            null
                     ),
                     null,
                     settings,

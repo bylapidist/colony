@@ -34,7 +34,7 @@ public class MapRenderDataBuilderTest {
         state.buildings().add(new BuildingData(BUILDING_X, BUILDING_Y, "house"));
 
         World world = new World(new WorldConfigurationBuilder().build());
-        MapComponent map = MapFactory.create(world, state).getComponent(MapComponent.class);
+        MapComponent map = MapFactory.create(world, state, null).getComponent(MapComponent.class);
 
         MapRenderData data = MapRenderDataBuilder.fromMap(map, world);
         assertEquals(
@@ -59,7 +59,7 @@ public class MapRenderDataBuilderTest {
                 .build());
 
         World world = new World(new WorldConfigurationBuilder().build());
-        MapComponent map = MapFactory.create(world, state).getComponent(MapComponent.class);
+        MapComponent map = MapFactory.create(world, state, null).getComponent(MapComponent.class);
 
         SimpleMapRenderData data = (SimpleMapRenderData) MapRenderDataBuilder.fromMap(map, world);
 

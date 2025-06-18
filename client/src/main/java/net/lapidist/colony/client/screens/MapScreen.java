@@ -9,6 +9,7 @@ import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.ui.MinimapActor;
 import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.map.MapStateProvider;
 
 /**
  * Gameplay screen that delegates world setup, UI creation and event handling
@@ -21,6 +22,8 @@ public final class MapScreen implements Screen {
     private final Stage stage;
     private final MinimapActor minimapActor;
     private final MapScreenEventHandler events;
+    private java.util.function.Consumer<Float> progressCallback;
+    private net.lapidist.colony.client.systems.MapInitSystem initSystem;
     private static final float DEFAULT_SCALE = 1f;
 
     private void applyScale() {
@@ -56,10 +59,54 @@ public final class MapScreen implements Screen {
         MapUi ui = MapUiBuilder.build(stage, world, client, colony);
         minimapActor = ui.getMinimapActor();
         events = new MapScreenEventHandler();
+        initSystem = world.getSystem(net.lapidist.colony.client.systems.MapInitSystem.class);
+        progressCallback = null;
+    }
+
+    public MapScreen(
+            final Colony colonyToSet,
+            final MapStateProvider provider,
+            final GameClient client,
+            final java.util.function.Consumer<Float> progress
+    ) {
+        this.colony = colonyToSet;
+        stage = new Stage(new ScreenViewport());
+        applyScale();
+        world = MapWorldBuilder.build(
+                MapWorldBuilder.builder(
+                        provider,
+                        client,
+                        stage,
+                        colony.getSettings().getKeyBindings(),
+                        colony.getSettings().getGraphicsSettings(),
+                        progress
+                ),
+                null,
+                colony.getSettings(),
+                null,
+                client,
+                new net.lapidist.colony.components.state.ResourceData(),
+                null
+        );
+        var cameraSystem = world.getSystem(net.lapidist.colony.client.systems.PlayerCameraSystem.class);
+        if (cameraSystem != null) {
+            cameraSystem.setClient(client);
+        }
+        MapUi ui = MapUiBuilder.build(stage, world, client, colony);
+        minimapActor = ui.getMinimapActor();
+        events = new MapScreenEventHandler();
+        progressCallback = progress;
+        initSystem = world.getSystem(net.lapidist.colony.client.systems.MapInitSystem.class);
+        if (initSystem != null && progressCallback != null) {
+            progressCallback.accept(0f);
+        }
     }
 
     @Override
     public void render(final float deltaTime) {
+        if (initSystem != null && progressCallback != null && !initSystem.isReady()) {
+            progressCallback.accept(initSystem.getProgress());
+        }
         events.update();
         world.setDelta(deltaTime);
         world.process();

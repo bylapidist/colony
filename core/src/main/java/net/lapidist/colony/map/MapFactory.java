@@ -27,18 +27,31 @@ public final class MapFactory {
     private MapFactory() { }
 
     /**
+     * Convenience overload without progress reporting.
+     */
+    public static Entity create(final World world, final MapState state) {
+        return create(world, state, null);
+    }
+
+    /**
      * Create a new map entity populated with tiles and buildings from the given state.
      *
      * @param world the Artemis world to create entities in
      * @param state the map state to convert to entities
      * @return the created map entity containing a {@link MapComponent}
      */
-    public static Entity create(final World world, final MapState state) {
+    public static Entity create(
+            final World world,
+            final MapState state,
+            final java.util.function.Consumer<Float> progress
+    ) {
         Entity map = world.createEntity();
         MapComponent mapComponent = new MapComponent();
         Array<Entity> tiles = new Array<>();
         Map<TilePos, Entity> tileMap = new HashMap<>();
         Array<Entity> entities = new Array<>();
+        int total = state.width() * state.height();
+        int count = 0;
 
         for (int x = 0; x < state.width(); x++) {
             for (int y = 0; y < state.height(); y++) {
@@ -70,6 +83,11 @@ public final class MapFactory {
 
                 tiles.add(tile);
                 tileMap.put(new TilePos(td.x(), td.y()), tile);
+
+                if (progress != null) {
+                    count++;
+                    progress.accept(count / (float) total);
+                }
             }
         }
 
@@ -95,6 +113,9 @@ public final class MapFactory {
         mapComponent.setEntities(entities);
         map.edit().add(mapComponent);
         mapComponent.incrementVersion();
+        if (progress != null) {
+            progress.accept(1f);
+        }
         return map;
     }
 }

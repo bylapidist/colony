@@ -51,7 +51,7 @@ public class MinimapCacheBenchmark {
             }
         }
         world = new World(new WorldConfigurationBuilder().build());
-        map = MapFactory.create(world, state);
+        map = MapFactory.create(world, state, null);
         mapMapper = world.getMapper(MapComponent.class);
         tileMapper = world.getMapper(TileComponent.class);
         loader = mock(ResourceLoader.class);

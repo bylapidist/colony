@@ -47,7 +47,7 @@ public class MapTileCacheTest {
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .build());
         World world = new World(new WorldConfigurationBuilder().build());
-        Entity map = MapFactory.create(world, state);
+        Entity map = MapFactory.create(world, state, null);
         ComponentMapper<MapComponent> mapMapper = world.getMapper(MapComponent.class);
         world.process();
         return MapRenderDataBuilder.fromMap(mapMapper.get(map), world);
@@ -63,7 +63,7 @@ public class MapTileCacheTest {
                     .build());
         }
         World world = new World(new WorldConfigurationBuilder().build());
-        Entity map = MapFactory.create(world, state);
+        Entity map = MapFactory.create(world, state, null);
         ComponentMapper<MapComponent> mapMapper = world.getMapper(MapComponent.class);
         world.process();
         return MapRenderDataBuilder.fromMap(mapMapper.get(map), world);
