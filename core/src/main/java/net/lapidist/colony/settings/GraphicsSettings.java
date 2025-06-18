@@ -20,6 +20,7 @@ public final class GraphicsSettings {
     private static final String RAYS_KEY = PREFIX + "lightRays";
 
     private static final int DEFAULT_RAYS = 16;
+    private static final float DEFAULT_NORMAL_STRENGTH = 0.5f;
 
     private boolean antialiasingEnabled = true;
     private boolean mipMapsEnabled = true;
@@ -29,7 +30,7 @@ public final class GraphicsSettings {
     private boolean lightingEnabled = true;
     private boolean normalMapsEnabled;
     private boolean specularMapsEnabled;
-    private float normalMapStrength = 1f;
+    private float normalMapStrength = DEFAULT_NORMAL_STRENGTH;
     private boolean dayNightCycleEnabled = true;
     private int lightRays = DEFAULT_RAYS;
 
@@ -133,7 +134,10 @@ public final class GraphicsSettings {
         gs.lightingEnabled = Boolean.parseBoolean(props.getProperty(LIGHT_KEY, "true"));
         gs.normalMapsEnabled = Boolean.parseBoolean(props.getProperty(NORMAL_KEY, "false"));
         gs.specularMapsEnabled = Boolean.parseBoolean(props.getProperty(SPECULAR_KEY, "false"));
-        gs.normalMapStrength = Float.parseFloat(props.getProperty(NORMAL_STRENGTH_KEY, "1"));
+        gs.normalMapStrength = Float.parseFloat(props.getProperty(
+                NORMAL_STRENGTH_KEY,
+                Float.toString(DEFAULT_NORMAL_STRENGTH)
+        ));
         gs.dayNightCycleEnabled = Boolean.parseBoolean(props.getProperty(DAY_NIGHT_KEY, "true"));
         gs.lightRays = Integer.parseInt(props.getProperty(RAYS_KEY, Integer.toString(DEFAULT_RAYS)));
         return gs;

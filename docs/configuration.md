@@ -81,5 +81,5 @@ Higher values produce smoother shadows but reduce performance. The default is
 `16`.
 
 `graphics.normalStrength` controls how strongly normal maps affect lighting. The
-value ranges from `0` (disabled) to `1` (full effect) and defaults to `1`.
+value ranges from `0` (disabled) to `1` (full effect) and defaults to `0.5`.
 
