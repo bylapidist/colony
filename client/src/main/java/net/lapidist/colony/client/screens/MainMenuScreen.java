@@ -25,11 +25,11 @@ public final class MainMenuScreen extends BaseScreen {
         getStage().getRoot().setScale(scale);
 
         Image logo = new Image(new TextureRegionDrawable(new Texture(Gdx.files.internal("textures/logo.png"))));
-        TextButton continueButton = new TextButton(I18n.get("main.continue"), getSkin());
-        TextButton newGameButton = new TextButton(I18n.get("main.newGame"), getSkin());
-        TextButton loadGameButton = new TextButton(I18n.get("main.loadGame"), getSkin());
-        TextButton settingsButton = new TextButton(I18n.get("main.settings"), getSkin());
-        TextButton exitButton = new TextButton(I18n.get("main.exit"), getSkin());
+        TextButton continueButton = createButton(I18n.get("main.continue"));
+        TextButton newGameButton = createButton(I18n.get("main.newGame"));
+        TextButton loadGameButton = createButton(I18n.get("main.loadGame"));
+        TextButton settingsButton = createButton(I18n.get("main.settings"));
+        TextButton exitButton = createButton(I18n.get("main.exit"));
 
         String lastSave = null;
         boolean canContinue = false;

@@ -5,6 +5,9 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -66,6 +69,36 @@ public abstract class BaseScreen extends ScreenAdapter {
      */
     protected final Table getRoot() {
         return root;
+    }
+
+    /**
+     * Creates a text button using the active UI skin.
+     *
+     * @param text button label
+     * @return newly created button
+     */
+    protected final TextButton createButton(final String text) {
+        return new TextButton(text, skin);
+    }
+
+    /**
+     * Creates a label using the active UI skin.
+     *
+     * @param text label contents
+     * @return newly created label
+     */
+    protected final Label createLabel(final String text) {
+        return new Label(text, skin);
+    }
+
+    /**
+     * Creates a dialog using the "dialog" style of the active UI skin.
+     *
+     * @param title dialog title
+     * @return newly created dialog
+     */
+    protected final Dialog createDialog(final String title) {
+        return new Dialog(title, skin, "dialog");
     }
 
     @Override
