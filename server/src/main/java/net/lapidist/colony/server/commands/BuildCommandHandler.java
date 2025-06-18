@@ -17,21 +17,16 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Applies a {@link BuildCommand} to the game state and broadcasts the change.
  */
-public final class BuildCommandHandler implements CommandHandler<BuildCommand> {
+public final class BuildCommandHandler extends LockedCommandHandler<BuildCommand> {
 
-    private final Supplier<MapState> stateSupplier;
-    private final Consumer<MapState> stateConsumer;
     private final NetworkService networkService;
-    private final ReentrantLock lock;
 
     public BuildCommandHandler(final Supplier<MapState> stateSupplierToUse,
                                final Consumer<MapState> stateConsumerToUse,
                                final NetworkService networkServiceToUse,
                                final ReentrantLock lockToUse) {
-        this.stateSupplier = stateSupplierToUse;
-        this.stateConsumer = stateConsumerToUse;
+        super(stateSupplierToUse, stateConsumerToUse, lockToUse);
         this.networkService = networkServiceToUse;
-        this.lock = lockToUse;
     }
 
     @Override
@@ -40,46 +35,40 @@ public final class BuildCommandHandler implements CommandHandler<BuildCommand> {
     }
 
     @Override
-    public void handle(final BuildCommand command) {
-        lock.lock();
-        try {
-            MapState state = stateSupplier.get();
-            TileData tile = state.getTile(command.x(), command.y());
-            boolean occupied = state.buildings().stream()
-                    .anyMatch(b -> b.x() == command.x() && b.y() == command.y());
-            if (tile == null || occupied) {
-                return;
-            }
-            BuildingDefinition def = Registries.buildings().get(command.buildingId());
-            if (def == null) {
-                return;
-            }
-            String type = def.id();
-            ResourceData cost = def.cost() != null ? def.cost() : new ResourceData();
-            ResourceData player = state.playerResources();
-            java.util.Map<String, Integer> playerAmounts = new java.util.HashMap<>(player.amounts());
-            for (var entry : cost.amounts().entrySet()) {
-                if (playerAmounts.getOrDefault(entry.getKey(), 0) < entry.getValue()) {
-                    return;
-                }
-            }
-            BuildingData building = new BuildingData(command.x(), command.y(), type);
-            state.buildings().add(building);
-            for (var entry : cost.amounts().entrySet()) {
-                playerAmounts.merge(entry.getKey(), -entry.getValue(), Integer::sum);
-            }
-            ResourceData newResources = new ResourceData(new java.util.HashMap<>(playerAmounts));
-            MapState updated = state.toBuilder()
-                    .playerResources(newResources)
-                    .build();
-            stateConsumer.accept(updated);
-            Events.dispatch(new BuildingPlacedEvent(command.x(), command.y(), type));
-            networkService.broadcast(building);
-            networkService.broadcast(new ResourceUpdateData(-1, -1,
-                    new java.util.HashMap<>(newResources.amounts())));
-        } finally {
-            lock.unlock();
+    protected MapState modify(final BuildCommand command, final MapState state) {
+        TileData tile = state.getTile(command.x(), command.y());
+        boolean occupied = state.buildings().stream()
+                .anyMatch(b -> b.x() == command.x() && b.y() == command.y());
+        if (tile == null || occupied) {
+            return null;
         }
+        BuildingDefinition def = Registries.buildings().get(command.buildingId());
+        if (def == null) {
+            return null;
+        }
+        String type = def.id();
+        ResourceData cost = def.cost() != null ? def.cost() : new ResourceData();
+        ResourceData player = state.playerResources();
+        java.util.Map<String, Integer> playerAmounts = new java.util.HashMap<>(player.amounts());
+        for (var entry : cost.amounts().entrySet()) {
+            if (playerAmounts.getOrDefault(entry.getKey(), 0) < entry.getValue()) {
+                return null;
+            }
+        }
+        BuildingData building = new BuildingData(command.x(), command.y(), type);
+        state.buildings().add(building);
+        for (var entry : cost.amounts().entrySet()) {
+            playerAmounts.merge(entry.getKey(), -entry.getValue(), Integer::sum);
+        }
+        ResourceData newResources = new ResourceData(new java.util.HashMap<>(playerAmounts));
+        MapState updated = state.toBuilder()
+                .playerResources(newResources)
+                .build();
+        Events.dispatch(new BuildingPlacedEvent(command.x(), command.y(), type));
+        networkService.broadcast(building);
+        networkService.broadcast(new ResourceUpdateData(-1, -1,
+                new java.util.HashMap<>(newResources.amounts())));
+        return updated;
     }
 
 }
