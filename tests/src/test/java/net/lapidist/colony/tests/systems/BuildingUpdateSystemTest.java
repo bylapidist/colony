@@ -6,8 +6,10 @@ import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
 import com.artemis.utils.IntBag;
 import net.lapidist.colony.client.network.GameClient;
+import net.lapidist.colony.client.systems.ParticleSystem;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.client.systems.network.BuildingUpdateSystem;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.components.state.MapState;
@@ -55,5 +57,37 @@ public class BuildingUpdateSystemTest {
 
         assertEquals(0, bc.getX());
         assertEquals(0, bc.getY());
+    }
+
+    @Test
+    public void spawnsParticleEffectOnPlacement() {
+        MapState state = new MapState();
+        TileData tile = TileData.builder()
+                .x(0)
+                .y(0)
+                .tileType("GRASS")
+                .passable(true)
+                .build();
+        state.putTile(tile);
+
+        GameClient client = new GameClient();
+        try (org.mockito.MockedConstruction<SpriteBatch> cons =
+                org.mockito.Mockito.mockConstruction(SpriteBatch.class)) {
+            ParticleSystem particles = new ParticleSystem(new SpriteBatch());
+            World world = new World(new WorldConfigurationBuilder()
+                    .with(new MapLoadSystem(state), new BuildingUpdateSystem(client), particles)
+                    .build());
+
+            world.process();
+
+            var file = net.lapidist.colony.client.core.io.FileLocation.INTERNAL.getFile("effects/building_placed.p");
+            org.junit.Assert.assertTrue(file.exists());
+
+            BuildingData data = new BuildingData(0, 0, "house");
+            client.injectBuildingUpdate(data);
+
+            world.process();
+
+        }
     }
 }
