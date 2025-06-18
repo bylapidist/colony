@@ -8,6 +8,7 @@ import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.CameraInputSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.SelectionSystem;
+import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.ResourceData;
@@ -43,7 +44,7 @@ public class SelectionSystemResourceTypeTest {
         SelectionSystem system = new SelectionSystem(client, keys);
         World world = new World(new WorldConfigurationBuilder()
                 .with(new MapLoadSystem(state), new PlayerCameraSystem(),
-                        new CameraInputSystem(keys), system)
+                        new CameraInputSystem(keys), new MapRenderDataSystem(), system)
                 .build());
 
         Input input = mock(Input.class);
@@ -77,7 +78,7 @@ public class SelectionSystemResourceTypeTest {
         SelectionSystem system = new SelectionSystem(client, keys);
         World world = new World(new WorldConfigurationBuilder()
                 .with(new MapLoadSystem(state), new PlayerCameraSystem(),
-                        new CameraInputSystem(keys), system)
+                        new CameraInputSystem(keys), new MapRenderDataSystem(), system)
                 .build());
         world.process();
 

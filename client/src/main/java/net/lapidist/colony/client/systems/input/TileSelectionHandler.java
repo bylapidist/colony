@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.map.MapUtils;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
+import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.client.graphics.CameraUtils;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
@@ -20,15 +21,18 @@ public final class TileSelectionHandler {
     private final GameClient client;
     private final PlayerCameraSystem cameraSystem;
     private final Array<Entity> selectedTiles;
+    private final MapRenderDataSystem dataSystem;
 
     public TileSelectionHandler(
             final GameClient clientToSet,
             final PlayerCameraSystem cameraSystemToSet,
-            final Array<Entity> selectedTilesToUse
+            final Array<Entity> selectedTilesToUse,
+            final MapRenderDataSystem dataSystemToUse
     ) {
         this.client = clientToSet;
         this.cameraSystem = cameraSystemToSet;
         this.selectedTiles = selectedTilesToUse;
+        this.dataSystem = dataSystemToUse;
     }
 
     public boolean handleTap(
@@ -61,6 +65,11 @@ public final class TileSelectionHandler {
                                         false
                                 ));
                                 comp.setSelected(false);
+                                comp.setDirty(true);
+                                int idx = map.getTiles().indexOf(selected, true);
+                                if (idx != -1) {
+                                    dataSystem.addDirtyIndex(idx);
+                                }
                                 map.incrementVersion();
                             }
                         }
@@ -76,6 +85,11 @@ public final class TileSelectionHandler {
                     );
                     client.sendTileSelectionRequest(msg);
                     tileComponent.setSelected(newState);
+                    tileComponent.setDirty(true);
+                    int idx = map.getTiles().indexOf(tile, true);
+                    if (idx != -1) {
+                        dataSystem.addDirtyIndex(idx);
+                    }
                     map.incrementVersion();
 
                     if (newState) {

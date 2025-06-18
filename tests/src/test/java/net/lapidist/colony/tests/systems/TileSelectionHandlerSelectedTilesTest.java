@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
+import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.client.systems.input.TileSelectionHandler;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.client.graphics.CameraUtils;
@@ -35,7 +36,7 @@ public class TileSelectionHandlerSelectedTilesTest {
 
         GameClient client = mock(GameClient.class);
         World world = new World(new WorldConfigurationBuilder()
-                .with(new MapLoadSystem(state), new PlayerCameraSystem())
+                .with(new MapLoadSystem(state), new PlayerCameraSystem(), new MapRenderDataSystem())
                 .build());
         world.process();
 
@@ -48,7 +49,12 @@ public class TileSelectionHandlerSelectedTilesTest {
         camera.getCamera().update();
 
         Array<Entity> selected = new Array<>();
-        TileSelectionHandler handler = new TileSelectionHandler(client, camera, selected);
+        TileSelectionHandler handler = new TileSelectionHandler(
+                client,
+                camera,
+                selected,
+                world.getSystem(MapRenderDataSystem.class)
+        );
         MapComponent map = MapUtils.findMap(world).orElseThrow();
         var tileMapper = world.getMapper(TileComponent.class);
 

@@ -4,6 +4,8 @@ import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
 import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.client.systems.MapRenderDataSystem;
+import net.lapidist.colony.client.systems.PlayerCameraSystem;
+import net.lapidist.colony.client.systems.input.TileSelectionHandler;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.maps.TileComponent;
@@ -170,6 +172,47 @@ public class MapRenderDataSystemTest {
         assertEquals(1, indices.size);
         assertEquals(0, indices.first());
         assertEquals(0, system.consumeUpdatedIndices().size);
+        world.dispose();
+    }
+
+    @Test
+    public void selectionUpdatesDirtyIndices() {
+        MapState state = new MapState();
+        state.putTile(TileData.builder()
+                .x(0).y(0).tileType("GRASS").passable(true)
+                .build());
+
+        World world = new World(new WorldConfigurationBuilder()
+                .with(new MapInitSystem(new ProvidedMapStateProvider(state)),
+                        new MapRenderDataSystem(),
+                        new PlayerCameraSystem())
+                .build());
+        world.process();
+
+        MapRenderDataSystem system = world.getSystem(MapRenderDataSystem.class);
+        PlayerCameraSystem camera = world.getSystem(PlayerCameraSystem.class);
+        ((com.badlogic.gdx.graphics.OrthographicCamera) camera.getCamera()).position.set(
+                net.lapidist.colony.components.GameConstants.TILE_SIZE / 2f,
+                net.lapidist.colony.components.GameConstants.TILE_SIZE / 2f,
+                0
+        );
+        camera.getCamera().update();
+
+        TileSelectionHandler handler = new TileSelectionHandler(
+                org.mockito.Mockito.mock(net.lapidist.colony.client.network.GameClient.class),
+                camera,
+                new com.badlogic.gdx.utils.Array<>(),
+                system
+        );
+
+        var map = net.lapidist.colony.map.MapUtils.findMap(world).orElseThrow();
+        var tileMapper = world.getMapper(TileComponent.class);
+        com.badlogic.gdx.math.Vector2 screen = net.lapidist.colony.client.graphics.CameraUtils.worldToScreenCoords(
+                camera.getViewport(), 0, 0);
+        handler.handleTap(screen.x, screen.y, map, tileMapper);
+        world.process();
+        assertEquals(1, system.getSelectedTileIndices().size);
+        assertEquals(0, system.getSelectedTileIndices().first());
         world.dispose();
     }
 }

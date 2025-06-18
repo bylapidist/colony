@@ -8,6 +8,7 @@ import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.SelectionSystem;
 import net.lapidist.colony.client.systems.CameraInputSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
+import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.client.graphics.CameraUtils;
 import net.lapidist.colony.components.state.MapState;
@@ -37,6 +38,7 @@ public class InputSystemInitOrderTest {
                 .with(
                         new SelectionSystem(client, new net.lapidist.colony.settings.KeyBindings()),
                         new CameraInputSystem(new net.lapidist.colony.settings.KeyBindings()),
+                        new MapRenderDataSystem(),
                         new MapLoadSystem(state),
                         new PlayerCameraSystem()
                 )
