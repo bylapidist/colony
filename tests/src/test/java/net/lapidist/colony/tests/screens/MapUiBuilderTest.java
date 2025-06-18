@@ -14,6 +14,7 @@ import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.CameraInputSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
+import net.lapidist.colony.client.screens.MapScreenEventHandler;
 import net.lapidist.colony.tests.GdxTestRunner;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.Input;
@@ -36,7 +37,7 @@ public class MapUiBuilderTest {
         Colony colony = mock(Colony.class);
         Settings settings = new Settings();
         when(colony.getSettings()).thenReturn(settings);
-        MapUi ui = MapUiBuilder.build(stage, world, client, colony);
+        MapUi ui = MapUiBuilder.build(stage, world, client, colony, new MapScreenEventHandler());
 
         stage.keyDown(settings.getKeyBindings().getKey(KeyAction.CHAT));
 
@@ -52,7 +53,7 @@ public class MapUiBuilderTest {
         Settings settings = new Settings();
         when(colony.getSettings()).thenReturn(settings);
 
-        MapUi ui = MapUiBuilder.build(stage, world, client, colony);
+        MapUi ui = MapUiBuilder.build(stage, world, client, colony, new MapScreenEventHandler());
 
         TextButton minimapButton = stage.getRoot().findActor("minimapButton");
         String expectedButton = I18n.get("map.minimap") + " ["
@@ -93,7 +94,7 @@ public class MapUiBuilderTest {
         Settings settings = new Settings();
         when(colony.getSettings()).thenReturn(settings);
 
-        MapUi ui = MapUiBuilder.build(stage, world, client, colony);
+        MapUi ui = MapUiBuilder.build(stage, world, client, colony, new MapScreenEventHandler());
 
         TextButton buildButton = stage.getRoot().findActor("buildButton");
         String expected = I18n.get("map.build") + " ["

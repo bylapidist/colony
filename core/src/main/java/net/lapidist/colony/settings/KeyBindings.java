@@ -26,7 +26,9 @@ public final class KeyBindings {
             Map.entry(KeyAction.SELECT, Input.Keys.ENTER),
             Map.entry(KeyAction.SELECT_WOOD, Input.Keys.NUM_1),
             Map.entry(KeyAction.SELECT_STONE, Input.Keys.NUM_2),
-            Map.entry(KeyAction.SELECT_FOOD, Input.Keys.NUM_3)
+            Map.entry(KeyAction.SELECT_FOOD, Input.Keys.NUM_3),
+            Map.entry(KeyAction.PAUSE, Input.Keys.P),
+            Map.entry(KeyAction.SLOW_MOTION, Input.Keys.L)
     );
 
     private final EnumMap<KeyAction, Integer> bindings = new EnumMap<>(KeyAction.class);

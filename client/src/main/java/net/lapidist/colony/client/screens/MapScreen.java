@@ -22,6 +22,10 @@ public final class MapScreen implements Screen {
     private final Stage stage;
     private final MinimapActor minimapActor;
     private final MapScreenEventHandler events;
+    /** True when world updates are paused. */
+    private boolean paused;
+    /** Multiplier applied to frame time for slow or fast motion. */
+    private float speedMultiplier;
     private static final float DEFAULT_SCALE = 1f;
     /** Fixed time step used for deterministic updates. */
     private static final double STEP_TIME = 1d / 60d;
@@ -70,19 +74,46 @@ public final class MapScreen implements Screen {
         if (cameraSystem != null) {
             cameraSystem.setClient(client);
         }
-        MapUi ui = MapUiBuilder.build(stage, world, client, colony);
-        minimapActor = ui.getMinimapActor();
         events = new MapScreenEventHandler();
+        MapUi ui = MapUiBuilder.build(stage, world, client, colony, events);
+        minimapActor = ui.getMinimapActor();
+        events.attach(this);
         accumulator = 0.0;
+        paused = false;
+        speedMultiplier = 1f;
+    }
+
+    /**
+     * Pause or resume world updates.
+     */
+    public void setPaused(final boolean value) {
+        this.paused = value;
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    /**
+     * Adjust the rate at which accumulated time advances.
+     */
+    public void setSpeedMultiplier(final float multiplier) {
+        this.speedMultiplier = multiplier;
+    }
+
+    public float getSpeedMultiplier() {
+        return speedMultiplier;
     }
 
     @Override
     public void render(final float deltaTime) {
         events.update();
-        accumulator += deltaTime;
+        if (!paused) {
+            accumulator += deltaTime * speedMultiplier;
+        }
         MapInitSystem init = world.getSystem(MapInitSystem.class);
         boolean loading = init != null && !init.isReady();
-        while (accumulator >= STEP_TIME) {
+        while (!paused && accumulator >= STEP_TIME) {
             world.setDelta((float) STEP_TIME);
             world.process();
             accumulator -= STEP_TIME;
