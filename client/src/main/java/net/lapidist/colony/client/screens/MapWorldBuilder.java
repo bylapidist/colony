@@ -231,7 +231,7 @@ public final class MapWorldBuilder {
 
         ShaderPlugin plugin = new net.lapidist.colony.client.graphics.LightsNormalMapShaderPlugin();
         if (plugin instanceof net.lapidist.colony.client.graphics.LightsNormalMapShaderPlugin ln) {
-            builder.with(new net.lapidist.colony.client.systems.LightOcclusionSystem(ln.getWorld()));
+            builder.with(-1, new net.lapidist.colony.client.systems.LightOcclusionSystem(ln.getWorld()));
         }
 
         World world = new World(builder.build());

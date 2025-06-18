@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 
 /** Tests for {@link LightOcclusionSystem}. */
 @RunWith(GdxTestRunner.class)
+@SuppressWarnings("checkstyle:magicnumber")
 public class LightOcclusionSystemTest {
 
     @Test
