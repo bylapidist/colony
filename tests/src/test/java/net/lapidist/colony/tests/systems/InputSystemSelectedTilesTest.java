@@ -6,7 +6,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.CameraInputSystem;
-import net.lapidist.colony.client.systems.InputSystem;
+import net.lapidist.colony.client.systems.SelectionSystem;
+import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.components.state.MapState;
@@ -42,11 +43,13 @@ public class InputSystemSelectedTilesTest {
 
         GameClient client = mock(GameClient.class);
         KeyBindings keys = new KeyBindings();
-        InputSystem system = new InputSystem(client, keys);
+        CameraInputSystem cameraInput = new CameraInputSystem(keys);
+        SelectionSystem selectionSystem = new SelectionSystem(client, keys);
+        BuildPlacementSystem buildSystem = new BuildPlacementSystem(client, keys);
 
         World world = new World(new WorldConfigurationBuilder()
                 .with(new MapLoadSystem(state), new PlayerCameraSystem(),
-                        new CameraInputSystem(keys), system)
+                        cameraInput, selectionSystem, buildSystem)
                 .build());
 
         Input input = mock(Input.class);
