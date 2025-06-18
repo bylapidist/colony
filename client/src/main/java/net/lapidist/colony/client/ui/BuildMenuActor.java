@@ -1,14 +1,15 @@
 package net.lapidist.colony.client.ui;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
 import net.lapidist.colony.client.core.io.FileLocation;
@@ -30,9 +31,13 @@ public final class BuildMenuActor extends Table implements Disposable {
     private static final Logger LOGGER = LoggerFactory.getLogger(BuildMenuActor.class);
     private static final float ICON_SIZE = 32f;
     private static final float PAD = 4f;
+    private static final float RESOURCE_SIZE = 16f;
 
     private final BuildPlacementSystem buildSystem;
     private final ResourceLoader resourceLoader = new TextureAtlasResourceLoader();
+    private final Texture woodTexture;
+    private final Texture stoneTexture;
+    private final Texture foodTexture;
 
     public BuildMenuActor(
             final Skin skin,
@@ -56,20 +61,47 @@ public final class BuildMenuActor extends Table implements Disposable {
             LOGGER.warn("Failed to load build menu textures", e);
         }
 
+        woodTexture = new Texture(resourceLoader.getFileLocation().getFile("textures/wood.png"));
+        stoneTexture = new Texture(resourceLoader.getFileLocation().getFile("textures/stone.png"));
+        foodTexture = new Texture(resourceLoader.getFileLocation().getFile("textures/food.png"));
+
         ButtonGroup<Button> group = new ButtonGroup<>();
 
         for (BuildingDefinition def : Registries.buildings().all()) {
             Button button = new Button(skin, "toggle");
             button.setName(def.id());
+
             Table content = new Table();
             TextureRegion region = resourceLoader.findRegion(def.asset());
             if (region != null) {
                 Image icon = new Image(new TextureRegionDrawable(region));
                 content.add(icon).size(ICON_SIZE, ICON_SIZE).padRight(PAD);
             }
-            String costText = def.cost().wood() + "/" + def.cost().stone() + "/" + def.cost().food();
-            Label label = new Label(def.label() + " " + costText, skin);
-            content.add(label);
+
+            Table info = new Table();
+            Label label = new Label(def.label(), skin);
+            info.add(label).padRight(PAD);
+
+            if (def.cost().wood() > 0) {
+                Image woodIcon = new Image(new TextureRegionDrawable(woodTexture));
+                woodIcon.setName("woodIcon");
+                info.add(woodIcon).size(RESOURCE_SIZE, RESOURCE_SIZE).padRight(PAD / 2f);
+                info.add(new Label(String.valueOf(def.cost().wood()), skin)).padRight(PAD);
+            }
+            if (def.cost().stone() > 0) {
+                Image stoneIcon = new Image(new TextureRegionDrawable(stoneTexture));
+                stoneIcon.setName("stoneIcon");
+                info.add(stoneIcon).size(RESOURCE_SIZE, RESOURCE_SIZE).padRight(PAD / 2f);
+                info.add(new Label(String.valueOf(def.cost().stone()), skin)).padRight(PAD);
+            }
+            if (def.cost().food() > 0) {
+                Image foodIcon = new Image(new TextureRegionDrawable(foodTexture));
+                foodIcon.setName("foodIcon");
+                info.add(foodIcon).size(RESOURCE_SIZE, RESOURCE_SIZE).padRight(PAD / 2f);
+                info.add(new Label(String.valueOf(def.cost().food()), skin));
+            }
+
+            content.add(info);
             button.add(content).pad(PAD);
             button.addListener(new ChangeListener() {
                 @Override
@@ -95,5 +127,8 @@ public final class BuildMenuActor extends Table implements Disposable {
     @Override
     public void dispose() {
         resourceLoader.dispose();
+        woodTexture.dispose();
+        stoneTexture.dispose();
+        foodTexture.dispose();
     }
 }
