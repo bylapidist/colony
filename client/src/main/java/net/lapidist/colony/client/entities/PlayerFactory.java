@@ -9,9 +9,9 @@ import net.lapidist.colony.components.entities.PlayerComponent;
 import net.lapidist.colony.components.light.PointLightComponent;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.resources.PlayerResourceComponent;
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.PlayerPosition;
-import net.lapidist.colony.components.state.ResourceData;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.map.PlayerPosition;
+import net.lapidist.colony.components.state.resources.ResourceData;
 
 /**
  * Factory methods for creating the player entity once at startup.

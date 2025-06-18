@@ -8,7 +8,7 @@ import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.graphics.CameraUtils;
 import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.components.maps.MapComponent;
-import net.lapidist.colony.components.state.BuildingRemovalData;
+import net.lapidist.colony.components.state.messages.BuildingRemovalData;
 
 /** Handles player building removal input. */
 public final class BuildingRemovalHandler {

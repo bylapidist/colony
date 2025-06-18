@@ -2,9 +2,9 @@ package net.lapidist.colony.tests.scenario;
 
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.resources.PlayerResourceComponent;
-import net.lapidist.colony.components.state.BuildingPlacementData;
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.ResourceData;
+import net.lapidist.colony.components.state.messages.BuildingPlacementData;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.resources.ResourceData;
 import net.lapidist.colony.map.ChunkedMapGenerator;
 import net.lapidist.colony.map.MapGenerator;
 import net.lapidist.colony.server.GameServer;

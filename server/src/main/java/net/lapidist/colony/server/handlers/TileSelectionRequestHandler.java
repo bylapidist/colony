@@ -2,7 +2,7 @@ package net.lapidist.colony.server.handlers;
 
 import net.lapidist.colony.server.commands.CommandBus;
 import net.lapidist.colony.server.commands.TileSelectionCommand;
-import net.lapidist.colony.components.state.TileSelectionData;
+import net.lapidist.colony.components.state.messages.TileSelectionData;
 import net.lapidist.colony.server.commands.ServerCommand;
 
 /**

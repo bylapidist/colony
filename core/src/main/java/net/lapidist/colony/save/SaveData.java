@@ -1,6 +1,6 @@
 package net.lapidist.colony.save;
 
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.serialization.KryoType;
 import net.lapidist.colony.mod.ModMetadata;
 import java.util.List;

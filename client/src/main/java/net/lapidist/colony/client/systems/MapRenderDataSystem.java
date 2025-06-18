@@ -72,10 +72,10 @@ public final class MapRenderDataSystem extends BaseSystem {
         if (map != null) {
             int width = client != null
                     ? client.getMapWidth()
-                    : net.lapidist.colony.components.state.MapState.DEFAULT_WIDTH;
+                    : net.lapidist.colony.components.state.map.MapState.DEFAULT_WIDTH;
             int height = client != null
                     ? client.getMapHeight()
-                    : net.lapidist.colony.components.state.MapState.DEFAULT_HEIGHT;
+                    : net.lapidist.colony.components.state.map.MapState.DEFAULT_HEIGHT;
             renderData = MapRenderDataBuilder.fromMap(map, world, width, height);
             lastVersion = map.getVersion();
             rebuildSelectedIndices();
@@ -93,10 +93,10 @@ public final class MapRenderDataSystem extends BaseSystem {
         if (renderData == null) {
             int width = client != null
                     ? client.getMapWidth()
-                    : net.lapidist.colony.components.state.MapState.DEFAULT_WIDTH;
+                    : net.lapidist.colony.components.state.map.MapState.DEFAULT_WIDTH;
             int height = client != null
                     ? client.getMapHeight()
-                    : net.lapidist.colony.components.state.MapState.DEFAULT_HEIGHT;
+                    : net.lapidist.colony.components.state.map.MapState.DEFAULT_HEIGHT;
             renderData = MapRenderDataBuilder.fromMap(map, world, width, height);
             lastVersion = map.getVersion();
             rebuildSelectedIndices();

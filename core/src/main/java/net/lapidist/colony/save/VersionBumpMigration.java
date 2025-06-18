@@ -1,6 +1,6 @@
 package net.lapidist.colony.save;
 
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 
 /**
  * Simple migration that only updates the save version without altering the state.

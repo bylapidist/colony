@@ -9,7 +9,7 @@ import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.client.ui.MinimapActor;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 
 /**
  * Gameplay screen that delegates world setup, UI creation and event handling

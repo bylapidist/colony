@@ -7,9 +7,9 @@ import com.artemis.WorldConfigurationBuilder;
 import com.artemis.utils.IntBag;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.components.maps.MapComponent;
-import net.lapidist.colony.components.state.BuildingData;
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.map.BuildingData;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.map.TileData;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

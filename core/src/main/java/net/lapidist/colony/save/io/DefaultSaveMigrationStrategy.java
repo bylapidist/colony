@@ -1,6 +1,6 @@
 package net.lapidist.colony.save.io;
 
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.save.SaveData;
 import net.lapidist.colony.save.SaveMigrator;
 import net.lapidist.colony.save.SaveVersion;

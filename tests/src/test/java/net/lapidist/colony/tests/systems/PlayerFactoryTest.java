@@ -28,7 +28,7 @@ public class PlayerFactoryTest {
         PlayerFactory.create(
                 world,
                 null,
-                new net.lapidist.colony.components.state.ResourceData(),
+                new net.lapidist.colony.components.state.resources.ResourceData(),
                 null
         );
         world.process();

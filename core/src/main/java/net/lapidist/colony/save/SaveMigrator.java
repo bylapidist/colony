@@ -1,6 +1,6 @@
 package net.lapidist.colony.save;
 
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 
 
 import java.util.EnumMap;
@@ -49,6 +49,7 @@ public final class SaveMigrator {
         register(new VersionBumpMigration(SaveVersion.V33, SaveVersion.V34));
         register(new V34ToV35Migration());
         register(new V35ToV36Migration());
+        register(new VersionBumpMigration(SaveVersion.V36, SaveVersion.V37));
     }
 
     private SaveMigrator() {

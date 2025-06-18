@@ -1,11 +1,11 @@
 package net.lapidist.colony.tests.components;
 
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.ResourceData;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.resources.ResourceData;
 import net.lapidist.colony.components.state.EnvironmentState;
 import org.junit.Test;
 
-import net.lapidist.colony.components.state.ChunkPos;
+import net.lapidist.colony.components.state.map.ChunkPos;
 import net.lapidist.colony.map.MapChunkData;
 
 import java.util.HashMap;

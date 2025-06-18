@@ -1,10 +1,10 @@
 package net.lapidist.colony.save;
 
-import net.lapidist.colony.components.state.BuildingData;
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.map.BuildingData;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.map.TileData;
 import net.lapidist.colony.map.MapChunkData;
-import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.components.state.map.TilePos;
 import net.lapidist.colony.registry.Registries;
 
 import java.util.ArrayList;

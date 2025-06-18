@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.entities.CelestialBodyComponent;
 import net.lapidist.colony.components.state.MutableEnvironmentState;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 
 /** Updates celestial body positions based on the current environment. */
 public final class CelestialSystem extends BaseSystem {

@@ -1,8 +1,8 @@
 package net.lapidist.colony.server.services;
 
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.PlayerPosition;
-import net.lapidist.colony.components.state.CameraPosition;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.map.PlayerPosition;
+import net.lapidist.colony.components.state.map.CameraPosition;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.map.MapGenerator;
 import net.lapidist.colony.map.MapChunkData;

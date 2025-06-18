@@ -1,6 +1,6 @@
 package net.lapidist.colony.mod.test;
 
-import net.lapidist.colony.components.state.ResourceData;
+import net.lapidist.colony.components.state.resources.ResourceData;
 import net.lapidist.colony.mod.GameMod;
 import net.lapidist.colony.registry.BuildingDefinition;
 import net.lapidist.colony.registry.Registries;

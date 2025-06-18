@@ -1,8 +1,8 @@
 package net.lapidist.colony.tests.map;
 
 import net.lapidist.colony.map.MapChunkData;
-import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.components.state.map.TileData;
+import net.lapidist.colony.components.state.map.TilePos;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

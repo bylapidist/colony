@@ -12,7 +12,7 @@ import net.lapidist.colony.client.graphics.CameraUtils;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
-import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.components.state.map.TilePos;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,8 +57,8 @@ public class BuildingPlacementHandlerTest {
         boolean handled = handler.handleTap(screen.x, screen.y, map, world.getMapper(TileComponent.class));
 
         assertTrue(handled);
-        ArgumentCaptor<net.lapidist.colony.components.state.BuildingPlacementData> captor =
-                ArgumentCaptor.forClass(net.lapidist.colony.components.state.BuildingPlacementData.class);
+        ArgumentCaptor<net.lapidist.colony.components.state.messages.BuildingPlacementData> captor =
+                ArgumentCaptor.forClass(net.lapidist.colony.components.state.messages.BuildingPlacementData.class);
         verify(client).sendBuildRequest(captor.capture());
         org.junit.Assert.assertEquals("farm", captor.getValue().buildingId());
         world.dispose();

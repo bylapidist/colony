@@ -1,6 +1,6 @@
 package net.lapidist.colony.server.handlers;
 
-import net.lapidist.colony.components.state.BuildingPlacementData;
+import net.lapidist.colony.components.state.messages.BuildingPlacementData;
 import net.lapidist.colony.server.commands.BuildCommand;
 import net.lapidist.colony.server.commands.CommandBus;
 import net.lapidist.colony.server.commands.ServerCommand;

@@ -12,11 +12,13 @@ import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.client.graphics.CameraUtils;
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.map.TileData;
 import net.lapidist.colony.settings.KeyAction;
 import net.lapidist.colony.settings.KeyBindings;
 import net.lapidist.colony.tests.GdxTestRunner;
+import net.lapidist.colony.components.state.messages.BuildingPlacementData;
+import org.mockito.ArgumentCaptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -92,8 +94,8 @@ public class BuildPlacementSystemTest {
         Vector2 screen = CameraUtils.worldToScreenCoords(camera.getViewport(), 0, 0);
         system.tap(screen.x, screen.y);
 
-        org.mockito.ArgumentCaptor<net.lapidist.colony.components.state.BuildingPlacementData> captor =
-                org.mockito.ArgumentCaptor.forClass(net.lapidist.colony.components.state.BuildingPlacementData.class);
+        ArgumentCaptor<BuildingPlacementData> captor =
+                ArgumentCaptor.forClass(BuildingPlacementData.class);
         verify(client).sendBuildRequest(captor.capture());
         assertEquals("farm", captor.getValue().buildingId());
     }
@@ -101,7 +103,7 @@ public class BuildPlacementSystemTest {
     @Test
     public void tapRemovesBuildingWhenEnabled() {
         MapState state = new MapState();
-        state.buildings().add(new net.lapidist.colony.components.state.BuildingData(0, 0, "house"));
+        state.buildings().add(new net.lapidist.colony.components.state.map.BuildingData(0, 0, "house"));
         state.putTile(TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .build());

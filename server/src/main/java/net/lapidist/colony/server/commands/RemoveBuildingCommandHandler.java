@@ -1,8 +1,8 @@
 package net.lapidist.colony.server.commands;
 
-import net.lapidist.colony.components.state.BuildingData;
-import net.lapidist.colony.components.state.BuildingRemovalData;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.BuildingData;
+import net.lapidist.colony.components.state.messages.BuildingRemovalData;
+import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.events.Events;
 import net.lapidist.colony.server.events.BuildingRemovedEvent;
 import net.lapidist.colony.server.services.NetworkService;

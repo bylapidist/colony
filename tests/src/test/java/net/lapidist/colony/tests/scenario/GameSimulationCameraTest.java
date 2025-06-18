@@ -1,8 +1,8 @@
 package net.lapidist.colony.tests.scenario;
 
 import net.lapidist.colony.components.GameConstants;
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.map.TileData;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;

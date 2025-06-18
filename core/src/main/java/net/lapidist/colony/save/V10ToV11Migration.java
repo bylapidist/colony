@@ -1,7 +1,7 @@
 package net.lapidist.colony.save;
 
-import net.lapidist.colony.components.state.CameraPosition;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.CameraPosition;
+import net.lapidist.colony.components.state.map.MapState;
 
 /** Migration from save version 10 to 11 adding camera position. */
 public final class V10ToV11Migration implements MapStateMigration {

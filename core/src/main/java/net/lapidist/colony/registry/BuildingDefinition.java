@@ -1,6 +1,6 @@
 package net.lapidist.colony.registry;
 
-import net.lapidist.colony.components.state.ResourceData;
+import net.lapidist.colony.components.state.resources.ResourceData;
 
 /**
  * Metadata describing a building type.

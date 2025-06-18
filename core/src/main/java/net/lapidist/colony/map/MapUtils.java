@@ -65,7 +65,7 @@ public final class MapUtils {
             return Optional.empty();
         }
 
-        Entity tile = map.getTileMap().get(new net.lapidist.colony.components.state.TilePos(x, y));
+        Entity tile = map.getTileMap().get(new net.lapidist.colony.components.state.map.TilePos(x, y));
         if (tile != null) {
             return Optional.of(tile);
         }

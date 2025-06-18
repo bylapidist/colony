@@ -2,9 +2,9 @@ package net.lapidist.colony.tests.server;
 
 import net.lapidist.colony.base.BaseItemsMod;
 import net.lapidist.colony.base.BaseResourcesMod;
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.ResourceData;
-import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.resources.ResourceData;
+import net.lapidist.colony.components.state.map.TileData;
 import net.lapidist.colony.registry.Registries;
 import net.lapidist.colony.server.commands.GatherCommand;
 import net.lapidist.colony.server.commands.GatherCommandHandler;

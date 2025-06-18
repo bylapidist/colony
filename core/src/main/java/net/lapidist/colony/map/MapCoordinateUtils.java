@@ -1,7 +1,7 @@
 package net.lapidist.colony.map;
 
-import net.lapidist.colony.components.state.ChunkPos;
-import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.components.state.map.ChunkPos;
+import net.lapidist.colony.components.state.map.TilePos;
 
 /**
  * Utility methods for converting world tile coordinates to chunk coordinates

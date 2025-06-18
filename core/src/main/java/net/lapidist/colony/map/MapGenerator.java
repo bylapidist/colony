@@ -1,6 +1,6 @@
 package net.lapidist.colony.map;
 
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 
 /**
  * Strategy interface for generating {@link MapState} instances.

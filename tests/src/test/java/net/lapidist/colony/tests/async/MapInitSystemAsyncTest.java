@@ -4,8 +4,8 @@ import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
 import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.components.maps.MapComponent;
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.map.TileData;
 import net.lapidist.colony.map.ProvidedMapStateProvider;
 import org.junit.Test;
 

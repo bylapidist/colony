@@ -1,6 +1,6 @@
 package net.lapidist.colony.server.handlers;
 
-import net.lapidist.colony.components.state.ResourceGatherRequestData;
+import net.lapidist.colony.components.state.resources.ResourceGatherRequestData;
 import net.lapidist.colony.server.commands.CommandBus;
 import net.lapidist.colony.server.commands.GatherCommand;
 import net.lapidist.colony.server.commands.ServerCommand;

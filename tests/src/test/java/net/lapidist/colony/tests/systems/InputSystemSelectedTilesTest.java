@@ -10,9 +10,9 @@ import net.lapidist.colony.client.systems.SelectionSystem;
 import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.ResourceData;
-import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.resources.ResourceData;
+import net.lapidist.colony.components.state.map.TileData;
 import net.lapidist.colony.settings.KeyAction;
 import net.lapidist.colony.settings.KeyBindings;
 import net.lapidist.colony.tests.GdxTestRunner;
@@ -63,8 +63,8 @@ public class InputSystemSelectedTilesTest {
                 .thenReturn(true);
         world.process();
 
-        ArgumentCaptor<net.lapidist.colony.components.state.ResourceGatherRequestData> captor =
-                ArgumentCaptor.forClass(net.lapidist.colony.components.state.ResourceGatherRequestData.class);
+        ArgumentCaptor<net.lapidist.colony.components.state.resources.ResourceGatherRequestData> captor =
+                ArgumentCaptor.forClass(net.lapidist.colony.components.state.resources.ResourceGatherRequestData.class);
         verify(client).sendGatherRequest(captor.capture());
         assertEquals(0, captor.getValue().x());
         assertEquals(0, captor.getValue().y());

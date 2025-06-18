@@ -1,6 +1,6 @@
 package net.lapidist.colony.tests.server;
 
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.server.services.DayNightCycleService;
 import org.junit.Test;
 

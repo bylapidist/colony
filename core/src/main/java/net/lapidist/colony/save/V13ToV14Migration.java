@@ -1,6 +1,6 @@
 package net.lapidist.colony.save;
 
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 
 /** Migration from save version 13 to 14 adding map dimensions. */
 public final class V13ToV14Migration implements MapStateMigration {

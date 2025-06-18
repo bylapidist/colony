@@ -5,7 +5,7 @@ import com.artemis.Entity;
 import com.artemis.utils.IntBag;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.maps.MapComponent;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
 import net.lapidist.colony.tests.GdxTestRunner;

@@ -5,7 +5,7 @@ import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
 import net.lapidist.colony.components.maps.MapComponent;
-import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.components.state.map.TilePos;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

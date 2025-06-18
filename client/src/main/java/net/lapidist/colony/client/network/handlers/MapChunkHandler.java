@@ -2,7 +2,7 @@ package net.lapidist.colony.client.network.handlers;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
-import net.lapidist.colony.components.state.MapChunkBytes;
+import net.lapidist.colony.components.state.map.MapChunkBytes;
 import net.lapidist.colony.map.MapChunkData;
 import net.lapidist.colony.network.AbstractMessageHandler;
 

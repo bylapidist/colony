@@ -1,10 +1,10 @@
 package net.lapidist.colony.server.commands;
 
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.map.TileData;
+import net.lapidist.colony.components.state.map.TilePos;
 import net.lapidist.colony.map.MapCoordinateUtils;
-import net.lapidist.colony.components.state.TileSelectionData;
+import net.lapidist.colony.components.state.messages.TileSelectionData;
 import net.lapidist.colony.events.Events;
 import net.lapidist.colony.server.events.TileSelectionEvent;
 import net.lapidist.colony.server.services.NetworkService;

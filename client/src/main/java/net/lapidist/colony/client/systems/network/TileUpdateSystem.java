@@ -6,7 +6,7 @@ import com.artemis.Entity;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
-import net.lapidist.colony.components.state.TileSelectionData;
+import net.lapidist.colony.components.state.messages.TileSelectionData;
 import net.lapidist.colony.map.MapUtils;
 
 /**

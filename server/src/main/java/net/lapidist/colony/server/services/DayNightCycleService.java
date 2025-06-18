@@ -1,7 +1,7 @@
 package net.lapidist.colony.server.services;
 
 import net.lapidist.colony.components.state.EnvironmentState;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.mod.ScheduledService;
 
 import java.util.concurrent.locks.ReentrantLock;

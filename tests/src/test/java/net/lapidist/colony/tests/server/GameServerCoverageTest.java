@@ -1,7 +1,7 @@
 package net.lapidist.colony.tests.server;
 
-import net.lapidist.colony.components.state.MapChunkRequest;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.messages.MapChunkRequest;
+import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.mod.GameMod;
 import net.lapidist.colony.mod.ModMetadata;
 import net.lapidist.colony.mod.ModLoader.LoadedMod;

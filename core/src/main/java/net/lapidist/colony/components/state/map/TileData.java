@@ -1,6 +1,7 @@
-package net.lapidist.colony.components.state;
+package net.lapidist.colony.components.state.map;
 
 import net.lapidist.colony.serialization.KryoType;
+import net.lapidist.colony.components.state.resources.ResourceData;
 
 /**
  * Immutable tile representation used in {@link MapState}.

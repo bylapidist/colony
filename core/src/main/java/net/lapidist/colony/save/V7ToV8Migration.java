@@ -1,7 +1,7 @@
 package net.lapidist.colony.save;
 
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.PlayerPosition;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.map.PlayerPosition;
 
 /** Migration from save version 7 to version 8 adding player position. */
 public final class V7ToV8Migration implements MapStateMigration {

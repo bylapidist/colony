@@ -1,8 +1,8 @@
 package net.lapidist.colony.tests.network;
 
 import net.lapidist.colony.client.network.GameClient;
-import net.lapidist.colony.components.state.ResourceGatherRequestData;
-import net.lapidist.colony.components.state.ResourceUpdateData;
+import net.lapidist.colony.components.state.resources.ResourceGatherRequestData;
+import net.lapidist.colony.components.state.resources.ResourceUpdateData;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
 import org.junit.Test;
