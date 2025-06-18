@@ -18,7 +18,9 @@ public enum KeyAction {
     SELECT("select"),
     SELECT_WOOD("selectWood"),
     SELECT_STONE("selectStone"),
-    SELECT_FOOD("selectFood");
+    SELECT_FOOD("selectFood"),
+    PAUSE("pause"),
+    SLOW_MOTION("slowMotion");
 
     private final String i18nKey;
 

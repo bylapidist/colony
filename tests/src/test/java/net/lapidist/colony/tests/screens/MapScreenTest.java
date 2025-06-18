@@ -29,6 +29,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(GdxTestRunner.class)
 public class MapScreenTest {
     private static final float DELTA = 0.5f;
+    private static final float HALF = 0.5f;
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
     private static final float SCALE = 1.5f;
@@ -64,7 +65,7 @@ public class MapScreenTest {
                     any(),
                     any()))
                     .thenReturn(world);
-            uiStatic.when(() -> MapUiBuilder.build(any(Stage.class), eq(world), eq(client), eq(colony)))
+            uiStatic.when(() -> MapUiBuilder.build(any(Stage.class), eq(world), eq(client), eq(colony), any()))
                     .thenAnswer(inv -> new MapUi(
                             inv.getArgument(0),
                             minimap,
@@ -122,7 +123,7 @@ public class MapScreenTest {
             worldStatic.when(() -> MapWorldBuilder.build(any(), isNull(), eq(settings), any(),
                     eq(client), any(), any()))
                     .thenReturn(new World(new WorldConfigurationBuilder().build()));
-            uiStatic.when(() -> MapUiBuilder.build(any(Stage.class), any(World.class), eq(client), eq(colony)))
+            uiStatic.when(() -> MapUiBuilder.build(any(Stage.class), any(World.class), eq(client), eq(colony), any()))
                     .thenAnswer(inv -> new MapUi(inv.getArgument(0), mock(MinimapActor.class),
                             mock(net.lapidist.colony.client.ui.ChatBox.class)));
 
@@ -130,6 +131,71 @@ public class MapScreenTest {
             Stage stage = extractStage(screen);
             ScreenViewport vp = (ScreenViewport) stage.getViewport();
             assertEquals(1f / settings.getUiScale(), vp.getUnitsPerPixel(), 0f);
+        }
+    }
+
+    @Test
+    public void pausedSkipsWorldProcessing() throws Exception {
+        Colony colony = mock(Colony.class);
+        Settings settings = new Settings();
+        when(colony.getSettings()).thenReturn(settings);
+        MapState state = new MapState();
+        GameClient client = mock(GameClient.class);
+        World world = mock(World.class);
+
+        try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class);
+             MockedStatic<MapWorldBuilder> worldStatic = mockStatic(MapWorldBuilder.class);
+             MockedStatic<MapUiBuilder> uiStatic = mockStatic(MapUiBuilder.class)) {
+            worldStatic.when(() -> MapWorldBuilder.builder(eq(state), eq(client), any(Stage.class),
+                    eq(settings.getKeyBindings()), eq(settings.getGraphicsSettings()), any()))
+                    .thenReturn(new WorldConfigurationBuilder());
+            worldStatic.when(() -> MapWorldBuilder.build(any(), isNull(), eq(settings), any(),
+                    eq(client), any(), any()))
+                    .thenReturn(world);
+            uiStatic.when(() -> MapUiBuilder.build(any(Stage.class), eq(world), eq(client), eq(colony), any()))
+                    .thenAnswer(inv -> new MapUi(inv.getArgument(0), mock(MinimapActor.class),
+                            mock(net.lapidist.colony.client.ui.ChatBox.class)));
+
+            MapScreen screen = new MapScreen(colony, state, client);
+            screen.setPaused(true);
+            screen.render(DELTA);
+
+            verify(world, never()).process();
+        }
+    }
+
+    @Test
+    public void slowMotionUsesMultiplier() throws Exception {
+        Colony colony = mock(Colony.class);
+        Settings settings = new Settings();
+        when(colony.getSettings()).thenReturn(settings);
+        MapState state = new MapState();
+        GameClient client = mock(GameClient.class);
+        World world = mock(World.class);
+
+        try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class);
+             MockedStatic<MapWorldBuilder> worldStatic = mockStatic(MapWorldBuilder.class);
+             MockedStatic<MapUiBuilder> uiStatic = mockStatic(MapUiBuilder.class)) {
+            worldStatic.when(() -> MapWorldBuilder.builder(eq(state), eq(client), any(Stage.class),
+                    eq(settings.getKeyBindings()), eq(settings.getGraphicsSettings()), any()))
+                    .thenReturn(new WorldConfigurationBuilder());
+            worldStatic.when(() -> MapWorldBuilder.build(any(), isNull(), eq(settings), any(),
+                    eq(client), any(), any()))
+                    .thenReturn(world);
+            uiStatic.when(() -> MapUiBuilder.build(any(Stage.class), eq(world), eq(client), eq(colony), any()))
+                    .thenAnswer(inv -> new MapUi(inv.getArgument(0), mock(MinimapActor.class),
+                            mock(net.lapidist.colony.client.ui.ChatBox.class)));
+
+            MapScreen screen = new MapScreen(colony, state, client);
+            Field stepField = MapScreen.class.getDeclaredField("STEP_TIME");
+            stepField.setAccessible(true);
+            double step = stepField.getDouble(null);
+            int expectedSteps = (int) Math.round((DELTA * HALF) / step);
+
+            screen.setSpeedMultiplier(HALF);
+            screen.render(DELTA);
+
+            verify(world, times(expectedSteps)).process();
         }
     }
 }
