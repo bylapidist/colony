@@ -5,7 +5,7 @@ import net.lapidist.colony.components.state.ResourceData;
 import net.lapidist.colony.components.state.ResourceUpdateData;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
-import net.lapidist.colony.map.MapChunkData;
+import net.lapidist.colony.map.MapCoordinateUtils;
 import net.lapidist.colony.server.services.NetworkService;
 import net.lapidist.colony.server.services.InventoryService;
 import net.lapidist.colony.registry.Registries;
@@ -59,11 +59,12 @@ public final class GatherCommandHandler implements CommandHandler<GatherCommand>
             amounts.put(command.resourceId(), updatedValue);
             ResourceData updated = new ResourceData(new java.util.HashMap<>(amounts));
             TileData newTile = tile.toBuilder().resources(updated).build();
-            int chunkX = Math.floorDiv(command.x(), MapChunkData.CHUNK_SIZE);
-            int chunkY = Math.floorDiv(command.y(), MapChunkData.CHUNK_SIZE);
-            int localX = Math.floorMod(command.x(), MapChunkData.CHUNK_SIZE);
-            int localY = Math.floorMod(command.y(), MapChunkData.CHUNK_SIZE);
-            state.getOrCreateChunk(chunkX, chunkY).getTiles().put(new TilePos(localX, localY), newTile);
+            int chunkX = MapCoordinateUtils.toChunkCoord(command.x());
+            int chunkY = MapCoordinateUtils.toChunkCoord(command.y());
+            int localX = MapCoordinateUtils.toLocalCoord(command.x());
+            int localY = MapCoordinateUtils.toLocalCoord(command.y());
+            state.getOrCreateChunk(chunkX, chunkY).getTiles()
+                    .put(new TilePos(localX, localY), newTile);
             ResourceData player = state.playerResources();
             java.util.Map<String, Integer> playerAmounts = new java.util.HashMap<>(player.amounts());
             playerAmounts.merge(command.resourceId(), current - updatedValue, Integer::sum);
