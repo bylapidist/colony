@@ -15,6 +15,7 @@ import net.lapidist.colony.client.render.data.RenderTile;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.render.SimpleMapRenderData;
 import net.lapidist.colony.client.render.data.RenderBuilding;
+import net.lapidist.colony.client.TileRotationUtil;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.settings.GraphicsSettings;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -33,6 +34,7 @@ public class TileRendererTest {
 
     private static final int CUSTOM_POWER = 11;
     private static final float CUSTOM_STRENGTH = 0.5f;
+    private static final float EPSILON = 0.001f;
 
     @Test
     public void drawsTileAndOverlay() {
@@ -415,5 +417,66 @@ public class TileRendererTest {
         renderer.render(map);
 
         verify(shader).setUniformf("u_normalStrength", CUSTOM_STRENGTH);
+    }
+
+    @Test
+    public void setsTileRotationUniform() {
+        SpriteBatch batch = mock(SpriteBatch.class);
+        ShaderProgram shader = mock(ShaderProgram.class);
+        when(batch.getShader()).thenReturn(shader);
+        ResourceLoader loader = mock(ResourceLoader.class);
+        TextureRegion region = mock(TextureRegion.class);
+        TextureRegion overlay = mock(TextureRegion.class);
+        when(loader.findRegion(anyString())).thenReturn(region);
+        when(loader.findRegion(eq("hoveredTile0"))).thenReturn(overlay);
+
+        new BaseDefinitionsMod().init();
+
+        CameraProvider camera = mock(CameraProvider.class);
+        com.badlogic.gdx.graphics.OrthographicCamera cam = new com.badlogic.gdx.graphics.OrthographicCamera();
+        com.badlogic.gdx.utils.viewport.ExtendViewport viewport =
+                new com.badlogic.gdx.utils.viewport.ExtendViewport(1f, 1f, cam);
+        cam.update();
+        when(camera.getViewport()).thenReturn(viewport);
+        when(camera.getCamera()).thenReturn(cam);
+
+        GraphicsSettings graphics = new GraphicsSettings();
+        TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver(), null, graphics);
+
+        Array<RenderTile> tiles = new Array<>();
+        RenderTile tile1 = RenderTile.builder()
+                .x(0)
+                .y(0)
+                .tileType("GRASS")
+                .selected(false)
+                .wood(0)
+                .stone(0)
+                .food(0)
+                .build();
+        tiles.add(tile1);
+
+        RenderTile tile2 = RenderTile.builder()
+                .x(1)
+                .y(0)
+                .tileType("GRASS")
+                .selected(false)
+                .wood(0)
+                .stone(0)
+                .food(0)
+                .build();
+        tiles.add(tile2);
+
+        RenderTile[][] grid = new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT];
+        grid[0][0] = tile1;
+        grid[1][0] = tile2;
+        MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);
+
+        renderer.render(map);
+
+        ArgumentCaptor<Float> captor = ArgumentCaptor.forClass(Float.class);
+        verify(shader, times(2)).setUniformf(eq("u_tileRotation"), captor.capture());
+        java.util.List<Float> vals = captor.getAllValues();
+        assertEquals(Math.toRadians(TileRotationUtil.rotationFor(0, 0)), vals.get(0), EPSILON);
+        assertEquals(Math.toRadians(TileRotationUtil.rotationFor(1, 0)), vals.get(1), EPSILON);
     }
 }

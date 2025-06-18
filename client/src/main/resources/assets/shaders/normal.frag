@@ -12,17 +12,24 @@ uniform vec3 u_lightDir;
 uniform vec3 u_viewDir;
 uniform float u_specularPower;
 uniform float u_normalStrength;
+uniform float u_tileRotation;
 
 void main() {
+    vec2 offset = v_texCoords - 0.5;
+    float c = cos(u_tileRotation);
+    float s = sin(u_tileRotation);
+    mat2 rot = mat2(c, -s, s, c);
+    vec2 rCoords = rot * offset + 0.5;
     vec4 diffuse = texture2D(u_texture, v_texCoords);
-    vec3 map = texture2D(u_normal, v_texCoords).xyz * 2.0 - 1.0;
+    vec3 map = texture2D(u_normal, rCoords).xyz * 2.0 - 1.0;
+    map.xy = rot * map.xy;
     vec3 normal = normalize(mix(vec3(0.0, 0.0, 1.0), map, u_normalStrength));
     vec3 lightDir = normalize(u_lightDir);
     vec3 viewDir = normalize(u_viewDir);
     float diff = max(dot(normal, lightDir), 0.0);
     vec3 halfDir = normalize(lightDir + viewDir);
     float specIntensity = pow(max(dot(normal, halfDir), 0.0), u_specularPower);
-    float specMap = texture2D(u_specular, v_texCoords).r;
+    float specMap = texture2D(u_specular, rCoords).r;
     vec3 color = diffuse.rgb * diff + vec3(specIntensity * specMap);
     gl_FragColor = vec4(color, diffuse.a) * v_color;
 }
