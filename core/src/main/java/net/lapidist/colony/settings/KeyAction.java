@@ -14,6 +14,7 @@ public enum KeyAction {
     CHAT("chat"),
     MINIMAP("minimap"),
     TOGGLE_CAMERA("toggleCamera"),
+    SELECT("select"),
     SELECT_WOOD("selectWood"),
     SELECT_STONE("selectStone"),
     SELECT_FOOD("selectFood");
