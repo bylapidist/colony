@@ -43,7 +43,9 @@ public final class PlayerRenderer implements EntityRenderer<Void> {
             player = world.getEntity(players.get(0));
         }
         PlayerComponent pc = playerMapper.get(player);
-        spriteBatch.draw(region, pc.getX(), pc.getY());
+        float drawX = pc.getX() - region.getRegionWidth() / 2f;
+        float drawY = pc.getY() - region.getRegionHeight() / 2f;
+        spriteBatch.draw(region, drawX, drawY);
     }
 
     // PlayerRenderer does not own disposable resources
