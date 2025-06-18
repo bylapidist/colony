@@ -32,6 +32,7 @@ public class BuildingRendererTest {
     private static final int VIEW_SIZE = 32;
     private static final int CUSTOM_POWER = 23;
     private static final float CUSTOM_STRENGTH = 0.4f;
+    private static final float EPSILON = 0.001f;
 
     @Test
     public void rendersBuildingTexture() {
@@ -256,5 +257,39 @@ public class BuildingRendererTest {
         renderer.render(map);
 
         verify(shader).setUniformf("u_normalStrength", CUSTOM_STRENGTH);
+    }
+
+    @Test
+    public void setsTileRotationUniform() {
+        SpriteBatch batch = mock(SpriteBatch.class);
+        ShaderProgram shader = mock(ShaderProgram.class);
+        when(batch.getShader()).thenReturn(shader);
+        ResourceLoader loader = mock(ResourceLoader.class);
+        TextureRegion region = mock(TextureRegion.class);
+        when(loader.findRegion(anyString())).thenReturn(region);
+
+        new BaseDefinitionsMod().init();
+
+        CameraProvider camera = mock(CameraProvider.class);
+        OrthographicCamera cam = new OrthographicCamera();
+        ExtendViewport viewport = new ExtendViewport(VIEW_SIZE, VIEW_SIZE, cam);
+        viewport.update(VIEW_SIZE, VIEW_SIZE, true);
+        cam.update();
+        when(camera.getCamera()).thenReturn(cam);
+        when(camera.getViewport()).thenReturn(viewport);
+
+        GraphicsSettings graphics = new GraphicsSettings();
+        BuildingRenderer renderer = new BuildingRenderer(batch, loader, camera, new DefaultAssetResolver(), graphics);
+
+        Array<RenderBuilding> buildings = new Array<>();
+        RenderBuilding building = RenderBuilding.builder().x(0).y(0).buildingType("house").build();
+        buildings.add(building);
+
+        MapRenderData map = new SimpleMapRenderData(new Array<RenderTile>(), buildings,
+                new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT]);
+
+        renderer.render(map);
+
+        verify(shader).setUniformf("u_tileRotation", 0f);
     }
 }

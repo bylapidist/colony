@@ -121,26 +121,32 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                         TextureRegion nrm = normalRegions.get(type.toUpperCase(java.util.Locale.ROOT));
                         TextureRegion spec = specularRegions.get(type.toUpperCase(java.util.Locale.ROOT));
                         com.badlogic.gdx.graphics.glutils.ShaderProgram shader = spriteBatch.getShader();
+                        float rotationAngle = 0f;
                         if (shader != null) {
                             if (nrm != null && graphicsSettings.isNormalMapsEnabled()) {
                                 nrm.getTexture().bind(1);
                                 shader.setUniformi("u_normal", 1);
                             }
-                        if (spec != null && graphicsSettings.isSpecularMapsEnabled()) {
-                            spec.getTexture().bind(2);
-                            shader.setUniformi("u_specular", 2);
+                            if (spec != null && graphicsSettings.isSpecularMapsEnabled()) {
+                                spec.getTexture().bind(2);
+                                shader.setUniformi("u_specular", 2);
+                            }
+                            Integer power = specularPowers.get(type.toUpperCase(java.util.Locale.ROOT));
+                            shader.setUniformf(
+                                    "u_specularPower",
+                                    power != null ? (float) power : ResourceLoader.DEFAULT_SPECULAR_POWER
+                            );
+                            shader.setUniformf("u_normalStrength", graphicsSettings.getNormalMapStrength());
                         }
-                        Integer power = specularPowers.get(type.toUpperCase(java.util.Locale.ROOT));
-                        shader.setUniformf(
-                                "u_specularPower",
-                                power != null ? (float) power : ResourceLoader.DEFAULT_SPECULAR_POWER
-                        );
-                        shader.setUniformf("u_normalStrength", graphicsSettings.getNormalMapStrength());
-                        com.badlogic.gdx.Gdx.gl.glActiveTexture(com.badlogic.gdx.graphics.GL20.GL_TEXTURE0);
-                    }
                         String upper = type.toUpperCase(java.util.Locale.ROOT);
                         if ("GRASS".equals(upper) || "DIRT".equals(upper)) {
-                            float rotation = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
+                            rotationAngle = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
+                            if (shader != null) {
+                                shader.setUniformf(
+                                        "u_tileRotation",
+                                        com.badlogic.gdx.math.MathUtils.degreesToRadians * rotationAngle
+                                );
+                            }
                             spriteBatch.draw(
                                     region,
                                     worldCoords.x,
@@ -151,10 +157,16 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                                     region.getRegionHeight(),
                                     1f,
                                     1f,
-                                    rotation
+                                    rotationAngle
                             );
                         } else {
+                            if (shader != null) {
+                                shader.setUniformf("u_tileRotation", 0f);
+                            }
                             spriteBatch.draw(region, worldCoords.x, worldCoords.y);
+                        }
+                        if (shader != null) {
+                            com.badlogic.gdx.Gdx.gl.glActiveTexture(com.badlogic.gdx.graphics.GL20.GL_TEXTURE0);
                         }
                     }
                     if (!resolver.hasTileAsset(type)) {
