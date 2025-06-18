@@ -103,11 +103,32 @@ public final class LoadGameScreen extends BaseScreen {
     }
 
     private List<String> listSaves() {
+        List<String> names;
         try {
-            return Paths.get().listAutosaves();
+            names = Paths.get().listAutosaves();
         } catch (IOException e) {
             return new ArrayList<>();
         }
+
+        try {
+            // sort by most recently modified first
+            names.sort((a, b) -> {
+                try {
+                    java.nio.file.Path pa = Paths.get().getAutosave(a);
+                    java.nio.file.Path pb = Paths.get().getAutosave(b);
+                    java.nio.file.attribute.FileTime ta = java.nio.file.Files.getLastModifiedTime(pa);
+                    java.nio.file.attribute.FileTime tb = java.nio.file.Files.getLastModifiedTime(pb);
+                    return -ta.compareTo(tb);
+                } catch (IOException ex) {
+                    // propagate to outer catch block
+                    throw new RuntimeException(ex);
+                }
+            });
+        } catch (RuntimeException e) {
+            names.sort(String::compareTo);
+        }
+
+        return names;
     }
 
 }
