@@ -18,6 +18,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.when;
 
 @RunWith(GdxTestRunner.class)
 public class LoadGameScreenOrderingTest {
@@ -39,6 +40,7 @@ public class LoadGameScreenOrderingTest {
         Files.setLastModifiedTime(olderFile, FileTime.fromMillis(now - OLDER_DELTA));
 
         Colony colony = mock(Colony.class);
+        when(colony.getSettings()).thenReturn(new net.lapidist.colony.settings.Settings());
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             LoadGameScreen screen = new LoadGameScreen(colony);
             Method m = LoadGameScreen.class.getDeclaredMethod("listSaves");

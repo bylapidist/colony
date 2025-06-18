@@ -52,6 +52,7 @@ public class LoadGameScreenTest {
     @Test
     public void backButtonReturnsToMainMenu() throws Exception {
         Colony colony = mock(Colony.class);
+        when(colony.getSettings()).thenReturn(new net.lapidist.colony.settings.Settings());
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             LoadGameScreen screen = new LoadGameScreen(colony);
             Table root = getRoot(screen);
@@ -65,6 +66,7 @@ public class LoadGameScreenTest {
     @Test
     public void escapeReturnsToMainMenu() throws Exception {
         Colony colony = mock(Colony.class);
+        when(colony.getSettings()).thenReturn(new net.lapidist.colony.settings.Settings());
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             LoadGameScreen screen = new LoadGameScreen(colony);
             Stage stage = getStage(screen);
@@ -91,6 +93,7 @@ public class LoadGameScreenTest {
         GameStateIO.save(state, folder.resolve(save + Paths.AUTOSAVE_SUFFIX));
 
         Colony colony = mock(Colony.class);
+        when(colony.getSettings()).thenReturn(new net.lapidist.colony.settings.Settings());
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             LoadGameScreen screen = new LoadGameScreen(colony);
             Table list = getList(screen);
