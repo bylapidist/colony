@@ -3,6 +3,10 @@ package net.lapidist.colony.client.systems.network;
 import com.artemis.BaseSystem;
 import com.artemis.ComponentMapper;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import net.lapidist.colony.client.core.io.FileLocation;
+import net.lapidist.colony.client.graphics.CameraUtils;
+import net.lapidist.colony.client.systems.ParticleSystem;
 import net.lapidist.colony.client.entities.BuildingFactory;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.entities.BuildingComponent;
@@ -21,6 +25,7 @@ public final class BuildingUpdateSystem extends BaseSystem {
     private final GameClient client;
     private MapComponent map;
     private ComponentMapper<BuildingComponent> buildingMapper;
+    private final Vector2 worldCoords = new Vector2();
 
     public BuildingUpdateSystem(final GameClient clientToSet) {
         this.client = clientToSet;
@@ -46,6 +51,21 @@ public final class BuildingUpdateSystem extends BaseSystem {
             buildingMapper.get(entity).setDirty(true);
             map.addEntity(entity);
             map.incrementVersion();
+            ParticleSystem ps = world.getSystem(ParticleSystem.class);
+            if (ps != null) {
+                CameraUtils.tileCoordsToWorldCoords(update.x(), update.y(), worldCoords);
+                try {
+                    ParticleEffect effect = new ParticleEffect();
+                    var file = FileLocation.INTERNAL.getFile("effects/building_placed.p");
+                    if (file.exists()) {
+                        effect.load(file, file.parent());
+                        effect.setPosition(worldCoords.x, worldCoords.y);
+                        ps.spawn(effect);
+                    }
+                } catch (Exception ignored) {
+                    // ignore missing effect definitions
+                }
+            }
         }
 
         BuildingRemovalData removal;
