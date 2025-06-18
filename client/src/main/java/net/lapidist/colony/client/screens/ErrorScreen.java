@@ -12,8 +12,8 @@ public final class ErrorScreen extends BaseScreen {
     public ErrorScreen(final Colony colony, final String message) {
         float scale = colony.getSettings() == null ? 1f : colony.getSettings().getUiScale();
         getStage().getRoot().setScale(scale);
-        Label label = new Label(message, getSkin());
-        TextButton back = new TextButton(I18n.get("common.back"), getSkin());
+        Label label = createLabel(message);
+        TextButton back = createButton(I18n.get("common.back"));
 
         getRoot().add(label).row();
         getRoot().add(back).row();

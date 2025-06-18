@@ -5,7 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -50,7 +49,7 @@ public final class LoadGameScreen extends BaseScreen {
         getRoot().add(filterField).growX().row();
         getRoot().add(scroll).expand().fill().row();
 
-        TextButton backButton = new TextButton(I18n.get("common.back"), getSkin());
+        TextButton backButton = createButton(I18n.get("common.back"));
         getRoot().add(backButton).row();
         backButton.addListener(new ChangeListener() {
             @Override
@@ -81,8 +80,8 @@ public final class LoadGameScreen extends BaseScreen {
             }
         }
         for (String save : matched) {
-            TextButton loadButton = new TextButton(save, getSkin());
-            TextButton deleteButton = new TextButton(I18n.get("loadGame.delete"), getSkin());
+            TextButton loadButton = createButton(save);
+            TextButton deleteButton = createButton(I18n.get("loadGame.delete"));
             Table row = new Table();
             row.add(loadButton).padRight(PADDING);
             row.add(deleteButton);
@@ -125,7 +124,7 @@ public final class LoadGameScreen extends BaseScreen {
         }
 
         if (matched.isEmpty()) {
-            list.add(new Label(I18n.get("loadGame.none"), getSkin())).row();
+            list.add(createLabel(I18n.get("loadGame.none"))).row();
         }
     }
 
