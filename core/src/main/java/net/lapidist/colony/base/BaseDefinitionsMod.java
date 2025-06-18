@@ -26,21 +26,25 @@ public final class BaseDefinitionsMod implements GameMod {
                 "house",
                 I18n.get("building.house"),
                 "house0",
-                new ResourceData(HOUSE_WOOD, 0, 0)));
+                new ResourceData(HOUSE_WOOD, 0, 0),
+                I18n.get("building.house.desc")));
         Registries.buildings().register(new BuildingDefinition(
                 "market",
                 I18n.get("building.market"),
                 "house0",
-                new ResourceData(MARKET_WOOD, MARKET_STONE, 0)));
+                new ResourceData(MARKET_WOOD, MARKET_STONE, 0),
+                I18n.get("building.market.desc")));
         Registries.buildings().register(new BuildingDefinition(
                 "factory",
                 I18n.get("building.factory"),
                 "house0",
-                new ResourceData(FACTORY_WOOD, FACTORY_STONE, 0)));
+                new ResourceData(FACTORY_WOOD, FACTORY_STONE, 0),
+                I18n.get("building.factory.desc")));
         Registries.buildings().register(new BuildingDefinition(
                 "farm",
                 I18n.get("building.farm"),
                 "house0",
-                new ResourceData(FARM_WOOD, 0, 0)));
+                new ResourceData(FARM_WOOD, 0, 0),
+                I18n.get("building.farm.desc")));
     }
 }

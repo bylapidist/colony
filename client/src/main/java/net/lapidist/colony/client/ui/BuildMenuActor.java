@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Tooltip;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.graphics.Texture;
@@ -35,6 +36,7 @@ public final class BuildMenuActor extends Table implements Disposable {
 
     private final BuildPlacementSystem buildSystem;
     private final ResourceLoader resourceLoader = new TextureAtlasResourceLoader();
+    private final Skin skin;
     private final Texture woodTexture;
     private final Texture stoneTexture;
     private final Texture foodTexture;
@@ -45,6 +47,7 @@ public final class BuildMenuActor extends Table implements Disposable {
             final GraphicsSettings graphics
     ) {
         this.buildSystem = buildSystemToUse;
+        this.skin = skin;
         setName("buildMenu");
         setFillParent(true);
         bottom().left();
@@ -114,9 +117,38 @@ public final class BuildMenuActor extends Table implements Disposable {
             if (current != null && def.id().equalsIgnoreCase(current)) {
                 button.setChecked(true);
             }
+            button.addListener(createTooltip(def));
             add(button).pad(PAD).row();
         }
         // no further selection
+    }
+
+    private Tooltip<Label> createTooltip(final BuildingDefinition def) {
+        StringBuilder text = new StringBuilder(def.description() == null ? "" : def.description());
+        String cost = formatCost(def.cost());
+        if (!cost.isEmpty()) {
+            if (text.length() > 0) {
+                text.append('\n');
+            }
+            text.append(cost);
+        }
+        Tooltip<Label> tooltip = new Tooltip<>(new Label(text.toString(), skin));
+        tooltip.setInstant(true);
+        return tooltip;
+    }
+
+    private static String formatCost(final net.lapidist.colony.components.state.ResourceData cost) {
+        java.util.List<String> parts = new java.util.ArrayList<>();
+        if (cost.wood() > 0) {
+            parts.add(cost.wood() + " wood");
+        }
+        if (cost.stone() > 0) {
+            parts.add(cost.stone() + " stone");
+        }
+        if (cost.food() > 0) {
+            parts.add(cost.food() + " food");
+        }
+        return String.join(", ", parts);
     }
 
     @Override

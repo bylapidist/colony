@@ -14,6 +14,7 @@ public final class BuildingCostMod implements GameMod {
                 "hut",
                 "Hut",
                 "house0",
-                new ResourceData(HUT_WOOD, 0, 0)));
+                new ResourceData(HUT_WOOD, 0, 0),
+                "Test hut"));
     }
 }
