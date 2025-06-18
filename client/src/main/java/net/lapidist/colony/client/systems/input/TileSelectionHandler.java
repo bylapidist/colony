@@ -49,6 +49,25 @@ public final class TileSelectionHandler {
         return MapUtils.findTile(map, (int) tileCoords.x, (int) tileCoords.y)
                 .map(tile -> {
                     TileComponent tileComponent = tileMapper.get(tile);
+
+                    if (!tileComponent.isSelected()) {
+                        for (int i = 0; i < selectedTiles.size; i++) {
+                            Entity selected = selectedTiles.get(i);
+                            TileComponent comp = tileMapper.get(selected);
+                            if (comp.isSelected()) {
+                                TileSelectionData deselectMsg = new TileSelectionData(
+                                        comp.getX(),
+                                        comp.getY(),
+                                        false
+                                );
+                                client.sendTileSelectionRequest(deselectMsg);
+                                comp.setSelected(false);
+                                map.incrementVersion();
+                            }
+                        }
+                        selectedTiles.clear();
+                    }
+
                     boolean newState = !tileComponent.isSelected();
 
                     TileSelectionData msg = new TileSelectionData(
@@ -59,10 +78,9 @@ public final class TileSelectionHandler {
                     client.sendTileSelectionRequest(msg);
                     tileComponent.setSelected(newState);
                     map.incrementVersion();
+
                     if (newState) {
-                        if (!selectedTiles.contains(tile, true)) {
-                            selectedTiles.add(tile);
-                        }
+                        selectedTiles.add(tile);
                     } else {
                         selectedTiles.removeValue(tile, true);
                     }
