@@ -25,6 +25,7 @@ import net.lapidist.colony.components.GameConstants;
 final class MapTileCache implements Disposable {
 
     private static final int MAX_SPRITES_PER_CACHE = 8191;
+    private static final float ROTATION_DIVISOR = 4f;
 
     private final Array<SpriteCache> spriteCaches = new Array<>();
     private final IntArray cacheIds = new IntArray();
@@ -122,6 +123,8 @@ final class MapTileCache implements Disposable {
 
                 if (region != null) {
                     float rotation = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
+                    int index = TileRotationUtil.indexFor(tile.getX(), tile.getY());
+                    cache.setColor(1f, 1f, 1f, index / ROTATION_DIVISOR);
                     cache.add(
                             region,
                             worldX,
@@ -134,6 +137,7 @@ final class MapTileCache implements Disposable {
                             1f,
                             rotation
                     );
+                    cache.setColor(com.badlogic.gdx.graphics.Color.WHITE);
                 }
             }
 
@@ -182,6 +186,8 @@ final class MapTileCache implements Disposable {
 
                 if (region != null) {
                     float rotation = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
+                    int index = TileRotationUtil.indexFor(tile.getX(), tile.getY());
+                    cache.setColor(1f, 1f, 1f, index / ROTATION_DIVISOR);
                     cache.add(
                             region,
                             worldX,
@@ -194,6 +200,7 @@ final class MapTileCache implements Disposable {
                             1f,
                             rotation
                     );
+                    cache.setColor(com.badlogic.gdx.graphics.Color.WHITE);
                 }
             }
 

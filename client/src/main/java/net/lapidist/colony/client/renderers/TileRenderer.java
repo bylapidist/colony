@@ -35,6 +35,7 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
     private final BitmapFont font = new BitmapFont();
     private final GlyphLayout layout = new GlyphLayout();
     private static final float LABEL_OFFSET_Y = 8f;
+    private static final float ROTATION_DIVISOR = 4f;
     private final Rectangle viewBounds = new Rectangle();
     private final Vector2 tmpStart = new Vector2();
     private final Vector2 tmpEnd = new Vector2();
@@ -138,6 +139,8 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                         shader.setUniformf("u_normalStrength", graphicsSettings.getNormalMapStrength());
                         com.badlogic.gdx.Gdx.gl.glActiveTexture(com.badlogic.gdx.graphics.GL20.GL_TEXTURE0);
                     }
+                        int index = TileRotationUtil.indexFor(tile.getX(), tile.getY());
+                        spriteBatch.setColor(1f, 1f, 1f, index / ROTATION_DIVISOR);
                         String upper = type.toUpperCase(java.util.Locale.ROOT);
                         if ("GRASS".equals(upper) || "DIRT".equals(upper)) {
                             float rotation = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
@@ -156,6 +159,7 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                         } else {
                             spriteBatch.draw(region, worldCoords.x, worldCoords.y);
                         }
+                        spriteBatch.setColor(com.badlogic.gdx.graphics.Color.WHITE);
                     }
                     if (!resolver.hasTileAsset(type)) {
                         layout.setText(font, type);

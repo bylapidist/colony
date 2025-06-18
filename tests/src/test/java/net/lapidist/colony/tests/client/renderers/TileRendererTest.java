@@ -17,12 +17,14 @@ import net.lapidist.colony.client.render.SimpleMapRenderData;
 import net.lapidist.colony.client.render.data.RenderBuilding;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.settings.GraphicsSettings;
+import net.lapidist.colony.client.TileRotationUtil;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.Texture;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -33,6 +35,7 @@ public class TileRendererTest {
 
     private static final int CUSTOM_POWER = 11;
     private static final float CUSTOM_STRENGTH = 0.5f;
+    private static final float ROT_DIV = 4f;
 
     @Test
     public void drawsTileAndOverlay() {
@@ -264,6 +267,62 @@ public class TileRendererTest {
         List<Float> values = rotCaptor.getAllValues();
         assertEquals(2, values.size());
         assertNotEquals(values.get(0), values.get(1));
+    }
+
+    @Test
+    public void encodesRotationInAlphaChannel() {
+        SpriteBatch batch = mock(SpriteBatch.class);
+        ResourceLoader loader = mock(ResourceLoader.class);
+        TextureRegion region = mock(TextureRegion.class);
+        TextureRegion overlay = mock(TextureRegion.class);
+        when(loader.findRegion(anyString())).thenReturn(region);
+        when(loader.findRegion(eq("hoveredTile0"))).thenReturn(overlay);
+
+        new BaseDefinitionsMod().init();
+
+        CameraProvider camera = mock(CameraProvider.class);
+        com.badlogic.gdx.graphics.OrthographicCamera cam = new com.badlogic.gdx.graphics.OrthographicCamera();
+        com.badlogic.gdx.utils.viewport.ExtendViewport viewport =
+                new com.badlogic.gdx.utils.viewport.ExtendViewport(1f, 1f, cam);
+        cam.update();
+        when(camera.getViewport()).thenReturn(viewport);
+        when(camera.getCamera()).thenReturn(cam);
+
+        GraphicsSettings graphics = new GraphicsSettings();
+        TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver(), null, graphics);
+        reset(loader);
+
+        Array<RenderTile> tiles = new Array<>();
+        RenderTile tile = RenderTile.builder()
+                .x(0)
+                .y(0)
+                .tileType("GRASS")
+                .selected(false)
+                .wood(0)
+                .stone(0)
+                .food(0)
+                .build();
+        tiles.add(tile);
+
+        RenderTile[][] grid = new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT];
+        grid[0][0] = tile;
+        MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);
+
+        renderer.render(map);
+
+        float expected = TileRotationUtil.indexFor(0, 0) / ROT_DIV;
+        InOrder order = inOrder(batch);
+        order.verify(batch).setColor(1f, 1f, 1f, expected);
+        order.verify(batch)
+                .draw(
+                        eq(region),
+                        anyFloat(), anyFloat(),
+                        anyFloat(), anyFloat(),
+                        anyFloat(), anyFloat(),
+                        anyFloat(), anyFloat(),
+                        eq(TileRotationUtil.rotationFor(0, 0))
+                );
+        order.verify(batch).setColor(com.badlogic.gdx.graphics.Color.WHITE);
     }
 
     @Test
