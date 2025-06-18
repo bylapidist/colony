@@ -108,7 +108,8 @@ compressed with GZIP before transmission to reduce bandwidth usage.
 
 ## Deterministic game loop
 
-`MapScreen` now accumulates frame time and processes the ECS world using a fixed
-`STEP_TIME` of 1⁄60 seconds. This ensures the simulation runs at a stable rate
+`MapScreen` now maintains separate logic and render worlds. The logic world is
+stepped using a fixed `STEP_TIME` of 1⁄60 seconds while the render world uses the
+remaining time as an interpolation factor. This keeps the simulation stable
 regardless of rendering performance and removes variability from tests that rely
 on consistent delta values.

@@ -22,16 +22,17 @@ tested without a graphical context.
 
 ## ECS Systems
 
-`MapWorldBuilder` assembles the client's Artemis‑ODB world. Input systems like
+`LogicWorldBuilder` assembles the update world. Input systems like
 `CameraInputSystem`, `SelectionSystem` and `PlayerMovementSystem` handle user
 actions, while `BuildPlacementSystem` and `PlayerFactory` create entities.
 `TileUpdateSystem`, `BuildingUpdateSystem` and `ResourceUpdateSystem` apply
 server messages. `ChunkLoadSystem` and `ChunkRequestQueueSystem` request missing
-chunks. `MapRenderSystem` draws the world using a renderer from
-`SpriteMapRendererFactory`, which loads textures asynchronously as noted in
-[performance.md](performance.md#asynchronous-renderer-loading). `ParticleSystem`
-plays back `ParticleEffect` instances for events like building placement. The
-camera is managed by `PlayerCameraSystem` and the UI by `UISystem`.
+chunks. `MapWorldBuilder` builds the render world. `MapRenderSystem` draws the
+world using a renderer from `SpriteMapRendererFactory`, which loads textures
+asynchronously as noted in [performance.md](performance.md#asynchronous-renderer-loading).
+`ParticleSystem` plays back `ParticleEffect` instances for events like building
+placement. The camera is managed by `PlayerCameraSystem` and the UI by
+`UISystem`.
 
 `GameServer` does not maintain an Artemis world. It initializes an
 `EventSystem` and relies on `NetworkService`, `MapService` and other services to
@@ -97,9 +98,9 @@ broadcasts a `ResourceUpdateData` so clients stay in sync.
 ## Render Abstraction
 
 Rendering code is decoupled from map creation through the `MapRendererFactory`
-interface. `MapWorldBuilder` accepts a factory instance when building the world
-and defaults to a sprite batch based implementation. The active factory can be
-configured via the `graphics.renderer` setting.
+interface. `MapWorldBuilder` accepts a factory instance when building the render
+world and defaults to a sprite batch based implementation. The active factory
+can be configured via the `graphics.renderer` setting.
 Optional GLSL effects can be added through shader plugins as explained in
 [shaders.md](shaders.md).
 

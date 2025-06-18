@@ -63,16 +63,16 @@ public class MapWorldBuilderConfigurationTest {
                     null
             );
 
-            assertNotNull(world.getSystem(CameraInputSystem.class));
-            assertNotNull(world.getSystem(SelectionSystem.class));
-            assertNotNull(world.getSystem(BuildPlacementSystem.class));
-            assertNotNull(world.getSystem(PlayerMovementSystem.class));
+            assertNull(world.getSystem(CameraInputSystem.class));
+            assertNull(world.getSystem(SelectionSystem.class));
+            assertNull(world.getSystem(BuildPlacementSystem.class));
+            assertNull(world.getSystem(PlayerMovementSystem.class));
             assertNotNull(world.getSystem(MapRenderSystem.class));
             assertNull(world.getSystem(MapInitSystem.class));
             assertNull(world.getSystem(MapRenderDataSystem.class));
             assertNotNull(world.getSystem(LightingSystem.class));
-            assertNotNull(world.getSystem(net.lapidist.colony.client.systems.CelestialSystem.class));
-            assertNotNull(world.getSystem(SeasonCycleSystem.class));
+            assertNull(world.getSystem(net.lapidist.colony.client.systems.CelestialSystem.class));
+            assertNull(world.getSystem(SeasonCycleSystem.class));
 
             world.dispose();
         }
@@ -111,10 +111,10 @@ public class MapWorldBuilderConfigurationTest {
 
             assertNotNull(world.getSystem(MapInitSystem.class));
             assertNotNull(world.getSystem(PlayerCameraSystem.class));
-            assertNotNull(world.getSystem(PlayerMovementSystem.class));
+            assertNull(world.getSystem(PlayerMovementSystem.class));
             assertNotNull(world.getSystem(MapRenderDataSystem.class));
-            assertNotNull(world.getSystem(net.lapidist.colony.client.systems.CelestialSystem.class));
-            assertNotNull(world.getSystem(SeasonCycleSystem.class));
+            assertNull(world.getSystem(net.lapidist.colony.client.systems.CelestialSystem.class));
+            assertNull(world.getSystem(SeasonCycleSystem.class));
             assertEquals(1, world.getAspectSubscriptionManager()
                     .get(Aspect.all(PlayerResourceComponent.class))
                     .getEntities().size());
