@@ -18,6 +18,8 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(GdxTestRunner.class)
 public class SettingsTest {
+    private static final int RES_W = 1024;
+    private static final int RES_H = 768;
 
     @Test
     public void savesAndLoadsLocale() throws IOException {
@@ -92,5 +94,22 @@ public class SettingsTest {
         assertEquals(true, loaded.getGraphicsSettings().isSpecularMapsEnabled());
         assertEquals(false, loaded.getGraphicsSettings().isDayNightCycleEnabled());
         assertEquals(rays, loaded.getGraphicsSettings().getLightRays());
+    }
+
+    @Test
+    public void savesAndLoadsWindowSettings() throws IOException {
+        Path dir = Files.createTempDirectory("settings-test-window");
+        Paths paths = new Paths(new TestPathService(dir));
+
+        Settings settings = new Settings();
+        settings.setWidth(RES_W);
+        settings.setHeight(RES_H);
+        settings.setFullscreen(true);
+        settings.save(paths);
+
+        Settings loaded = Settings.load(paths);
+        assertEquals(RES_W, loaded.getWidth());
+        assertEquals(RES_H, loaded.getHeight());
+        assertEquals(true, loaded.isFullscreen());
     }
 }

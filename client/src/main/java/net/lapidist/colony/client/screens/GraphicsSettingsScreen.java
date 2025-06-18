@@ -26,6 +26,8 @@ public final class GraphicsSettingsScreen extends BaseScreen {
     private final CheckBox normalBox;
     private final CheckBox specularBox;
     private final SelectBox<String> rendererBox;
+    private final SelectBox<String> resolutionBox;
+    private final CheckBox fullscreenBox;
     private final CheckBox cacheBox;
     private final CheckBox lightingBox;
     private final CheckBox dayNightBox;
@@ -40,6 +42,7 @@ public final class GraphicsSettingsScreen extends BaseScreen {
         this.colony = game;
 
         GraphicsSettings graphics = colony.getSettings().getGraphicsSettings();
+        net.lapidist.colony.settings.Settings general = colony.getSettings();
         Table root = getRoot();
 
         aaBox = new CheckBox(I18n.get("graphics.antialiasing"), getSkin());
@@ -55,6 +58,12 @@ public final class GraphicsSettingsScreen extends BaseScreen {
         rendererBox = new SelectBox<>(getSkin());
         rendererBox.setItems("sprite");
         rendererBox.setSelected(graphics.getRenderer());
+        resolutionBox = new SelectBox<>(getSkin());
+        resolutionBox.setItems("1280x720", "1600x900", "1920x1080");
+        String resText = general.getWidth() + "x" + general.getHeight();
+        resolutionBox.setSelected(resText);
+        fullscreenBox = new CheckBox(I18n.get("graphics.fullscreen"), getSkin());
+        fullscreenBox.setChecked(general.isFullscreen());
         cacheBox = new CheckBox(I18n.get("graphics.spritecache"), getSkin());
         cacheBox.setChecked(graphics.isSpriteCacheEnabled());
         lightingBox = new CheckBox(I18n.get("graphics.lighting"), getSkin());
@@ -75,6 +84,8 @@ public final class GraphicsSettingsScreen extends BaseScreen {
         options.add(lightingBox).left().row();
         options.add(dayNightBox).left().row();
         options.add(rendererBox).left().row();
+        options.add(resolutionBox).left().row();
+        options.add(fullscreenBox).left().row();
 
         ScrollPane scroll = new ScrollPane(options, getSkin());
         scroll.setScrollingDisabled(true, false);
@@ -98,6 +109,10 @@ public final class GraphicsSettingsScreen extends BaseScreen {
                 graphics.setLightingEnabled(lightingBox.isChecked());
                 graphics.setDayNightCycleEnabled(dayNightBox.isChecked());
                 graphics.setRenderer(rendererBox.getSelected());
+                String[] res = resolutionBox.getSelected().split("x");
+                general.setWidth(Integer.parseInt(res[0]));
+                general.setHeight(Integer.parseInt(res[1]));
+                general.setFullscreen(fullscreenBox.isChecked());
                 save();
             }
         });

@@ -83,3 +83,15 @@ Higher values produce smoother shadows but reduce performance. The default is
 `graphics.normalStrength` controls how strongly normal maps affect lighting. The
 value ranges from `0` (disabled) to `1` (full effect) and defaults to `0.5`.
 
+## Window Settings
+
+`width` and `height` define the window resolution in windowed mode. Set
+`fullscreen=true` to start the game using the primary monitor's current display
+mode instead.
+
+```properties
+width=1920
+height=1080
+fullscreen=false
+```
+

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -31,8 +32,12 @@ public class GraphicsSettingsScreenTest {
     private static final int BUTTON_TABLE_INDEX = 1;
     private static final int AA_INDEX = 0;
     private static final int DAY_NIGHT_INDEX = 7;
+    private static final int RES_INDEX = 9;
+    private static final int FULL_INDEX = 10;
     private static final int BACK_INDEX = 0;
     private static final int SAVE_INDEX = 1;
+    private static final int RES_W = 1280;
+    private static final int RES_H = 720;
 
     private static Table getRoot(final GraphicsSettingsScreen screen) throws Exception {
         Field f = screen.getClass().getSuperclass().getDeclaredField("root");
@@ -68,6 +73,26 @@ public class GraphicsSettingsScreenTest {
         save.fire(new ChangeListener.ChangeEvent());
         assertTrue(settings.getGraphicsSettings().isAntialiasingEnabled());
         assertFalse(settings.getGraphicsSettings().isDayNightCycleEnabled());
+    }
+
+    @Test
+    public void saveAppliesWindowSettings() throws Exception {
+        Settings settings = new Settings();
+        Colony colony = mock(Colony.class);
+        when(colony.getSettings()).thenReturn(settings);
+        Stage stage = new Stage(new ScreenViewport(), mock(Batch.class));
+        GraphicsSettingsScreen screen = new GraphicsSettingsScreen(colony, stage);
+        Table options = getOptions(screen);
+        SelectBox res = (SelectBox) options.getChildren().get(RES_INDEX);
+        res.setSelected(RES_W + "x" + RES_H);
+        CheckBox fs = (CheckBox) options.getChildren().get(FULL_INDEX);
+        fs.setChecked(true);
+        Table buttons = getButtons(screen);
+        TextButton save = (TextButton) buttons.getChildren().get(SAVE_INDEX);
+        save.fire(new ChangeListener.ChangeEvent());
+        assertEquals(RES_W, settings.getWidth());
+        assertEquals(RES_H, settings.getHeight());
+        assertTrue(settings.isFullscreen());
     }
 
     @Test
