@@ -259,6 +259,7 @@ public final class MapWorldBuilder {
         }
         PlayerCameraSystem cameraSystem = world.getSystem(PlayerCameraSystem.class);
         if (cameraSystem != null && cameraPos != null) {
+            cameraSystem.setTargetPosition(new com.badlogic.gdx.math.Vector2(cameraPos.x(), cameraPos.y()));
             cameraSystem.getCamera().position.set(cameraPos.x(), cameraPos.y(), 0);
             cameraSystem.getCamera().update();
         }
