@@ -33,6 +33,11 @@ chunks. `MapRenderSystem` draws the world using a renderer from
 plays back `ParticleEffect` instances for events like building placement. The
 camera is managed by `PlayerCameraSystem` and the UI by `UISystem`.
 
+`LogicWorldBuilder` constructs the update-only world used for deterministic
+simulation. `MapScreen` maintains both a logic world and a render world. The
+logic world advances at a fixed rate while the render world interpolates between
+updates each frame.
+
 `GameServer` does not maintain an Artemis world. It initializes an
 `EventSystem` and relies on `NetworkService`, `MapService` and other services to
 mutate the shared `MapState`. Kryonet handlers convert incoming messages into

@@ -80,6 +80,7 @@ public class MapWorldBuilderConfigurationTest {
 
     @Test
     public void builderRegistersMapSystems() {
+        new net.lapidist.colony.base.BaseDefinitionsMod().init();
         MapState state = new MapState();
         state.putTile(TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)
@@ -125,6 +126,7 @@ public class MapWorldBuilderConfigurationTest {
 
     @Test
     public void builderFromStateUsesInitialResources() {
+        new net.lapidist.colony.base.BaseDefinitionsMod().init();
         ResourceData resources = new ResourceData(WOOD, STONE, FOOD);
         MapState state = MapState.builder()
                 .playerResources(resources)
@@ -200,6 +202,7 @@ public class MapWorldBuilderConfigurationTest {
 
     @Test
     public void builderFromStateUsesPlayerPosition() {
+        new net.lapidist.colony.base.BaseDefinitionsMod().init();
         final int x = 2;
         final int y = 3;
         PlayerPosition pos = new PlayerPosition(x, y);
