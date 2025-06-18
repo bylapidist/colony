@@ -9,6 +9,7 @@ import net.lapidist.colony.client.screens.LoadGameScreen;
 import net.lapidist.colony.client.screens.MainMenuScreen;
 import net.lapidist.colony.client.screens.ModSelectionScreen;
 import net.lapidist.colony.client.screens.SettingsScreen;
+import net.lapidist.colony.settings.Settings;
 import org.mockito.MockedConstruction;
 import static org.mockito.Mockito.mockConstruction;
 import net.lapidist.colony.tests.GdxTestRunner;
@@ -59,6 +60,7 @@ public class MainMenuScreenTest {
     @Test
     public void clickingSettingsOpensSettingsScreen() throws Exception {
         Colony colony = mock(Colony.class);
+        when(colony.getSettings()).thenReturn(new Settings());
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             MainMenuScreen screen = new MainMenuScreen(colony);
             TextButton settings = (TextButton) getRoot(screen).getChildren().get(SETTINGS_INDEX);
