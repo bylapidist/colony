@@ -51,6 +51,7 @@ public class GameSimulationInputSelectionTest {
             Vector2 screen = CameraUtils.worldToScreenCoords(
                     sim.getCamera().getViewport(), 0, 0
             );
+            sim.getSelection().setSelectMode(true);
             sim.getSelection().tap(screen.x, screen.y);
 
             Thread.sleep(WAIT_MS);

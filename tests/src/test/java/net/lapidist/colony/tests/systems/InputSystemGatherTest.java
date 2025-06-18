@@ -56,6 +56,7 @@ public class InputSystemGatherTest {
 
         Vector2 screenCoords = CameraUtils.worldToScreenCoords(camera.getViewport(), 0, 0);
         SelectionSystem input = world.getSystem(SelectionSystem.class);
+        input.setSelectMode(true);
         input.tap(screenCoords.x, screenCoords.y);
 
         verify(client).sendGatherRequest(any());
