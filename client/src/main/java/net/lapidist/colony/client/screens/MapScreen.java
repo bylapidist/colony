@@ -70,6 +70,9 @@ public final class MapScreen implements Screen {
     @Override
     public void resume() {
         events.resume();
+        float scale = colony.getSettings() == null ? 1f : colony.getSettings().getUiScale();
+        stage.getRoot().setScale(scale);
+        events.resize(com.badlogic.gdx.Gdx.graphics.getWidth(), com.badlogic.gdx.Gdx.graphics.getHeight());
     }
 
     @Override
@@ -79,6 +82,9 @@ public final class MapScreen implements Screen {
 
     @Override
     public void show() {
+        float scale = colony.getSettings() == null ? 1f : colony.getSettings().getUiScale();
+        stage.getRoot().setScale(scale);
+        events.resize(com.badlogic.gdx.Gdx.graphics.getWidth(), com.badlogic.gdx.Gdx.graphics.getHeight());
         events.show();
     }
 
