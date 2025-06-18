@@ -29,6 +29,7 @@ import net.lapidist.colony.client.systems.network.ResourceUpdateSystem;
 import net.lapidist.colony.client.systems.CelestialSystem;
 import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.client.systems.MapRenderDataSystem;
+import net.lapidist.colony.client.systems.LightOcclusionSystem;
 import net.lapidist.colony.components.entities.CelestialBodyComponent;
 import net.lapidist.colony.components.state.CameraPosition;
 import net.lapidist.colony.components.state.MutableEnvironmentState;
@@ -229,6 +230,9 @@ public final class MapWorldBuilder {
         builder.with(new PlayerCameraSystem());
 
         ShaderPlugin plugin = new net.lapidist.colony.client.graphics.LightsNormalMapShaderPlugin();
+        if (plugin instanceof net.lapidist.colony.client.graphics.LightsNormalMapShaderPlugin ln) {
+            builder.with(new net.lapidist.colony.client.systems.LightOcclusionSystem(ln.getWorld()));
+        }
 
         World world = new World(builder.build());
         MapRenderSystem renderSystem = world.getSystem(MapRenderSystem.class);
@@ -236,6 +240,12 @@ public final class MapWorldBuilder {
             MapRenderer renderer = actualFactory.create(world, plugin);
             renderSystem.setMapRenderer(renderer);
             renderSystem.setCameraProvider(world.getSystem(PlayerCameraSystem.class));
+            if (plugin instanceof net.lapidist.colony.client.graphics.LightsNormalMapShaderPlugin ln) {
+                LightOcclusionSystem los = world.getSystem(LightOcclusionSystem.class);
+                if (los != null) {
+                    los.setWorld(ln.getWorld());
+                }
+            }
         }
         LightingSystem lightingSystem = world.getSystem(LightingSystem.class);
         if (plugin instanceof net.lapidist.colony.client.graphics.LightsNormalMapShaderPlugin ln

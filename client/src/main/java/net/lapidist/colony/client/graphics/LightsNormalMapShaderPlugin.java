@@ -50,6 +50,11 @@ public final class LightsNormalMapShaderPlugin implements LightingPlugin, Unifor
         return rayHandler;
     }
 
+    /** Current Box2D world used for occlusion bodies. */
+    public World getWorld() {
+        return world;
+    }
+
     @Override
     public String id() {
         return "lights-normalmap";
