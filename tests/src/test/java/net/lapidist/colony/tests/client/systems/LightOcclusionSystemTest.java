@@ -55,8 +55,10 @@ public class LightOcclusionSystemTest {
 
         var player = world.createEntity();
         PlayerComponent pc = new PlayerComponent();
-        pc.setX(3f);
-        pc.setY(4f);
+        final float x = 3f;
+        final float y = 4f;
+        pc.setX(x);
+        pc.setY(y);
         player.edit().add(pc);
 
         world.process();
@@ -64,8 +66,9 @@ public class LightOcclusionSystemTest {
                 new com.badlogic.gdx.utils.Array<>();
         box.getBodies(bodies);
         com.badlogic.gdx.physics.box2d.Body body = bodies.get(0);
-        assertEquals(3f, body.getPosition().x, 0.001f);
-        assertEquals(4f, body.getPosition().y, 0.001f);
+        final float epsilon = 0.001f;
+        assertEquals(x, body.getPosition().x, epsilon);
+        assertEquals(y, body.getPosition().y, epsilon);
         world.dispose();
         box.dispose();
     }
