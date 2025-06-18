@@ -17,48 +17,35 @@ import java.util.Locale;
  */
 public final class SettingsScreen extends BaseScreen {
     private final Colony colony;
+    private static final Locale[] SUPPORTED_LOCALES = new Locale[] {
+            Locale.ENGLISH,
+            Locale.FRENCH,
+            new Locale("es"),
+            Locale.GERMAN
+    };
+    private int localeIndex;
+    private final TextButton language;
 
     public SettingsScreen(final Colony game) {
         this.colony = game;
-
-        TextButton en = new TextButton(I18n.get("language.en"), getSkin());
-        TextButton fr = new TextButton(I18n.get("language.fr"), getSkin());
-        TextButton es = new TextButton(I18n.get("language.es"), getSkin());
-        TextButton de = new TextButton(I18n.get("language.de"), getSkin());
+        localeIndex = findLocaleIndex(colony.getSettings().getLocale());
+        language = new TextButton(getLanguageText(SUPPORTED_LOCALES[localeIndex]), getSkin());
         TextButton keybinds = new TextButton(I18n.get("settings.keybinds"), getSkin());
         TextButton graphics = new TextButton(I18n.get("settings.graphics"), getSkin());
         TextButton back = new TextButton(I18n.get("common.back"), getSkin());
 
-        getRoot().add(en).row();
-        getRoot().add(fr).row();
-        getRoot().add(es).row();
-        getRoot().add(de).row();
+        getRoot().add(language).row();
         getRoot().add(keybinds).row();
         getRoot().add(graphics).row();
         getRoot().add(back).row();
 
-        en.addListener(new ChangeListener() {
+        language.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                switchLocale(Locale.ENGLISH);
-            }
-        });
-        fr.addListener(new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                switchLocale(Locale.FRENCH);
-            }
-        });
-        es.addListener(new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                switchLocale(new Locale("es"));
-            }
-        });
-        de.addListener(new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                switchLocale(Locale.GERMAN);
+                localeIndex = (localeIndex + 1) % SUPPORTED_LOCALES.length;
+                Locale next = SUPPORTED_LOCALES[localeIndex];
+                switchLocale(next);
+                language.setText(getLanguageText(next));
             }
         });
         keybinds.addListener(new ChangeListener() {
@@ -91,6 +78,19 @@ public final class SettingsScreen extends BaseScreen {
                 return false;
             }
         });
+    }
+
+    private static int findLocaleIndex(final Locale locale) {
+        for (int i = 0; i < SUPPORTED_LOCALES.length; i++) {
+            if (SUPPORTED_LOCALES[i].getLanguage().equals(locale.getLanguage())) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    private static String getLanguageText(final Locale locale) {
+        return I18n.get("language." + locale.getLanguage());
     }
 
     private void switchLocale(final Locale locale) {

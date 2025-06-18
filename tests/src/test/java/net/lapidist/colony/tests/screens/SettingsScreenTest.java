@@ -25,9 +25,9 @@ import static org.mockito.Mockito.*;
 @RunWith(GdxTestRunner.class)
 public class SettingsScreenTest {
 
-    private static final int KEYBINDS_INDEX = 4;
-    private static final int GRAPHICS_INDEX = 5;
-    private static final int BACK_BUTTON_INDEX = 6;
+    private static final int KEYBINDS_INDEX = 1;
+    private static final int GRAPHICS_INDEX = 2;
+    private static final int BACK_BUTTON_INDEX = 3;
 
     private static Table getRoot(final SettingsScreen screen) throws Exception {
         Field f = screen.getClass().getSuperclass().getDeclaredField("root");
