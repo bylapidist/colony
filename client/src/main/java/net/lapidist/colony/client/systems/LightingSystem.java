@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.IntMap;
 import net.lapidist.colony.components.entities.PlayerComponent;
 import net.lapidist.colony.components.light.PointLightComponent;
 import net.lapidist.colony.components.state.MutableEnvironmentState;
+import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.client.events.ResizeEvent;
 import net.mostlyoriginal.api.event.common.Subscribe;
 
@@ -42,6 +43,7 @@ public final class LightingSystem extends BaseSystem implements Disposable {
     private ComponentMapper<PlayerComponent> playerMapper;
 
     private static final float HOURS_PER_DAY = 24f;
+    private static final float DAY_LENGTH_SECONDS = GameConstants.DAY_LENGTH_SECONDS;
     private static final float SUNRISE_TIME = 6f;
     private static final float NOON_TIME = 12f;
     private static final float SUNSET_TIME = 18f;
@@ -145,7 +147,8 @@ public final class LightingSystem extends BaseSystem implements Disposable {
     }
 
     private void updateDayNight() {
-        float t = wrap(environment.getTimeOfDay() + world.getDelta());
+        float t = wrap(environment.getTimeOfDay()
+                + world.getDelta() * HOURS_PER_DAY / DAY_LENGTH_SECONDS);
         environment.setTimeOfDay(t);
         timeOfDay = t;
         Color c = clearScreenSystem.getColor();
