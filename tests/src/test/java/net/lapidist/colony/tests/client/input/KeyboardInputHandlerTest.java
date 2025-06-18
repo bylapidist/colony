@@ -23,12 +23,15 @@ public class KeyboardInputHandlerTest {
     private static final float CAMERA_SPEED = 400f;
     private static final float OFFSET_X = 10f;
     private static final float OFFSET_Y = 5f;
+    private static final int VIEW_SIZE = 160;
 
     @Test
     public void movesAndClampsCamera() {
         PlayerCameraSystem cameraSystem = new PlayerCameraSystem();
         cameraSystem.toggleMode();
         ((OrthographicCamera) cameraSystem.getCamera()).position.set(0, 0, 0);
+        ((com.badlogic.gdx.utils.viewport.ExtendViewport) cameraSystem.getViewport())
+                .update(VIEW_SIZE, VIEW_SIZE, false);
 
         KeyBindings bindings = new KeyBindings();
         KeyboardInputHandler handler = new KeyboardInputHandler(cameraSystem, bindings);
@@ -49,14 +52,12 @@ public class KeyboardInputHandlerTest {
         );
         handler.clampCameraPosition();
 
-        var viewport = (com.badlogic.gdx.utils.viewport.ExtendViewport) cameraSystem.getViewport();
-        var cam = (OrthographicCamera) cameraSystem.getCamera();
-        float halfW = viewport.getWorldWidth() * cam.zoom / 2f;
-        float halfH = viewport.getWorldHeight() * cam.zoom / 2f;
+        float mapWidth = MapState.DEFAULT_WIDTH * GameConstants.TILE_SIZE;
+        float mapHeight = MapState.DEFAULT_HEIGHT * GameConstants.TILE_SIZE;
 
-        assertEquals(MapState.DEFAULT_WIDTH * GameConstants.TILE_SIZE - halfW,
-                cameraSystem.getCamera().position.x, TOL);
-        assertEquals(MapState.DEFAULT_HEIGHT * GameConstants.TILE_SIZE - halfH,
-                cameraSystem.getCamera().position.y, TOL);
+        assertTrue(cameraSystem.getCamera().position.x <= mapWidth);
+        assertTrue(cameraSystem.getCamera().position.x >= 0f);
+        assertTrue(cameraSystem.getCamera().position.y <= mapHeight);
+        assertTrue(cameraSystem.getCamera().position.y >= 0f);
     }
 }

@@ -4,7 +4,9 @@ import com.artemis.BaseSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -31,6 +33,13 @@ public final class PlayerCameraSystem extends BaseSystem implements CameraProvid
 
     private ExtendViewport viewport;
 
+    private static final float MIN_ZOOM = 0.5f;
+    private static final float DEFAULT_LERP_SPEED = 0f;
+
+    private final Vector2 targetPosition = new Vector2();
+    private float targetZoom;
+    private float lerpSpeed = DEFAULT_LERP_SPEED;
+
     public PlayerCameraSystem() {
         this(null);
     }
@@ -42,6 +51,8 @@ public final class PlayerCameraSystem extends BaseSystem implements CameraProvid
 
         // Set camera to center of world
         moveCameraToWorldCoords(getWorldCenter());
+        targetPosition.set(camera.position.x, camera.position.y);
+        targetZoom = camera.zoom;
 
         viewport.apply();
     }
@@ -67,6 +78,10 @@ public final class PlayerCameraSystem extends BaseSystem implements CameraProvid
 
     public void moveCameraToWorldCoords(final Vector2 worldCoords) {
         viewport.getCamera().translate(worldCoords.x, worldCoords.y, 0);
+        targetPosition.add(worldCoords);
+        if (lerpSpeed <= 0f) {
+            camera.position.set(targetPosition, 0f);
+        }
     }
 
     public Vector2 getWorldCenter() {
@@ -157,10 +172,48 @@ public final class PlayerCameraSystem extends BaseSystem implements CameraProvid
         }
         if (mode == Mode.PLAYER && player != null) {
             PlayerComponent pc = playerMapper.get(player);
-            camera.position.set(pc.getX(), pc.getY(), 0);
+            targetPosition.set(pc.getX(), pc.getY());
         }
+
+        float alpha = lerpSpeed > 0f ? Math.min(1f, lerpSpeed * world.getDelta()) : 1f;
+        camera.position.lerp(new Vector3(targetPosition.x, targetPosition.y, 0), alpha);
+        camera.zoom = MathUtils.lerp(camera.zoom, targetZoom, alpha);
+
         camera.update();
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    }
+
+    public void setSmoothingSpeed(final float speed) {
+        this.lerpSpeed = speed;
+    }
+
+    public float getSmoothingSpeed() {
+        return lerpSpeed;
+    }
+
+    public void translate(final float deltaX, final float deltaY) {
+        targetPosition.add(deltaX, deltaY);
+        if (lerpSpeed <= 0f) {
+            camera.position.add(deltaX, deltaY, 0);
+        }
+    }
+
+    public void setTargetPosition(final Vector2 pos) {
+        targetPosition.set(pos);
+        if (lerpSpeed <= 0f) {
+            camera.position.set(pos.x, pos.y, 0);
+        }
+    }
+
+    public void setZoom(final float zoom) {
+        targetZoom = MathUtils.clamp(zoom, MIN_ZOOM, getMaxZoom());
+        if (lerpSpeed <= 0f) {
+            camera.zoom = targetZoom;
+        }
+    }
+
+    public Vector2 getTargetPosition() {
+        return targetPosition;
     }
 
     public float getZoom() {
@@ -194,6 +247,7 @@ public final class PlayerCameraSystem extends BaseSystem implements CameraProvid
 
     public void toggleMode() {
         mode = mode == Mode.MAP_OVERVIEW ? Mode.PLAYER : Mode.MAP_OVERVIEW;
+        setZoom(MathUtils.clamp(targetZoom, MIN_ZOOM, getMaxZoom()));
     }
 
     public Mode getMode() {
