@@ -155,7 +155,7 @@ public final class MapUiBuilder {
         infoTable.add(progressBar).pad(PADDING);
         stage.addActor(infoTable);
 
-        stage.addListener(createStageListener(keyBindings, chatBox, minimapActor, minimapButton));
+        stage.addListener(createStageListener(colony, keyBindings, chatBox, minimapActor, minimapButton));
         return new MapUi(stage, minimapActor, chatBox);
     }
 
@@ -252,6 +252,7 @@ public final class MapUiBuilder {
     }
 
     private static InputListener createStageListener(
+            final Colony colony,
             final KeyBindings keyBindings,
             final ChatBox chatBox,
             final MinimapActor minimapActor,
@@ -270,6 +271,10 @@ public final class MapUiBuilder {
                     minimapButton.setProgrammaticChangeEvents(false);
                     minimapButton.setChecked(visible);
                     minimapButton.setProgrammaticChangeEvents(true);
+                    return true;
+                }
+                if (keycode == keyBindings.getKey(KeyAction.MENU)) {
+                    colony.returnToMainMenu();
                     return true;
                 }
                 return false;

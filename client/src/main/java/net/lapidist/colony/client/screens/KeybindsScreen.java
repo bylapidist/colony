@@ -95,7 +95,7 @@ public final class KeybindsScreen extends BaseScreen {
         getStage().addListener(new InputListener() {
             @Override
             public boolean keyDown(final InputEvent event, final int keycode) {
-                if (awaiting == null && keycode == Input.Keys.ESCAPE) {
+                if (awaiting == null && keycode == bindings.getKey(KeyAction.MENU)) {
                     colony.setScreen(new SettingsScreen(colony));
                     return true;
                 }
