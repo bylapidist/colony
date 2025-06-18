@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.IntMap;
 import net.lapidist.colony.components.entities.PlayerComponent;
 import net.lapidist.colony.components.light.PointLightComponent;
+import net.lapidist.colony.components.state.MutableEnvironmentState;
 
 /**
  * Consolidated lighting system combining dynamic lights and day/night cycle.
@@ -28,6 +29,7 @@ public final class LightingSystem extends BaseSystem implements Disposable {
     private final ClearScreenSystem clearScreenSystem;
     private final int rays;
     private final LightFactory factory;
+    private final MutableEnvironmentState environment;
     private final IntMap<PointLight> lights = new IntMap<>();
 
     private RayHandler rayHandler;
@@ -45,22 +47,35 @@ public final class LightingSystem extends BaseSystem implements Disposable {
     private static final Color DAY_COLOR = new Color(0.6f, 0.7f, 1f, 1f);
     private static final float NIGHT_AMBIENT_SCALE = 0.1f;
 
-    public LightingSystem(final ClearScreenSystem clearSystem) {
-        this(clearSystem, DEFAULT_RAYS);
+    public LightingSystem(final ClearScreenSystem clearSystem,
+                          final MutableEnvironmentState env) {
+        this(clearSystem, DEFAULT_RAYS, env);
     }
 
-    public LightingSystem(final ClearScreenSystem clearSystem, final int rayCount) {
-        this(clearSystem, (h, c) -> new PointLight(h, rayCount, c.getColor(), c.getRadius(), 0f, 0f), rayCount);
+    public LightingSystem(final ClearScreenSystem clearSystem,
+                          final int rayCount,
+                          final MutableEnvironmentState env) {
+        this(clearSystem,
+                (h, c) -> new PointLight(h, rayCount, c.getColor(), c.getRadius(), 0f, 0f),
+                rayCount,
+                env);
     }
 
-    public LightingSystem(final ClearScreenSystem clearSystem, final LightFactory factoryParam) {
-        this(clearSystem, factoryParam, DEFAULT_RAYS);
+    public LightingSystem(final ClearScreenSystem clearSystem,
+                          final LightFactory factoryParam,
+                          final MutableEnvironmentState env) {
+        this(clearSystem, factoryParam, DEFAULT_RAYS, env);
     }
 
-    private LightingSystem(final ClearScreenSystem clearSystem, final LightFactory factoryParam, final int rayCount) {
+    private LightingSystem(final ClearScreenSystem clearSystem,
+                           final LightFactory factoryParam,
+                           final int rayCount,
+                           final MutableEnvironmentState env) {
         this.clearScreenSystem = clearSystem;
         this.factory = factoryParam;
         this.rays = rayCount;
+        this.environment = env == null ? new MutableEnvironmentState() : env;
+        this.timeOfDay = this.environment.getTimeOfDay();
     }
 
     /** Assign the handler used for lighting. */
@@ -75,12 +90,14 @@ public final class LightingSystem extends BaseSystem implements Disposable {
 
     /** Current time of day between 0 and 24. */
     public float getTimeOfDay() {
-        return timeOfDay;
+        return environment.getTimeOfDay();
     }
 
     /** Set the time of day, values wrap to the 0-24 range. */
     public void setTimeOfDay(final float time) {
-        timeOfDay = wrap(time);
+        float wrapped = wrap(time);
+        timeOfDay = wrapped;
+        environment.setTimeOfDay(wrapped);
     }
 
     /** Number of rays used when creating each light. */
@@ -95,7 +112,7 @@ public final class LightingSystem extends BaseSystem implements Disposable {
 
     /** Calculate the direction of the sun for the current time of day. */
     public Vector3 getSunDirection(final Vector3 out) {
-        float angle = (timeOfDay / HOURS_PER_DAY) * MathUtils.PI2 - MathUtils.HALF_PI;
+        float angle = (environment.getTimeOfDay() / HOURS_PER_DAY) * MathUtils.PI2 - MathUtils.HALF_PI;
         return out.set(0f, MathUtils.cos(angle), MathUtils.sin(angle)).nor();
     }
 
@@ -115,10 +132,12 @@ public final class LightingSystem extends BaseSystem implements Disposable {
     }
 
     private void updateDayNight() {
-        timeOfDay = wrap(timeOfDay + world.getDelta());
+        float t = wrap(environment.getTimeOfDay() + world.getDelta());
+        environment.setTimeOfDay(t);
+        timeOfDay = t;
         Color c = clearScreenSystem.getColor();
-        gradientColor(timeOfDay, c);
-        float brightness = 1f - calculateBrightness(timeOfDay);
+        gradientColor(t, c);
+        float brightness = 1f - calculateBrightness(t);
         float ambient = brightness * NIGHT_AMBIENT_SCALE;
         if (rayHandler != null) {
             rayHandler.setAmbientLight(ambient, ambient, ambient, 1f);

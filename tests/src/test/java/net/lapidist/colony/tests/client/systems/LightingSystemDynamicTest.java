@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import static org.mockito.Mockito.*;
 import net.lapidist.colony.client.systems.LightingSystem;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
+import net.lapidist.colony.components.state.MutableEnvironmentState;
 import net.lapidist.colony.components.entities.PlayerComponent;
 import net.lapidist.colony.components.light.PointLightComponent;
 import net.lapidist.colony.tests.GdxTestRunner;
@@ -26,7 +27,8 @@ public class LightingSystemDynamicTest {
     public void createsAndRemovesLights() {
         ClearScreenSystem clear = new ClearScreenSystem(new Color());
         LightingSystem.LightFactory factory = (h, c) -> mock(box2dLight.PointLight.class);
-        LightingSystem lighting = new LightingSystem(clear, factory);
+        MutableEnvironmentState env = new MutableEnvironmentState();
+        LightingSystem lighting = new LightingSystem(clear, factory, env);
         World world = new World(new WorldConfigurationBuilder()
                 .with(clear, lighting)
                 .build());
@@ -58,7 +60,8 @@ public class LightingSystemDynamicTest {
     @Test
     public void usesConfiguredRayCount() {
         final int rays = 24;
-        LightingSystem lighting = new LightingSystem(new ClearScreenSystem(new Color()), rays);
+        MutableEnvironmentState env2 = new MutableEnvironmentState();
+        LightingSystem lighting = new LightingSystem(new ClearScreenSystem(new Color()), rays, env2);
         assertEquals(rays, lighting.getRayCount());
     }
 }
