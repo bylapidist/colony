@@ -3,6 +3,7 @@ package net.lapidist.colony.tests.screens;
 import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.client.network.GameClient;
@@ -23,12 +24,20 @@ import org.mockito.MockedStatic;
 import java.lang.reflect.Field;
 
 import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(GdxTestRunner.class)
 public class MapScreenTest {
     private static final float DELTA = 0.5f;
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
+    private static final float SCALE = 1.5f;
+
+    private static Stage extractStage(final MapScreen screen) throws Exception {
+        Field stageField = MapScreen.class.getDeclaredField("stage");
+        stageField.setAccessible(true);
+        return (Stage) stageField.get(screen);
+    }
 
     @Test
     public void delegatesLifecycleToHandlerAndProcessesWorld() throws Exception {
@@ -87,6 +96,35 @@ public class MapScreenTest {
             verify(handler).dispose();
             verify(world).dispose();
             verify(minimap).dispose();
+        }
+    }
+
+    @Test
+    public void viewportUsesUiScale() throws Exception {
+        Colony colony = mock(Colony.class);
+        Settings settings = new Settings();
+        settings.setUiScale(SCALE);
+        when(colony.getSettings()).thenReturn(settings);
+        MapState state = new MapState();
+        GameClient client = mock(GameClient.class);
+
+        try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class);
+             MockedStatic<MapWorldBuilder> worldStatic = mockStatic(MapWorldBuilder.class);
+             MockedStatic<MapUiBuilder> uiStatic = mockStatic(MapUiBuilder.class)) {
+            worldStatic.when(() -> MapWorldBuilder.builder(eq(state), eq(client), any(Stage.class),
+                    eq(settings.getKeyBindings()), eq(settings.getGraphicsSettings())))
+                    .thenReturn(new WorldConfigurationBuilder());
+            worldStatic.when(() -> MapWorldBuilder.build(any(), isNull(), eq(settings), any(),
+                    eq(client), any(), any()))
+                    .thenReturn(new World(new WorldConfigurationBuilder().build()));
+            uiStatic.when(() -> MapUiBuilder.build(any(Stage.class), any(World.class), eq(client), eq(colony)))
+                    .thenAnswer(inv -> new MapUi(inv.getArgument(0), mock(MinimapActor.class),
+                            mock(net.lapidist.colony.client.ui.ChatBox.class)));
+
+            MapScreen screen = new MapScreen(colony, state, client);
+            Stage stage = extractStage(screen);
+            ScreenViewport vp = (ScreenViewport) stage.getViewport();
+            assertEquals(1f / settings.getUiScale(), vp.getUnitsPerPixel(), 0f);
         }
     }
 }
