@@ -8,9 +8,8 @@ import net.lapidist.colony.registry.Registries;
 import net.lapidist.colony.registry.ResourceDefinition;
 import net.lapidist.colony.registry.BuildingDefinition;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import net.lapidist.colony.mod.ScheduledService;
+
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.concurrent.locks.ReentrantLock;
@@ -18,15 +17,12 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Periodically increases player food based on existing farms.
  */
-public final class ResourceProductionService implements net.lapidist.colony.mod.GameSystem {
-
-    private final long interval;
+public final class ResourceProductionService extends ScheduledService {
     private final Supplier<MapState> supplier;
     private final Consumer<MapState> consumer;
     private final NetworkService networkService;
     private final ReentrantLock lock;
     private final BuildingDefinition farmDef;
-    private ScheduledExecutorService executor;
 
     public ResourceProductionService(
             final long intervalToUse,
@@ -35,7 +31,7 @@ public final class ResourceProductionService implements net.lapidist.colony.mod.
             final NetworkService networkServiceToUse,
             final ReentrantLock lockToUse
     ) {
-        this.interval = intervalToUse;
+        super(intervalToUse);
         this.supplier = stateSupplier;
         this.consumer = stateConsumer;
         this.networkService = networkServiceToUse;
@@ -43,24 +39,9 @@ public final class ResourceProductionService implements net.lapidist.colony.mod.
         this.farmDef = Registries.buildings().get("farm");
     }
 
-    /** Starts periodic production on a daemon thread. */
-    public void start() {
-        executor = Executors.newSingleThreadScheduledExecutor(r -> {
-            Thread thread = new Thread(r);
-            thread.setDaemon(true);
-            return thread;
-        });
-        executor.scheduleAtFixedRate(this::produce, interval, interval, TimeUnit.MILLISECONDS);
-    }
 
-    /** Stops the scheduler. */
-    public void stop() {
-        if (executor != null) {
-            executor.shutdownNow();
-        }
-    }
-
-    private void produce() {
+    @Override
+    protected void runTask() {
         MapState state;
         lock.lock();
         try {

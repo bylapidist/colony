@@ -3,24 +3,20 @@ package net.lapidist.colony.server.services;
 import net.lapidist.colony.components.state.EnvironmentState;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.Season;
-import net.lapidist.colony.mod.GameSystem;
+import net.lapidist.colony.mod.ScheduledService;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /** Service that periodically advances the world season. */
-public final class SeasonCycleService implements GameSystem {
+public final class SeasonCycleService extends ScheduledService {
     private static final float MS_TO_SECONDS = 1000f;
     private final long period;
     private final float seasonLength;
     private final Supplier<MapState> supplier;
     private final Consumer<MapState> consumer;
     private final ReentrantLock lock;
-    private ScheduledExecutorService executor;
     private float elapsed;
 
     public SeasonCycleService(final long periodMs,
@@ -28,6 +24,7 @@ public final class SeasonCycleService implements GameSystem {
                               final Supplier<MapState> stateSupplier,
                               final Consumer<MapState> stateConsumer,
                               final ReentrantLock stateLock) {
+        super(periodMs);
         this.period = periodMs;
         this.seasonLength = lengthInSeconds;
         this.supplier = stateSupplier;
@@ -35,24 +32,10 @@ public final class SeasonCycleService implements GameSystem {
         this.lock = stateLock;
     }
 
-    @Override
-    public void start() {
-        executor = Executors.newSingleThreadScheduledExecutor(r -> {
-            Thread t = new Thread(r);
-            t.setDaemon(true);
-            return t;
-        });
-        executor.scheduleAtFixedRate(this::tick, period, period, TimeUnit.MILLISECONDS);
-    }
+
 
     @Override
-    public void stop() {
-        if (executor != null) {
-            executor.shutdownNow();
-        }
-    }
-
-    private void tick() {
+    protected void runTask() {
         lock.lock();
         try {
             elapsed += period / MS_TO_SECONDS;

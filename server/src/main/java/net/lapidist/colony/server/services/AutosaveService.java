@@ -9,31 +9,27 @@ import net.lapidist.colony.server.events.ShutdownSaveEvent;
 import net.mostlyoriginal.api.event.common.Event;
 import net.lapidist.colony.save.io.GameStateIO;
 import net.lapidist.colony.mod.ModMetadata;
+import net.lapidist.colony.mod.ScheduledService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Handles periodic and shutdown saving of the game state.
  */
-public final class AutosaveService {
+public final class AutosaveService extends ScheduledService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AutosaveService.class);
 
-    private final long interval;
     private final String saveName;
     private final Supplier<MapState> supplier;
     private final ReentrantLock lock;
     private final Supplier<java.util.List<ModMetadata>> modsSupplier;
-    private ScheduledExecutorService executor;
 
     public AutosaveService(
             final long intervalToUse,
@@ -42,36 +38,25 @@ public final class AutosaveService {
             final Supplier<java.util.List<ModMetadata>> modsSupplierToUse,
             final ReentrantLock lockToUse
     ) {
-        this.interval = intervalToUse;
+        super(intervalToUse);
         this.saveName = saveNameToUse;
         this.supplier = stateSupplier;
         this.modsSupplier = modsSupplierToUse;
         this.lock = lockToUse;
     }
 
-    /**
-     * Starts periodic autosaving on a daemon thread.
-     */
-    public void start() {
-        executor = Executors.newSingleThreadScheduledExecutor(r -> {
-            Thread thread = new Thread(r);
-            thread.setDaemon(true);
-            return thread;
-        });
-        executor.scheduleAtFixedRate(this::autoSave, interval, interval, TimeUnit.MILLISECONDS);
-    }
 
     /**
      * Stops the scheduler and saves the game state one final time.
      */
+    @Override
     public void stop() {
-        if (executor != null) {
-            executor.shutdownNow();
-        }
+        super.stop();
         saveOnShutdown();
     }
 
-    private void autoSave() {
+    @Override
+    protected void runTask() {
         saveGameState(AutosaveEvent::new, "Autosaved game state to {} ({} bytes)");
     }
 
