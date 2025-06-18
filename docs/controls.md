@@ -26,3 +26,6 @@ Placing a building consumes resources. Houses cost **1 wood**, markets cost **5 
 2. Click **Keybinds** to open the remapping screen.
 3. Select an action, then press the new key you want to use.
 4. Press **Back** to save your changes. Use **Reset** to restore the defaults.
+
+The **Load Game** screen includes a search box at the top for quickly filtering
+saved games by name.
