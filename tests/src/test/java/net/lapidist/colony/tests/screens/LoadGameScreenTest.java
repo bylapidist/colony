@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.client.screens.LoadGameScreen;
@@ -25,6 +26,7 @@ import java.nio.file.Path;
 import java.util.UUID;
 
 import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
 
 @RunWith(GdxTestRunner.class)
 public class LoadGameScreenTest {
@@ -37,7 +39,7 @@ public class LoadGameScreenTest {
 
     private static Table getList(final LoadGameScreen screen) throws Exception {
         Table root = getRoot(screen);
-        ScrollPane scroll = (ScrollPane) root.getChildren().first();
+        ScrollPane scroll = (ScrollPane) root.getChildren().get(1);
         return (Table) scroll.getActor();
     }
 
@@ -109,5 +111,59 @@ public class LoadGameScreenTest {
             Files.deleteIfExists(folder.resolve(save + Paths.AUTOSAVE_SUFFIX));
             screen.dispose();
         }
+    }
+
+    @Test
+    public void filteringHidesNonMatchingEntries() throws Exception {
+        String prefix = "filter-test-";
+        String match = prefix + "match-" + UUID.randomUUID();
+        String other = prefix + "other-" + UUID.randomUUID();
+        Path folder = Path.of(
+                System.getProperty("user.home"),
+                ".colony",
+                "saves"
+        );
+        Files.createDirectories(folder);
+        for (String existing : Paths.get().listAutosaves()) {
+            if (existing.startsWith(prefix)) {
+                Files.deleteIfExists(Paths.get().getAutosave(existing));
+            }
+        }
+        MapState state = MapState.builder()
+                .width(MapState.DEFAULT_WIDTH)
+                .height(MapState.DEFAULT_HEIGHT)
+                .build();
+        GameStateIO.save(state, folder.resolve(match + Paths.AUTOSAVE_SUFFIX));
+        GameStateIO.save(state, folder.resolve(other + Paths.AUTOSAVE_SUFFIX));
+
+        Colony colony = mock(Colony.class);
+        try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
+            LoadGameScreen screen = new LoadGameScreen(colony);
+            Table root = getRoot(screen);
+            TextField filter = (TextField) root.getChildren().first();
+            filter.setText(match);
+            filter.fire(new ChangeListener.ChangeEvent());
+            Table list = getList(screen);
+            boolean hasMatch = false;
+            boolean hasOther = false;
+            for (com.badlogic.gdx.scenes.scene2d.Actor child : list.getChildren()) {
+                if (child instanceof Table t) {
+                    TextButton btn = (TextButton) t.getChildren().first();
+                    String name = btn.getText().toString();
+                    if (name.equals(match)) {
+                        hasMatch = true;
+                    }
+                    if (name.equals(other)) {
+                        hasOther = true;
+                    }
+                }
+            }
+            assertTrue(hasMatch);
+            assertFalse(hasOther);
+            screen.dispose();
+        }
+
+        Files.deleteIfExists(folder.resolve(match + Paths.AUTOSAVE_SUFFIX));
+        Files.deleteIfExists(folder.resolve(other + Paths.AUTOSAVE_SUFFIX));
     }
 }
