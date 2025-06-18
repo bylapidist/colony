@@ -7,6 +7,7 @@ import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.CameraInputSystem;
 import net.lapidist.colony.client.systems.SelectionSystem;
 import net.lapidist.colony.client.systems.BuildPlacementSystem;
+import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.client.systems.network.TileUpdateSystem;
 import net.lapidist.colony.client.systems.network.BuildingUpdateSystem;
@@ -48,6 +49,7 @@ public final class GameSimulation {
                         new MapLoadSystem(state),
                         new PlayerCameraSystem(),
                         new CameraInputSystem(keys),
+                        new MapRenderDataSystem(),
                         new SelectionSystem(client, keys),
                         new BuildPlacementSystem(client, keys),
                         new net.lapidist.colony.client.systems.PlayerMovementSystem(keys),

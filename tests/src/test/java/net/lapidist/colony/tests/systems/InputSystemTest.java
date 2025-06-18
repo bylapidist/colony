@@ -12,6 +12,7 @@ import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.CameraInputSystem;
 import net.lapidist.colony.client.graphics.CameraUtils;
 import net.lapidist.colony.client.systems.SelectionSystem;
+import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
@@ -42,6 +43,7 @@ public class InputSystemTest {
         World world = new World(new WorldConfigurationBuilder()
                 .with(new MapLoadSystem(state), new PlayerCameraSystem(),
                         new CameraInputSystem(new net.lapidist.colony.settings.KeyBindings()),
+                        new MapRenderDataSystem(),
                         new SelectionSystem(client, new net.lapidist.colony.settings.KeyBindings()))
                 .build());
 

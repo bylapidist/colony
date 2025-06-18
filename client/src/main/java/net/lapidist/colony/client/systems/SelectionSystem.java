@@ -71,7 +71,8 @@ public final class SelectionSystem extends BaseSystem {
                 }
             }
         }
-        tileSelectionHandler = new TileSelectionHandler(client, cameraSystem, selectedTiles);
+        MapRenderDataSystem dataSystem = world.getSystem(MapRenderDataSystem.class);
+        tileSelectionHandler = new TileSelectionHandler(client, cameraSystem, selectedTiles, dataSystem);
         GestureDetector detector = new GestureDetector(new SelectionGestureListener());
         cameraInputSystem.addProcessor(detector);
     }
