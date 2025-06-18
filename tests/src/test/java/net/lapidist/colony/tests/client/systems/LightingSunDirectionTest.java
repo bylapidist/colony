@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
 import net.lapidist.colony.client.systems.LightingSystem;
+import net.lapidist.colony.components.state.MutableEnvironmentState;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,16 +19,18 @@ public class LightingSunDirectionTest {
 
     @Test
     public void midnightBelowHorizon() {
-        LightingSystem lighting = new LightingSystem(new ClearScreenSystem(new Color()));
-        lighting.setTimeOfDay(0f);
+        MutableEnvironmentState env = new MutableEnvironmentState();
+        LightingSystem lighting = new LightingSystem(new ClearScreenSystem(new Color()), env);
+        env.setTimeOfDay(0f);
         Vector3 dir = lighting.getSunDirection(new Vector3());
         assertTrue(dir.z < 0f);
     }
 
     @Test
     public void noonAboveHorizon() {
-        LightingSystem lighting = new LightingSystem(new ClearScreenSystem(new Color()));
-        lighting.setTimeOfDay(NOON);
+        MutableEnvironmentState env = new MutableEnvironmentState();
+        LightingSystem lighting = new LightingSystem(new ClearScreenSystem(new Color()), env);
+        env.setTimeOfDay(NOON);
         Vector3 dir = lighting.getSunDirection(new Vector3());
         assertTrue(dir.z > 0f);
     }

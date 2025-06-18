@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.Color;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
 import net.lapidist.colony.client.systems.LightingSystem;
+import net.lapidist.colony.components.state.MutableEnvironmentState;
 import com.badlogic.gdx.math.Vector3;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
@@ -38,13 +39,15 @@ public class LightsNormalMapShaderPluginTest {
     @SuppressWarnings("checkstyle:magicnumber")
     public void updatesLightDirectionWhenTimeChanges() {
         LightsNormalMapShaderPlugin plugin = new LightsNormalMapShaderPlugin();
+        MutableEnvironmentState env = new MutableEnvironmentState();
         LightingSystem system = new LightingSystem(
-                new ClearScreenSystem(new Color())
+                new ClearScreenSystem(new Color()),
+                env
         );
         plugin.setLightingSystem(system);
         ShaderProgram shader = mock(ShaderProgram.class);
 
-        system.setTimeOfDay(0f);
+        env.setTimeOfDay(0f);
         plugin.applyUniforms(shader);
         ArgumentCaptor<Vector3> firstCap = ArgumentCaptor.forClass(Vector3.class);
         verify(shader).setUniformf(eq("u_lightDir"), firstCap.capture());
@@ -52,7 +55,7 @@ public class LightsNormalMapShaderPluginTest {
         reset(shader);
 
         final float newTime = 6f;
-        system.setTimeOfDay(newTime);
+        env.setTimeOfDay(newTime);
         plugin.applyUniforms(shader);
         ArgumentCaptor<Vector3> secondCap = ArgumentCaptor.forClass(Vector3.class);
         verify(shader).setUniformf(eq("u_lightDir"), secondCap.capture());

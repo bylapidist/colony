@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
 import net.lapidist.colony.client.systems.LightingSystem;
 import net.lapidist.colony.tests.GdxTestRunner;
+import net.lapidist.colony.components.state.MutableEnvironmentState;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -26,11 +27,12 @@ public class LightingCycleSystemTest {
     @Test
     public void updatesLightAndColor() {
         ClearScreenSystem clear = new ClearScreenSystem(new Color());
-        LightingSystem lighting = new LightingSystem(clear);
+        MutableEnvironmentState env = new MutableEnvironmentState();
+        LightingSystem lighting = new LightingSystem(clear, env);
         RayHandler handler = mock(RayHandler.class);
         lighting.setRayHandler(handler);
         final float noon = 12f;
-        lighting.setTimeOfDay(noon);
+        env.setTimeOfDay(noon);
         World world = new World(new WorldConfigurationBuilder()
                 .with(clear, lighting)
                 .build());
@@ -38,7 +40,7 @@ public class LightingCycleSystemTest {
         world.process();
         verify(handler).setAmbientLight(0f, 0f, 0f, 1f);
         assertEquals(DAY_RED, clear.getColor().r, TOLERANCE);
-        lighting.setTimeOfDay(0f);
+        env.setTimeOfDay(0f);
         world.process();
         verify(handler).setAmbientLight(NIGHT_AMBIENT, NIGHT_AMBIENT, NIGHT_AMBIENT, 1f);
         assertEquals(NIGHT_RED, clear.getColor().r, TOLERANCE);
@@ -48,9 +50,10 @@ public class LightingCycleSystemTest {
     @Test
     public void wrapsTimeOfDay() {
         ClearScreenSystem clear = new ClearScreenSystem(new Color());
-        LightingSystem lighting = new LightingSystem(clear);
+        MutableEnvironmentState env = new MutableEnvironmentState();
+        LightingSystem lighting = new LightingSystem(clear, env);
         final float wrapValue = 25f;
-        lighting.setTimeOfDay(wrapValue);
+        env.setTimeOfDay(wrapValue);
         World world = new World(new WorldConfigurationBuilder()
                 .with(clear, lighting)
                 .build());
