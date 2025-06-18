@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
+import java.util.ArrayDeque;
 
 public final class Events {
 
@@ -46,6 +47,8 @@ public final class Events {
     private static final Map<Class<? extends Event>, List<Consumer<? extends Event>>>
             LISTENERS = new ConcurrentHashMap<>();
     private static final List<Object> PENDING = new CopyOnWriteArrayList<>();
+    private static final ArrayDeque<Event> QUEUE = new ArrayDeque<>();
+    public static final int MAX_EVENTS_PER_UPDATE = 10;
 
     private Events() { }
 
@@ -87,21 +90,31 @@ public final class Events {
     }
 
     public static void dispatch(final Event event) {
-        if (instance != null) {
-            LOGGER.debug("Dispatched event: {}", event);
-            instance.dispatch(event);
-        }
-        for (Map.Entry<Class<? extends Event>, List<Consumer<? extends Event>>> e : LISTENERS.entrySet()) {
-            if (e.getKey().isInstance(event)) {
-                for (Consumer handler : e.getValue()) {
-                    handler.accept(event);
-                }
-            }
+        synchronized (QUEUE) {
+            QUEUE.add(event);
         }
     }
 
     public static void update() {
         if (instance != null) {
+            for (int i = 0; i < MAX_EVENTS_PER_UPDATE; i++) {
+                Event event;
+                synchronized (QUEUE) {
+                    event = QUEUE.poll();
+                }
+                if (event == null) {
+                    break;
+                }
+                LOGGER.debug("Dispatched event: {}", event);
+                instance.dispatch(event);
+                for (Map.Entry<Class<? extends Event>, List<Consumer<? extends Event>>> e : LISTENERS.entrySet()) {
+                    if (e.getKey().isInstance(event)) {
+                        for (Consumer handler : e.getValue()) {
+                            handler.accept(event);
+                        }
+                    }
+                }
+            }
             instance.process();
         }
     }
@@ -110,5 +123,8 @@ public final class Events {
         instance = null;
         LISTENERS.clear();
         PENDING.clear();
+        synchronized (QUEUE) {
+            QUEUE.clear();
+        }
     }
 }

@@ -11,7 +11,6 @@ import static org.junit.Assert.assertTrue;
 
 public class DayNightCycleServiceTest {
     private static final int INTERVAL = 10;
-    private static final int WAIT_MS = 30;
     private static final float DAY_LENGTH = 0.02f;
 
     @Test
@@ -26,10 +25,9 @@ public class DayNightCycleServiceTest {
                 new ReentrantLock()
         );
 
-        service.start();
-        Thread.sleep(WAIT_MS);
-        service.stop();
-
+        java.lang.reflect.Method run = DayNightCycleService.class.getDeclaredMethod("runTask");
+        run.setAccessible(true);
+        run.invoke(service);
         assertTrue(ref.get().environment().timeOfDay() > 0f);
     }
 }

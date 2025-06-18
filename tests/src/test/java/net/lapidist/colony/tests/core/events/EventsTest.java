@@ -22,17 +22,21 @@ import org.slf4j.LoggerFactory;
 public class EventsTest {
 
     private boolean pauseHandled;
+    private int pauseCount;
     private ResizeEvent resizeEvent;
 
     @Before
     public void setUp() {
+        Events.dispose();
         Events.init(new EventSystem());
         Events.registerEvents(this);
+        pauseCount = 0;
     }
 
     @Subscribe
     private void onPause(final PauseEvent event) {
         pauseHandled = true;
+        pauseCount++;
     }
 
     @Subscribe
@@ -100,5 +104,19 @@ public class EventsTest {
         Events.dispatch(new PauseEvent());
         Events.update();
         assertTrue(pauseHandled);
+    }
+
+    @Test
+    public void excessEventsDeferred() {
+        pauseCount = 0;
+        int limit = Events.MAX_EVENTS_PER_UPDATE;
+        final int extra = 5;
+        for (int i = 0; i < limit + extra; i++) {
+            Events.dispatch(new PauseEvent());
+        }
+        Events.update();
+        assertEquals(limit, pauseCount);
+        Events.update();
+        assertEquals(limit + extra, pauseCount);
     }
 }
