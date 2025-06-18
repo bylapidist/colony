@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.client.screens.MainMenuScreen;
 import net.lapidist.colony.client.screens.NewGameScreen;
+import net.lapidist.colony.settings.Settings;
 import org.mockito.MockedConstruction;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
@@ -58,6 +59,7 @@ public class NewGameScreenTest {
     @Test
     public void startButtonBeginsGameWithEnteredName() throws Exception {
         Colony colony = mock(Colony.class);
+        when(colony.getSettings()).thenReturn(new Settings());
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             NewGameScreen screen = new NewGameScreen(colony);
             Table options = getOptions(screen);
@@ -76,6 +78,7 @@ public class NewGameScreenTest {
     @Test
     public void backButtonReturnsToMainMenu() throws Exception {
         Colony colony = mock(Colony.class);
+        when(colony.getSettings()).thenReturn(new Settings());
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             NewGameScreen screen = new NewGameScreen(colony);
             Table buttons = getButtons(screen);
@@ -89,6 +92,7 @@ public class NewGameScreenTest {
     @Test
     public void escapeReturnsToMainMenu() throws Exception {
         Colony colony = mock(Colony.class);
+        when(colony.getSettings()).thenReturn(new Settings());
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             NewGameScreen screen = new NewGameScreen(colony);
             Stage stage = getStage(screen);

@@ -95,3 +95,6 @@ height=1080
 fullscreen=false
 ```
 
+`uiScale` controls how large UI elements appear. The default is `1.0` and larger
+values increase the interface size.
+

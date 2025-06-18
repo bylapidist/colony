@@ -36,6 +36,7 @@ public class MainMenuScreenTest {
     @Test
     public void clickingNewGameOpensNewGameScreen() throws Exception {
         Colony colony = mock(Colony.class);
+        when(colony.getSettings()).thenReturn(new Settings());
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             MainMenuScreen screen = new MainMenuScreen(colony);
             TextButton newGame = (TextButton) getRoot(screen).getChildren().get(NEW_GAME_INDEX);
@@ -48,6 +49,7 @@ public class MainMenuScreenTest {
     @Test
     public void clickingLoadGameOpensLoadGameScreen() throws Exception {
         Colony colony = mock(Colony.class);
+        when(colony.getSettings()).thenReturn(new Settings());
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             MainMenuScreen screen = new MainMenuScreen(colony);
             TextButton load = (TextButton) getRoot(screen).getChildren().get(LOAD_GAME_INDEX);

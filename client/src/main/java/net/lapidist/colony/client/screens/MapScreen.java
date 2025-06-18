@@ -24,6 +24,8 @@ public final class MapScreen implements Screen {
     public MapScreen(final Colony colonyToSet, final MapState state, final GameClient client) {
         this.colony = colonyToSet;
         stage = new Stage(new ScreenViewport());
+        float scale = colony.getSettings() == null ? 1f : colony.getSettings().getUiScale();
+        stage.getRoot().setScale(scale);
         world = MapWorldBuilder.build(
                 MapWorldBuilder.builder(
                         state,
