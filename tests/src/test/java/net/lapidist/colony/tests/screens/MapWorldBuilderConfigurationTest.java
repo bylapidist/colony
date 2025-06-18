@@ -98,7 +98,8 @@ public class MapWorldBuilderConfigurationTest {
                             client,
                             stage,
                             keys,
-                            settings.getGraphicsSettings()
+                            settings.getGraphicsSettings(),
+                            null
                     ),
                     null,
                     settings,
@@ -138,7 +139,7 @@ public class MapWorldBuilderConfigurationTest {
         net.lapidist.colony.settings.Settings settings = new net.lapidist.colony.settings.Settings();
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             World world = MapWorldBuilder.build(
-                    MapWorldBuilder.builder(state, client, stage, keys, settings.getGraphicsSettings()),
+                    MapWorldBuilder.builder(state, client, stage, keys, settings.getGraphicsSettings(), null),
                     null,
                     settings,
                     null,
@@ -215,7 +216,7 @@ public class MapWorldBuilderConfigurationTest {
         net.lapidist.colony.settings.Settings settings = new net.lapidist.colony.settings.Settings();
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class)) {
             World world = MapWorldBuilder.build(
-                    MapWorldBuilder.builder(state, client, stage, keys, settings.getGraphicsSettings()),
+                    MapWorldBuilder.builder(state, client, stage, keys, settings.getGraphicsSettings(), null),
                     null,
                     settings,
                     null,

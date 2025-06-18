@@ -53,7 +53,7 @@ public class MapScreenTest {
              MockedStatic<MapWorldBuilder> worldStatic = mockStatic(MapWorldBuilder.class);
              MockedStatic<MapUiBuilder> uiStatic = mockStatic(MapUiBuilder.class)) {
             worldStatic.when(() -> MapWorldBuilder.builder(eq(state), eq(client),
-                    any(Stage.class), eq(settings.getKeyBindings()), eq(settings.getGraphicsSettings())))
+                    any(Stage.class), eq(settings.getKeyBindings()), eq(settings.getGraphicsSettings()), any()))
                     .thenReturn(new WorldConfigurationBuilder());
             worldStatic.when(() -> MapWorldBuilder.build(
                     any(),
@@ -117,7 +117,7 @@ public class MapScreenTest {
              MockedStatic<MapWorldBuilder> worldStatic = mockStatic(MapWorldBuilder.class);
              MockedStatic<MapUiBuilder> uiStatic = mockStatic(MapUiBuilder.class)) {
             worldStatic.when(() -> MapWorldBuilder.builder(eq(state), eq(client), any(Stage.class),
-                    eq(settings.getKeyBindings()), eq(settings.getGraphicsSettings())))
+                    eq(settings.getKeyBindings()), eq(settings.getGraphicsSettings()), any()))
                     .thenReturn(new WorldConfigurationBuilder());
             worldStatic.when(() -> MapWorldBuilder.build(any(), isNull(), eq(settings), any(),
                     eq(client), any(), any()))

@@ -73,7 +73,8 @@ public class GameSimulationSpawnNetworkTest {
                                 client,
                                 stage,
                                 new KeyBindings(),
-                                settings.getGraphicsSettings()
+                                settings.getGraphicsSettings(),
+                                null
                         ),
                         null,
                         settings,
