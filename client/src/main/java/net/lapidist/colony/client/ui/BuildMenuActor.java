@@ -42,12 +42,12 @@ public final class BuildMenuActor extends Table implements Disposable {
     private final Texture foodTexture;
 
     public BuildMenuActor(
-            final Skin skinParam,
+            final Skin skinToUse,
             final BuildPlacementSystem buildSystemToUse,
             final GraphicsSettings graphics
     ) {
         this.buildSystem = buildSystemToUse;
-        this.skin = skinParam;
+        this.skin = skinToUse;
         setName("buildMenu");
         setFillParent(true);
         bottom().left();

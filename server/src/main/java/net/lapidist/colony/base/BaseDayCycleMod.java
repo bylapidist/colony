@@ -3,11 +3,12 @@ package net.lapidist.colony.base;
 import net.lapidist.colony.mod.GameMod;
 import net.lapidist.colony.mod.GameServer;
 import net.lapidist.colony.server.services.DayNightCycleService;
+import net.lapidist.colony.components.GameConstants;
 
 /** Built-in mod registering the day/night cycle service. */
 public final class BaseDayCycleMod implements GameMod {
     private static final long TICK_PERIOD_MS = 1000L;
-    private static final float DAY_LENGTH_SECONDS = 24f;
+    private static final float DAY_LENGTH_SECONDS = GameConstants.DAY_LENGTH_SECONDS;
 
     @Override
     public void registerSystems(final GameServer srv) {
