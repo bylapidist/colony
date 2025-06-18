@@ -57,6 +57,7 @@ public class InputSystemInitOrderTest {
         float tapY = screenCoords.y;
 
         SelectionSystem input = world.getSystem(SelectionSystem.class);
+        input.setSelectMode(true);
         input.tap(tapX, tapY);
 
         verify(client).sendTileSelectionRequest(any());

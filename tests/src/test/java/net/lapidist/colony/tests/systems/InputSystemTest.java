@@ -56,6 +56,7 @@ public class InputSystemTest {
         float tapY = screenCoords.y;
 
         SelectionSystem input = world.getSystem(SelectionSystem.class);
+        input.setSelectMode(true);
         input.tap(tapX, tapY);
 
         IntBag maps = world.getAspectSubscriptionManager()

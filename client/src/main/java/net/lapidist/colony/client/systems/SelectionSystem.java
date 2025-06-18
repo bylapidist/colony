@@ -25,6 +25,8 @@ public final class SelectionSystem extends BaseSystem {
     private final GameClient client;
     private final KeyBindings keyBindings;
 
+    private boolean selectMode;
+
     private final Array<Entity> selectedTiles = new Array<>();
 
     private PlayerCameraSystem cameraSystem;
@@ -43,8 +45,19 @@ public final class SelectionSystem extends BaseSystem {
         this.keyBindings = bindings;
     }
 
+    /** Enable or disable selection mode. */
+    public void setSelectMode(final boolean mode) {
+        this.selectMode = mode;
+    }
+
+    /** @return whether selection mode is currently enabled. */
+    public boolean isSelectMode() {
+        return selectMode;
+    }
+
     @Override
     public void initialize() {
+        selectMode = false;
         cameraSystem = world.getSystem(PlayerCameraSystem.class);
         cameraInputSystem = world.getSystem(CameraInputSystem.class);
         tileMapper = world.getMapper(TileComponent.class);
@@ -76,6 +89,9 @@ public final class SelectionSystem extends BaseSystem {
                 }
             }
         }
+        if (Gdx.input.isKeyJustPressed(keyBindings.getKey(KeyAction.SELECT))) {
+            selectMode = !selectMode;
+        }
         if (Gdx.input.isKeyJustPressed(keyBindings.getKey(KeyAction.SELECT_WOOD))) {
             resourceId = "WOOD";
         }
@@ -100,6 +116,9 @@ public final class SelectionSystem extends BaseSystem {
     }
 
     public boolean tap(final float x, final float y) {
+        if (!selectMode) {
+            return false;
+        }
         if (map == null) {
             return false;
         }
@@ -108,6 +127,9 @@ public final class SelectionSystem extends BaseSystem {
     }
 
     private boolean handleTap(final float x, final float y) {
+        if (!selectMode) {
+            return false;
+        }
         boolean result = tileSelectionHandler.handleTap(x, y, map, tileMapper);
         var worldCoords = CameraUtils.screenToWorldCoords(cameraSystem.getViewport(), x, y);
         var tileCoords = CameraUtils.worldCoordsToTileCoords(worldCoords);

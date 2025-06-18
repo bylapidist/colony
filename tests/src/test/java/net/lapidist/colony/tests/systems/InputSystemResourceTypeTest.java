@@ -101,6 +101,7 @@ public class InputSystemResourceTypeTest {
         camera.getCamera().update();
 
         Vector2 screenCoords = CameraUtils.worldToScreenCoords(camera.getViewport(), 0, 0);
+        selectionSystem.setSelectMode(true);
         selectionSystem.tap(screenCoords.x, screenCoords.y);
 
         ArgumentCaptor<ResourceGatherRequestData> captor =
