@@ -85,9 +85,14 @@ public class MapScreenTest {
             screen.show();
             screen.dispose();
 
+            Field stepField = MapScreen.class.getDeclaredField("STEP_TIME");
+            stepField.setAccessible(true);
+            double step = stepField.getDouble(null);
+            int expectedSteps = (int) Math.round(DELTA / step);
+
             verify(handler).update();
-            verify(world).setDelta(DELTA);
-            verify(world).process();
+            verify(world, times(expectedSteps)).setDelta((float) step);
+            verify(world, times(expectedSteps)).process();
             verify(handler).resize(WIDTH, HEIGHT);
             verify(handler).pause();
             verify(handler).resume();

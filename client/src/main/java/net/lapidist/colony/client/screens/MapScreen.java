@@ -22,6 +22,12 @@ public final class MapScreen implements Screen {
     private final MinimapActor minimapActor;
     private final MapScreenEventHandler events;
     private static final float DEFAULT_SCALE = 1f;
+    /** Fixed time step used for deterministic updates. */
+    private static final double STEP_TIME = 1d / 60d;
+    /**
+     * Accumulates frame time so the world can be stepped in fixed increments.
+     */
+    private double accumulator;
 
     private void applyScale() {
         float scale = colony.getSettings() == null ? DEFAULT_SCALE : colony.getSettings().getUiScale();
@@ -56,13 +62,18 @@ public final class MapScreen implements Screen {
         MapUi ui = MapUiBuilder.build(stage, world, client, colony);
         minimapActor = ui.getMinimapActor();
         events = new MapScreenEventHandler();
+        accumulator = 0.0;
     }
 
     @Override
     public void render(final float deltaTime) {
         events.update();
-        world.setDelta(deltaTime);
-        world.process();
+        accumulator += deltaTime;
+        while (accumulator >= STEP_TIME) {
+            world.setDelta((float) STEP_TIME);
+            world.process();
+            accumulator -= STEP_TIME;
+        }
     }
 
     @Override

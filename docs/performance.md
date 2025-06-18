@@ -105,3 +105,10 @@ compressed with GZIP before transmission to reduce bandwidth usage.
 | Benchmark | Score (ops/s) |
 |-----------|---------------|
 | MinimapCacheBenchmark.buildMinimap | ~2,800 |
+
+## Deterministic game loop
+
+`MapScreen` now accumulates frame time and processes the ECS world using a fixed
+`STEP_TIME` of 1⁄60 seconds. This ensures the simulation runs at a stable rate
+regardless of rendering performance and removes variability from tests that rely
+on consistent delta values.
