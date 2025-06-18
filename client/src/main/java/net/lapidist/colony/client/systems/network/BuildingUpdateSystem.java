@@ -11,8 +11,8 @@ import net.lapidist.colony.client.entities.BuildingFactory;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.components.maps.MapComponent;
-import net.lapidist.colony.components.state.BuildingData;
-import net.lapidist.colony.components.state.BuildingRemovalData;
+import net.lapidist.colony.components.state.map.BuildingData;
+import net.lapidist.colony.components.state.messages.BuildingRemovalData;
 import net.lapidist.colony.map.MapUtils;
 
 /**

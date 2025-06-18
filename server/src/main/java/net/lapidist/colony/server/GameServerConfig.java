@@ -1,7 +1,7 @@
 package net.lapidist.colony.server;
 
 import net.lapidist.colony.config.ColonyConfig;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.map.ChunkedMapGenerator;
 import net.lapidist.colony.map.MapGenerator;
 

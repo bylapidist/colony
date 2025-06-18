@@ -1,4 +1,4 @@
-package net.lapidist.colony.components.state;
+package net.lapidist.colony.components.state.messages;
 
 import net.lapidist.colony.serialization.KryoType;
 

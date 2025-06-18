@@ -1,7 +1,7 @@
 package net.lapidist.colony.tests.serialization;
 
 import com.esotericsoftware.kryo.Kryo;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.serialization.SerializationRegistrar;
 import net.lapidist.colony.mod.ModMetadata;
 import org.junit.Test;

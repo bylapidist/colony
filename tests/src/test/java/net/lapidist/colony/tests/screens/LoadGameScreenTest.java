@@ -13,7 +13,7 @@ import net.lapidist.colony.client.screens.LoadGameScreen;
 import net.lapidist.colony.client.screens.MainMenuScreen;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.save.io.GameStateIO;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import org.mockito.MockedConstruction;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;

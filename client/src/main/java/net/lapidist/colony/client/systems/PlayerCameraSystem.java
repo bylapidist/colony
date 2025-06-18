@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import net.lapidist.colony.client.graphics.CameraUtils;
 import net.lapidist.colony.components.entities.PlayerComponent;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 

@@ -12,7 +12,7 @@ import net.lapidist.colony.client.screens.MapUiBuilder;
 import net.lapidist.colony.client.screens.MapWorldBuilder;
 import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.client.ui.MinimapActor;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.map.ProvidedMapStateProvider;
 import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.tests.GdxTestRunner;

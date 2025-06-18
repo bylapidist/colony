@@ -1,7 +1,7 @@
 package net.lapidist.colony.map;
 
-import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.components.state.map.TileData;
+import net.lapidist.colony.components.state.map.TilePos;
 import net.lapidist.colony.serialization.KryoType;
 
 import java.util.Map;
@@ -74,7 +74,7 @@ public final class MapChunkData {
                 .y(worldY)
                 .tileType(type)
                 .passable(true)
-                .resources(new net.lapidist.colony.components.state.ResourceData(
+                .resources(new net.lapidist.colony.components.state.resources.ResourceData(
                         DEFAULT_WOOD, DEFAULT_STONE, DEFAULT_FOOD))
                 .build();
     }

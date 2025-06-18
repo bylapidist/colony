@@ -11,8 +11,11 @@ import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.SelectionSystem;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.client.graphics.CameraUtils;
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.map.TileData;
+import net.lapidist.colony.components.maps.TileComponent;
+import net.lapidist.colony.components.state.messages.BuildingPlacementData;
+import org.mockito.ArgumentCaptor;
 import net.lapidist.colony.map.MapUtils;
 import net.lapidist.colony.settings.KeyBindings;
 import net.lapidist.colony.tests.GdxTestRunner;
@@ -58,11 +61,11 @@ public class BuildPlacementWithSelectionSystemTest {
         Vector2 screen = CameraUtils.worldToScreenCoords(camera.getViewport(), 0, 0);
         buildSystem.tap(screen.x, screen.y);
 
-        org.mockito.ArgumentCaptor<net.lapidist.colony.components.state.BuildingPlacementData> captor =
-                org.mockito.ArgumentCaptor.forClass(net.lapidist.colony.components.state.BuildingPlacementData.class);
+        ArgumentCaptor<BuildingPlacementData> captor =
+                ArgumentCaptor.forClass(BuildingPlacementData.class);
         verify(client).sendBuildRequest(captor.capture());
         assertEquals("farm", captor.getValue().buildingId());
-        assertFalse(world.getMapper(net.lapidist.colony.components.maps.TileComponent.class)
+        assertFalse(world.getMapper(TileComponent.class)
                 .get(MapUtils.findMap(world).get().getTiles().get(0)).isSelected());
     }
 }

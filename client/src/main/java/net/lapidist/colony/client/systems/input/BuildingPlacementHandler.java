@@ -8,7 +8,7 @@ import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.graphics.CameraUtils;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
-import net.lapidist.colony.components.state.BuildingPlacementData;
+import net.lapidist.colony.components.state.messages.BuildingPlacementData;
 
 /**
  * Handles player building placement input.

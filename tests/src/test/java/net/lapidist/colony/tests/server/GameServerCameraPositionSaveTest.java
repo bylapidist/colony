@@ -4,7 +4,7 @@ import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
 import net.lapidist.colony.save.io.GameStateIO;
 import net.lapidist.colony.io.Paths;
-import net.lapidist.colony.components.state.CameraPosition;
+import net.lapidist.colony.components.state.map.CameraPosition;
 import org.junit.Test;
 
 import java.nio.file.Path;

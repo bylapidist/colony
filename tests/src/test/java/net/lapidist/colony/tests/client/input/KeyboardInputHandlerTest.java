@@ -8,7 +8,7 @@ import net.lapidist.colony.client.systems.input.KeyboardInputHandler;
 import net.lapidist.colony.settings.KeyAction;
 import net.lapidist.colony.settings.KeyBindings;
 import net.lapidist.colony.components.GameConstants;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;

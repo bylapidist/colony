@@ -2,8 +2,8 @@ package net.lapidist.colony.tests.map;
 
 import net.lapidist.colony.map.MapCoordinateUtils;
 import net.lapidist.colony.map.MapChunkData;
-import net.lapidist.colony.components.state.ChunkPos;
-import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.components.state.map.ChunkPos;
+import net.lapidist.colony.components.state.map.TilePos;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

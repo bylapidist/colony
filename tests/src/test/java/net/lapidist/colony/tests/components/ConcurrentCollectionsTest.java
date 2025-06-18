@@ -1,6 +1,6 @@
 package net.lapidist.colony.tests.components;
 
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.map.MapChunkData;
 import org.junit.Test;
 

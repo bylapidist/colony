@@ -1,8 +1,8 @@
 package net.lapidist.colony.tests.scenario;
 
 import net.lapidist.colony.client.network.GameClient;
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.TileSelectionData;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.messages.TileSelectionData;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
 import net.lapidist.colony.tests.GdxTestRunner;

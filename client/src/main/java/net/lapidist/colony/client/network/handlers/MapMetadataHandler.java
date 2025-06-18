@@ -1,6 +1,6 @@
 package net.lapidist.colony.client.network.handlers;
 
-import net.lapidist.colony.components.state.MapMetadata;
+import net.lapidist.colony.components.state.map.MapMetadata;
 import net.lapidist.colony.network.AbstractMessageHandler;
 
 import java.util.function.Consumer;

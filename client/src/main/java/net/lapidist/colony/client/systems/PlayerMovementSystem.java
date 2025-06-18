@@ -6,7 +6,7 @@ import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import net.lapidist.colony.components.GameConstants;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.components.entities.PlayerComponent;
 import net.lapidist.colony.settings.KeyAction;
 import net.lapidist.colony.settings.KeyBindings;
@@ -90,7 +90,7 @@ public final class PlayerMovementSystem extends BaseSystem {
             lastTileX = tileX;
             lastTileY = tileY;
             client.sendPlayerPositionUpdate(
-                    new net.lapidist.colony.components.state.PlayerPositionUpdate(tileX, tileY)
+                    new net.lapidist.colony.components.state.messages.PlayerPositionUpdate(tileX, tileY)
             );
         }
     }

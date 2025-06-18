@@ -12,7 +12,7 @@ import net.lapidist.colony.client.graphics.CameraUtils;
 import net.lapidist.colony.client.render.data.RenderTile;
 import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.TileRotationUtil;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.registry.Registries;
 import net.lapidist.colony.registry.TileDefinition;
 import net.lapidist.colony.settings.GraphicsSettings;

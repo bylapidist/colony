@@ -2,24 +2,24 @@ package net.lapidist.colony.serialization;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.serializers.RecordSerializer;
-import net.lapidist.colony.components.state.BuildingData;
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TileSelectionData;
-import net.lapidist.colony.components.state.TilePos;
-import net.lapidist.colony.components.state.BuildingPlacementData;
-import net.lapidist.colony.components.state.BuildingRemovalData;
-import net.lapidist.colony.components.state.ResourceData;
-import net.lapidist.colony.components.state.ResourceGatherRequestData;
-import net.lapidist.colony.components.state.ResourceUpdateData;
-import net.lapidist.colony.components.state.MapMetadata;
-import net.lapidist.colony.components.state.MapChunk;
-import net.lapidist.colony.components.state.MapChunkBytes;
-import net.lapidist.colony.components.state.MapChunkRequest;
+import net.lapidist.colony.components.state.map.BuildingData;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.map.TileData;
+import net.lapidist.colony.components.state.messages.TileSelectionData;
+import net.lapidist.colony.components.state.map.TilePos;
+import net.lapidist.colony.components.state.messages.BuildingPlacementData;
+import net.lapidist.colony.components.state.messages.BuildingRemovalData;
+import net.lapidist.colony.components.state.resources.ResourceData;
+import net.lapidist.colony.components.state.resources.ResourceGatherRequestData;
+import net.lapidist.colony.components.state.resources.ResourceUpdateData;
+import net.lapidist.colony.components.state.map.MapMetadata;
+import net.lapidist.colony.components.state.map.MapChunk;
+import net.lapidist.colony.components.state.map.MapChunkBytes;
+import net.lapidist.colony.components.state.messages.MapChunkRequest;
 import net.lapidist.colony.save.SaveData;
-import net.lapidist.colony.components.state.PlayerPosition;
-import net.lapidist.colony.components.state.CameraPosition;
-import net.lapidist.colony.components.state.PlayerPositionUpdate;
+import net.lapidist.colony.components.state.map.PlayerPosition;
+import net.lapidist.colony.components.state.map.CameraPosition;
+import net.lapidist.colony.components.state.messages.PlayerPositionUpdate;
 import net.lapidist.colony.mod.ModMetadata;
 import net.lapidist.colony.components.state.EnvironmentState;
 import net.lapidist.colony.components.state.Season;
@@ -65,7 +65,7 @@ public final class SerializationRegistrar {
     }
 
     /** Precomputed registration hash for quick access. */
-    public static final int REGISTRATION_HASH = -95745047;
+    public static final int REGISTRATION_HASH = 1361101144;
 
     private static final Class<?>[] REGISTERED_TYPES = {
             TileData.class,
@@ -83,7 +83,7 @@ public final class SerializationRegistrar {
             MapChunk.class,
             MapChunkBytes.class,
             MapChunkRequest.class,
-            net.lapidist.colony.components.state.ChunkPos.class,
+            net.lapidist.colony.components.state.map.ChunkPos.class,
             net.lapidist.colony.map.MapChunkData.class,
             TilePos.class,
             net.lapidist.colony.network.ChatMessage.class,

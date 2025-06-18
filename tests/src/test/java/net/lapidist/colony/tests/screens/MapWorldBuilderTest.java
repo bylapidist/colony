@@ -38,7 +38,7 @@ public class MapWorldBuilderTest {
                 new net.lapidist.colony.settings.Settings(),
                 null,
                 null,
-                new net.lapidist.colony.components.state.ResourceData(),
+                new net.lapidist.colony.components.state.resources.ResourceData(),
                 null
         );
         world.setDelta(0f);

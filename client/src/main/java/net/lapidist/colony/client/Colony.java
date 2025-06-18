@@ -15,7 +15,7 @@ import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
 import net.lapidist.colony.save.io.GameStateIO;
 import net.lapidist.colony.config.ColonyConfig;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.events.Events;
 import net.lapidist.colony.client.events.GameInitEvent;
 import net.lapidist.colony.mod.ModLoader;
@@ -47,8 +47,8 @@ public final class Colony extends Game {
 
     /**
      * Starts or resumes a game using the dimensions stored in the autosave file.
-     * Defaults to {@link net.lapidist.colony.components.state.MapState#DEFAULT_WIDTH}
-     * and {@link net.lapidist.colony.components.state.MapState#DEFAULT_HEIGHT}
+     * Defaults to {@link net.lapidist.colony.components.state.map.MapState#DEFAULT_WIDTH}
+     * and {@link net.lapidist.colony.components.state.map.MapState#DEFAULT_HEIGHT}
      * when no save exists.
      */
     public void startGame(final String saveName) {

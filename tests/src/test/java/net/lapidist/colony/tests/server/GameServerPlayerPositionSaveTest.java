@@ -3,7 +3,7 @@ package net.lapidist.colony.tests.server;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
 import net.lapidist.colony.io.Paths;
-import net.lapidist.colony.components.state.PlayerPosition;
+import net.lapidist.colony.components.state.map.PlayerPosition;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -28,7 +28,7 @@ public class GameServerPlayerPositionSaveTest {
 
         final int x = 3;
         final int y = 4;
-        dispatch.invoke(server, new net.lapidist.colony.components.state.PlayerPositionUpdate(x, y));
+        dispatch.invoke(server, new net.lapidist.colony.components.state.messages.PlayerPositionUpdate(x, y));
         Thread.sleep(waitMs + extra);
         server.stop();
 

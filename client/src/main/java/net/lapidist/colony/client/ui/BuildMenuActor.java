@@ -137,7 +137,7 @@ public final class BuildMenuActor extends Table implements Disposable {
         return tooltip;
     }
 
-    private static String formatCost(final net.lapidist.colony.components.state.ResourceData cost) {
+    private static String formatCost(final net.lapidist.colony.components.state.resources.ResourceData cost) {
         java.util.List<String> parts = new java.util.ArrayList<>();
         if (cost.wood() > 0) {
             parts.add(cost.wood() + " wood");

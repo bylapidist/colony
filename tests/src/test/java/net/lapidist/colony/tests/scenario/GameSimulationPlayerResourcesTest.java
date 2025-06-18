@@ -1,8 +1,8 @@
 package net.lapidist.colony.tests.scenario;
 
 import net.lapidist.colony.client.network.GameClient;
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.ResourceGatherRequestData;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.resources.ResourceGatherRequestData;
 import net.lapidist.colony.components.resources.PlayerResourceComponent;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;

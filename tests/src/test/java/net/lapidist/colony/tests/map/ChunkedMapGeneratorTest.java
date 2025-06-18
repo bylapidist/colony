@@ -1,7 +1,7 @@
 package net.lapidist.colony.tests.map;
 
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.ChunkPos;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.map.ChunkPos;
 import net.lapidist.colony.map.ChunkedMapGenerator;
 import net.lapidist.colony.map.MapChunkData;
 import org.junit.Test;

@@ -2,11 +2,11 @@ package net.lapidist.colony.server.services;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Output;
-import net.lapidist.colony.components.state.MapChunkBytes;
-import net.lapidist.colony.components.state.MapMetadata;
+import net.lapidist.colony.components.state.map.MapChunkBytes;
+import net.lapidist.colony.components.state.map.MapMetadata;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.map.MapChunkData;
 import net.lapidist.colony.map.MapCoordinateUtils;
@@ -115,7 +115,7 @@ public final class NetworkService {
         int sent = 0;
         for (int x = chunkX - radius; x <= chunkX + radius; x++) {
             for (int y = chunkY - radius; y <= chunkY + radius; y++) {
-                MapChunkData chunk = state.chunks().get(new net.lapidist.colony.components.state.ChunkPos(x, y));
+                MapChunkData chunk = state.chunks().get(new net.lapidist.colony.components.state.map.ChunkPos(x, y));
                 if (chunk != null) {
                     connection.sendTCP(toChunkBytes(x, y, chunk));
                     sent++;

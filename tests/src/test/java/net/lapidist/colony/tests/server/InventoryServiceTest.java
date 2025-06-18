@@ -2,7 +2,7 @@ package net.lapidist.colony.tests.server;
 
 import net.lapidist.colony.base.BaseItemsMod;
 import net.lapidist.colony.server.services.InventoryService;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReentrantLock;
 import org.junit.Before;

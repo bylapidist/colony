@@ -1,9 +1,9 @@
 package net.lapidist.colony.map;
 
-import net.lapidist.colony.components.state.BuildingData;
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.ResourceData;
-import net.lapidist.colony.components.state.ChunkPos;
+import net.lapidist.colony.components.state.map.BuildingData;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.resources.ResourceData;
+import net.lapidist.colony.components.state.map.ChunkPos;
 import net.lapidist.colony.util.I18n;
 
 import java.util.Random;

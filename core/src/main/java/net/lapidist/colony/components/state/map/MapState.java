@@ -1,7 +1,9 @@
-package net.lapidist.colony.components.state;
+package net.lapidist.colony.components.state.map;
 
 import net.lapidist.colony.serialization.KryoType;
 import net.lapidist.colony.save.SaveVersion;
+import net.lapidist.colony.components.state.EnvironmentState;
+import net.lapidist.colony.components.state.resources.ResourceData;
 
 import net.lapidist.colony.map.MapChunkData;
 import net.lapidist.colony.map.MapCoordinateUtils;

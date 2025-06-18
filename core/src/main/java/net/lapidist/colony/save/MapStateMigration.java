@@ -1,6 +1,6 @@
 package net.lapidist.colony.save;
 
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 
 /**
  * Represents a single save migration step between two versions.

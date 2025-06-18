@@ -1,7 +1,7 @@
 package net.lapidist.colony.server.commands;
 
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.PlayerPosition;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.map.PlayerPosition;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.concurrent.locks.ReentrantLock;

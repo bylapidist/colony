@@ -10,7 +10,7 @@ import net.lapidist.colony.components.entities.BuildingComponent;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.resources.ResourceComponent;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 
 /** Utility to convert {@link MapComponent} to {@link MapRenderData}. */
 public final class MapRenderDataBuilder {

@@ -4,10 +4,10 @@ import com.artemis.BaseSystem;
 import com.badlogic.gdx.math.Rectangle;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.GameConstants;
-import net.lapidist.colony.components.state.MapChunkRequest;
-import net.lapidist.colony.components.state.ChunkPos;
+import net.lapidist.colony.components.state.messages.MapChunkRequest;
+import net.lapidist.colony.components.state.map.ChunkPos;
 import net.lapidist.colony.map.MapCoordinateUtils;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 
 /**
  * Requests map chunks near the camera position.

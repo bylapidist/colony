@@ -1,6 +1,6 @@
 package net.lapidist.colony.server.handlers;
 
-import net.lapidist.colony.components.state.PlayerPositionUpdate;
+import net.lapidist.colony.components.state.messages.PlayerPositionUpdate;
 import net.lapidist.colony.server.commands.CommandBus;
 import net.lapidist.colony.server.commands.PlayerPositionCommand;
 import net.lapidist.colony.server.commands.ServerCommand;

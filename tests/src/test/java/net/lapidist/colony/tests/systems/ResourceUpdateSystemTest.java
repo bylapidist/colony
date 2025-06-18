@@ -11,10 +11,10 @@ import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.resources.PlayerResourceComponent;
 import net.lapidist.colony.components.resources.ResourceComponent;
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.ResourceData;
-import net.lapidist.colony.components.state.ResourceUpdateData;
-import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.resources.ResourceData;
+import net.lapidist.colony.components.state.resources.ResourceUpdateData;
+import net.lapidist.colony.components.state.map.TileData;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,7 +49,7 @@ public class ResourceUpdateSystemTest {
         net.lapidist.colony.client.entities.PlayerFactory.create(
                 world,
                 null,
-                new net.lapidist.colony.components.state.ResourceData(),
+                new net.lapidist.colony.components.state.resources.ResourceData(),
                 null
         );
         world.process();

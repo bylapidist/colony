@@ -7,9 +7,9 @@ import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.client.render.MapRenderDataBuilder;
 import net.lapidist.colony.client.render.SimpleMapRenderData;
 import net.lapidist.colony.components.maps.MapComponent;
-import net.lapidist.colony.components.state.BuildingData;
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.map.BuildingData;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.map.TileData;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -29,7 +29,7 @@ public class MapRenderDataBuilderTest {
         MapState state = new MapState();
         state.putTile(TileData.builder()
                 .x(TILE_X).y(TILE_Y).tileType("GRASS").passable(true)
-                .resources(new net.lapidist.colony.components.state.ResourceData(WOOD, STONE, FOOD))
+                .resources(new net.lapidist.colony.components.state.resources.ResourceData(WOOD, STONE, FOOD))
                 .build());
         state.buildings().add(new BuildingData(BUILDING_X, BUILDING_Y, "house"));
 

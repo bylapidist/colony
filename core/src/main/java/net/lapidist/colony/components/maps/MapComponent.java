@@ -3,7 +3,7 @@ package net.lapidist.colony.components.maps;
 import com.artemis.Component;
 import com.artemis.Entity;
 import com.badlogic.gdx.utils.Array;
-import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.components.state.map.TilePos;
 
 import java.util.Map;
 

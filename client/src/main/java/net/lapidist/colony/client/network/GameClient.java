@@ -2,19 +2,20 @@ package net.lapidist.colony.client.network;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.TileSelectionData;
-import net.lapidist.colony.components.state.BuildingData;
-import net.lapidist.colony.components.state.BuildingPlacementData;
-import net.lapidist.colony.components.state.BuildingRemovalData;
-import net.lapidist.colony.components.state.ResourceGatherRequestData;
-import net.lapidist.colony.components.state.ResourceUpdateData;
-import net.lapidist.colony.components.state.TilePos;
-import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.ChunkPos;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.messages.TileSelectionData;
+import net.lapidist.colony.components.state.map.BuildingData;
+import net.lapidist.colony.components.state.messages.BuildingPlacementData;
+import net.lapidist.colony.components.state.messages.BuildingRemovalData;
+import net.lapidist.colony.components.state.resources.ResourceGatherRequestData;
+import net.lapidist.colony.components.state.resources.ResourceUpdateData;
+import net.lapidist.colony.components.state.map.TilePos;
+import net.lapidist.colony.components.state.map.TileData;
+import net.lapidist.colony.components.state.map.ChunkPos;
 import net.lapidist.colony.map.MapChunkData;
 import net.lapidist.colony.map.MapCoordinateUtils;
-import net.lapidist.colony.components.state.MapChunkRequest;
+import net.lapidist.colony.components.state.messages.MapChunkRequest;
+import net.lapidist.colony.components.state.messages.PlayerPositionUpdate;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.network.ChatMessage;
 import net.lapidist.colony.serialization.KryoRegistry;
@@ -450,7 +451,7 @@ public final class GameClient extends AbstractMessageEndpoint implements AutoClo
     /**
      * Send a player position update to the server.
      */
-    public void sendPlayerPositionUpdate(final net.lapidist.colony.components.state.PlayerPositionUpdate data) {
+    public void sendPlayerPositionUpdate(final PlayerPositionUpdate data) {
         send(data);
     }
 

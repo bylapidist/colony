@@ -1,6 +1,6 @@
 package net.lapidist.colony.server.services;
 
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.registry.Registries;
 
 import java.util.HashMap;

@@ -1,6 +1,6 @@
 package net.lapidist.colony.save;
 
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 
 /** Migration from save version 35 to 36 adding inventory storage. */
 public final class V35ToV36Migration implements MapStateMigration {

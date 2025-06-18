@@ -1,6 +1,6 @@
 package net.lapidist.colony.server.services;
 
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.events.Events;
 import net.lapidist.colony.io.Paths;
 import net.lapidist.colony.events.autosave.AutosaveEvent;

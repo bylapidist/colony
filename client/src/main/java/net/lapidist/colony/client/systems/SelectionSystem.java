@@ -12,7 +12,7 @@ import net.lapidist.colony.client.graphics.CameraUtils;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.resources.ResourceComponent;
-import net.lapidist.colony.components.state.ResourceGatherRequestData;
+import net.lapidist.colony.components.state.resources.ResourceGatherRequestData;
 import net.lapidist.colony.map.MapUtils;
 import net.lapidist.colony.settings.KeyAction;
 import net.lapidist.colony.settings.KeyBindings;

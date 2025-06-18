@@ -1,10 +1,10 @@
 package net.lapidist.colony.server.commands;
 
-import net.lapidist.colony.components.state.BuildingData;
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.ResourceData;
-import net.lapidist.colony.components.state.ResourceUpdateData;
-import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.map.BuildingData;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.resources.ResourceData;
+import net.lapidist.colony.components.state.resources.ResourceUpdateData;
+import net.lapidist.colony.components.state.map.TileData;
 import net.lapidist.colony.events.Events;
 import net.lapidist.colony.server.events.BuildingPlacedEvent;
 import net.lapidist.colony.server.services.NetworkService;

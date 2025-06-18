@@ -6,8 +6,8 @@ import com.artemis.WorldConfigurationBuilder;
 import com.artemis.utils.IntBag;
 import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.components.maps.MapComponent;
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.TileData;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.map.TileData;
 import net.lapidist.colony.map.GeneratedMapStateProvider;
 import net.lapidist.colony.map.ProvidedMapStateProvider;
 import net.lapidist.colony.map.ChunkedMapGenerator;
@@ -73,7 +73,7 @@ public class MapInitSystemTest {
                 .y(0)
                 .tileType("GRASS")
                 .passable(true)
-                .resources(new net.lapidist.colony.components.state.ResourceData(WOOD, STONE, FOOD))
+                .resources(new net.lapidist.colony.components.state.resources.ResourceData(WOOD, STONE, FOOD))
                 .build());
 
         World world = new World(new WorldConfigurationBuilder().build());

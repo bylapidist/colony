@@ -1,6 +1,6 @@
 package net.lapidist.colony.server.handlers;
 
-import net.lapidist.colony.components.state.BuildingRemovalData;
+import net.lapidist.colony.components.state.messages.BuildingRemovalData;
 import net.lapidist.colony.server.commands.CommandBus;
 import net.lapidist.colony.server.commands.RemoveBuildingCommand;
 import net.lapidist.colony.server.commands.ServerCommand;

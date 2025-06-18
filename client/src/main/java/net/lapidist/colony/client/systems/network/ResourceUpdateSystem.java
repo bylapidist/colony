@@ -8,7 +8,7 @@ import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
 import net.lapidist.colony.components.resources.ResourceComponent;
 import net.lapidist.colony.components.resources.PlayerResourceComponent;
-import net.lapidist.colony.components.state.ResourceUpdateData;
+import net.lapidist.colony.components.state.resources.ResourceUpdateData;
 import net.lapidist.colony.map.MapUtils;
 
 /**

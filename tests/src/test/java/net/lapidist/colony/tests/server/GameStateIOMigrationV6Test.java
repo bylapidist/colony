@@ -2,16 +2,16 @@ package net.lapidist.colony.tests.server;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Output;
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.TileData;
-import net.lapidist.colony.components.state.TilePos;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.map.TileData;
+import net.lapidist.colony.components.state.map.TilePos;
 import net.lapidist.colony.serialization.KryoRegistry;
 import net.lapidist.colony.save.SaveData;
 import net.lapidist.colony.save.SaveVersion;
 import net.lapidist.colony.serialization.SerializationRegistrar;
 import net.lapidist.colony.save.io.GameStateIO;
 import net.lapidist.colony.map.MapChunkData;
-import net.lapidist.colony.components.state.ChunkPos;
+import net.lapidist.colony.components.state.map.ChunkPos;
 import org.junit.Test;
 
 import java.nio.file.Files;

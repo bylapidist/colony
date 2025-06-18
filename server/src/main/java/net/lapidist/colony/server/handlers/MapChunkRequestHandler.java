@@ -1,7 +1,7 @@
 package net.lapidist.colony.server.handlers;
 
-import net.lapidist.colony.components.state.MapChunkRequest;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.messages.MapChunkRequest;
+import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.network.AbstractMessageHandler;
 import net.lapidist.colony.server.services.NetworkService;
 

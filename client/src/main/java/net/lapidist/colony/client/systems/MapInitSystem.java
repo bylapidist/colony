@@ -3,7 +3,7 @@ package net.lapidist.colony.client.systems;
 import com.artemis.BaseSystem;
 import net.lapidist.colony.map.MapFactory;
 import net.lapidist.colony.map.MapStateProvider;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 
 import java.util.function.Consumer;
 

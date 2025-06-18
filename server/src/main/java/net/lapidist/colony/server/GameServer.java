@@ -1,7 +1,7 @@
 package net.lapidist.colony.server;
 
 import com.esotericsoftware.kryonet.Server;
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.events.Events;
 import net.lapidist.colony.serialization.KryoRegistry;

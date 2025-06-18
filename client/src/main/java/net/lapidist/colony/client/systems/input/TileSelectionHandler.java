@@ -11,7 +11,7 @@ import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.client.graphics.CameraUtils;
 import net.lapidist.colony.components.maps.MapComponent;
 import net.lapidist.colony.components.maps.TileComponent;
-import net.lapidist.colony.components.state.TileSelectionData;
+import net.lapidist.colony.components.state.messages.TileSelectionData;
 
 /**
  * Processes tile selection input events.

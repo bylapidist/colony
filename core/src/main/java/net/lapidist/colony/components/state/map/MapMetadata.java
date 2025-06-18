@@ -1,6 +1,8 @@
-package net.lapidist.colony.components.state;
+package net.lapidist.colony.components.state.map;
 
 import net.lapidist.colony.serialization.KryoType;
+import net.lapidist.colony.components.state.EnvironmentState;
+import net.lapidist.colony.components.state.resources.ResourceData;
 
 import java.util.List;
 

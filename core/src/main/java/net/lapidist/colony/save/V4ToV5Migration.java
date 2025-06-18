@@ -1,7 +1,7 @@
 package net.lapidist.colony.save;
 
-import net.lapidist.colony.components.state.MapState;
-import net.lapidist.colony.components.state.ResourceData;
+import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.components.state.resources.ResourceData;
 
 /** Migration from save version 4 to version 5 adding player resources. */
 public final class V4ToV5Migration implements MapStateMigration {
