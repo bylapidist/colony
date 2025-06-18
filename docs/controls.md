@@ -15,6 +15,8 @@ This page lists the default keyboard bindings and how to customize them in-game.
 | Chat | **T** | Open the chat input box |
 | Toggle Minimap | **M** | Show or hide the minimap |
 | Toggle Camera | **F** | Switch between map overview and player camera |
+| Pause | **P** | Pause or resume the game |
+| Slow Motion | **L** | Reduce game speed |
 | Menu | **Esc** | Return to the main menu |
 
 The defaults are defined in [`KeyBindings.java`](../core/src/main/java/net/lapidist/colony/settings/KeyBindings.java).

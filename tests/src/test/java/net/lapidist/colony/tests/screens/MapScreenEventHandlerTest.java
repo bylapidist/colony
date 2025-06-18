@@ -22,6 +22,7 @@ public class MapScreenEventHandlerTest {
         private boolean resume;
         private boolean disposed;
         private ResizeEvent resize;
+        private SpeedMultiplierEvent speed;
 
         @Subscribe
         public void onShow(final ShowEvent event) {
@@ -52,11 +53,17 @@ public class MapScreenEventHandlerTest {
         public void onResize(final ResizeEvent event) {
             resize = event;
         }
+
+        @Subscribe
+        public void onSpeed(final SpeedMultiplierEvent event) {
+            speed = event;
+        }
     }
 
     private Capture capture;
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
+    private static final double HALF = 0.5d;
 
     @Before
     public void setup() {
@@ -84,5 +91,19 @@ public class MapScreenEventHandlerTest {
         assertTrue(capture.disposed);
         assertEquals(WIDTH, capture.resize.width());
         assertEquals(HEIGHT, capture.resize.height());
+    }
+
+    @Test
+    public void dispatchesGameplayControls() {
+        MapScreenEventHandler handler = new MapScreenEventHandler();
+        handler.pauseGame();
+        handler.resumeGame();
+        handler.setSpeedMultiplier(HALF);
+        Events.update();
+
+        assertTrue(capture.pause);
+        assertTrue(capture.resume);
+        assertNotNull(capture.speed);
+        assertEquals(HALF, capture.speed.multiplier(), 0d);
     }
 }

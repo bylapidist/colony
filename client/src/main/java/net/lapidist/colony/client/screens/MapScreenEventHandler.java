@@ -6,6 +6,7 @@ import net.lapidist.colony.client.events.PauseEvent;
 import net.lapidist.colony.client.events.ResizeEvent;
 import net.lapidist.colony.client.events.ResumeEvent;
 import net.lapidist.colony.client.events.ShowEvent;
+import net.lapidist.colony.client.events.SpeedMultiplierEvent;
 import net.lapidist.colony.events.Events;
 
 /**
@@ -25,8 +26,20 @@ public final class MapScreenEventHandler {
         Events.dispatch(new PauseEvent());
     }
 
+    public void pauseGame() {
+        Events.dispatch(new PauseEvent());
+    }
+
     public void resume() {
         Events.dispatch(new ResumeEvent());
+    }
+
+    public void resumeGame() {
+        Events.dispatch(new ResumeEvent());
+    }
+
+    public void setSpeedMultiplier(final double multiplier) {
+        Events.dispatch(new SpeedMultiplierEvent(multiplier));
     }
 
     public void hide() {

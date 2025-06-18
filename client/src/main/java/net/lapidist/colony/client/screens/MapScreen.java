@@ -9,6 +9,7 @@ import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.ui.MinimapActor;
 import net.lapidist.colony.components.state.MapState;
+import net.mostlyoriginal.api.event.common.Subscribe;
 
 /**
  * Gameplay screen that delegates world setup, UI creation and event handling
@@ -21,6 +22,8 @@ public final class MapScreen implements Screen {
     private final Stage stage;
     private final MinimapActor minimapActor;
     private final MapScreenEventHandler events;
+    private boolean paused;
+    private double speedMultiplier;
     private static final float DEFAULT_SCALE = 1f;
     /** Fixed time step used for deterministic updates. */
     private static final double STEP_TIME = 1d / 60d;
@@ -28,6 +31,21 @@ public final class MapScreen implements Screen {
      * Accumulates frame time so the world can be stepped in fixed increments.
      */
     private double accumulator;
+
+    @Subscribe
+    private void onPause(final net.lapidist.colony.client.events.PauseEvent e) {
+        paused = true;
+    }
+
+    @Subscribe
+    private void onResume(final net.lapidist.colony.client.events.ResumeEvent e) {
+        paused = false;
+    }
+
+    @Subscribe
+    private void onSpeed(final net.lapidist.colony.client.events.SpeedMultiplierEvent e) {
+        speedMultiplier = e.multiplier();
+    }
 
     private void applyScale() {
         float scale = colony.getSettings() == null ? DEFAULT_SCALE : colony.getSettings().getUiScale();
@@ -59,20 +77,27 @@ public final class MapScreen implements Screen {
         if (cameraSystem != null) {
             cameraSystem.setClient(client);
         }
-        MapUi ui = MapUiBuilder.build(stage, world, client, colony);
-        minimapActor = ui.getMinimapActor();
         events = new MapScreenEventHandler();
+        MapUi ui = MapUiBuilder.build(stage, world, client, colony, events);
+        minimapActor = ui.getMinimapActor();
         accumulator = 0.0;
+        paused = false;
+        speedMultiplier = 1.0;
+        if (net.lapidist.colony.events.Events.getInstance() != null) {
+            net.lapidist.colony.events.Events.getInstance().registerEvents(this);
+        }
     }
 
     @Override
     public void render(final float deltaTime) {
         events.update();
-        accumulator += deltaTime;
-        while (accumulator >= STEP_TIME) {
-            world.setDelta((float) STEP_TIME);
-            world.process();
-            accumulator -= STEP_TIME;
+        if (!paused) {
+            accumulator += deltaTime * speedMultiplier;
+            while (accumulator >= STEP_TIME) {
+                world.setDelta((float) STEP_TIME);
+                world.process();
+                accumulator -= STEP_TIME;
+            }
         }
     }
 

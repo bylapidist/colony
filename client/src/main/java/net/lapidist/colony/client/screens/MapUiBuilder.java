@@ -51,7 +51,8 @@ public final class MapUiBuilder {
             final Stage stage,
             final World world,
             final GameClient client,
-            final Colony colony
+            final Colony colony,
+            final MapScreenEventHandler events
     ) {
         Skin skin = new Skin(Gdx.files.internal("skin/default.json"));
         KeyBindings keyBindings = colony.getSettings().getKeyBindings();
@@ -78,6 +79,10 @@ public final class MapUiBuilder {
         mapButton.setName("mapButton");
         TextButton minimapButton = new TextButton("", skin, "toggle");
         minimapButton.setName("minimapButton");
+        TextButton pauseButton = new TextButton("", skin, "toggle");
+        pauseButton.setName("pauseButton");
+        TextButton slowButton = new TextButton("", skin, "toggle");
+        slowButton.setName("slowButton");
         GraphicsSettings graphics = colony.getSettings().getGraphicsSettings();
         MinimapActor minimapActor = new MinimapActor(world, graphics, client);
         minimapButton.setChecked(minimapActor.isVisible());
@@ -96,6 +101,8 @@ public final class MapUiBuilder {
         setButtonText(selectButton, "map.select", keyBindings.getKey(KeyAction.SELECT));
         setButtonText(mapButton, "map.map", keyBindings.getKey(KeyAction.TOGGLE_CAMERA));
         setButtonText(minimapButton, "map.minimap", keyBindings.getKey(KeyAction.MINIMAP));
+        setButtonText(pauseButton, "map.pause", keyBindings.getKey(KeyAction.PAUSE));
+        setButtonText(slowButton, "map.slowMotion", keyBindings.getKey(KeyAction.SLOW_MOTION));
 
         PlayerCameraSystem cameraSystem = world.getSystem(PlayerCameraSystem.class);
         if (cameraSystem != null) {
@@ -108,6 +115,8 @@ public final class MapUiBuilder {
         addSelectListener(selectionSystem, selectButton, buildButton, removeButton);
         addMapListener(cameraSystem, mapButton);
         addMinimapListener(minimapButton, minimapActor);
+        addPauseListener(events, pauseButton);
+        addSlowListener(events, slowButton);
 
         table.add(menuButton).pad(PADDING).left().top();
         table.add(buildButton).pad(PADDING).left().top();
@@ -115,6 +124,8 @@ public final class MapUiBuilder {
         table.add(selectButton).pad(PADDING).left().top();
         table.add(mapButton).pad(PADDING).left().top();
         table.add(minimapButton).pad(PADDING).left().top();
+        table.add(pauseButton).pad(PADDING).left().top();
+        table.add(slowButton).pad(PADDING).left().top();
         table.add(minimapActor).pad(PADDING).expandX().right().top();
         table.row();
         chatTable.add(chatBox).pad(PADDING).growX();
@@ -125,7 +136,8 @@ public final class MapUiBuilder {
                 removeButton,
                 selectButton,
                 mapButton,
-                minimapButton
+                minimapButton,
+                new ShortcutUpdater.ExtraButtons(pauseButton, slowButton)
         ));
         stage.addActor(new ModeUpdater(
                 buildSystem,
@@ -155,7 +167,8 @@ public final class MapUiBuilder {
         infoTable.add(progressBar).pad(PADDING);
         stage.addActor(infoTable);
 
-        stage.addListener(createStageListener(colony, keyBindings, chatBox, minimapActor, minimapButton));
+        stage.addListener(createStageListener(colony, keyBindings, chatBox, minimapActor,
+                minimapButton, pauseButton, slowButton));
         return new MapUi(stage, minimapActor, chatBox);
     }
 
@@ -251,12 +264,37 @@ public final class MapUiBuilder {
         });
     }
 
+    private static void addPauseListener(final MapScreenEventHandler events, final TextButton pauseButton) {
+        pauseButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                if (pauseButton.isChecked()) {
+                    events.pauseGame();
+                } else {
+                    events.resumeGame();
+                }
+            }
+        });
+    }
+
+    private static void addSlowListener(final MapScreenEventHandler events, final TextButton slowButton) {
+        final double slow = 0.5d;
+        slowButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                events.setSpeedMultiplier(slowButton.isChecked() ? slow : 1d);
+            }
+        });
+    }
+
     private static InputListener createStageListener(
             final Colony colony,
             final KeyBindings keyBindings,
             final ChatBox chatBox,
             final MinimapActor minimapActor,
-            final TextButton minimapButton
+            final TextButton minimapButton,
+            final TextButton pauseButton,
+            final TextButton slowButton
     ) {
         return new InputListener() {
             @Override
@@ -273,6 +311,14 @@ public final class MapUiBuilder {
                     minimapButton.setProgrammaticChangeEvents(true);
                     return true;
                 }
+                if (keycode == keyBindings.getKey(KeyAction.PAUSE)) {
+                    pauseButton.toggle();
+                    return true;
+                }
+                if (keycode == keyBindings.getKey(KeyAction.SLOW_MOTION)) {
+                    slowButton.toggle();
+                    return true;
+                }
                 if (keycode == keyBindings.getKey(KeyAction.MENU)) {
                     colony.returnToMainMenu();
                     return true;
@@ -287,17 +333,23 @@ public final class MapUiBuilder {
     }
 
     private static final class ShortcutUpdater extends Actor {
+        private record ExtraButtons(TextButton pause, TextButton slow) { }
+
         private final KeyBindings bindings;
         private final TextButton build;
         private final TextButton remove;
         private final TextButton select;
         private final TextButton map;
         private final TextButton minimap;
+        private final TextButton pause;
+        private final TextButton slow;
         private int buildKey;
         private int removeKey;
         private int selectKey;
         private int mapKey;
         private int minimapKey;
+        private int pauseKey;
+        private int slowKey;
 
         ShortcutUpdater(
                 final KeyBindings bindingsToUse,
@@ -305,7 +357,8 @@ public final class MapUiBuilder {
                 final TextButton removeButton,
                 final TextButton selectButton,
                 final TextButton mapButton,
-                final TextButton minimapButton
+                final TextButton minimapButton,
+                final ExtraButtons extraButtons
         ) {
             this.bindings = bindingsToUse;
             this.build = buildButton;
@@ -313,6 +366,8 @@ public final class MapUiBuilder {
             this.select = selectButton;
             this.map = mapButton;
             this.minimap = minimapButton;
+            this.pause = extraButtons.pause();
+            this.slow = extraButtons.slow();
             refresh();
         }
 
@@ -323,7 +378,9 @@ public final class MapUiBuilder {
                     || removeKey != bindings.getKey(KeyAction.REMOVE)
                     || selectKey != bindings.getKey(KeyAction.SELECT)
                     || mapKey != bindings.getKey(KeyAction.TOGGLE_CAMERA)
-                    || minimapKey != bindings.getKey(KeyAction.MINIMAP)) {
+                    || minimapKey != bindings.getKey(KeyAction.MINIMAP)
+                    || pauseKey != bindings.getKey(KeyAction.PAUSE)
+                    || slowKey != bindings.getKey(KeyAction.SLOW_MOTION)) {
                 refresh();
             }
         }
@@ -334,11 +391,15 @@ public final class MapUiBuilder {
             selectKey = bindings.getKey(KeyAction.SELECT);
             mapKey = bindings.getKey(KeyAction.TOGGLE_CAMERA);
             minimapKey = bindings.getKey(KeyAction.MINIMAP);
+            pauseKey = bindings.getKey(KeyAction.PAUSE);
+            slowKey = bindings.getKey(KeyAction.SLOW_MOTION);
             setButtonText(build, "map.build", buildKey);
             setButtonText(remove, "map.remove", removeKey);
             setButtonText(select, "map.select", selectKey);
             setButtonText(map, "map.map", mapKey);
             setButtonText(minimap, "map.minimap", minimapKey);
+            setButtonText(pause, "map.pause", pauseKey);
+            setButtonText(slow, "map.slowMotion", slowKey);
         }
     }
 

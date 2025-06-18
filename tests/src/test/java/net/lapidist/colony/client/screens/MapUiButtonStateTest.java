@@ -45,7 +45,7 @@ public class MapUiButtonStateTest {
         Colony colony = mock(Colony.class);
         when(colony.getSettings()).thenReturn(settings);
 
-        MapUiBuilder.build(stage, world, client, colony);
+        MapUiBuilder.build(stage, world, client, colony, new MapScreenEventHandler());
 
         TextButton buildButton = stage.getRoot().findActor("buildButton");
         TextButton removeButton = stage.getRoot().findActor("removeButton");
@@ -95,7 +95,7 @@ public class MapUiButtonStateTest {
         Colony colony = mock(Colony.class);
         when(colony.getSettings()).thenReturn(settings);
 
-        MapUi ui = MapUiBuilder.build(stage, world, client, colony);
+        MapUi ui = MapUiBuilder.build(stage, world, client, colony, new MapScreenEventHandler());
 
         PlayerCameraSystem cameraSystem = world.getSystem(PlayerCameraSystem.class);
         TextButton mapButton = stage.getRoot().findActor("mapButton");
@@ -142,7 +142,7 @@ public class MapUiButtonStateTest {
         Colony colony = mock(Colony.class);
         when(colony.getSettings()).thenReturn(settings);
 
-        MapUiBuilder.build(stage, world, client, colony);
+        MapUiBuilder.build(stage, world, client, colony, new MapScreenEventHandler());
 
         TextButton buildButton = stage.getRoot().findActor("buildButton");
         TextButton removeButton = stage.getRoot().findActor("removeButton");
@@ -185,7 +185,7 @@ public class MapUiButtonStateTest {
         Colony colony = mock(Colony.class);
         when(colony.getSettings()).thenReturn(settings);
 
-        MapUiBuilder.build(stage, world, client, colony);
+        MapUiBuilder.build(stage, world, client, colony, new MapScreenEventHandler());
 
         TextButton mapButton = stage.getRoot().findActor("mapButton");
         PlayerCameraSystem cameraSystem = world.getSystem(PlayerCameraSystem.class);
