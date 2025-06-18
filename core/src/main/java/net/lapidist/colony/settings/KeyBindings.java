@@ -21,6 +21,7 @@ public final class KeyBindings {
             Map.entry(KeyAction.REMOVE, Input.Keys.R),
             Map.entry(KeyAction.CHAT, Input.Keys.T),
             Map.entry(KeyAction.MINIMAP, Input.Keys.M),
+            Map.entry(KeyAction.MENU, Input.Keys.ESCAPE),
             Map.entry(KeyAction.TOGGLE_CAMERA, Input.Keys.F),
             Map.entry(KeyAction.SELECT, Input.Keys.ENTER),
             Map.entry(KeyAction.SELECT_WOOD, Input.Keys.NUM_1),

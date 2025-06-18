@@ -13,6 +13,7 @@ public enum KeyAction {
     REMOVE("remove"),
     CHAT("chat"),
     MINIMAP("minimap"),
+    MENU("menu"),
     TOGGLE_CAMERA("toggleCamera"),
     SELECT("select"),
     SELECT_WOOD("selectWood"),
