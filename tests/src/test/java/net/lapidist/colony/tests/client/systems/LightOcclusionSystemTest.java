@@ -14,7 +14,12 @@ import static org.junit.Assert.assertEquals;
 
 /** Tests for {@link LightOcclusionSystem}. */
 @RunWith(GdxTestRunner.class)
+@SuppressWarnings("checkstyle:magicnumber")
 public class LightOcclusionSystemTest {
+
+    private static final float POS_X = 3f;
+    private static final float POS_Y = 4f;
+    private static final float EPSILON = 0.001f;
 
     @Test
     public void createsAndRemovesBodies() {
@@ -54,8 +59,8 @@ public class LightOcclusionSystemTest {
 
         var player = world.createEntity();
         PlayerComponent pc = new PlayerComponent();
-        pc.setX(3f);
-        pc.setY(4f);
+        pc.setX(POS_X);
+        pc.setY(POS_Y);
         player.edit().add(pc);
 
         world.process();
@@ -63,8 +68,8 @@ public class LightOcclusionSystemTest {
                 new com.badlogic.gdx.utils.Array<>();
         box.getBodies(bodies);
         com.badlogic.gdx.physics.box2d.Body body = bodies.get(0);
-        assertEquals(3f, body.getPosition().x, 0.001f);
-        assertEquals(4f, body.getPosition().y, 0.001f);
+        assertEquals(POS_X, body.getPosition().x, EPSILON);
+        assertEquals(POS_Y, body.getPosition().y, EPSILON);
         world.dispose();
         box.dispose();
     }
