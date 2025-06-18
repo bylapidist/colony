@@ -14,7 +14,7 @@ import java.io.IOException;
 public interface ResourceLoader extends Disposable {
 
     /** Default specular exponent applied when metadata is missing. */
-    int DEFAULT_SPECULAR_POWER = 16;
+    int DEFAULT_SPECULAR_POWER = 8;
 
     /**
      * Load texture regions from the given atlas.

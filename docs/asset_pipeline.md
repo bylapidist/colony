@@ -5,7 +5,7 @@ region may define additional custom fields which are preserved by the atlas load
 
 The normal mapping shader reads a `specularPower` value from atlas regions to
 control the Blinn–Phong exponent. Add a line like `specularPower: 32` under a
-region entry to override the default of `16`.
+region entry to override the default of `8`.
 
 Run `./gradlew tests:copyAssets` whenever the atlas is updated so the test module
 has the latest resources.
