@@ -4,6 +4,7 @@ import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
 import net.lapidist.colony.server.services.ResourceProductionService;
 import net.lapidist.colony.server.services.SeasonCycleService;
+import net.lapidist.colony.server.services.DayNightCycleService;
 import net.lapidist.colony.io.Paths;
 import org.junit.Test;
 
@@ -41,6 +42,17 @@ public class GameServerBaseSystemsTest {
         server.start();
 
         assertTrue(systems(server).stream().anyMatch(s -> s instanceof SeasonCycleService));
+        server.stop();
+    }
+
+    @Test
+    public void dayNightCycleSystemRegistered() throws Exception {
+        String name = "day-cycle";
+        Paths.get().deleteAutosave(name);
+        GameServer server = new GameServer(GameServerConfig.builder().saveName(name).build());
+        server.start();
+
+        assertTrue(systems(server).stream().anyMatch(s -> s instanceof DayNightCycleService));
         server.stop();
     }
 }
