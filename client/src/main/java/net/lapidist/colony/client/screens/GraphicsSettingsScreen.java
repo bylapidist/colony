@@ -59,8 +59,14 @@ public final class GraphicsSettingsScreen extends BaseScreen {
         rendererBox.setItems("sprite");
         rendererBox.setSelected(graphics.getRenderer());
         resolutionBox = new SelectBox<>(getSkin());
-        resolutionBox.setItems("1280x720", "1600x900", "1920x1080");
+        com.badlogic.gdx.utils.Array<String> resolutions = new com.badlogic.gdx.utils.Array<>(new String[] {
+                "1280x720", "1600x900", "1920x1080"
+        });
         String resText = general.getWidth() + "x" + general.getHeight();
+        if (!resolutions.contains(resText, false)) {
+            resolutions.add(resText);
+        }
+        resolutionBox.setItems(resolutions);
         resolutionBox.setSelected(resText);
         fullscreenBox = new CheckBox(I18n.get("graphics.fullscreen"), getSkin());
         fullscreenBox.setChecked(general.isFullscreen());
