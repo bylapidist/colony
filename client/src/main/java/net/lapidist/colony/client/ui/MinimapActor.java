@@ -152,10 +152,13 @@ public final class MinimapActor extends Actor implements Disposable {
         if (mapWidthWorld < 0) {
             calculateMapDimensions();
         }
-        float scaleX = getWidth() / mapWidthWorld;
-        float scaleY = getHeight() / mapHeightWorld;
+        float rootScaleX = getStage() != null ? getStage().getRoot().getScaleX() : 1f;
+        float rootScaleY = getStage() != null ? getStage().getRoot().getScaleY() : 1f;
 
-        cache.setViewport(getWidth(), getHeight());
+        float scaleX = getWidth() * rootScaleX / mapWidthWorld;
+        float scaleY = getHeight() * rootScaleY / mapHeightWorld;
+
+        cache.setViewport(getWidth() * rootScaleX, getHeight() * rootScaleY);
         cache.ensureCache(resourceLoader, map, mapMapper, tileMapper,
                 scaleX, scaleY);
         cache.draw((SpriteBatch) batch, getX(), getY());
