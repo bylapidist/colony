@@ -78,7 +78,10 @@ public final class BuildPlacementSystem extends BaseSystem {
 
     /** @return currently selected building identifier. */
     public String getSelectedBuilding() {
-        return buildingIds.isEmpty() ? null : buildingIds.get(selectedIndex);
+        if (buildingIds == null || buildingIds.isEmpty()) {
+            return null;
+        }
+        return buildingIds.get(selectedIndex);
     }
 
     @Override
