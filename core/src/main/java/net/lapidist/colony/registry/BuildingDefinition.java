@@ -9,14 +9,25 @@ import net.lapidist.colony.components.state.ResourceData;
  * @param label  display label
  * @param asset  rendering asset reference
  * @param cost   resources required to construct the building
+ * @param description short description shown in build menu
  */
-public record BuildingDefinition(String id, String label, String asset, ResourceData cost) {
+public record BuildingDefinition(String id, String label, String asset, ResourceData cost, String description) {
     public BuildingDefinition() {
-        this(null, null, null, new ResourceData());
+        this(null, null, null, new ResourceData(), null);
     }
 
     /** Convenience constructor omitting cost (defaults to zero). */
     public BuildingDefinition(final String idValue, final String labelValue, final String assetValue) {
-        this(idValue, labelValue, assetValue, new ResourceData());
+        this(idValue, labelValue, assetValue, new ResourceData(), null);
+    }
+
+    /** Convenience constructor omitting description. */
+    public BuildingDefinition(
+            final String idValue,
+            final String labelValue,
+            final String assetValue,
+            final ResourceData costValue
+    ) {
+        this(idValue, labelValue, assetValue, costValue, null);
     }
 }

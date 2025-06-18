@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.scenes.scene2d.ui.TextTooltip;
 import net.lapidist.colony.client.core.io.FileLocation;
 import net.lapidist.colony.client.core.io.ResourceLoader;
 import net.lapidist.colony.client.core.io.TextureAtlasResourceLoader;
@@ -71,6 +72,16 @@ public final class BuildMenuActor extends Table implements Disposable {
             Label label = new Label(def.label() + " " + costText, skin);
             content.add(label);
             button.add(content).pad(PAD);
+            String tooltipText = (def.description() != null ? def.description() : "") + "\n" + costText;
+            TextTooltip.TextTooltipStyle ttStyle;
+            if (skin.has("default", TextTooltip.TextTooltipStyle.class)) {
+                ttStyle = skin.get(TextTooltip.TextTooltipStyle.class);
+            } else {
+                ttStyle = new TextTooltip.TextTooltipStyle();
+                ttStyle.label = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+            }
+            TextTooltip tooltip = new TextTooltip(tooltipText, ttStyle);
+            button.addListener(tooltip);
             button.addListener(new ChangeListener() {
                 @Override
                 public void changed(final ChangeEvent event, final Actor actor) {
