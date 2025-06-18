@@ -90,7 +90,16 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
             spriteBatch.setShader(null);
         }
         if (lights != null) {
-            lights.setCombinedMatrix(camera.getCamera().combined);
+            com.badlogic.gdx.graphics.OrthographicCamera cam =
+                    (com.badlogic.gdx.graphics.OrthographicCamera) camera.getCamera();
+            com.badlogic.gdx.utils.viewport.Viewport vp = camera.getViewport();
+            lights.setCombinedMatrix(
+                    cam.combined,
+                    cam.position.x,
+                    cam.position.y,
+                    vp.getWorldWidth() * cam.zoom,
+                    vp.getWorldHeight() * cam.zoom
+            );
             lights.render();
         }
     }
