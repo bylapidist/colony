@@ -3,27 +3,22 @@ package net.lapidist.colony.server.handlers;
 import net.lapidist.colony.components.state.BuildingPlacementData;
 import net.lapidist.colony.server.commands.BuildCommand;
 import net.lapidist.colony.server.commands.CommandBus;
-import net.lapidist.colony.network.AbstractMessageHandler;
+import net.lapidist.colony.server.commands.ServerCommand;
 
 /**
  * Converts incoming {@link BuildingPlacementData} messages into {@link BuildCommand} instances.
  *
  * Client system: {@code net.lapidist.colony.client.systems.network.BuildingUpdateSystem}
  */
-public final class BuildingPlacementRequestHandler extends AbstractMessageHandler<BuildingPlacementData> {
-    private final CommandBus commandBus;
+public final class BuildingPlacementRequestHandler
+        extends CommandBusMessageHandler<BuildingPlacementData> {
 
     public BuildingPlacementRequestHandler(final CommandBus bus) {
-        super(BuildingPlacementData.class);
-        this.commandBus = bus;
+        super(BuildingPlacementData.class, bus);
     }
 
     @Override
-    public void handle(final BuildingPlacementData data) {
-        commandBus.dispatch(new BuildCommand(
-                data.x(),
-                data.y(),
-                data.buildingId()
-        ));
+    protected ServerCommand convert(final BuildingPlacementData data) {
+        return new BuildCommand(data.x(), data.y(), data.buildingId());
     }
 }
