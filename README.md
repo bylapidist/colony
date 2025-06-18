@@ -105,6 +105,7 @@ Scenario test utilities are covered in [docs/tests.md](docs/tests.md).
 Developer build steps are summarized in [docs/developer_workflow.md](docs/developer_workflow.md).
 Shader plugins are described in [docs/shaders.md](docs/shaders.md).
 The asset pipeline is documented in [docs/asset_pipeline.md](docs/asset_pipeline.md).
+Asynchronous loading hooks are covered in [docs/background_tasks.md](docs/background_tasks.md).
 
 ## License
 This project is licensed under the [MIT License](LICENSE).

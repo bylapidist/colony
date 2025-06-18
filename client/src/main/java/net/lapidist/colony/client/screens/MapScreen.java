@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import net.lapidist.colony.client.Colony;
 import net.lapidist.colony.client.network.GameClient;
+import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.client.ui.MinimapActor;
 import net.lapidist.colony.components.state.MapState;
 
@@ -37,6 +38,15 @@ public final class MapScreen implements Screen {
     }
 
     public MapScreen(final Colony colonyToSet, final MapState state, final GameClient client) {
+        this(colonyToSet, state, client, null);
+    }
+
+    public MapScreen(
+            final Colony colonyToSet,
+            final MapState state,
+            final GameClient client,
+            final java.util.function.Consumer<Float> callback
+    ) {
         this.colony = colonyToSet;
         stage = new Stage(new ScreenViewport());
         applyScale();
@@ -46,7 +56,8 @@ public final class MapScreen implements Screen {
                         client,
                         stage,
                         colony.getSettings().getKeyBindings(),
-                        colony.getSettings().getGraphicsSettings()
+                        colony.getSettings().getGraphicsSettings(),
+                        callback
                 ),
                 null,
                 colony.getSettings(),
@@ -69,10 +80,15 @@ public final class MapScreen implements Screen {
     public void render(final float deltaTime) {
         events.update();
         accumulator += deltaTime;
+        MapInitSystem init = world.getSystem(MapInitSystem.class);
+        boolean loading = init != null && !init.isReady();
         while (accumulator >= STEP_TIME) {
             world.setDelta((float) STEP_TIME);
             world.process();
             accumulator -= STEP_TIME;
+            if (loading) {
+                break;
+            }
         }
     }
 
