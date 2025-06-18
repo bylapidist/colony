@@ -38,6 +38,12 @@ camera is managed by `PlayerCameraSystem` and the UI by `UISystem`.
 mutate the shared `MapState`. Kryonet handlers convert incoming messages into
 commands processed by these services.
 
+### Event Queue
+
+`Events.dispatch` now queues events instead of sending them immediately. Each
+call to `Events.update` processes up to ten queued events, forwarding them to the
+underlying Artemis `EventSystem` and any listeners.
+
 ### Client ↔ Server Systems
 
 | Client System | Client File | Server Handler | Server File | Purpose |

@@ -138,6 +138,7 @@ public class ColonyTest {
             });
 
             colony.create();
+            Events.update();
 
             settingsStatic.verify(Settings::load);
             verify(paths).createGameFoldersIfNotExists();
