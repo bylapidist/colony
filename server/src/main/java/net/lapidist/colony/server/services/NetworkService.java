@@ -9,6 +9,7 @@ import net.lapidist.colony.components.state.MapChunkBytes;
 import net.lapidist.colony.components.state.MapMetadata;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.map.MapChunkData;
+import net.lapidist.colony.map.MapCoordinateUtils;
 import net.lapidist.colony.network.DispatchListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,8 +109,8 @@ public final class NetworkService {
         if (state.playerPos() == null) {
             return;
         }
-        int chunkX = Math.floorDiv(state.playerPos().x(), MapChunkData.CHUNK_SIZE);
-        int chunkY = Math.floorDiv(state.playerPos().y(), MapChunkData.CHUNK_SIZE);
+        int chunkX = MapCoordinateUtils.toChunkCoord(state.playerPos().x());
+        int chunkY = MapCoordinateUtils.toChunkCoord(state.playerPos().y());
         int radius = GameConstants.CHUNK_LOAD_RADIUS;
         int sent = 0;
         for (int x = chunkX - radius; x <= chunkX + radius; x++) {

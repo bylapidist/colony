@@ -5,6 +5,7 @@ import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.components.state.ChunkPos;
 import net.lapidist.colony.map.MapChunkData;
+import net.lapidist.colony.map.MapCoordinateUtils;
 
 import java.util.Map;
 
@@ -31,10 +32,10 @@ public final class V6ToV7Migration implements MapStateMigration {
             Object key = e.getKey();
             Object value = e.getValue();
             if (key instanceof TilePos pos && value instanceof TileData tile) {
-                int chunkX = Math.floorDiv(pos.x(), MapChunkData.CHUNK_SIZE);
-                int chunkY = Math.floorDiv(pos.y(), MapChunkData.CHUNK_SIZE);
-                int localX = Math.floorMod(pos.x(), MapChunkData.CHUNK_SIZE);
-                int localY = Math.floorMod(pos.y(), MapChunkData.CHUNK_SIZE);
+                int chunkX = MapCoordinateUtils.toChunkCoord(pos.x());
+                int chunkY = MapCoordinateUtils.toChunkCoord(pos.y());
+                int localX = MapCoordinateUtils.toLocalCoord(pos.x());
+                int localY = MapCoordinateUtils.toLocalCoord(pos.y());
                 ChunkPos cp = new ChunkPos(chunkX, chunkY);
                 MapChunkData chunk = chunks.computeIfAbsent(cp, p -> new MapChunkData(chunkX, chunkY));
                 chunk.getTiles().put(new TilePos(localX, localY), tile);

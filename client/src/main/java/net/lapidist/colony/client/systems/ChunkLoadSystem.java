@@ -6,7 +6,7 @@ import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.state.MapChunkRequest;
 import net.lapidist.colony.components.state.ChunkPos;
-import net.lapidist.colony.map.MapChunkData;
+import net.lapidist.colony.map.MapCoordinateUtils;
 import net.lapidist.colony.components.state.MapState;
 
 /**
@@ -40,16 +40,16 @@ public final class ChunkLoadSystem extends BaseSystem {
             return;
         }
         if (!requestedInitial && state.playerPos() != null) {
-            int cx = Math.floorDiv(state.playerPos().x(), MapChunkData.CHUNK_SIZE);
-            int cy = Math.floorDiv(state.playerPos().y(), MapChunkData.CHUNK_SIZE);
+            int cx = MapCoordinateUtils.toChunkCoord(state.playerPos().x());
+            int cy = MapCoordinateUtils.toChunkCoord(state.playerPos().y());
             client.send(new MapChunkRequest(cx, cy));
             requestedInitial = true;
         }
         view.set(cameraSystem.getViewBounds());
         int centerX = Math.round(view.x + view.width / 2f) / GameConstants.TILE_SIZE;
         int centerY = Math.round(view.y + view.height / 2f) / GameConstants.TILE_SIZE;
-        int chunkX = Math.floorDiv(centerX, MapChunkData.CHUNK_SIZE);
-        int chunkY = Math.floorDiv(centerY, MapChunkData.CHUNK_SIZE);
+        int chunkX = MapCoordinateUtils.toChunkCoord(centerX);
+        int chunkY = MapCoordinateUtils.toChunkCoord(centerY);
         int radius = GameConstants.CHUNK_LOAD_RADIUS;
         for (int x = chunkX - radius; x <= chunkX + radius; x++) {
             for (int y = chunkY - radius; y <= chunkY + radius; y++) {

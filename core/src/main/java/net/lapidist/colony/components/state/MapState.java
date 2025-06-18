@@ -4,6 +4,7 @@ import net.lapidist.colony.serialization.KryoType;
 import net.lapidist.colony.save.SaveVersion;
 
 import net.lapidist.colony.map.MapChunkData;
+import net.lapidist.colony.map.MapCoordinateUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,18 +66,18 @@ public record MapState(
     }
 
     public TileData getTile(final int x, final int y) {
-        int chunkX = Math.floorDiv(x, MapChunkData.CHUNK_SIZE);
-        int chunkY = Math.floorDiv(y, MapChunkData.CHUNK_SIZE);
-        int localX = Math.floorMod(x, MapChunkData.CHUNK_SIZE);
-        int localY = Math.floorMod(y, MapChunkData.CHUNK_SIZE);
+        int chunkX = MapCoordinateUtils.toChunkCoord(x);
+        int chunkY = MapCoordinateUtils.toChunkCoord(y);
+        int localX = MapCoordinateUtils.toLocalCoord(x);
+        int localY = MapCoordinateUtils.toLocalCoord(y);
         return getOrCreateChunk(chunkX, chunkY).getTile(localX, localY);
     }
 
     public void putTile(final TileData tile) {
-        int chunkX = Math.floorDiv(tile.x(), MapChunkData.CHUNK_SIZE);
-        int chunkY = Math.floorDiv(tile.y(), MapChunkData.CHUNK_SIZE);
-        int localX = Math.floorMod(tile.x(), MapChunkData.CHUNK_SIZE);
-        int localY = Math.floorMod(tile.y(), MapChunkData.CHUNK_SIZE);
+        int chunkX = MapCoordinateUtils.toChunkCoord(tile.x());
+        int chunkY = MapCoordinateUtils.toChunkCoord(tile.y());
+        int localX = MapCoordinateUtils.toLocalCoord(tile.x());
+        int localY = MapCoordinateUtils.toLocalCoord(tile.y());
         getOrCreateChunk(chunkX, chunkY).getTiles().put(new TilePos(localX, localY), tile);
     }
 
@@ -95,10 +96,10 @@ public record MapState(
 
         @Override
         public TileData put(final TilePos key, final TileData value) {
-            int chunkX = Math.floorDiv(key.x(), MapChunkData.CHUNK_SIZE);
-            int chunkY = Math.floorDiv(key.y(), MapChunkData.CHUNK_SIZE);
-            int localX = Math.floorMod(key.x(), MapChunkData.CHUNK_SIZE);
-            int localY = Math.floorMod(key.y(), MapChunkData.CHUNK_SIZE);
+            int chunkX = MapCoordinateUtils.toChunkCoord(key.x());
+            int chunkY = MapCoordinateUtils.toChunkCoord(key.y());
+            int localX = MapCoordinateUtils.toLocalCoord(key.x());
+            int localY = MapCoordinateUtils.toLocalCoord(key.y());
             return MapState.this.getOrCreateChunk(chunkX, chunkY)
                     .getTiles()
                     .put(new TilePos(localX, localY), value);

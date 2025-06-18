@@ -13,6 +13,7 @@ import net.lapidist.colony.components.state.TilePos;
 import net.lapidist.colony.components.state.TileData;
 import net.lapidist.colony.components.state.ChunkPos;
 import net.lapidist.colony.map.MapChunkData;
+import net.lapidist.colony.map.MapCoordinateUtils;
 import net.lapidist.colony.components.state.MapChunkRequest;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.network.ChatMessage;
@@ -281,10 +282,10 @@ public final class GameClient extends AbstractMessageEndpoint implements AutoClo
         for (var entry : tiles.entrySet()) {
             TilePos pos = entry.getKey();
             TileData data = entry.getValue();
-            int chunkX = Math.floorDiv(pos.x(), MapChunkData.CHUNK_SIZE);
-            int chunkY = Math.floorDiv(pos.y(), MapChunkData.CHUNK_SIZE);
-            int localX = Math.floorMod(pos.x(), MapChunkData.CHUNK_SIZE);
-            int localY = Math.floorMod(pos.y(), MapChunkData.CHUNK_SIZE);
+            int chunkX = MapCoordinateUtils.toChunkCoord(pos.x());
+            int chunkY = MapCoordinateUtils.toChunkCoord(pos.y());
+            int localX = MapCoordinateUtils.toLocalCoord(pos.x());
+            int localY = MapCoordinateUtils.toLocalCoord(pos.y());
             ChunkPos posKey = new ChunkPos(chunkX, chunkY);
             MapChunkData chunk = chunks.computeIfAbsent(posKey, p -> new MapChunkData(chunkX, chunkY));
             chunk.getTiles().put(new TilePos(localX, localY), data);
@@ -332,8 +333,8 @@ public final class GameClient extends AbstractMessageEndpoint implements AutoClo
         }
         for (var entry : chunk.getTiles().entrySet()) {
             TileData td = entry.getValue();
-            int localX = Math.floorMod(td.x(), MapChunkData.CHUNK_SIZE);
-            int localY = Math.floorMod(td.y(), MapChunkData.CHUNK_SIZE);
+            int localX = MapCoordinateUtils.toLocalCoord(td.x());
+            int localY = MapCoordinateUtils.toLocalCoord(td.y());
             data.getTiles().put(new TilePos(localX, localY), td);
         }
     }
