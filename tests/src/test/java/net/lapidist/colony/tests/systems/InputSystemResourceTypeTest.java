@@ -8,7 +8,8 @@ import com.badlogic.gdx.math.Vector2;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.CameraInputSystem;
-import net.lapidist.colony.client.systems.InputSystem;
+import net.lapidist.colony.client.systems.SelectionSystem;
+import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.network.MapLoadSystem;
 import net.lapidist.colony.client.graphics.CameraUtils;
@@ -42,17 +43,21 @@ public class InputSystemResourceTypeTest {
 
         GameClient client = mock(GameClient.class);
         KeyBindings keys = new KeyBindings();
-        InputSystem system = new InputSystem(client, keys);
+        CameraInputSystem cameraInput = new CameraInputSystem(keys);
+        SelectionSystem selectionSystem = new SelectionSystem(client, keys);
+        BuildPlacementSystem buildSystem = new BuildPlacementSystem(client, keys);
 
         World world = new World(new WorldConfigurationBuilder()
                 .with(new MapLoadSystem(state), new PlayerCameraSystem(),
-                        new CameraInputSystem(keys), system)
+                        cameraInput, selectionSystem, buildSystem)
                 .build());
 
         Input input = mock(Input.class);
         Gdx.input = input;
-        when(input.isKeyJustPressed(keys.getKey(KeyAction.GATHER)))
-                .thenReturn(false, true);
+        when(input.isKeyJustPressed(keys.getKey(KeyAction.SELECT_WOOD))).thenReturn(false, false);
+        when(input.isKeyJustPressed(keys.getKey(KeyAction.SELECT_STONE))).thenReturn(true, false);
+        when(input.isKeyJustPressed(keys.getKey(KeyAction.SELECT_FOOD))).thenReturn(false, false);
+        when(input.isKeyJustPressed(keys.getKey(KeyAction.GATHER))).thenReturn(false, true);
 
         world.process();
         world.process();
@@ -78,10 +83,12 @@ public class InputSystemResourceTypeTest {
 
         GameClient client = mock(GameClient.class);
         KeyBindings keys = new KeyBindings();
-        InputSystem system = new InputSystem(client, keys);
+        CameraInputSystem cameraInput = new CameraInputSystem(keys);
+        SelectionSystem selectionSystem = new SelectionSystem(client, keys);
+        BuildPlacementSystem buildSystem = new BuildPlacementSystem(client, keys);
         World world = new World(new WorldConfigurationBuilder()
                 .with(new MapLoadSystem(state), new PlayerCameraSystem(),
-                        new CameraInputSystem(keys), system)
+                        cameraInput, selectionSystem, buildSystem)
                 .build());
         world.process();
 
@@ -94,7 +101,7 @@ public class InputSystemResourceTypeTest {
         camera.getCamera().update();
 
         Vector2 screenCoords = CameraUtils.worldToScreenCoords(camera.getViewport(), 0, 0);
-        system.tap(screenCoords.x, screenCoords.y, 1, 0);
+        selectionSystem.tap(screenCoords.x, screenCoords.y);
 
         ArgumentCaptor<ResourceGatherRequestData> captor =
                 ArgumentCaptor.forClass(ResourceGatherRequestData.class);
