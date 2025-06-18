@@ -123,8 +123,8 @@ public final class CameraUtils {
 
     public static Vector2 getWorldCenter(final int mapWidth, final int mapHeight) {
         return new Vector2(
-                (GameConstants.TILE_SIZE * mapWidth + GameConstants.TILE_SIZE) / 2f,
-                (GameConstants.TILE_SIZE * mapHeight + GameConstants.TILE_SIZE) / 2f
+                GameConstants.TILE_SIZE * mapWidth / 2f,
+                GameConstants.TILE_SIZE * mapHeight / 2f
         );
     }
 
