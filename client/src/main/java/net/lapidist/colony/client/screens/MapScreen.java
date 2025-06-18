@@ -2,6 +2,7 @@ package net.lapidist.colony.client.screens;
 
 import com.artemis.World;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import net.lapidist.colony.client.Colony;
@@ -20,12 +21,19 @@ public final class MapScreen implements Screen {
     private final Stage stage;
     private final MinimapActor minimapActor;
     private final MapScreenEventHandler events;
+    private static final float DEFAULT_SCALE = 1f;
+
+    private void applyScale() {
+        float scale = colony.getSettings() == null ? DEFAULT_SCALE : colony.getSettings().getUiScale();
+        ScreenViewport viewport = (ScreenViewport) stage.getViewport();
+        viewport.setUnitsPerPixel(1f / scale);
+        viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+    }
 
     public MapScreen(final Colony colonyToSet, final MapState state, final GameClient client) {
         this.colony = colonyToSet;
         stage = new Stage(new ScreenViewport());
-        float scale = colony.getSettings() == null ? 1f : colony.getSettings().getUiScale();
-        stage.getRoot().setScale(scale);
+        applyScale();
         world = MapWorldBuilder.build(
                 MapWorldBuilder.builder(
                         state,
@@ -70,9 +78,8 @@ public final class MapScreen implements Screen {
     @Override
     public void resume() {
         events.resume();
-        float scale = colony.getSettings() == null ? 1f : colony.getSettings().getUiScale();
-        stage.getRoot().setScale(scale);
-        events.resize(com.badlogic.gdx.Gdx.graphics.getWidth(), com.badlogic.gdx.Gdx.graphics.getHeight());
+        applyScale();
+        events.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     @Override
@@ -82,9 +89,8 @@ public final class MapScreen implements Screen {
 
     @Override
     public void show() {
-        float scale = colony.getSettings() == null ? 1f : colony.getSettings().getUiScale();
-        stage.getRoot().setScale(scale);
-        events.resize(com.badlogic.gdx.Gdx.graphics.getWidth(), com.badlogic.gdx.Gdx.graphics.getHeight());
+        applyScale();
+        events.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         events.show();
     }
 
