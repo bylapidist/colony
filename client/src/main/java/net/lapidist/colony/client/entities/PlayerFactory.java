@@ -7,6 +7,7 @@ import net.lapidist.colony.client.graphics.CameraUtils;
 import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.components.entities.PlayerComponent;
 import net.lapidist.colony.components.light.PointLightComponent;
+import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.components.resources.PlayerResourceComponent;
 import net.lapidist.colony.components.state.MapState;
 import net.lapidist.colony.components.state.PlayerPosition;
@@ -16,7 +17,7 @@ import net.lapidist.colony.components.state.ResourceData;
  * Factory methods for creating the player entity once at startup.
  */
 public final class PlayerFactory {
-    private static final float DEFAULT_LIGHT_RADIUS = 3f;
+    private static final float DEFAULT_LIGHT_RADIUS = 3f * GameConstants.TILE_SIZE;
     private static final float DEFAULT_LIGHT_INTENSITY = 0.6f;
     private static final com.badlogic.gdx.graphics.Color DEFAULT_LIGHT_COLOR =
             new com.badlogic.gdx.graphics.Color(1f, 0.6f, 0.2f, 1f);

@@ -6,6 +6,7 @@ import com.artemis.WorldConfigurationBuilder;
 import net.lapidist.colony.client.entities.PlayerFactory;
 import net.lapidist.colony.components.entities.PlayerComponent;
 import net.lapidist.colony.components.light.PointLightComponent;
+import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +17,7 @@ import static org.junit.Assert.*;
 @RunWith(GdxTestRunner.class)
 public class PlayerFactoryTest {
 
-    private static final float EXPECTED_RADIUS = 3f;
+    private static final float EXPECTED_RADIUS = 3f * GameConstants.TILE_SIZE;
     private static final float EXPECTED_INTENSITY = 0.6f;
     private static final com.badlogic.gdx.graphics.Color EXPECTED_COLOR =
             new com.badlogic.gdx.graphics.Color(1f, 0.6f, 0.2f, 1f);
