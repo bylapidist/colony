@@ -6,6 +6,7 @@ import com.artemis.Aspect;
 import com.artemis.BaseSystem;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
@@ -14,6 +15,8 @@ import com.badlogic.gdx.utils.IntMap;
 import net.lapidist.colony.components.entities.PlayerComponent;
 import net.lapidist.colony.components.light.PointLightComponent;
 import net.lapidist.colony.components.state.MutableEnvironmentState;
+import net.lapidist.colony.client.events.ResizeEvent;
+import net.mostlyoriginal.api.event.common.Subscribe;
 
 /**
  * Consolidated lighting system combining dynamic lights and day/night cycle.
@@ -81,6 +84,9 @@ public final class LightingSystem extends BaseSystem implements Disposable {
     /** Assign the handler used for lighting. */
     public void setRayHandler(final RayHandler handler) {
         this.rayHandler = handler;
+        if (handler != null) {
+            onResize(new ResizeEvent(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+        }
     }
 
     /** Current lighting handler or {@code null}. */
@@ -108,6 +114,13 @@ public final class LightingSystem extends BaseSystem implements Disposable {
     /** Number of active lights. */
     public int getLightCount() {
         return lights.size;
+    }
+
+    @Subscribe
+    private void onResize(final ResizeEvent event) {
+        if (rayHandler != null) {
+            rayHandler.useCustomViewport(0, 0, event.width(), event.height());
+        }
     }
 
     /** Calculate the direction of the sun for the current time of day. */
