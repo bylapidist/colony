@@ -110,12 +110,7 @@ public final class BuildMenuActor extends Table implements Disposable {
                 }
             });
             group.add(button);
-            String current = null;
-            try {
-                current = buildSystem.getSelectedBuilding();
-            } catch (NullPointerException ignore) {
-                // system not initialized
-            }
+            String current = buildSystem.getSelectedBuilding();
             if (current != null && def.id().equalsIgnoreCase(current)) {
                 button.setChecked(true);
             }
