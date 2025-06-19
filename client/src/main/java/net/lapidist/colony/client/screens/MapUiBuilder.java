@@ -112,8 +112,10 @@ public final class MapUiBuilder {
         }
 
         addMenuListener(colony, menuButton);
-        addBuildListener(buildSystem, buildButton, removeButton);
-        addRemoveListener(buildSystem, buildButton, removeButton);
+        if (buildSystem != null) {
+            addBuildListener(buildSystem, buildButton, removeButton);
+            addRemoveListener(buildSystem, buildButton, removeButton);
+        }
         addSelectListener(selectionSystem, selectButton, buildButton, removeButton);
         addMapListener(cameraSystem, mapButton);
         addMinimapListener(minimapButton, minimapActor);
@@ -459,8 +461,8 @@ public final class MapUiBuilder {
         @Override
         public void act(final float delta) {
             super.act(delta);
-            boolean build = buildSystem.isBuildMode();
-            boolean remove = buildSystem.isRemoveMode();
+            boolean build = buildSystem != null && buildSystem.isBuildMode();
+            boolean remove = buildSystem != null && buildSystem.isRemoveMode();
             boolean select = selectionSystem != null && selectionSystem.isSelectMode();
             if (buildButton.isChecked() != build) {
                 buildButton.setProgrammaticChangeEvents(false);
