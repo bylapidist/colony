@@ -18,7 +18,8 @@ import net.lapidist.colony.components.state.map.MapState;
 public final class MapScreen implements Screen {
 
     private final Colony colony;
-    private final World world;
+    private final World logicWorld;
+    private final World renderWorld;
     private final Stage stage;
     private final MinimapActor minimapActor;
     private final MapScreenEventHandler events;
@@ -54,7 +55,18 @@ public final class MapScreen implements Screen {
         this.colony = colonyToSet;
         stage = new Stage(new ScreenViewport());
         applyScale();
-        world = MapWorldBuilder.build(
+        logicWorld = LogicWorldBuilder.build(
+                LogicWorldBuilder.builder(
+                        state,
+                        client,
+                        colony.getSettings().getKeyBindings(),
+                        callback
+                ),
+                client,
+                state.playerResources(),
+                state.playerPos()
+        );
+        renderWorld = MapWorldBuilder.build(
                 MapWorldBuilder.builder(
                         state,
                         client,
@@ -70,12 +82,12 @@ public final class MapScreen implements Screen {
                 state.playerResources(),
                 state.playerPos()
         );
-        var cameraSystem = world.getSystem(net.lapidist.colony.client.systems.PlayerCameraSystem.class);
+        var cameraSystem = renderWorld.getSystem(net.lapidist.colony.client.systems.PlayerCameraSystem.class);
         if (cameraSystem != null) {
             cameraSystem.setClient(client);
         }
         events = new MapScreenEventHandler();
-        MapUi ui = MapUiBuilder.build(stage, world, client, colony, events);
+        MapUi ui = MapUiBuilder.build(stage, renderWorld, client, colony, events);
         minimapActor = ui.getMinimapActor();
         events.attach(this);
         accumulator = 0.0;
@@ -111,15 +123,19 @@ public final class MapScreen implements Screen {
         if (!paused) {
             accumulator += deltaTime * speedMultiplier;
         }
-        MapInitSystem init = world.getSystem(MapInitSystem.class);
+        MapInitSystem init = logicWorld.getSystem(MapInitSystem.class);
         boolean loading = init != null && !init.isReady();
         while (!paused && accumulator >= STEP_TIME) {
-            world.setDelta((float) STEP_TIME);
-            world.process();
+            logicWorld.setDelta((float) STEP_TIME);
+            logicWorld.process();
             accumulator -= STEP_TIME;
             if (loading) {
                 break;
             }
+        }
+        if (!paused) {
+            renderWorld.setDelta(deltaTime * speedMultiplier);
+            renderWorld.process();
         }
     }
 
@@ -155,7 +171,8 @@ public final class MapScreen implements Screen {
     @Override
     public void dispose() {
         events.dispose();
-        world.dispose();
+        logicWorld.dispose();
+        renderWorld.dispose();
         minimapActor.dispose();
         stage.dispose();
     }

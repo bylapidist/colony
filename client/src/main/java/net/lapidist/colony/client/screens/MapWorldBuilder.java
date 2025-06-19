@@ -12,20 +12,11 @@ import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.settings.GraphicsSettings;
 import net.lapidist.colony.client.graphics.ShaderPlugin;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
-import net.lapidist.colony.client.systems.CameraInputSystem;
-import net.lapidist.colony.client.systems.SelectionSystem;
-import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.MapRenderSystem;
 import net.lapidist.colony.client.systems.LightingSystem;
 import net.lapidist.colony.client.systems.ParticleSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
-import net.lapidist.colony.client.systems.PlayerMovementSystem;
 import net.lapidist.colony.client.systems.UISystem;
-import net.lapidist.colony.client.systems.ChunkLoadSystem;
-import net.lapidist.colony.client.systems.network.ChunkRequestQueueSystem;
-import net.lapidist.colony.client.systems.network.TileUpdateSystem;
-import net.lapidist.colony.client.systems.network.BuildingUpdateSystem;
-import net.lapidist.colony.client.systems.network.ResourceUpdateSystem;
 import net.lapidist.colony.client.systems.CelestialSystem;
 import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.client.systems.MapRenderDataSystem;
@@ -155,12 +146,7 @@ public final class MapWorldBuilder {
         PlayerPosition playerPos = state.playerPos();
         CameraPosition cameraPos = state.cameraPos();
         MutableEnvironmentState environment = new MutableEnvironmentState(state.environment());
-        CameraInputSystem cameraInputSystem = new CameraInputSystem(client, keyBindings);
-        cameraInputSystem.addProcessor(stage);
-        SelectionSystem selectionSystem = new SelectionSystem(client, keyBindings);
-        BuildPlacementSystem buildPlacementSystem = new BuildPlacementSystem(client, keyBindings);
         ParticleSystem particleSystem = new ParticleSystem(new com.badlogic.gdx.graphics.g2d.SpriteBatch());
-        PlayerMovementSystem movementSystem = new PlayerMovementSystem(client, keyBindings);
 
         ClearScreenSystem clear = new ClearScreenSystem(Color.BLACK);
         int rays = graphics != null ? graphics.getLightRays() : LightingSystem.DEFAULT_RAYS;
@@ -175,15 +161,6 @@ public final class MapWorldBuilder {
                 .with(
                         new EventSystem(),
                         clear,
-                        cameraInputSystem,
-                        selectionSystem,
-                        buildPlacementSystem,
-                        movementSystem,
-                        new TileUpdateSystem(client),
-                        new BuildingUpdateSystem(client),
-                        new ResourceUpdateSystem(client),
-                        new ChunkLoadSystem(client),
-                        new ChunkRequestQueueSystem(client),
                         new CelestialSystem(client, environment),
                         new MapRenderSystem(),
                         particleSystem,

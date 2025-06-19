@@ -12,6 +12,7 @@ import net.lapidist.colony.client.screens.MapScreenEventHandler;
 import net.lapidist.colony.client.screens.MapUi;
 import net.lapidist.colony.client.screens.MapUiBuilder;
 import net.lapidist.colony.client.screens.MapWorldBuilder;
+import net.lapidist.colony.client.screens.LogicWorldBuilder;
 import net.lapidist.colony.client.ui.MinimapActor;
 import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.settings.Settings;
@@ -47,15 +48,34 @@ public class MapScreenTest {
         when(colony.getSettings()).thenReturn(settings);
         MapState state = new MapState();
         GameClient client = mock(GameClient.class);
+        World logic = mock(World.class);
         World world = mock(World.class);
         MinimapActor minimap = mock(MinimapActor.class);
 
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class);
+             MockedStatic<LogicWorldBuilder> logicStatic = mockStatic(LogicWorldBuilder.class);
              MockedStatic<MapWorldBuilder> worldStatic = mockStatic(MapWorldBuilder.class);
              MockedStatic<MapUiBuilder> uiStatic = mockStatic(MapUiBuilder.class)) {
-            worldStatic.when(() -> MapWorldBuilder.builder(eq(state), eq(client),
-                    any(Stage.class), eq(settings.getKeyBindings()), eq(settings.getGraphicsSettings()), any()))
-                    .thenReturn(new WorldConfigurationBuilder());
+            logicStatic.when(() -> LogicWorldBuilder.builder(
+                    eq(state),
+                    eq(client),
+                    eq(settings.getKeyBindings()),
+                    any()
+            )).thenReturn(new WorldConfigurationBuilder());
+            logicStatic.when(() -> LogicWorldBuilder.build(
+                    any(),
+                    eq(client),
+                    any(),
+                    any()
+            )).thenReturn(logic);
+            worldStatic.when(() -> MapWorldBuilder.builder(
+                    eq(state),
+                    eq(client),
+                    any(Stage.class),
+                    eq(settings.getKeyBindings()),
+                    eq(settings.getGraphicsSettings()),
+                    any()
+            )).thenReturn(new WorldConfigurationBuilder());
             worldStatic.when(() -> MapWorldBuilder.build(
                     any(),
                     isNull(),
@@ -63,8 +83,8 @@ public class MapScreenTest {
                     any(),
                     eq(client),
                     any(),
-                    any()))
-                    .thenReturn(world);
+                    any()
+            )).thenReturn(world);
             uiStatic.when(() -> MapUiBuilder.build(any(Stage.class), eq(world), eq(client), eq(colony), any()))
                     .thenAnswer(inv -> new MapUi(
                             inv.getArgument(0),
@@ -92,14 +112,17 @@ public class MapScreenTest {
             int expectedSteps = (int) Math.round(DELTA / step);
 
             verify(handler).update();
-            verify(world, times(expectedSteps)).setDelta((float) step);
-            verify(world, times(expectedSteps)).process();
+            verify(logic, times(expectedSteps)).setDelta((float) step);
+            verify(logic, times(expectedSteps)).process();
+            verify(world).setDelta(DELTA);
+            verify(world).process();
             verify(handler).resize(WIDTH, HEIGHT);
             verify(handler).pause();
             verify(handler).resume();
             verify(handler).hide();
             verify(handler).show();
             verify(handler).dispose();
+            verify(logic).dispose();
             verify(world).dispose();
             verify(minimap).dispose();
         }
@@ -115,14 +138,38 @@ public class MapScreenTest {
         GameClient client = mock(GameClient.class);
 
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class);
+             MockedStatic<LogicWorldBuilder> logicStatic = mockStatic(LogicWorldBuilder.class);
              MockedStatic<MapWorldBuilder> worldStatic = mockStatic(MapWorldBuilder.class);
              MockedStatic<MapUiBuilder> uiStatic = mockStatic(MapUiBuilder.class)) {
-            worldStatic.when(() -> MapWorldBuilder.builder(eq(state), eq(client), any(Stage.class),
-                    eq(settings.getKeyBindings()), eq(settings.getGraphicsSettings()), any()))
-                    .thenReturn(new WorldConfigurationBuilder());
-            worldStatic.when(() -> MapWorldBuilder.build(any(), isNull(), eq(settings), any(),
-                    eq(client), any(), any()))
-                    .thenReturn(new World(new WorldConfigurationBuilder().build()));
+            logicStatic.when(() -> LogicWorldBuilder.builder(
+                    eq(state),
+                    eq(client),
+                    eq(settings.getKeyBindings()),
+                    any()
+            )).thenReturn(new WorldConfigurationBuilder());
+            logicStatic.when(() -> LogicWorldBuilder.build(
+                    any(),
+                    eq(client),
+                    any(),
+                    any()
+            )).thenReturn(new World(new WorldConfigurationBuilder().build()));
+            worldStatic.when(() -> MapWorldBuilder.builder(
+                    eq(state),
+                    eq(client),
+                    any(Stage.class),
+                    eq(settings.getKeyBindings()),
+                    eq(settings.getGraphicsSettings()),
+                    any()
+            )).thenReturn(new WorldConfigurationBuilder());
+            worldStatic.when(() -> MapWorldBuilder.build(
+                    any(),
+                    isNull(),
+                    eq(settings),
+                    any(),
+                    eq(client),
+                    any(),
+                    any()
+            )).thenReturn(new World(new WorldConfigurationBuilder().build()));
             uiStatic.when(() -> MapUiBuilder.build(any(Stage.class), any(World.class), eq(client), eq(colony), any()))
                     .thenAnswer(inv -> new MapUi(inv.getArgument(0), mock(MinimapActor.class),
                             mock(net.lapidist.colony.client.ui.ChatBox.class)));
@@ -141,17 +188,42 @@ public class MapScreenTest {
         when(colony.getSettings()).thenReturn(settings);
         MapState state = new MapState();
         GameClient client = mock(GameClient.class);
+        World logic = mock(World.class);
         World world = mock(World.class);
 
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class);
+             MockedStatic<LogicWorldBuilder> logicStatic = mockStatic(LogicWorldBuilder.class);
              MockedStatic<MapWorldBuilder> worldStatic = mockStatic(MapWorldBuilder.class);
              MockedStatic<MapUiBuilder> uiStatic = mockStatic(MapUiBuilder.class)) {
-            worldStatic.when(() -> MapWorldBuilder.builder(eq(state), eq(client), any(Stage.class),
-                    eq(settings.getKeyBindings()), eq(settings.getGraphicsSettings()), any()))
-                    .thenReturn(new WorldConfigurationBuilder());
-            worldStatic.when(() -> MapWorldBuilder.build(any(), isNull(), eq(settings), any(),
-                    eq(client), any(), any()))
-                    .thenReturn(world);
+            logicStatic.when(() -> LogicWorldBuilder.builder(
+                    eq(state),
+                    eq(client),
+                    eq(settings.getKeyBindings()),
+                    any()
+            )).thenReturn(new WorldConfigurationBuilder());
+            logicStatic.when(() -> LogicWorldBuilder.build(
+                    any(),
+                    eq(client),
+                    any(),
+                    any()
+            )).thenReturn(logic);
+            worldStatic.when(() -> MapWorldBuilder.builder(
+                    eq(state),
+                    eq(client),
+                    any(Stage.class),
+                    eq(settings.getKeyBindings()),
+                    eq(settings.getGraphicsSettings()),
+                    any()
+            )).thenReturn(new WorldConfigurationBuilder());
+            worldStatic.when(() -> MapWorldBuilder.build(
+                    any(),
+                    isNull(),
+                    eq(settings),
+                    any(),
+                    eq(client),
+                    any(),
+                    any()
+            )).thenReturn(world);
             uiStatic.when(() -> MapUiBuilder.build(any(Stage.class), eq(world), eq(client), eq(colony), any()))
                     .thenAnswer(inv -> new MapUi(inv.getArgument(0), mock(MinimapActor.class),
                             mock(net.lapidist.colony.client.ui.ChatBox.class)));
@@ -160,6 +232,7 @@ public class MapScreenTest {
             screen.setPaused(true);
             screen.render(DELTA);
 
+            verify(logic, never()).process();
             verify(world, never()).process();
         }
     }
@@ -171,14 +244,33 @@ public class MapScreenTest {
         when(colony.getSettings()).thenReturn(settings);
         MapState state = new MapState();
         GameClient client = mock(GameClient.class);
+        World logic = mock(World.class);
         World world = mock(World.class);
 
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class);
+             MockedStatic<LogicWorldBuilder> logicStatic = mockStatic(LogicWorldBuilder.class);
              MockedStatic<MapWorldBuilder> worldStatic = mockStatic(MapWorldBuilder.class);
              MockedStatic<MapUiBuilder> uiStatic = mockStatic(MapUiBuilder.class)) {
-            worldStatic.when(() -> MapWorldBuilder.builder(eq(state), eq(client), any(Stage.class),
-                    eq(settings.getKeyBindings()), eq(settings.getGraphicsSettings()), any()))
-                    .thenReturn(new WorldConfigurationBuilder());
+            logicStatic.when(() -> LogicWorldBuilder.builder(
+                    eq(state),
+                    eq(client),
+                    eq(settings.getKeyBindings()),
+                    any()
+            )).thenReturn(new WorldConfigurationBuilder());
+            logicStatic.when(() -> LogicWorldBuilder.build(
+                    any(),
+                    eq(client),
+                    any(),
+                    any()
+            )).thenReturn(logic);
+            worldStatic.when(() -> MapWorldBuilder.builder(
+                    eq(state),
+                    eq(client),
+                    any(Stage.class),
+                    eq(settings.getKeyBindings()),
+                    eq(settings.getGraphicsSettings()),
+                    any()
+            )).thenReturn(new WorldConfigurationBuilder());
             worldStatic.when(() -> MapWorldBuilder.build(any(), isNull(), eq(settings), any(),
                     eq(client), any(), any()))
                     .thenReturn(world);
@@ -195,7 +287,8 @@ public class MapScreenTest {
             screen.setSpeedMultiplier(HALF);
             screen.render(DELTA);
 
-            verify(world, times(expectedSteps)).process();
+            verify(logic, times(expectedSteps)).process();
+            verify(world).process();
         }
     }
 }
