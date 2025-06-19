@@ -10,6 +10,8 @@ import net.lapidist.colony.client.network.GameClient;
 import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.client.ui.MinimapActor;
 import net.lapidist.colony.components.state.map.MapState;
+import net.lapidist.colony.client.screens.MapWorldBuilder;
+import net.lapidist.colony.client.screens.LogicWorldBuilder;
 
 /**
  * Gameplay screen that delegates world setup, UI creation and event handling
@@ -18,7 +20,8 @@ import net.lapidist.colony.components.state.map.MapState;
 public final class MapScreen implements Screen {
 
     private final Colony colony;
-    private final World world;
+    private final World logicWorld;
+    private final World renderWorld;
     private final Stage stage;
     private final MinimapActor minimapActor;
     private final MapScreenEventHandler events;
@@ -50,7 +53,20 @@ public final class MapScreen implements Screen {
         this.colony = colonyToSet;
         stage = new Stage(new ScreenViewport());
         applyScale();
-        world = MapWorldBuilder.build(
+        logicWorld = LogicWorldBuilder.build(
+                LogicWorldBuilder.builder(
+                        state,
+                        client,
+                        stage,
+                        colony.getSettings().getKeyBindings(),
+                        colony.getSettings().getGraphicsSettings(),
+                        callback
+                ),
+                client,
+                state.playerResources(),
+                state.playerPos()
+        );
+        renderWorld = MapWorldBuilder.build(
                 MapWorldBuilder.builder(
                         state,
                         client,
@@ -66,11 +82,11 @@ public final class MapScreen implements Screen {
                 state.playerResources(),
                 state.playerPos()
         );
-        var cameraSystem = world.getSystem(net.lapidist.colony.client.systems.PlayerCameraSystem.class);
+        var cameraSystem = renderWorld.getSystem(net.lapidist.colony.client.systems.PlayerCameraSystem.class);
         if (cameraSystem != null) {
             cameraSystem.setClient(client);
         }
-        MapUi ui = MapUiBuilder.build(stage, world, client, colony);
+        MapUi ui = MapUiBuilder.build(stage, logicWorld, client, colony);
         minimapActor = ui.getMinimapActor();
         events = new MapScreenEventHandler();
         accumulator = 0.0;
@@ -80,16 +96,19 @@ public final class MapScreen implements Screen {
     public void render(final float deltaTime) {
         events.update();
         accumulator += deltaTime;
-        MapInitSystem init = world.getSystem(MapInitSystem.class);
+        MapInitSystem init = logicWorld.getSystem(MapInitSystem.class);
         boolean loading = init != null && !init.isReady();
         while (accumulator >= STEP_TIME) {
-            world.setDelta((float) STEP_TIME);
-            world.process();
+            logicWorld.setDelta((float) STEP_TIME);
+            logicWorld.process();
             accumulator -= STEP_TIME;
             if (loading) {
                 break;
             }
         }
+        float alpha = (float) (accumulator / STEP_TIME);
+        renderWorld.setDelta(alpha);
+        renderWorld.process();
     }
 
     @Override
@@ -124,7 +143,8 @@ public final class MapScreen implements Screen {
     @Override
     public void dispose() {
         events.dispose();
-        world.dispose();
+        logicWorld.dispose();
+        renderWorld.dispose();
         minimapActor.dispose();
         stage.dispose();
     }

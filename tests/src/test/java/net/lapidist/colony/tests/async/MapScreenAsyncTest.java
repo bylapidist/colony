@@ -10,6 +10,7 @@ import net.lapidist.colony.client.screens.MapScreen;
 import net.lapidist.colony.client.screens.MapUi;
 import net.lapidist.colony.client.screens.MapUiBuilder;
 import net.lapidist.colony.client.screens.MapWorldBuilder;
+import net.lapidist.colony.client.screens.LogicWorldBuilder;
 import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.client.ui.MinimapActor;
 import net.lapidist.colony.components.state.map.MapState;
@@ -43,20 +44,27 @@ public class MapScreenAsyncTest {
         AtomicBoolean called = new AtomicBoolean(false);
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class);
              MockedStatic<MapWorldBuilder> worldStatic = mockStatic(MapWorldBuilder.class);
+             MockedStatic<LogicWorldBuilder> logicStatic = mockStatic(LogicWorldBuilder.class);
              MockedStatic<MapUiBuilder> uiStatic = mockStatic(MapUiBuilder.class)) {
-            World world = new World(new WorldConfigurationBuilder()
+            World logicWorld = new World(new WorldConfigurationBuilder()
                     .with(new MapInitSystem(new ProvidedMapStateProvider(state), true, p -> {
                         if (p == 1f) {
                             called.set(true);
                         }
                     })).build());
+            World renderWorld = new World(new WorldConfigurationBuilder().build());
+            logicStatic.when(() -> LogicWorldBuilder.builder(eq(state), eq(client), any(Stage.class),
+                    eq(settings.getKeyBindings()), eq(settings.getGraphicsSettings()), any()))
+                    .thenReturn(new WorldConfigurationBuilder());
+            logicStatic.when(() -> LogicWorldBuilder.build(any(), eq(client), any(), any()))
+                    .thenReturn(logicWorld);
             worldStatic.when(() -> MapWorldBuilder.builder(eq(state), eq(client), any(Stage.class),
                     eq(settings.getKeyBindings()), eq(settings.getGraphicsSettings()), any()))
                     .thenReturn(new WorldConfigurationBuilder());
             worldStatic.when(() -> MapWorldBuilder.build(any(), isNull(), eq(settings), any(),
                     eq(client), any(), any()))
-                    .thenReturn(world);
-            uiStatic.when(() -> MapUiBuilder.build(any(Stage.class), eq(world), eq(client), eq(colony)))
+                    .thenReturn(renderWorld);
+            uiStatic.when(() -> MapUiBuilder.build(any(Stage.class), eq(logicWorld), eq(client), eq(colony)))
                     .thenAnswer(inv -> new MapUi(inv.getArgument(0), mock(MinimapActor.class),
                             mock(net.lapidist.colony.client.ui.ChatBox.class)));
 

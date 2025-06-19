@@ -1,6 +1,6 @@
 package net.lapidist.colony.server.commands;
 
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
