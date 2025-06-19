@@ -17,4 +17,10 @@ public interface MapRenderData {
 
     /** Returns the map version used to generate this data. */
     int getVersion();
+
+    /** Width of the rendered map in tiles. */
+    int getWidth();
+
+    /** Height of the rendered map in tiles. */
+    int getHeight();
 }
