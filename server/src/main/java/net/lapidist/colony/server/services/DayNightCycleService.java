@@ -2,23 +2,17 @@ package net.lapidist.colony.server.services;
 
 import net.lapidist.colony.components.state.EnvironmentState;
 import net.lapidist.colony.components.state.map.MapState;
-import net.lapidist.colony.mod.ScheduledService;
 
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
  * Periodically advances the time of day stored in the map state.
  */
-public final class DayNightCycleService extends ScheduledService {
+public final class DayNightCycleService extends EnvironmentCycleService {
     private static final float HOURS_PER_DAY = 24f;
-    private static final float MS_TO_SECONDS = 1000f;
-    private final long interval;
-    private final float dayLength;
-    private final Supplier<MapState> supplier;
-    private final Consumer<MapState> consumer;
-    private final ReentrantLock lock;
 
     public DayNightCycleService(
             final long periodMs,
@@ -26,32 +20,23 @@ public final class DayNightCycleService extends ScheduledService {
             final Supplier<MapState> stateSupplier,
             final Consumer<MapState> stateConsumer,
             final ReentrantLock stateLock) {
-        super(periodMs);
-        this.interval = periodMs;
-        this.dayLength = dayLengthInSeconds;
-        this.supplier = stateSupplier;
-        this.consumer = stateConsumer;
-        this.lock = stateLock;
+        super(periodMs, stateSupplier, stateConsumer, stateLock,
+                new DayNightUpdater(dayLengthInSeconds));
     }
 
-    @Override
-    protected void runTask() {
-        lock.lock();
-        try {
-            MapState state = supplier.get();
-            EnvironmentState env = state.environment();
-            float increment = (getIntervalSeconds() * HOURS_PER_DAY) / dayLength;
-            float time = wrap(env.timeOfDay() + increment);
-            consumer.accept(state.toBuilder()
-                    .environment(new EnvironmentState(time, env.season(), env.moonPhase()))
-                    .build());
-        } finally {
-            lock.unlock();
+    private static final class DayNightUpdater implements BiFunction<EnvironmentState, Float, EnvironmentState> {
+        private final float dayLength;
+
+        DayNightUpdater(final float dayLengthInSeconds) {
+            this.dayLength = dayLengthInSeconds;
         }
-    }
 
-    private float getIntervalSeconds() {
-        return interval / MS_TO_SECONDS;
+        @Override
+        public EnvironmentState apply(final EnvironmentState env, final Float intervalSeconds) {
+            float increment = (intervalSeconds * HOURS_PER_DAY) / dayLength;
+            float time = wrap(env.timeOfDay() + increment);
+            return new EnvironmentState(time, env.season(), env.moonPhase());
+        }
     }
 
     private static float wrap(final float time) {
