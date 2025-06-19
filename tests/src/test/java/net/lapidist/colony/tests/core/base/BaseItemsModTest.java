@@ -15,5 +15,7 @@ public class BaseItemsModTest {
 
         assertNotNull(Registries.items().get("stick"));
         assertNotNull(Registries.items().get("stone"));
+        assertNotNull(Registries.items().get("wood"));
+        assertNotNull(Registries.items().get("food"));
     }
 }
