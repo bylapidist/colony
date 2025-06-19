@@ -10,6 +10,7 @@ import net.lapidist.colony.client.screens.MapScreen;
 import net.lapidist.colony.client.screens.MapUi;
 import net.lapidist.colony.client.screens.MapUiBuilder;
 import net.lapidist.colony.client.screens.MapWorldBuilder;
+import net.lapidist.colony.client.screens.LogicWorldBuilder;
 import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.client.ui.MinimapActor;
 import net.lapidist.colony.components.state.map.MapState;
@@ -42,8 +43,21 @@ public class MapScreenAsyncTest {
         GameClient client = mock(GameClient.class);
         AtomicBoolean called = new AtomicBoolean(false);
         try (MockedConstruction<SpriteBatch> ignored = mockConstruction(SpriteBatch.class);
+             MockedStatic<LogicWorldBuilder> logicStatic = mockStatic(LogicWorldBuilder.class);
              MockedStatic<MapWorldBuilder> worldStatic = mockStatic(MapWorldBuilder.class);
              MockedStatic<MapUiBuilder> uiStatic = mockStatic(MapUiBuilder.class)) {
+            logicStatic.when(() -> LogicWorldBuilder.builder(
+                    eq(state),
+                    eq(client),
+                    eq(settings.getKeyBindings()),
+                    any()
+            )).thenReturn(new WorldConfigurationBuilder());
+            logicStatic.when(() -> LogicWorldBuilder.build(
+                    any(),
+                    eq(client),
+                    any(),
+                    any()
+            )).thenReturn(new World(new WorldConfigurationBuilder().build()));
             World world = new World(new WorldConfigurationBuilder()
                     .with(new MapInitSystem(new ProvidedMapStateProvider(state), true, p -> {
                         if (p == 1f) {
