@@ -24,11 +24,15 @@ public class InventoryServiceTest {
         AtomicReference<MapState> ref = new AtomicReference<>(state);
         ReentrantLock lock = new ReentrantLock();
         InventoryService inv = new InventoryService(ref::get, ref::set, lock);
-        inv.addItem("stone", 2);
+        final int stoneAmount = 2;
+        final int woodAmount = 3;
+        inv.addItem("stone", stoneAmount);
+        inv.addItem("wood", woodAmount);
         final int unknownAmount = 5;
         inv.addItem("unknown", unknownAmount);
 
-        assertEquals(2, inv.getAmount("stone"));
+        assertEquals(stoneAmount, inv.getAmount("stone"));
+        assertEquals(woodAmount, inv.getAmount("wood"));
         assertEquals(0, inv.getAmount("unknown"));
     }
 }
