@@ -2,7 +2,8 @@ package net.lapidist.colony.tests.server;
 
 import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.components.state.Season;
-import net.lapidist.colony.server.services.SeasonCycleService;
+import net.lapidist.colony.server.services.EnvironmentCycleService;
+import net.lapidist.colony.components.state.EnvironmentState;
 import org.junit.Test;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -19,12 +20,24 @@ public class SeasonCycleServiceTest {
     public void advancesSeason() throws Exception {
         MapState state = new MapState();
         AtomicReference<MapState> ref = new AtomicReference<>(state);
-        SeasonCycleService service = new SeasonCycleService(
+        EnvironmentCycleService service = new EnvironmentCycleService(
                 INTERVAL,
-                SEASON_LENGTH,
                 ref::get,
                 ref::set,
-                new ReentrantLock()
+                new ReentrantLock(),
+                new java.util.function.BiFunction<EnvironmentState, Float, EnvironmentState>() {
+                    private float elapsed;
+
+                    @Override
+                    public EnvironmentState apply(final EnvironmentState env, final Float dt) {
+                        elapsed += dt;
+                        if (elapsed < SEASON_LENGTH) {
+                            return env;
+                        }
+                        elapsed -= SEASON_LENGTH;
+                        return new EnvironmentState(env.timeOfDay(), env.season().next(), env.moonPhase());
+                    }
+                }
         );
 
         service.start();

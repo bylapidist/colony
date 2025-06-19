@@ -3,8 +3,7 @@ package net.lapidist.colony.tests.server;
 import net.lapidist.colony.server.GameServer;
 import net.lapidist.colony.server.GameServerConfig;
 import net.lapidist.colony.server.services.ResourceProductionService;
-import net.lapidist.colony.server.services.SeasonCycleService;
-import net.lapidist.colony.server.services.DayNightCycleService;
+import net.lapidist.colony.server.services.EnvironmentCycleService;
 import net.lapidist.colony.io.Paths;
 import org.junit.Test;
 
@@ -41,7 +40,7 @@ public class GameServerBaseSystemsTest {
         GameServer server = new GameServer(GameServerConfig.builder().saveName(name).build());
         server.start();
 
-        assertTrue(systems(server).stream().anyMatch(s -> s instanceof SeasonCycleService));
+        assertTrue(systems(server).stream().anyMatch(s -> s instanceof EnvironmentCycleService));
         server.stop();
     }
 
@@ -52,7 +51,7 @@ public class GameServerBaseSystemsTest {
         GameServer server = new GameServer(GameServerConfig.builder().saveName(name).build());
         server.start();
 
-        assertTrue(systems(server).stream().anyMatch(s -> s instanceof DayNightCycleService));
+        assertTrue(systems(server).stream().anyMatch(s -> s instanceof EnvironmentCycleService));
         server.stop();
     }
 }

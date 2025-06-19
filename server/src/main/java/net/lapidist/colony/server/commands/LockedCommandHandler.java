@@ -1,13 +1,13 @@
 package net.lapidist.colony.server.commands;
 
-import net.lapidist.colony.components.state.MapState;
+import net.lapidist.colony.components.state.map.MapState;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
  * Base handler that acquires a {@link ReentrantLock} before modifying the state.
- * Subclasses implement {@link #modify(Object, MapState)} to perform their changes.
+ * Subclasses implement {@code modify(Object, MapState)} to perform their changes.
  *
  * @param <C> command type
  */

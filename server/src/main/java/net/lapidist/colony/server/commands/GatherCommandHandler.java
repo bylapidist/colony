@@ -61,8 +61,11 @@ public final class GatherCommandHandler extends LockedCommandHandler<GatherComma
         java.util.Map<String, Integer> playerAmounts = new java.util.HashMap<>(player.amounts());
         playerAmounts.merge(command.resourceId(), current - updatedValue, Integer::sum);
         inventoryService.addItem(command.resourceId().toLowerCase(Locale.ROOT), current - updatedValue);
+        java.util.Map<String, Integer> invMap = new java.util.HashMap<>(state.inventory());
+        invMap.merge(command.resourceId().toLowerCase(Locale.ROOT), current - updatedValue, Integer::sum);
         ResourceData newPlayer = new ResourceData(new java.util.HashMap<>(playerAmounts));
         MapState updatedState = state.toBuilder()
+                .inventory(new java.util.HashMap<>(invMap))
                 .playerResources(newPlayer)
                 .build();
         networkService.broadcast(new ResourceUpdateData(
