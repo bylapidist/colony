@@ -31,4 +31,12 @@ public class PerlinNoiseTest {
         double value = noise.noise(X2, Y2);
         assertTrue(value >= -1.0 && value <= 1.0);
     }
+
+    @Test
+    public void negativeIntegerInputsStable() {
+        PerlinNoise noise = new PerlinNoise(SEED_TWO);
+        double exact = noise.noise(-1.0, 0.0);
+        double near = noise.noise(-1.0 + 1e-6, 0.0);
+        assertEquals(exact, near, 1e-5);
+    }
 }
