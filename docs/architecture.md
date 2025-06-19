@@ -22,16 +22,15 @@ tested without a graphical context.
 
 ## ECS Systems
 
-`MapWorldBuilder` assembles the client's Artemis‑ODB world. Input systems like
-`CameraInputSystem`, `SelectionSystem` and `PlayerMovementSystem` handle user
-actions, while `BuildPlacementSystem` and `PlayerFactory` create entities.
-`TileUpdateSystem`, `BuildingUpdateSystem` and `ResourceUpdateSystem` apply
-server messages. `ChunkLoadSystem` and `ChunkRequestQueueSystem` request missing
-chunks. `MapRenderSystem` draws the world using a renderer from
-`SpriteMapRendererFactory`, which loads textures asynchronously as noted in
-[performance.md](performance.md#asynchronous-renderer-loading). `ParticleSystem`
-plays back `ParticleEffect` instances for events like building placement. The
-camera is managed by `PlayerCameraSystem` and the UI by `UISystem`.
+`LogicWorldBuilder` assembles the update-only world used for deterministic
+simulation. Systems like `CameraInputSystem`, `SelectionSystem` and
+`PlayerMovementSystem` handle user input while networking systems process
+server messages. `MapWorldBuilder` builds the render world which contains
+`MapRenderSystem`, `LightingSystem` and other drawing code. Both worlds are
+advanced each frame – the logic world in fixed steps and the render world with
+interpolation. Textures are loaded asynchronously as noted in
+[performance.md](performance.md#asynchronous-renderer-loading). The camera is
+managed by `PlayerCameraSystem` and the UI by `UISystem`.
 
 `GameServer` does not maintain an Artemis world. It initializes an
 `EventSystem` and relies on `NetworkService`, `MapService` and other services to
