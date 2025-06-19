@@ -87,7 +87,7 @@ public final class MapScreen implements Screen {
             cameraSystem.setClient(client);
         }
         events = new MapScreenEventHandler();
-        MapUi ui = MapUiBuilder.build(stage, renderWorld, client, colony, events);
+        MapUi ui = MapUiBuilder.build(stage, logicWorld, client, colony, events);
         minimapActor = ui.getMinimapActor();
         events.attach(this);
         accumulator = 0.0;

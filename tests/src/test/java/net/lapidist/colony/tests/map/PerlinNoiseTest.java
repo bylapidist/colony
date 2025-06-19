@@ -15,6 +15,8 @@ public class PerlinNoiseTest {
     private static final double X2 = 0.2;
     private static final double Y2 = 0.8;
     private static final double EPSILON = 1e-6;
+    private static final double SMALL_DELTA = 1e-6;
+    private static final double COMP_EPSILON = 1e-5;
 
     @Test
     public void sameSeedProducesSameValues() {
@@ -36,7 +38,7 @@ public class PerlinNoiseTest {
     public void negativeIntegerInputsStable() {
         PerlinNoise noise = new PerlinNoise(SEED_TWO);
         double exact = noise.noise(-1.0, 0.0);
-        double near = noise.noise(-1.0 + 1e-6, 0.0);
-        assertEquals(exact, near, 1e-5);
+        double near = noise.noise(-1.0 + SMALL_DELTA, 0.0);
+        assertEquals(exact, near, COMP_EPSILON);
     }
 }

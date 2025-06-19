@@ -85,7 +85,7 @@ public class MapScreenTest {
                     any(),
                     any()
             )).thenReturn(world);
-            uiStatic.when(() -> MapUiBuilder.build(any(Stage.class), eq(world), eq(client), eq(colony), any()))
+            uiStatic.when(() -> MapUiBuilder.build(any(Stage.class), eq(logic), eq(client), eq(colony), any()))
                     .thenAnswer(inv -> new MapUi(
                             inv.getArgument(0),
                             minimap,
@@ -224,7 +224,7 @@ public class MapScreenTest {
                     any(),
                     any()
             )).thenReturn(world);
-            uiStatic.when(() -> MapUiBuilder.build(any(Stage.class), eq(world), eq(client), eq(colony), any()))
+            uiStatic.when(() -> MapUiBuilder.build(any(Stage.class), eq(logic), eq(client), eq(colony), any()))
                     .thenAnswer(inv -> new MapUi(inv.getArgument(0), mock(MinimapActor.class),
                             mock(net.lapidist.colony.client.ui.ChatBox.class)));
 
@@ -274,7 +274,7 @@ public class MapScreenTest {
             worldStatic.when(() -> MapWorldBuilder.build(any(), isNull(), eq(settings), any(),
                     eq(client), any(), any()))
                     .thenReturn(world);
-            uiStatic.when(() -> MapUiBuilder.build(any(Stage.class), eq(world), eq(client), eq(colony), any()))
+            uiStatic.when(() -> MapUiBuilder.build(any(Stage.class), eq(logic), eq(client), eq(colony), any()))
                     .thenAnswer(inv -> new MapUi(inv.getArgument(0), mock(MinimapActor.class),
                             mock(net.lapidist.colony.client.ui.ChatBox.class)));
 
