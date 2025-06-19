@@ -23,6 +23,8 @@ public final class MapRenderDataSystem extends BaseSystem {
     private MapRenderData renderData;
     private MapComponent map;
     private int lastVersion;
+    private int lastWidth;
+    private int lastHeight;
     private ComponentMapper<TileComponent> tileMapper;
     private ComponentMapper<ResourceComponent> resourceMapper;
     private ComponentMapper<BuildingComponent> buildingMapper;
@@ -78,6 +80,8 @@ public final class MapRenderDataSystem extends BaseSystem {
                     : net.lapidist.colony.components.state.map.MapState.DEFAULT_HEIGHT;
             renderData = MapRenderDataBuilder.fromMap(map, world, width, height);
             lastVersion = map.getVersion();
+            lastWidth = width;
+            lastHeight = height;
             rebuildSelectedIndices();
         }
     }
@@ -99,7 +103,25 @@ public final class MapRenderDataSystem extends BaseSystem {
                     : net.lapidist.colony.components.state.map.MapState.DEFAULT_HEIGHT;
             renderData = MapRenderDataBuilder.fromMap(map, world, width, height);
             lastVersion = map.getVersion();
+            lastWidth = width;
+            lastHeight = height;
             rebuildSelectedIndices();
+            return;
+        }
+        int width = client != null
+                ? client.getMapWidth()
+                : net.lapidist.colony.components.state.map.MapState.DEFAULT_WIDTH;
+        int height = client != null
+                ? client.getMapHeight()
+                : net.lapidist.colony.components.state.map.MapState.DEFAULT_HEIGHT;
+        if (width != lastWidth || height != lastHeight) {
+            renderData = MapRenderDataBuilder.fromMap(map, world, width, height);
+            lastVersion = map.getVersion();
+            lastWidth = width;
+            lastHeight = height;
+            rebuildSelectedIndices();
+            dirtyIndices.clear();
+            updatedIndices.clear();
             return;
         }
         if (map.getVersion() != lastVersion) {
