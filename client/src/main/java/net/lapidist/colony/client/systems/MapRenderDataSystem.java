@@ -72,12 +72,9 @@ public final class MapRenderDataSystem extends BaseSystem {
         buildingMapper = world.getMapper(BuildingComponent.class);
         map = MapUtils.findMap(world).orElse(null);
         if (map != null) {
-            int width = client != null
-                    ? client.getMapWidth()
-                    : net.lapidist.colony.components.state.map.MapState.DEFAULT_WIDTH;
-            int height = client != null
-                    ? client.getMapHeight()
-                    : net.lapidist.colony.components.state.map.MapState.DEFAULT_HEIGHT;
+            int[] dims = determineDimensions();
+            int width = dims[0];
+            int height = dims[1];
             renderData = MapRenderDataBuilder.fromMap(map, world, width, height);
             lastVersion = map.getVersion();
             lastWidth = width;
@@ -95,12 +92,9 @@ public final class MapRenderDataSystem extends BaseSystem {
             }
         }
         if (renderData == null) {
-            int width = client != null
-                    ? client.getMapWidth()
-                    : net.lapidist.colony.components.state.map.MapState.DEFAULT_WIDTH;
-            int height = client != null
-                    ? client.getMapHeight()
-                    : net.lapidist.colony.components.state.map.MapState.DEFAULT_HEIGHT;
+            int[] dims = determineDimensions();
+            int width = dims[0];
+            int height = dims[1];
             renderData = MapRenderDataBuilder.fromMap(map, world, width, height);
             lastVersion = map.getVersion();
             lastWidth = width;
@@ -108,12 +102,9 @@ public final class MapRenderDataSystem extends BaseSystem {
             rebuildSelectedIndices();
             return;
         }
-        int width = client != null
-                ? client.getMapWidth()
-                : net.lapidist.colony.components.state.map.MapState.DEFAULT_WIDTH;
-        int height = client != null
-                ? client.getMapHeight()
-                : net.lapidist.colony.components.state.map.MapState.DEFAULT_HEIGHT;
+        int[] dims = determineDimensions();
+        int width = dims[0];
+        int height = dims[1];
         if (width != lastWidth || height != lastHeight) {
             renderData = MapRenderDataBuilder.fromMap(map, world, width, height);
             lastVersion = map.getVersion();
@@ -184,6 +175,37 @@ public final class MapRenderDataSystem extends BaseSystem {
         }
 
         data.setVersion(map.getVersion());
+    }
+
+    /**
+     * Determine the current map dimensions. When the client provides valid
+     * values they are used, otherwise the dimensions are calculated from the
+     * tile components.
+     */
+    private int[] determineDimensions() {
+        int width = 0;
+        int height = 0;
+        if (client != null) {
+            width = client.getMapWidth();
+            height = client.getMapHeight();
+        }
+        if (width <= 0 || height <= 0) {
+            if (map != null) {
+                Array<Entity> tiles = map.getTiles();
+                for (int i = 0; i < tiles.size; i++) {
+                    TileComponent tc = tileMapper.get(tiles.get(i));
+                    width = Math.max(width, tc.getX() + 1);
+                    height = Math.max(height, tc.getY() + 1);
+                }
+            }
+            if (width <= 0) {
+                width = net.lapidist.colony.components.state.map.MapState.DEFAULT_WIDTH;
+            }
+            if (height <= 0) {
+                height = net.lapidist.colony.components.state.map.MapState.DEFAULT_HEIGHT;
+            }
+        }
+        return new int[] {width, height};
     }
 
     private void rebuildSelectedIndices() {
