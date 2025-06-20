@@ -34,8 +34,6 @@ public final class KeybindsScreen extends BaseScreen {
     public KeybindsScreen(final Colony game, final Stage stage) {
         super(stage);
         this.colony = game;
-        float scale = game.getSettings() == null ? 1f : game.getSettings().getUiScale();
-        stage.getRoot().setScale(scale);
         KeyBindings bindings = game.getSettings().getKeyBindings();
         Table root = getRoot();
         Table list = new Table();

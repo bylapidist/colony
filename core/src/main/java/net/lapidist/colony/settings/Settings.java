@@ -15,8 +15,6 @@ public final class Settings {
     private static final String WIDTH_KEY = "width";
     private static final String HEIGHT_KEY = "height";
     private static final String FULLSCREEN_KEY = "fullscreen";
-    private static final String UI_SCALE_KEY = "uiScale";
-    private static final float DEFAULT_UI_SCALE = 1f;
 
     private final KeyBindings keyBindings = new KeyBindings();
     private final GraphicsSettings graphicsSettings = new GraphicsSettings();
@@ -25,7 +23,6 @@ public final class Settings {
     private int width = DEFAULT_WIDTH;
     private int height = DEFAULT_HEIGHT;
     private boolean fullscreen;
-    private float uiScale = DEFAULT_UI_SCALE;
 
     public KeyBindings getKeyBindings() {
         return keyBindings;
@@ -67,13 +64,6 @@ public final class Settings {
         this.fullscreen = fullscreenToSet;
     }
 
-    public float getUiScale() {
-        return uiScale;
-    }
-
-    public void setUiScale(final float scale) {
-        this.uiScale = scale;
-    }
 
     /**
      * Load settings from the configuration file located next to the save folder.
@@ -104,10 +94,6 @@ public final class Settings {
             String heightStr = props.getProperty(HEIGHT_KEY);
             if (heightStr != null) {
                 settings.setHeight(Integer.parseInt(heightStr));
-            }
-            String uiScaleStr = props.getProperty(UI_SCALE_KEY);
-            if (uiScaleStr != null) {
-                settings.setUiScale(Float.parseFloat(uiScaleStr));
             }
             settings.setFullscreen(Boolean.parseBoolean(props.getProperty(FULLSCREEN_KEY, "false")));
             KeyBindings loaded = KeyBindings.load(props);
@@ -152,7 +138,6 @@ public final class Settings {
         props.setProperty(WIDTH_KEY, Integer.toString(width));
         props.setProperty(HEIGHT_KEY, Integer.toString(height));
         props.setProperty(FULLSCREEN_KEY, Boolean.toString(fullscreen));
-        props.setProperty(UI_SCALE_KEY, Float.toString(uiScale));
         keyBindings.save(props);
         graphicsSettings.save(props);
         try (java.io.OutputStream out = java.nio.file.Files.newOutputStream(file)) {

@@ -28,8 +28,6 @@ public final class LoadGameScreen extends BaseScreen {
 
     public LoadGameScreen(final Colony game) {
         this.colony = game;
-        float scale = game.getSettings() == null ? 1f : game.getSettings().getUiScale();
-        getStage().getRoot().setScale(scale);
 
         this.saves = listSaves();
         this.list = new Table();

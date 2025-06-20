@@ -27,7 +27,6 @@ public final class MapScreen implements Screen {
     private boolean paused;
     /** Multiplier applied to frame time for slow or fast motion. */
     private float speedMultiplier;
-    private static final float DEFAULT_SCALE = 1f;
     /** Fixed time step used for deterministic updates. */
     private static final double STEP_TIME = 1d / 60d;
     /**
@@ -35,12 +34,6 @@ public final class MapScreen implements Screen {
      */
     private double accumulator;
 
-    private void applyScale() {
-        float scale = colony.getSettings() == null ? DEFAULT_SCALE : colony.getSettings().getUiScale();
-        ScreenViewport viewport = (ScreenViewport) stage.getViewport();
-        viewport.setUnitsPerPixel(1f / scale);
-        viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-    }
 
     public MapScreen(final Colony colonyToSet, final MapState state, final GameClient client) {
         this(colonyToSet, state, client, null);
@@ -54,7 +47,6 @@ public final class MapScreen implements Screen {
     ) {
         this.colony = colonyToSet;
         stage = new Stage(new ScreenViewport());
-        applyScale();
         logicWorld = LogicWorldBuilder.build(
                 LogicWorldBuilder.builder(
                         state,
@@ -152,7 +144,6 @@ public final class MapScreen implements Screen {
     @Override
     public void resume() {
         events.resume();
-        applyScale();
         events.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
@@ -163,7 +154,6 @@ public final class MapScreen implements Screen {
 
     @Override
     public void show() {
-        applyScale();
         events.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         events.show();
     }

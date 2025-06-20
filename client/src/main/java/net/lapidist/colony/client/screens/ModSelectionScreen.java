@@ -29,8 +29,6 @@ public final class ModSelectionScreen extends BaseScreen {
 
     public ModSelectionScreen(final Colony game) {
         this.colony = game;
-        float scale = game.getSettings() == null ? 1f : game.getSettings().getUiScale();
-        getStage().getRoot().setScale(scale);
         this.mods = game.getMods();
         getRoot().add(new com.badlogic.gdx.scenes.scene2d.ui.Label(
                 I18n.get("modSelect.title"), getSkin())).row();
