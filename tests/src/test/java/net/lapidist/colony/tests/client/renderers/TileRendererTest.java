@@ -484,4 +484,38 @@ public class TileRendererTest {
         assertEquals(index1 / INDEX_SCALE, vals.get(0), EPSILON);
         assertEquals(index2 / INDEX_SCALE, vals.get(1), EPSILON);
     }
+
+    @Test
+    public void tilesOpaqueWithoutShader() {
+        SpriteBatch batch = mock(SpriteBatch.class);
+        ResourceLoader loader = mock(ResourceLoader.class);
+        TextureRegion region = mock(TextureRegion.class);
+        TextureRegion overlay = mock(TextureRegion.class);
+        when(loader.findRegion(anyString())).thenReturn(region);
+        when(loader.findRegion(eq("hoveredTile0"))).thenReturn(overlay);
+
+        new BaseDefinitionsMod().init();
+
+        CameraProvider camera = mock(CameraProvider.class);
+        com.badlogic.gdx.graphics.OrthographicCamera cam = new com.badlogic.gdx.graphics.OrthographicCamera();
+        com.badlogic.gdx.utils.viewport.ExtendViewport viewport =
+                new com.badlogic.gdx.utils.viewport.ExtendViewport(1f, 1f, cam);
+        cam.update();
+        when(camera.getViewport()).thenReturn(viewport);
+        when(camera.getCamera()).thenReturn(cam);
+
+        GraphicsSettings graphics = new GraphicsSettings();
+        TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver(), null, graphics);
+
+        Array<RenderTile> tiles = new Array<>();
+        tiles.add(RenderTile.builder().x(0).y(0).tileType("GRASS").selected(false).wood(0).stone(0).food(0).build());
+
+        RenderTile[][] grid = new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT];
+        grid[0][0] = tiles.first();
+        MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);
+
+        renderer.render(map);
+
+        verify(batch).setColor(1f, 1f, 1f, 1f);
+    }
 }

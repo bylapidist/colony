@@ -60,7 +60,8 @@ final class MapTileCache implements Disposable {
             final ResourceLoader loader,
             final MapRenderData map,
             final AssetResolver resolver,
-            final CameraProvider camera
+            final CameraProvider camera,
+            final boolean hasShader
     ) {
         if (map == null) {
             dispose();
@@ -69,7 +70,7 @@ final class MapTileCache implements Disposable {
 
         if (spriteCaches.isEmpty() || cachedData != map) {
             dispose();
-            rebuildAll(loader, map, resolver, camera);
+            rebuildAll(loader, map, resolver, camera, hasShader);
             return;
         }
 
@@ -86,7 +87,7 @@ final class MapTileCache implements Disposable {
 
         if (invalidated) {
             dispose();
-            rebuildAll(loader, map, resolver, camera);
+            rebuildAll(loader, map, resolver, camera, hasShader);
             return;
         }
 
@@ -126,7 +127,8 @@ final class MapTileCache implements Disposable {
                 if (region != null) {
                     float rotation = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
                     int rotationIndex = (int) (rotation / RIGHT_ANGLE);
-                    cache.setColor(1f, 1f, 1f, rotationIndex / INDEX_SCALE);
+                    float alpha = hasShader ? rotationIndex / INDEX_SCALE : 1f;
+                    cache.setColor(1f, 1f, 1f, alpha);
                     cache.add(
                             region,
                             worldX,
@@ -156,7 +158,8 @@ final class MapTileCache implements Disposable {
             final ResourceLoader loader,
             final MapRenderData map,
             final AssetResolver resolver,
-            final CameraProvider camera
+            final CameraProvider camera,
+            final boolean hasShader
     ) {
         dispose();
         cachedData = map;
@@ -189,7 +192,8 @@ final class MapTileCache implements Disposable {
                 if (region != null) {
                     float rotation = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
                     int rotationIndex = (int) (rotation / RIGHT_ANGLE);
-                    cache.setColor(1f, 1f, 1f, rotationIndex / INDEX_SCALE);
+                    float alpha = hasShader ? rotationIndex / INDEX_SCALE : 1f;
+                    cache.setColor(1f, 1f, 1f, alpha);
                     cache.add(
                             region,
                             worldX,

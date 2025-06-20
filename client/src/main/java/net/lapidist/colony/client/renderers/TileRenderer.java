@@ -144,10 +144,12 @@ public final class TileRenderer implements EntityRenderer<RenderTile>, Disposabl
                         }
                         String upper = type.toUpperCase(java.util.Locale.ROOT);
                         int rotationIndex = 0;
+                        boolean hasShader = shader != null;
                         if ("GRASS".equals(upper) || "DIRT".equals(upper)) {
                             rotationAngle = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
                             rotationIndex = (int) (rotationAngle / RIGHT_ANGLE);
-                            spriteBatch.setColor(1f, 1f, 1f, rotationIndex / INDEX_SCALE);
+                            float alpha = hasShader ? rotationIndex / INDEX_SCALE : 1f;
+                            spriteBatch.setColor(1f, 1f, 1f, alpha);
                             spriteBatch.draw(
                                     region,
                                     worldCoords.x,
@@ -162,7 +164,8 @@ public final class TileRenderer implements EntityRenderer<RenderTile>, Disposabl
                             );
                             spriteBatch.setColor(com.badlogic.gdx.graphics.Color.WHITE);
                         } else {
-                            spriteBatch.setColor(1f, 1f, 1f, rotationIndex / INDEX_SCALE);
+                            float alpha = hasShader ? rotationIndex / INDEX_SCALE : 1f;
+                            spriteBatch.setColor(1f, 1f, 1f, alpha);
                             spriteBatch.draw(region, worldCoords.x, worldCoords.y);
                             spriteBatch.setColor(com.badlogic.gdx.graphics.Color.WHITE);
                         }

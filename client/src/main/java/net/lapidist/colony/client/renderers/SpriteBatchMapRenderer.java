@@ -48,6 +48,11 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
         this.plugin = pluginToSet;
     }
 
+    /** Indicates if this renderer is using a custom shader program. */
+    public boolean hasShader() {
+        return shader != null;
+    }
+
     /** Invalidate cache segments for the given tile indices. */
     public void invalidateTiles(final com.badlogic.gdx.utils.IntArray indices) {
         if (cacheEnabled) {
@@ -64,7 +69,7 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
     public void render(final MapRenderData map, final CameraProvider camera) {
         spriteBatch.setProjectionMatrix(camera.getCamera().combined);
         if (cacheEnabled) {
-            tileCache.ensureCache(resourceLoader, map, resolver, camera);
+            tileCache.ensureCache(resourceLoader, map, resolver, camera, shader != null);
         }
         if (shader != null) {
             spriteBatch.setShader(shader);
