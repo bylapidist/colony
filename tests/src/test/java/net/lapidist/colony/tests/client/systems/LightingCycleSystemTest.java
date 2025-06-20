@@ -23,6 +23,7 @@ public class LightingCycleSystemTest {
     private static final float NIGHT_RED = 0f;
     private static final float NIGHT_AMBIENT = 0.1f;
     private static final float TOLERANCE = 0.01f;
+    private static final float INITIAL_TIME = 3f;
 
     @Test
     public void updatesLightAndColor() {
@@ -61,6 +62,19 @@ public class LightingCycleSystemTest {
         world.process();
         final float small = 0.001f;
         assertEquals(1f, lighting.getTimeOfDay(), small);
+        world.dispose();
+    }
+
+    @Test
+    public void doesNotAdvanceWhenDisabled() {
+        ClearScreenSystem clear = new ClearScreenSystem(new Color());
+        MutableEnvironmentState env = new MutableEnvironmentState();
+        LightingSystem lighting = new LightingSystem(clear, env, false);
+        env.setTimeOfDay(INITIAL_TIME);
+        World world = new World(new WorldConfigurationBuilder().with(clear, lighting).build());
+        world.setDelta(1f);
+        world.process();
+        assertEquals(INITIAL_TIME, lighting.getTimeOfDay(), TOLERANCE);
         world.dispose();
     }
 }

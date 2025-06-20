@@ -35,6 +35,7 @@ public final class LightingSystem extends BaseSystem implements Disposable {
     private final LightFactory factory;
     private final MutableEnvironmentState environment;
     private final IntMap<PointLight> lights = new IntMap<>();
+    private final boolean dayNightCycleEnabled;
 
     private RayHandler rayHandler;
     private float timeOfDay;
@@ -54,33 +55,56 @@ public final class LightingSystem extends BaseSystem implements Disposable {
 
     public LightingSystem(final ClearScreenSystem clearSystem,
                           final MutableEnvironmentState env) {
-        this(clearSystem, DEFAULT_RAYS, env);
+        this(clearSystem, DEFAULT_RAYS, env, true);
+    }
+
+    public LightingSystem(final ClearScreenSystem clearSystem,
+                          final MutableEnvironmentState env,
+                          final boolean cycleEnabled) {
+        this(clearSystem, DEFAULT_RAYS, env, cycleEnabled);
     }
 
     public LightingSystem(final ClearScreenSystem clearSystem,
                           final int rayCount,
                           final MutableEnvironmentState env) {
+        this(clearSystem, rayCount, env, true);
+    }
+
+    public LightingSystem(final ClearScreenSystem clearSystem,
+                          final int rayCount,
+                          final MutableEnvironmentState env,
+                          final boolean cycleEnabled) {
         this(clearSystem,
                 (h, c) -> new PointLight(h, rayCount, c.getColor(), c.getRadius(), 0f, 0f),
                 rayCount,
-                env);
+                env,
+                cycleEnabled);
     }
 
     public LightingSystem(final ClearScreenSystem clearSystem,
                           final LightFactory factoryParam,
                           final MutableEnvironmentState env) {
-        this(clearSystem, factoryParam, DEFAULT_RAYS, env);
+        this(clearSystem, factoryParam, DEFAULT_RAYS, env, true);
+    }
+
+    public LightingSystem(final ClearScreenSystem clearSystem,
+                          final LightFactory factoryParam,
+                          final MutableEnvironmentState env,
+                          final boolean cycleEnabled) {
+        this(clearSystem, factoryParam, DEFAULT_RAYS, env, cycleEnabled);
     }
 
     private LightingSystem(final ClearScreenSystem clearSystem,
                            final LightFactory factoryParam,
                            final int rayCount,
-                           final MutableEnvironmentState env) {
+                           final MutableEnvironmentState env,
+                           final boolean cycleEnabled) {
         this.clearScreenSystem = clearSystem;
         this.factory = factoryParam;
         this.rays = rayCount;
         this.environment = env == null ? new MutableEnvironmentState() : env;
         this.timeOfDay = this.environment.getTimeOfDay();
+        this.dayNightCycleEnabled = cycleEnabled;
     }
 
     /** Assign the handler used for lighting. */
@@ -147,6 +171,9 @@ public final class LightingSystem extends BaseSystem implements Disposable {
     }
 
     private void updateDayNight() {
+        if (!dayNightCycleEnabled) {
+            return;
+        }
         float t = wrap(environment.getTimeOfDay()
                 + world.getDelta() * HOURS_PER_DAY / DAY_LENGTH_SECONDS);
         environment.setTimeOfDay(t);

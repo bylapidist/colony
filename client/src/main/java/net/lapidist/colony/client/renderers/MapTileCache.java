@@ -32,6 +32,8 @@ final class MapTileCache implements Disposable {
     private final BooleanArray invalidSegments = new BooleanArray();
     private final Matrix4 oldProj = new Matrix4();
     private final Rectangle viewBounds = new Rectangle();
+    private static final float RIGHT_ANGLE = 90f;
+    private static final float INDEX_SCALE = 4f;
     private MapRenderData cachedData;
     private int cachedVersion;
     private boolean invalidated = true;
@@ -53,6 +55,7 @@ final class MapTileCache implements Disposable {
         }
     }
 
+    @SuppressWarnings("checkstyle:magicnumber")
     void ensureCache(
             final ResourceLoader loader,
             final MapRenderData map,
@@ -122,8 +125,8 @@ final class MapTileCache implements Disposable {
 
                 if (region != null) {
                     float rotation = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
-                    int rotationIndex = (int) (rotation / 90f);
-                    cache.setColor(1f, 1f, 1f, rotationIndex / 4f);
+                    int rotationIndex = (int) (rotation / RIGHT_ANGLE);
+                    cache.setColor(1f, 1f, 1f, rotationIndex / INDEX_SCALE);
                     cache.add(
                             region,
                             worldX,
@@ -148,6 +151,7 @@ final class MapTileCache implements Disposable {
         cachedVersion = map.getVersion();
     }
 
+    @SuppressWarnings("checkstyle:magicnumber")
     private void rebuildAll(
             final ResourceLoader loader,
             final MapRenderData map,
@@ -184,8 +188,8 @@ final class MapTileCache implements Disposable {
 
                 if (region != null) {
                     float rotation = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
-                    int rotationIndex = (int) (rotation / 90f);
-                    cache.setColor(1f, 1f, 1f, rotationIndex / 4f);
+                    int rotationIndex = (int) (rotation / RIGHT_ANGLE);
+                    cache.setColor(1f, 1f, 1f, rotationIndex / INDEX_SCALE);
                     cache.add(
                             region,
                             worldX,
