@@ -100,8 +100,7 @@ public final class Colony extends Game {
                 }
                 setScreen(new ErrorScreen(this, I18n.get("error.connectionFailed")));
             }));
-            float scale = settings == null ? 1f : settings.getUiScale();
-            LoadingScreen loading = new LoadingScreen(scale);
+            LoadingScreen loading = new LoadingScreen();
             loading.setMessage(I18n.get("loading.connect"));
             client.setLoadProgressListener(p -> Gdx.app.postRunnable(() -> loading.setProgress(p)));
             client.setLoadMessageListener(msg -> Gdx.app.postRunnable(() -> loading.setMessage(msg)));

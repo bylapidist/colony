@@ -35,8 +35,6 @@ public final class NewGameScreen extends BaseScreen {
 
     public NewGameScreen(final Colony game) {
         this.colony = game;
-        float scale = game.getSettings() == null ? 1f : game.getSettings().getUiScale();
-        getStage().getRoot().setScale(scale);
 
         Label nameLabel = new Label(I18n.get("newGame.saveName"), getSkin());
         TextField nameField = new TextField("", getSkin());

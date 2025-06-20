@@ -21,8 +21,6 @@ public final class MainMenuScreen extends BaseScreen {
 
     public MainMenuScreen(final Colony game) {
         this.colony = game;
-        float scale = game.getSettings() == null ? 1f : game.getSettings().getUiScale();
-        getStage().getRoot().setScale(scale);
 
         Image logo = new Image(new TextureRegionDrawable(new Texture(Gdx.files.internal("textures/logo.png"))));
         TextButton continueButton = createButton(I18n.get("main.continue"));

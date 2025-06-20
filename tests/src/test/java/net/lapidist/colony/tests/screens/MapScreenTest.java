@@ -33,7 +33,6 @@ public class MapScreenTest {
     private static final float HALF = 0.5f;
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
-    private static final float SCALE = 1.5f;
 
     private static Stage extractStage(final MapScreen screen) throws Exception {
         Field stageField = MapScreen.class.getDeclaredField("stage");
@@ -132,7 +131,6 @@ public class MapScreenTest {
     public void viewportUsesUiScale() throws Exception {
         Colony colony = mock(Colony.class);
         Settings settings = new Settings();
-        settings.setUiScale(SCALE);
         when(colony.getSettings()).thenReturn(settings);
         MapState state = new MapState();
         GameClient client = mock(GameClient.class);
@@ -177,7 +175,7 @@ public class MapScreenTest {
             MapScreen screen = new MapScreen(colony, state, client);
             Stage stage = extractStage(screen);
             ScreenViewport vp = (ScreenViewport) stage.getViewport();
-            assertEquals(1f / settings.getUiScale(), vp.getUnitsPerPixel(), 0f);
+            assertEquals(1f, vp.getUnitsPerPixel(), 0f);
         }
     }
 

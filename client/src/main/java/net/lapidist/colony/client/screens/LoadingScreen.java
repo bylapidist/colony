@@ -19,11 +19,6 @@ public final class LoadingScreen extends BaseScreen {
     private final ProgressBar progressBar;
 
     public LoadingScreen() {
-        this(1f);
-    }
-
-    public LoadingScreen(final float scale) {
-        getStage().getRoot().setScale(scale);
         messageLabel = new Label(I18n.get("loading.title"), getSkin());
         ProgressBarStyle style = new ProgressBarStyle();
         style.background = getSkin().newDrawable("white_pixel", Color.DARK_GRAY);
