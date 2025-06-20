@@ -294,7 +294,10 @@ public class MapTileCacheTest {
             MapTileCache cache = new MapTileCache();
             cache.ensureCache(loader, data, new DefaultAssetResolver(), cam);
             SpriteCache sprite = cons.constructed().get(0);
-            ArgumentCaptor<Float> rotCap = ArgumentCaptor.forClass(Float.class);
+            ArgumentCaptor<Float> angleCap = ArgumentCaptor.forClass(Float.class);
+            ArgumentCaptor<Float> alphaCap = ArgumentCaptor.forClass(Float.class);
+            verify(sprite, times(2))
+                    .setColor(eq(1f), eq(1f), eq(1f), alphaCap.capture());
             verify(sprite, times(2))
                     .add(
                             eq(region),
@@ -302,11 +305,14 @@ public class MapTileCacheTest {
                             anyFloat(), anyFloat(),
                             anyFloat(), anyFloat(),
                             anyFloat(), anyFloat(),
-                            rotCap.capture()
+                            angleCap.capture()
                     );
-            java.util.List<Float> values = rotCap.getAllValues();
-            assertEquals(2, values.size());
-            assertNotEquals(values.get(0), values.get(1));
+            java.util.List<Float> angles = angleCap.getAllValues();
+            java.util.List<Float> alphas = alphaCap.getAllValues();
+            assertEquals(2, angles.size());
+            assertEquals(2, alphas.size());
+            assertNotEquals(angles.get(0), angles.get(1));
+            assertNotEquals(alphas.get(0), alphas.get(1));
         }
     }
 }

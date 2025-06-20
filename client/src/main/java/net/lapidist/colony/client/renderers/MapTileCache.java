@@ -122,6 +122,8 @@ final class MapTileCache implements Disposable {
 
                 if (region != null) {
                     float rotation = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
+                    int rotationIndex = (int) (rotation / 90f);
+                    cache.setColor(1f, 1f, 1f, rotationIndex / 4f);
                     cache.add(
                             region,
                             worldX,
@@ -182,6 +184,8 @@ final class MapTileCache implements Disposable {
 
                 if (region != null) {
                     float rotation = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
+                    int rotationIndex = (int) (rotation / 90f);
+                    cache.setColor(1f, 1f, 1f, rotationIndex / 4f);
                     cache.add(
                             region,
                             worldX,

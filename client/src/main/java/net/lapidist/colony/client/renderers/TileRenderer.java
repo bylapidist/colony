@@ -140,14 +140,11 @@ public final class TileRenderer implements EntityRenderer<RenderTile>, Disposabl
                             shader.setUniformf("u_normalStrength", graphicsSettings.getNormalMapStrength());
                         }
                         String upper = type.toUpperCase(java.util.Locale.ROOT);
+                        int rotationIndex = 0;
                         if ("GRASS".equals(upper) || "DIRT".equals(upper)) {
                             rotationAngle = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
-                            if (shader != null) {
-                                shader.setUniformf(
-                                        "u_tileRotation",
-                                        com.badlogic.gdx.math.MathUtils.degreesToRadians * rotationAngle
-                                );
-                            }
+                            rotationIndex = (int) (rotationAngle / 90f);
+                            spriteBatch.setColor(1f, 1f, 1f, rotationIndex / 4f);
                             spriteBatch.draw(
                                     region,
                                     worldCoords.x,
@@ -160,11 +157,11 @@ public final class TileRenderer implements EntityRenderer<RenderTile>, Disposabl
                                     1f,
                                     rotationAngle
                             );
+                            spriteBatch.setColor(com.badlogic.gdx.graphics.Color.WHITE);
                         } else {
-                            if (shader != null) {
-                                shader.setUniformf("u_tileRotation", 0f);
-                            }
+                            spriteBatch.setColor(1f, 1f, 1f, rotationIndex / 4f);
                             spriteBatch.draw(region, worldCoords.x, worldCoords.y);
+                            spriteBatch.setColor(com.badlogic.gdx.graphics.Color.WHITE);
                         }
                         if (shader != null) {
                             com.badlogic.gdx.Gdx.gl.glActiveTexture(com.badlogic.gdx.graphics.GL20.GL_TEXTURE0);
