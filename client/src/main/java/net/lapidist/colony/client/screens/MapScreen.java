@@ -46,6 +46,7 @@ public final class MapScreen implements Screen {
     ) {
         this.colony = colonyToSet;
         stage = new Stage(new ScreenViewport());
+        stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
         world = MapWorldBuilder.build(
                 MapWorldBuilder.builder(
                         state,
