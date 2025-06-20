@@ -42,6 +42,8 @@ public final class TileRenderer implements EntityRenderer<RenderTile>, Disposabl
     private final Vector2 worldCoords = new Vector2();
     private final GraphicsSettings graphicsSettings;
     private boolean overlayOnly;
+    private static final float ROTATION_QUADRANT_DEG = 90f;
+    private static final float QUADRANT_COUNT = 4f;
 
     public TileRenderer(
             final SpriteBatch spriteBatchToSet,
@@ -143,8 +145,9 @@ public final class TileRenderer implements EntityRenderer<RenderTile>, Disposabl
                         int rotationIndex = 0;
                         if ("GRASS".equals(upper) || "DIRT".equals(upper)) {
                             rotationAngle = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
-                            rotationIndex = (int) (rotationAngle / 90f);
-                            spriteBatch.setColor(1f, 1f, 1f, rotationIndex / 4f);
+                            rotationIndex = (int) (rotationAngle / ROTATION_QUADRANT_DEG);
+                            float alpha = spriteBatch.getShader() != null ? rotationIndex / QUADRANT_COUNT : 1f;
+                            spriteBatch.setColor(1f, 1f, 1f, alpha);
                             spriteBatch.draw(
                                     region,
                                     worldCoords.x,
@@ -159,7 +162,8 @@ public final class TileRenderer implements EntityRenderer<RenderTile>, Disposabl
                             );
                             spriteBatch.setColor(com.badlogic.gdx.graphics.Color.WHITE);
                         } else {
-                            spriteBatch.setColor(1f, 1f, 1f, rotationIndex / 4f);
+                            float alpha = spriteBatch.getShader() != null ? rotationIndex / QUADRANT_COUNT : 1f;
+                            spriteBatch.setColor(1f, 1f, 1f, alpha);
                             spriteBatch.draw(region, worldCoords.x, worldCoords.y);
                             spriteBatch.setColor(com.badlogic.gdx.graphics.Color.WHITE);
                         }

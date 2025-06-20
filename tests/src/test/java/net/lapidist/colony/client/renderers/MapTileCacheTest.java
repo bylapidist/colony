@@ -107,6 +107,7 @@ public class MapTileCacheTest {
                     when(mock.endCache()).thenReturn(0);
                 })) {
             MapTileCache cache = new MapTileCache();
+            cache.setShaderActive(true);
             cache.ensureCache(loader, data, new DefaultAssetResolver(), cam);
             assertEquals(1, cons.constructed().size());
             cache.ensureCache(loader, data, new DefaultAssetResolver(), cam);
@@ -134,6 +135,7 @@ public class MapTileCacheTest {
                     when(mock.endCache()).thenReturn(0);
                 })) {
             MapTileCache cache = new MapTileCache();
+            cache.setShaderActive(true);
             cache.ensureCache(loader, data, new DefaultAssetResolver(), cam);
             SpriteCache sprite = cons.constructed().get(0);
             SpriteBatch batch = mock(SpriteBatch.class);
@@ -170,6 +172,7 @@ public class MapTileCacheTest {
                     when(mock.endCache()).thenReturn(0);
                 })) {
             MapTileCache cache = new MapTileCache();
+            cache.setShaderActive(true);
             cache.ensureCache(loader, data, new DefaultAssetResolver(), cam);
             SpriteCache sprite = cons.constructed().get(0);
             SpriteBatch batch = mock(SpriteBatch.class);
@@ -191,6 +194,7 @@ public class MapTileCacheTest {
                     when(mock.endCache()).thenReturn(0);
                 })) {
             MapTileCache cache = new MapTileCache();
+            cache.setShaderActive(true);
             cache.ensureCache(loader, data, new DefaultAssetResolver(), cam);
             assertEquals(1, cons.constructed().size());
             data.setVersion(data.getVersion() + 1);
@@ -212,6 +216,7 @@ public class MapTileCacheTest {
                     when(mock.endCache()).thenReturn(0);
                 })) {
             MapTileCache cache = new MapTileCache();
+            cache.setShaderActive(true);
             cache.ensureCache(loader, data, new DefaultAssetResolver(), cam);
             assertEquals(1, cons.constructed().size());
             com.badlogic.gdx.utils.IntArray indices = new com.badlogic.gdx.utils.IntArray(new int[] {0});
@@ -292,6 +297,7 @@ public class MapTileCacheTest {
                     when(mock.endCache()).thenReturn(0);
                 })) {
             MapTileCache cache = new MapTileCache();
+            cache.setShaderActive(true);
             cache.ensureCache(loader, data, new DefaultAssetResolver(), cam);
             SpriteCache sprite = cons.constructed().get(0);
             ArgumentCaptor<Float> angleCap = ArgumentCaptor.forClass(Float.class);
@@ -313,6 +319,28 @@ public class MapTileCacheTest {
             assertEquals(2, alphas.size());
             assertNotEquals(angles.get(0), angles.get(1));
             assertNotEquals(alphas.get(0), alphas.get(1));
+        }
+    }
+
+    @Test
+    public void cachesOpaqueTilesWhenNoShader() {
+        MapRenderData data = createManualData();
+
+        CameraProvider cam = mock(CameraProvider.class);
+        when(cam.getCamera()).thenReturn(new OrthographicCamera());
+        ResourceLoader loader = mock(ResourceLoader.class);
+        TextureRegion region = new TextureRegion();
+        when(loader.findRegion(any())).thenReturn(region);
+        try (MockedConstruction<SpriteCache> cons = mockConstruction(SpriteCache.class,
+                (mock, ctx) -> {
+                    when(mock.getProjectionMatrix()).thenReturn(new Matrix4());
+                    when(mock.endCache()).thenReturn(0);
+                })) {
+            MapTileCache cache = new MapTileCache();
+            cache.setShaderActive(false);
+            cache.ensureCache(loader, data, new DefaultAssetResolver(), cam);
+            SpriteCache sprite = cons.constructed().get(0);
+            verify(sprite, times(2)).setColor(1f, 1f, 1f, 1f);
         }
     }
 }

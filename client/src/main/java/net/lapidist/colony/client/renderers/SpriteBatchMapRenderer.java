@@ -64,6 +64,7 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
     public void render(final MapRenderData map, final CameraProvider camera) {
         spriteBatch.setProjectionMatrix(camera.getCamera().combined);
         if (cacheEnabled) {
+            tileCache.setShaderActive(shader != null);
             tileCache.ensureCache(resourceLoader, map, resolver, camera);
         }
         if (shader != null) {

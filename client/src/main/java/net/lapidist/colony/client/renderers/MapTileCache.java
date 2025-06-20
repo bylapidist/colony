@@ -25,6 +25,8 @@ import net.lapidist.colony.components.GameConstants;
 final class MapTileCache implements Disposable {
 
     private static final int MAX_SPRITES_PER_CACHE = 8191;
+    private static final float ROTATION_QUADRANT_DEG = 90f;
+    private static final float QUADRANT_COUNT = 4f;
 
     private final Array<SpriteCache> spriteCaches = new Array<>();
     private final IntArray cacheIds = new IntArray();
@@ -35,6 +37,11 @@ final class MapTileCache implements Disposable {
     private MapRenderData cachedData;
     private int cachedVersion;
     private boolean invalidated = true;
+    private boolean shaderActive;
+
+    void setShaderActive(final boolean active) {
+        this.shaderActive = active;
+    }
 
     void invalidate() {
         invalidated = true;
@@ -122,8 +129,9 @@ final class MapTileCache implements Disposable {
 
                 if (region != null) {
                     float rotation = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
-                    int rotationIndex = (int) (rotation / 90f);
-                    cache.setColor(1f, 1f, 1f, rotationIndex / 4f);
+                    int rotationIndex = (int) (rotation / ROTATION_QUADRANT_DEG);
+                    float alpha = shaderActive ? rotationIndex / QUADRANT_COUNT : 1f;
+                    cache.setColor(1f, 1f, 1f, alpha);
                     cache.add(
                             region,
                             worldX,
@@ -184,8 +192,9 @@ final class MapTileCache implements Disposable {
 
                 if (region != null) {
                     float rotation = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
-                    int rotationIndex = (int) (rotation / 90f);
-                    cache.setColor(1f, 1f, 1f, rotationIndex / 4f);
+                    int rotationIndex = (int) (rotation / ROTATION_QUADRANT_DEG);
+                    float alpha = shaderActive ? rotationIndex / QUADRANT_COUNT : 1f;
+                    cache.setColor(1f, 1f, 1f, alpha);
                     cache.add(
                             region,
                             worldX,
