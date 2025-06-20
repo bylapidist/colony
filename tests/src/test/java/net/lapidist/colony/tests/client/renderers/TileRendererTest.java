@@ -474,9 +474,11 @@ public class TileRendererTest {
         renderer.render(map);
 
         ArgumentCaptor<Float> captor = ArgumentCaptor.forClass(Float.class);
-        verify(shader, times(2)).setUniformf(eq("u_tileRotation"), captor.capture());
+        verify(batch, times(2)).setColor(eq(1f), eq(1f), eq(1f), captor.capture());
         java.util.List<Float> vals = captor.getAllValues();
-        assertEquals(Math.toRadians(TileRotationUtil.rotationFor(0, 0)), vals.get(0), EPSILON);
-        assertEquals(Math.toRadians(TileRotationUtil.rotationFor(1, 0)), vals.get(1), EPSILON);
+        int index1 = (int) (TileRotationUtil.rotationFor(0, 0) / 90f);
+        int index2 = (int) (TileRotationUtil.rotationFor(1, 0) / 90f);
+        assertEquals(index1 / 4f, vals.get(0), EPSILON);
+        assertEquals(index2 / 4f, vals.get(1), EPSILON);
     }
 }

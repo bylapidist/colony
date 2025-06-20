@@ -28,7 +28,9 @@ collections remain necessary despite the overhead.
 `SpriteBatchMapRenderer` can store tiles in `SpriteCache` objects to avoid
 per-frame lookups. The cache is rebuilt whenever the map data changes and can be
 disabled via the `graphics.spritecache` setting. Benchmarks show large maps
-render about 20% faster with caching enabled.
+render about 20% faster with caching enabled. Each cached sprite stores its
+rotation index in the alpha channel via `SpriteCache#setColor` so the shader
+can rotate normal maps without a uniform.
 
 ## Lighting
 
