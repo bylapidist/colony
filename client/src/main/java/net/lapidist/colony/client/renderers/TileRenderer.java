@@ -16,11 +16,12 @@ import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.registry.Registries;
 import net.lapidist.colony.registry.TileDefinition;
 import net.lapidist.colony.settings.GraphicsSettings;
+import com.badlogic.gdx.utils.Disposable;
 
 /**
  * Renders tile entities.
  */
-public final class TileRenderer implements EntityRenderer<RenderTile> {
+public final class TileRenderer implements EntityRenderer<RenderTile>, Disposable {
     private final net.lapidist.colony.client.network.GameClient client;
 
     private final SpriteBatch spriteBatch;
@@ -180,5 +181,10 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                 }
             }
         }
+    }
+
+    @Override
+    public void dispose() {
+        font.dispose();
     }
 }

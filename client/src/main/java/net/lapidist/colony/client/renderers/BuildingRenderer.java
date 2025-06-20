@@ -15,11 +15,12 @@ import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.registry.BuildingDefinition;
 import net.lapidist.colony.registry.Registries;
 import net.lapidist.colony.settings.GraphicsSettings;
+import com.badlogic.gdx.utils.Disposable;
 
 /**
  * Renders building entities.
  */
-public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
+public final class BuildingRenderer implements EntityRenderer<RenderBuilding>, Disposable {
 
     private final SpriteBatch spriteBatch;
     private final ResourceLoader resourceLoader;
@@ -115,5 +116,10 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
                 font.draw(spriteBatch, layout, worldCoords.x, worldCoords.y + LABEL_OFFSET_Y);
             }
         }
+    }
+
+    @Override
+    public void dispose() {
+        font.dispose();
     }
 }
