@@ -10,6 +10,8 @@ import net.lapidist.colony.client.Colony;
 /** Simple screen that displays an error message with a button to return to the main menu. */
 public final class ErrorScreen extends BaseScreen {
     public ErrorScreen(final Colony colony, final String message) {
+        float scale = colony.getSettings() == null ? 1f : colony.getSettings().getUiScale();
+        getStage().getRoot().setScale(scale);
         Label label = createLabel(message);
         TextButton back = createButton(I18n.get("common.back"));
 

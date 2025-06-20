@@ -12,14 +12,12 @@ uniform vec3 u_lightDir;
 uniform vec3 u_viewDir;
 uniform float u_specularPower;
 uniform float u_normalStrength;
-// Rotation angle is encoded in v_color.a as index / 4.
-// Multiply by 2π to convert to radians inside the shader.
+uniform float u_tileRotation;
 
 void main() {
     vec2 offset = v_texCoords - 0.5;
-    float angle = v_color.a * 6.28318;
-    float c = cos(angle);
-    float s = sin(angle);
+    float c = cos(u_tileRotation);
+    float s = sin(u_tileRotation);
     mat2 rot = mat2(c, -s, s, c);
     vec2 rCoords = rot * offset + 0.5;
     vec4 diffuse = texture2D(u_texture, v_texCoords);
@@ -33,5 +31,5 @@ void main() {
     float specIntensity = pow(max(dot(normal, halfDir), 0.0), u_specularPower);
     float specMap = texture2D(u_specular, rCoords).r;
     vec3 color = diffuse.rgb * diff + vec3(specIntensity * specMap);
-    gl_FragColor = vec4(color, diffuse.a) * vec4(v_color.rgb, 1.0);
+    gl_FragColor = vec4(color, diffuse.a) * v_color;
 }

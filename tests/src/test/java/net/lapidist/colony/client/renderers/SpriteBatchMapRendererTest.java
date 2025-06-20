@@ -1,7 +1,6 @@
 package net.lapidist.colony.client.renderers;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import org.mockito.InOrder;
 import net.lapidist.colony.client.core.io.ResourceLoader;
@@ -13,7 +12,6 @@ import org.junit.runner.RunWith;
 import net.lapidist.colony.tests.GdxTestRunner;
 import com.badlogic.gdx.utils.IntArray;
 import net.lapidist.colony.client.render.MapRenderData;
-import net.lapidist.colony.settings.GraphicsSettings;
 
 import java.lang.reflect.Field;
 
@@ -205,41 +203,5 @@ public class SpriteBatchMapRendererTest {
         verify(lights).render();
 
         renderer.dispose();
-    }
-
-    @Test
-    public void disposesRendererFonts() throws Exception {
-        SpriteBatch batch = mock(SpriteBatch.class);
-        ResourceLoader loader = mock(ResourceLoader.class);
-        GraphicsSettings settings = new GraphicsSettings();
-
-        TileRenderer tileRenderer = new TileRenderer(
-                batch, loader, null, new DefaultAssetResolver(), null, settings);
-        BuildingRenderer buildingRenderer = new BuildingRenderer(
-                batch, loader, null, new DefaultAssetResolver(), settings);
-
-        BitmapFont tileFont = spy(new BitmapFont());
-        java.lang.reflect.Field tileFontField = TileRenderer.class.getDeclaredField("font");
-        tileFontField.setAccessible(true);
-        tileFontField.set(tileRenderer, tileFont);
-
-        BitmapFont buildingFont = spy(new BitmapFont());
-        java.lang.reflect.Field bFontField = BuildingRenderer.class.getDeclaredField("font");
-        bFontField.setAccessible(true);
-        bFontField.set(buildingRenderer, buildingFont);
-
-        ResourceRenderer resourceRenderer = mock(ResourceRenderer.class);
-        PlayerRenderer playerRenderer = mock(PlayerRenderer.class);
-        CelestialRenderer celestialRenderer = mock(CelestialRenderer.class);
-        MapEntityRenderers renderers = new MapEntityRenderers(resourceRenderer, playerRenderer, celestialRenderer);
-
-        SpriteBatchMapRenderer renderer = new SpriteBatchMapRenderer(
-                batch, loader, tileRenderer, buildingRenderer, renderers, false, null);
-        renderer.setPlugin(null);
-
-        renderer.dispose();
-
-        verify(tileFont).dispose();
-        verify(buildingFont).dispose();
     }
 }

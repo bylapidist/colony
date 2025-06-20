@@ -30,7 +30,7 @@ public final class InventoryService {
      * @param amount quantity to add
      */
     public void addItem(final String itemId, final int amount) {
-        if (itemId == null || amount <= 0 || Registries.items().get(itemId) == null) {
+        if (itemId == null || amount == 0 || Registries.items().get(itemId) == null) {
             return;
         }
         lock.lock();

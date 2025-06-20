@@ -28,6 +28,8 @@ public final class SettingsScreen extends BaseScreen {
 
     public SettingsScreen(final Colony game) {
         this.colony = game;
+        float scale = game.getSettings() == null ? 1f : game.getSettings().getUiScale();
+        getStage().getRoot().setScale(scale);
         localeIndex = findLocaleIndex(colony.getSettings().getLocale());
         language = new TextButton(getLanguageText(SUPPORTED_LOCALES[localeIndex]), getSkin());
         TextButton keybinds = new TextButton(I18n.get("settings.keybinds"), getSkin());

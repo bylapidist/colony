@@ -15,12 +15,11 @@ import net.lapidist.colony.client.render.MapRenderData;
 import net.lapidist.colony.registry.BuildingDefinition;
 import net.lapidist.colony.registry.Registries;
 import net.lapidist.colony.settings.GraphicsSettings;
-import com.badlogic.gdx.utils.Disposable;
 
 /**
  * Renders building entities.
  */
-public final class BuildingRenderer implements EntityRenderer<RenderBuilding>, Disposable {
+public final class BuildingRenderer implements EntityRenderer<RenderBuilding> {
 
     private final SpriteBatch spriteBatch;
     private final ResourceLoader resourceLoader;
@@ -106,21 +105,15 @@ public final class BuildingRenderer implements EntityRenderer<RenderBuilding>, D
                             power != null ? (float) power : ResourceLoader.DEFAULT_SPECULAR_POWER
                     );
                     shader.setUniformf("u_normalStrength", graphicsSettings.getNormalMapStrength());
+                    shader.setUniformf("u_tileRotation", 0f);
                     com.badlogic.gdx.Gdx.gl.glActiveTexture(com.badlogic.gdx.graphics.GL20.GL_TEXTURE0);
                 }
-                spriteBatch.setColor(1f, 1f, 1f, 0f);
                 spriteBatch.draw(region, worldCoords.x, worldCoords.y);
-                spriteBatch.setColor(com.badlogic.gdx.graphics.Color.WHITE);
             }
             if (!resolver.hasBuildingAsset(type)) {
                 layout.setText(font, type);
                 font.draw(spriteBatch, layout, worldCoords.x, worldCoords.y + LABEL_OFFSET_Y);
             }
         }
-    }
-
-    @Override
-    public void dispose() {
-        font.dispose();
     }
 }

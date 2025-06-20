@@ -73,8 +73,7 @@ additional uniforms:
 * `u_viewDir` – direction toward the camera.
 * `u_specularPower` – exponent for the specular highlight.
 * `u_normalStrength` – blend factor for normal maps.
-* Tile rotation is encoded in the sprite color alpha channel. The shader multiplies
-  this value by `2π` to rotate normal and specular maps.
+* `u_tileRotation` – angle applied to normal and specular maps.
 
 The first two values are updated every frame so diffuse and specular terms react
 to camera movement. The specular map supplies the intensity for a Blinn–Phong

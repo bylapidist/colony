@@ -32,8 +32,6 @@ final class MapTileCache implements Disposable {
     private final BooleanArray invalidSegments = new BooleanArray();
     private final Matrix4 oldProj = new Matrix4();
     private final Rectangle viewBounds = new Rectangle();
-    private static final float RIGHT_ANGLE = 90f;
-    private static final float INDEX_SCALE = 4f;
     private MapRenderData cachedData;
     private int cachedVersion;
     private boolean invalidated = true;
@@ -55,13 +53,11 @@ final class MapTileCache implements Disposable {
         }
     }
 
-    @SuppressWarnings("checkstyle:magicnumber")
     void ensureCache(
             final ResourceLoader loader,
             final MapRenderData map,
             final AssetResolver resolver,
-            final CameraProvider camera,
-            final boolean hasShader
+            final CameraProvider camera
     ) {
         if (map == null) {
             dispose();
@@ -70,7 +66,7 @@ final class MapTileCache implements Disposable {
 
         if (spriteCaches.isEmpty() || cachedData != map) {
             dispose();
-            rebuildAll(loader, map, resolver, camera, hasShader);
+            rebuildAll(loader, map, resolver, camera);
             return;
         }
 
@@ -87,7 +83,7 @@ final class MapTileCache implements Disposable {
 
         if (invalidated) {
             dispose();
-            rebuildAll(loader, map, resolver, camera, hasShader);
+            rebuildAll(loader, map, resolver, camera);
             return;
         }
 
@@ -126,9 +122,6 @@ final class MapTileCache implements Disposable {
 
                 if (region != null) {
                     float rotation = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
-                    int rotationIndex = (int) (rotation / RIGHT_ANGLE);
-                    float alpha = hasShader ? rotationIndex / INDEX_SCALE : 1f;
-                    cache.setColor(1f, 1f, 1f, alpha);
                     cache.add(
                             region,
                             worldX,
@@ -153,13 +146,11 @@ final class MapTileCache implements Disposable {
         cachedVersion = map.getVersion();
     }
 
-    @SuppressWarnings("checkstyle:magicnumber")
     private void rebuildAll(
             final ResourceLoader loader,
             final MapRenderData map,
             final AssetResolver resolver,
-            final CameraProvider camera,
-            final boolean hasShader
+            final CameraProvider camera
     ) {
         dispose();
         cachedData = map;
@@ -191,9 +182,6 @@ final class MapTileCache implements Disposable {
 
                 if (region != null) {
                     float rotation = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
-                    int rotationIndex = (int) (rotation / RIGHT_ANGLE);
-                    float alpha = hasShader ? rotationIndex / INDEX_SCALE : 1f;
-                    cache.setColor(1f, 1f, 1f, alpha);
                     cache.add(
                             region,
                             worldX,
