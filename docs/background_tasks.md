@@ -6,18 +6,11 @@ Provide a progress callback to receive updates between `0` and `1` as the map st
 is generated. `MapScreen` polls this system during the loading phase and processes
 the world once initialization completes.
 
-Use `LogicWorldBuilder.builder` with the new callback parameter to create the
-logic world and `MapWorldBuilder.builder` for the render world. Both report
-loading progress:
+Use `MapWorldBuilder.builder` with the new callback parameter to create a world
+that reports loading progress:
 
 ```java
-WorldConfigurationBuilder builder = LogicWorldBuilder.builder(
-        provider,
-        client,
-        keys,
-        progress -> loadingScreen.setProgress(progress)
-);
-WorldConfigurationBuilder render = MapWorldBuilder.builder(
+WorldConfigurationBuilder builder = MapWorldBuilder.builder(
         provider,
         client,
         stage,
