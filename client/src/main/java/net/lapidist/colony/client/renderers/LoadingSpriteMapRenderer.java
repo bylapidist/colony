@@ -55,6 +55,14 @@ public final class LoadingSpriteMapRenderer implements MapRenderer, Disposable {
         this.shader = shaderProgram;
     }
 
+    /** Indicates if a custom shader program was created. */
+    public boolean hasShader() {
+        if (delegate instanceof SpriteBatchMapRenderer sb) {
+            return sb.hasShader();
+        }
+        return shader != null;
+    }
+
     /** Set graphics settings for renderer creation. */
     public void setGraphicsSettings(final GraphicsSettings settings) {
         this.graphicsSettings = settings;
