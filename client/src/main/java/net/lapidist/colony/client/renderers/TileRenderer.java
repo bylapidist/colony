@@ -36,6 +36,8 @@ public final class TileRenderer implements EntityRenderer<RenderTile>, Disposabl
     private final BitmapFont font = new BitmapFont();
     private final GlyphLayout layout = new GlyphLayout();
     private static final float LABEL_OFFSET_Y = 8f;
+    private static final float RIGHT_ANGLE = 90f;
+    private static final float INDEX_SCALE = 4f;
     private final Rectangle viewBounds = new Rectangle();
     private final Vector2 tmpStart = new Vector2();
     private final Vector2 tmpEnd = new Vector2();
@@ -84,6 +86,7 @@ public final class TileRenderer implements EntityRenderer<RenderTile>, Disposabl
     }
 
     @Override
+    @SuppressWarnings("checkstyle:magicnumber")
     public void render(final MapRenderData map) {
         Rectangle view = CameraUtils.getViewBounds(
                 (com.badlogic.gdx.graphics.OrthographicCamera) cameraSystem.getCamera(),
@@ -143,8 +146,8 @@ public final class TileRenderer implements EntityRenderer<RenderTile>, Disposabl
                         int rotationIndex = 0;
                         if ("GRASS".equals(upper) || "DIRT".equals(upper)) {
                             rotationAngle = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
-                            rotationIndex = (int) (rotationAngle / 90f);
-                            spriteBatch.setColor(1f, 1f, 1f, rotationIndex / 4f);
+                            rotationIndex = (int) (rotationAngle / RIGHT_ANGLE);
+                            spriteBatch.setColor(1f, 1f, 1f, rotationIndex / INDEX_SCALE);
                             spriteBatch.draw(
                                     region,
                                     worldCoords.x,
@@ -159,7 +162,7 @@ public final class TileRenderer implements EntityRenderer<RenderTile>, Disposabl
                             );
                             spriteBatch.setColor(com.badlogic.gdx.graphics.Color.WHITE);
                         } else {
-                            spriteBatch.setColor(1f, 1f, 1f, rotationIndex / 4f);
+                            spriteBatch.setColor(1f, 1f, 1f, rotationIndex / INDEX_SCALE);
                             spriteBatch.draw(region, worldCoords.x, worldCoords.y);
                             spriteBatch.setColor(com.badlogic.gdx.graphics.Color.WHITE);
                         }

@@ -169,7 +169,8 @@ public final class MapWorldBuilder {
                 || (graphics.isLightingEnabled() && graphics.isDayNightCycleEnabled());
         LightingSystem lighting = null;
         if (lightingEnabled || dayNightEnabled) {
-            lighting = new LightingSystem(clear, rays, environment);
+            boolean cycleEnabled = graphics == null || graphics.isDayNightCycleEnabled();
+            lighting = new LightingSystem(clear, rays, environment, cycleEnabled);
         }
         WorldConfigurationBuilder builder = new WorldConfigurationBuilder()
                 .with(

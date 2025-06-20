@@ -30,11 +30,14 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(GdxTestRunner.class)
+@SuppressWarnings("checkstyle:magicnumber")
 public class TileRendererTest {
 
     private static final int CUSTOM_POWER = 11;
     private static final float CUSTOM_STRENGTH = 0.5f;
     private static final float EPSILON = 0.001f;
+    private static final float RIGHT_ANGLE = 90f;
+    private static final float INDEX_SCALE = 4f;
 
     @Test
     public void drawsTileAndOverlay() {
@@ -476,9 +479,9 @@ public class TileRendererTest {
         ArgumentCaptor<Float> captor = ArgumentCaptor.forClass(Float.class);
         verify(batch, times(2)).setColor(eq(1f), eq(1f), eq(1f), captor.capture());
         java.util.List<Float> vals = captor.getAllValues();
-        int index1 = (int) (TileRotationUtil.rotationFor(0, 0) / 90f);
-        int index2 = (int) (TileRotationUtil.rotationFor(1, 0) / 90f);
-        assertEquals(index1 / 4f, vals.get(0), EPSILON);
-        assertEquals(index2 / 4f, vals.get(1), EPSILON);
+        int index1 = (int) (TileRotationUtil.rotationFor(0, 0) / RIGHT_ANGLE);
+        int index2 = (int) (TileRotationUtil.rotationFor(1, 0) / RIGHT_ANGLE);
+        assertEquals(index1 / INDEX_SCALE, vals.get(0), EPSILON);
+        assertEquals(index2 / INDEX_SCALE, vals.get(1), EPSILON);
     }
 }
