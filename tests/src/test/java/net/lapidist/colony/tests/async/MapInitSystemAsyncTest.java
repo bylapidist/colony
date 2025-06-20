@@ -48,4 +48,32 @@ public class MapInitSystemAsyncTest {
                 .getEntities();
         assertEquals(1, maps.size());
     }
+
+    @Test
+    public void disposingWorldStopsWorker() throws Exception {
+        MapState state = new MapState();
+        state.putTile(TileData.builder()
+                .x(0)
+                .y(0)
+                .tileType("GRASS")
+                .passable(true)
+                .build());
+        MapInitSystem init = new MapInitSystem(new ProvidedMapStateProvider(state), true, null);
+        World world = new World(new WorldConfigurationBuilder().with(init).build());
+        world.process();
+        Thread.sleep(SLEEP_MS);
+        world.dispose();
+
+        long wait = System.currentTimeMillis() + WAIT_MS;
+        boolean alive;
+        do {
+            alive = Thread.getAllStackTraces().keySet().stream()
+                    .anyMatch(t -> "map-init".equals(t.getName()) && t.isAlive());
+            if (alive) {
+                Thread.sleep(SLEEP_MS);
+            }
+        } while (alive && System.currentTimeMillis() < wait);
+
+        assertTrue(!alive);
+    }
 }
