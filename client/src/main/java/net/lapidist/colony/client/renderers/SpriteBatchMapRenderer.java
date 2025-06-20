@@ -107,6 +107,8 @@ public final class SpriteBatchMapRenderer implements MapRenderer, Disposable {
     @Override
     public void dispose() {
         resourceLoader.dispose();
+        tileRenderer.dispose();
+        buildingRenderer.dispose();
         entityRenderers.resourceRenderer().dispose();
         spriteBatch.dispose();
         if (shader != null) {
