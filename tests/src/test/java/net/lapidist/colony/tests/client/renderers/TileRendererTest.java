@@ -30,14 +30,11 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(GdxTestRunner.class)
-@SuppressWarnings("checkstyle:magicnumber")
 public class TileRendererTest {
 
     private static final int CUSTOM_POWER = 11;
     private static final float CUSTOM_STRENGTH = 0.5f;
     private static final float EPSILON = 0.001f;
-    private static final float RIGHT_ANGLE = 90f;
-    private static final float INDEX_SCALE = 4f;
 
     @Test
     public void drawsTileAndOverlay() {
@@ -477,45 +474,9 @@ public class TileRendererTest {
         renderer.render(map);
 
         ArgumentCaptor<Float> captor = ArgumentCaptor.forClass(Float.class);
-        verify(batch, times(2)).setColor(eq(1f), eq(1f), eq(1f), captor.capture());
+        verify(shader, times(2)).setUniformf(eq("u_tileRotation"), captor.capture());
         java.util.List<Float> vals = captor.getAllValues();
-        int index1 = (int) (TileRotationUtil.rotationFor(0, 0) / RIGHT_ANGLE);
-        int index2 = (int) (TileRotationUtil.rotationFor(1, 0) / RIGHT_ANGLE);
-        assertEquals(index1 / INDEX_SCALE, vals.get(0), EPSILON);
-        assertEquals(index2 / INDEX_SCALE, vals.get(1), EPSILON);
-    }
-
-    @Test
-    public void tilesOpaqueWithoutShader() {
-        SpriteBatch batch = mock(SpriteBatch.class);
-        ResourceLoader loader = mock(ResourceLoader.class);
-        TextureRegion region = mock(TextureRegion.class);
-        TextureRegion overlay = mock(TextureRegion.class);
-        when(loader.findRegion(anyString())).thenReturn(region);
-        when(loader.findRegion(eq("hoveredTile0"))).thenReturn(overlay);
-
-        new BaseDefinitionsMod().init();
-
-        CameraProvider camera = mock(CameraProvider.class);
-        com.badlogic.gdx.graphics.OrthographicCamera cam = new com.badlogic.gdx.graphics.OrthographicCamera();
-        com.badlogic.gdx.utils.viewport.ExtendViewport viewport =
-                new com.badlogic.gdx.utils.viewport.ExtendViewport(1f, 1f, cam);
-        cam.update();
-        when(camera.getViewport()).thenReturn(viewport);
-        when(camera.getCamera()).thenReturn(cam);
-
-        GraphicsSettings graphics = new GraphicsSettings();
-        TileRenderer renderer = new TileRenderer(batch, loader, camera, new DefaultAssetResolver(), null, graphics);
-
-        Array<RenderTile> tiles = new Array<>();
-        tiles.add(RenderTile.builder().x(0).y(0).tileType("GRASS").selected(false).wood(0).stone(0).food(0).build());
-
-        RenderTile[][] grid = new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT];
-        grid[0][0] = tiles.first();
-        MapRenderData map = new SimpleMapRenderData(tiles, new Array<RenderBuilding>(), grid);
-
-        renderer.render(map);
-
-        verify(batch).setColor(1f, 1f, 1f, 1f);
+        assertEquals(Math.toRadians(TileRotationUtil.rotationFor(0, 0)), vals.get(0), EPSILON);
+        assertEquals(Math.toRadians(TileRotationUtil.rotationFor(1, 0)), vals.get(1), EPSILON);
     }
 }

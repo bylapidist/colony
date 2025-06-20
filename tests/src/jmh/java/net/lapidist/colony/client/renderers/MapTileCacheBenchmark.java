@@ -107,7 +107,7 @@ public class MapTileCacheBenchmark {
     @Benchmark
     public final void rebuildCache() {
         cache.invalidate();
-        cache.ensureCache(loader, data, resolver, camera, true);
+        cache.ensureCache(loader, data, resolver, camera);
     }
 
     @Benchmark
@@ -115,6 +115,6 @@ public class MapTileCacheBenchmark {
         cache.invalidateTiles(updateIndices);
         ((net.lapidist.colony.client.render.SimpleMapRenderData) data)
                 .setVersion(((net.lapidist.colony.client.render.SimpleMapRenderData) data).getVersion() + 1);
-        cache.ensureCache(loader, data, resolver, camera, true);
+        cache.ensureCache(loader, data, resolver, camera);
     }
 }

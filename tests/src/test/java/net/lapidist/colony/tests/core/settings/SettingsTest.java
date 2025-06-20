@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 public class SettingsTest {
     private static final int RES_W = 1024;
     private static final int RES_H = 768;
+    private static final float SCALE = 1.5f;
 
     @Test
     public void savesAndLoadsLocale() throws IOException {
@@ -105,11 +106,13 @@ public class SettingsTest {
         settings.setWidth(RES_W);
         settings.setHeight(RES_H);
         settings.setFullscreen(true);
+        settings.setUiScale(SCALE);
         settings.save(paths);
 
         Settings loaded = Settings.load(paths);
         assertEquals(RES_W, loaded.getWidth());
         assertEquals(RES_H, loaded.getHeight());
         assertEquals(true, loaded.isFullscreen());
+        assertEquals(SCALE, loaded.getUiScale(), 0f);
     }
 }

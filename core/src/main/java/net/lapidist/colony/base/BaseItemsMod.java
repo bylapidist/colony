@@ -10,7 +10,5 @@ public final class BaseItemsMod implements GameMod {
     public void init() {
         Registries.items().register(new ItemDefinition("stick", "Stick", "stick0"));
         Registries.items().register(new ItemDefinition("stone", "Stone", "stone0"));
-        Registries.items().register(new ItemDefinition("wood", "Wood", "wood0"));
-        Registries.items().register(new ItemDefinition("food", "Food", "food0"));
     }
 }

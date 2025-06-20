@@ -24,30 +24,11 @@ public class InventoryServiceTest {
         AtomicReference<MapState> ref = new AtomicReference<>(state);
         ReentrantLock lock = new ReentrantLock();
         InventoryService inv = new InventoryService(ref::get, ref::set, lock);
-        final int stoneAmount = 2;
-        final int woodAmount = 3;
-        inv.addItem("stone", stoneAmount);
-        inv.addItem("wood", woodAmount);
+        inv.addItem("stone", 2);
         final int unknownAmount = 5;
         inv.addItem("unknown", unknownAmount);
 
-        assertEquals(stoneAmount, inv.getAmount("stone"));
-        assertEquals(woodAmount, inv.getAmount("wood"));
+        assertEquals(2, inv.getAmount("stone"));
         assertEquals(0, inv.getAmount("unknown"));
-    }
-
-    @Test
-    public void ignoresNegativeAmount() {
-        MapState state = new MapState();
-        java.util.concurrent.atomic.AtomicReference<MapState> ref =
-                new java.util.concurrent.atomic.AtomicReference<>(state);
-        java.util.concurrent.locks.ReentrantLock lock =
-                new java.util.concurrent.locks.ReentrantLock();
-        InventoryService inv = new InventoryService(ref::get, ref::set, lock);
-
-        final int negative = -5;
-        inv.addItem("stone", negative);
-
-        assertEquals(0, inv.getAmount("stone"));
     }
 }

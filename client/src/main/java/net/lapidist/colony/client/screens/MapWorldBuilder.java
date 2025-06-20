@@ -12,15 +12,15 @@ import net.lapidist.colony.settings.Settings;
 import net.lapidist.colony.settings.GraphicsSettings;
 import net.lapidist.colony.client.graphics.ShaderPlugin;
 import net.lapidist.colony.client.systems.ClearScreenSystem;
+import net.lapidist.colony.client.systems.CameraInputSystem;
+import net.lapidist.colony.client.systems.SelectionSystem;
+import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.MapRenderSystem;
 import net.lapidist.colony.client.systems.LightingSystem;
 import net.lapidist.colony.client.systems.ParticleSystem;
 import net.lapidist.colony.client.systems.PlayerCameraSystem;
 import net.lapidist.colony.client.systems.PlayerMovementSystem;
 import net.lapidist.colony.client.systems.UISystem;
-import net.lapidist.colony.client.systems.CameraInputSystem;
-import net.lapidist.colony.client.systems.SelectionSystem;
-import net.lapidist.colony.client.systems.BuildPlacementSystem;
 import net.lapidist.colony.client.systems.ChunkLoadSystem;
 import net.lapidist.colony.client.systems.network.ChunkRequestQueueSystem;
 import net.lapidist.colony.client.systems.network.TileUpdateSystem;
@@ -169,8 +169,7 @@ public final class MapWorldBuilder {
                 || (graphics.isLightingEnabled() && graphics.isDayNightCycleEnabled());
         LightingSystem lighting = null;
         if (lightingEnabled || dayNightEnabled) {
-            boolean cycleEnabled = graphics == null || graphics.isDayNightCycleEnabled();
-            lighting = new LightingSystem(clear, rays, environment, cycleEnabled);
+            lighting = new LightingSystem(clear, rays, environment);
         }
         WorldConfigurationBuilder builder = new WorldConfigurationBuilder()
                 .with(

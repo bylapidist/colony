@@ -7,6 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import net.lapidist.colony.client.Colony;
@@ -31,7 +33,13 @@ public final class GraphicsSettingsScreen extends BaseScreen {
     private final CheckBox cacheBox;
     private final CheckBox lightingBox;
     private final CheckBox dayNightBox;
+    private final Slider uiScaleSlider;
+    private final Label uiScaleLabel;
     private static final float PADDING = 10f;
+    private static final float SCALE_MIN = 0.5f;
+    private static final float SCALE_MAX = 2f;
+    private static final float SCALE_STEP = 0.1f;
+    private static final float SLIDER_WIDTH = 150f;
 
     public GraphicsSettingsScreen(final Colony game) {
         this(game, new Stage(new ScreenViewport()));
@@ -40,6 +48,8 @@ public final class GraphicsSettingsScreen extends BaseScreen {
     public GraphicsSettingsScreen(final Colony game, final Stage stage) {
         super(stage);
         this.colony = game;
+        float scale = game.getSettings() == null ? 1f : game.getSettings().getUiScale();
+        stage.getRoot().setScale(scale);
 
         GraphicsSettings graphics = colony.getSettings().getGraphicsSettings();
         net.lapidist.colony.settings.Settings general = colony.getSettings();
@@ -76,6 +86,9 @@ public final class GraphicsSettingsScreen extends BaseScreen {
         lightingBox.setChecked(graphics.isLightingEnabled());
         dayNightBox = new CheckBox(I18n.get("graphics.dayNightCycle"), getSkin());
         dayNightBox.setChecked(graphics.isDayNightCycleEnabled());
+        uiScaleSlider = new Slider(SCALE_MIN, SCALE_MAX, SCALE_STEP, false, getSkin());
+        uiScaleSlider.setValue(general.getUiScale());
+        uiScaleLabel = new Label(I18n.get("graphics.uiScale"), getSkin());
 
         TextButton save = new TextButton(I18n.get("common.save"), getSkin());
         TextButton back = new TextButton(I18n.get("common.back"), getSkin());
@@ -92,6 +105,10 @@ public final class GraphicsSettingsScreen extends BaseScreen {
         options.add(rendererBox).left().row();
         options.add(resolutionBox).left().row();
         options.add(fullscreenBox).left().row();
+        Table scaleRow = new Table();
+        scaleRow.add(uiScaleLabel).padRight(PADDING);
+        scaleRow.add(uiScaleSlider).width(SLIDER_WIDTH);
+        options.add(scaleRow).left().row();
 
         ScrollPane scroll = new ScrollPane(options, getSkin());
         scroll.setScrollingDisabled(true, false);
@@ -119,6 +136,7 @@ public final class GraphicsSettingsScreen extends BaseScreen {
                 general.setWidth(Integer.parseInt(res[0]));
                 general.setHeight(Integer.parseInt(res[1]));
                 general.setFullscreen(fullscreenBox.isChecked());
+                general.setUiScale(uiScaleSlider.getValue());
                 save();
             }
         });

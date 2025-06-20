@@ -15,10 +15,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class MapRenderDataSystemTest {
-    private static final int STATE_WIDTH = 5;
-    private static final int STATE_HEIGHT = 4;
-    private static final int CLIENT_WIDTH = 8;
-    private static final int CLIENT_HEIGHT = 6;
 
     @Test
     public void returnsNullWhenNoMapPresent() {
@@ -33,10 +29,7 @@ public class MapRenderDataSystemTest {
 
     @Test
     public void populatesRenderDataFromMap() {
-        MapState state = MapState.builder()
-                .width(STATE_WIDTH)
-                .height(STATE_HEIGHT)
-                .build();
+        MapState state = new MapState();
         state.putTile(TileData.builder()
                 .x(0).y(0).tileType("GRASS").passable(true)
                 .build());
@@ -220,58 +213,6 @@ public class MapRenderDataSystemTest {
         world.process();
         assertEquals(1, system.getSelectedTileIndices().size);
         assertEquals(0, system.getSelectedTileIndices().first());
-        world.dispose();
-    }
-
-    @Test
-    public void usesClientDimensionsWhenProvided() {
-        MapState state = MapState.builder()
-                .width(STATE_WIDTH - 2)
-                .height(STATE_HEIGHT - 1)
-                .build();
-        state.putTile(TileData.builder()
-                .x(0).y(0).tileType("GRASS").passable(true)
-                .build());
-
-        var client = org.mockito.Mockito.mock(net.lapidist.colony.client.network.GameClient.class);
-        org.mockito.Mockito.when(client.getMapWidth()).thenReturn(CLIENT_WIDTH);
-        org.mockito.Mockito.when(client.getMapHeight()).thenReturn(CLIENT_HEIGHT);
-
-        World world = new World(new WorldConfigurationBuilder()
-                .with(new MapInitSystem(new ProvidedMapStateProvider(state)),
-                        new MapRenderDataSystem(client))
-                .build());
-        world.process();
-
-        MapRenderDataSystem system = world.getSystem(MapRenderDataSystem.class);
-        assertEquals(CLIENT_WIDTH, system.getRenderData().getWidth());
-        assertEquals(CLIENT_HEIGHT, system.getRenderData().getHeight());
-        world.dispose();
-    }
-
-    @Test
-    public void fallsBackWhenClientReportsZero() {
-        MapState state = MapState.builder()
-                .width(STATE_WIDTH - 1)
-                .height(STATE_HEIGHT + 1)
-                .build();
-        state.putTile(TileData.builder()
-                .x(0).y(0).tileType("GRASS").passable(true)
-                .build());
-
-        var client = org.mockito.Mockito.mock(net.lapidist.colony.client.network.GameClient.class);
-        org.mockito.Mockito.when(client.getMapWidth()).thenReturn(0);
-        org.mockito.Mockito.when(client.getMapHeight()).thenReturn(0);
-
-        World world = new World(new WorldConfigurationBuilder()
-                .with(new MapInitSystem(new ProvidedMapStateProvider(state)),
-                        new MapRenderDataSystem(client))
-                .build());
-        world.process();
-
-        MapRenderDataSystem system = world.getSystem(MapRenderDataSystem.class);
-        assertEquals(STATE_WIDTH - 1, system.getRenderData().getWidth());
-        assertEquals(STATE_HEIGHT + 1, system.getRenderData().getHeight());
         world.dispose();
     }
 }

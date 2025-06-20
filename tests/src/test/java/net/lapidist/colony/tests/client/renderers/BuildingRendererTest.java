@@ -290,6 +290,6 @@ public class BuildingRendererTest {
 
         renderer.render(map);
 
-        verify(batch).setColor(1f, 1f, 1f, 0f);
+        verify(shader).setUniformf("u_tileRotation", 0f);
     }
 }

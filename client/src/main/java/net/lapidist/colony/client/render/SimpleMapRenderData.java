@@ -47,16 +47,6 @@ public final class SimpleMapRenderData implements MapRenderData {
         return version;
     }
 
-    @Override
-    public int getWidth() {
-        return tileGrid.length;
-    }
-
-    @Override
-    public int getHeight() {
-        return tileGrid.length > 0 ? tileGrid[0].length : 0;
-    }
-
     /** Sets the map version for this render data. */
     public void setVersion(final int newVersion) {
         this.version = newVersion;

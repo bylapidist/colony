@@ -16,12 +16,11 @@ import net.lapidist.colony.components.state.map.MapState;
 import net.lapidist.colony.registry.Registries;
 import net.lapidist.colony.registry.TileDefinition;
 import net.lapidist.colony.settings.GraphicsSettings;
-import com.badlogic.gdx.utils.Disposable;
 
 /**
  * Renders tile entities.
  */
-public final class TileRenderer implements EntityRenderer<RenderTile>, Disposable {
+public final class TileRenderer implements EntityRenderer<RenderTile> {
     private final net.lapidist.colony.client.network.GameClient client;
 
     private final SpriteBatch spriteBatch;
@@ -36,8 +35,6 @@ public final class TileRenderer implements EntityRenderer<RenderTile>, Disposabl
     private final BitmapFont font = new BitmapFont();
     private final GlyphLayout layout = new GlyphLayout();
     private static final float LABEL_OFFSET_Y = 8f;
-    private static final float RIGHT_ANGLE = 90f;
-    private static final float INDEX_SCALE = 4f;
     private final Rectangle viewBounds = new Rectangle();
     private final Vector2 tmpStart = new Vector2();
     private final Vector2 tmpEnd = new Vector2();
@@ -86,7 +83,6 @@ public final class TileRenderer implements EntityRenderer<RenderTile>, Disposabl
     }
 
     @Override
-    @SuppressWarnings("checkstyle:magicnumber")
     public void render(final MapRenderData map) {
         Rectangle view = CameraUtils.getViewBounds(
                 (com.badlogic.gdx.graphics.OrthographicCamera) cameraSystem.getCamera(),
@@ -143,13 +139,14 @@ public final class TileRenderer implements EntityRenderer<RenderTile>, Disposabl
                             shader.setUniformf("u_normalStrength", graphicsSettings.getNormalMapStrength());
                         }
                         String upper = type.toUpperCase(java.util.Locale.ROOT);
-                        int rotationIndex = 0;
-                        boolean hasShader = shader != null;
                         if ("GRASS".equals(upper) || "DIRT".equals(upper)) {
                             rotationAngle = TileRotationUtil.rotationFor(tile.getX(), tile.getY());
-                            rotationIndex = (int) (rotationAngle / RIGHT_ANGLE);
-                            float alpha = hasShader ? rotationIndex / INDEX_SCALE : 1f;
-                            spriteBatch.setColor(1f, 1f, 1f, alpha);
+                            if (shader != null) {
+                                shader.setUniformf(
+                                        "u_tileRotation",
+                                        com.badlogic.gdx.math.MathUtils.degreesToRadians * rotationAngle
+                                );
+                            }
                             spriteBatch.draw(
                                     region,
                                     worldCoords.x,
@@ -162,12 +159,11 @@ public final class TileRenderer implements EntityRenderer<RenderTile>, Disposabl
                                     1f,
                                     rotationAngle
                             );
-                            spriteBatch.setColor(com.badlogic.gdx.graphics.Color.WHITE);
                         } else {
-                            float alpha = hasShader ? rotationIndex / INDEX_SCALE : 1f;
-                            spriteBatch.setColor(1f, 1f, 1f, alpha);
+                            if (shader != null) {
+                                shader.setUniformf("u_tileRotation", 0f);
+                            }
                             spriteBatch.draw(region, worldCoords.x, worldCoords.y);
-                            spriteBatch.setColor(com.badlogic.gdx.graphics.Color.WHITE);
                         }
                         if (shader != null) {
                             com.badlogic.gdx.Gdx.gl.glActiveTexture(com.badlogic.gdx.graphics.GL20.GL_TEXTURE0);
@@ -184,10 +180,5 @@ public final class TileRenderer implements EntityRenderer<RenderTile>, Disposabl
                 }
             }
         }
-    }
-
-    @Override
-    public void dispose() {
-        font.dispose();
     }
 }

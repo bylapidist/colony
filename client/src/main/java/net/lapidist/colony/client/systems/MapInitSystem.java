@@ -67,16 +67,4 @@ public class MapInitSystem extends BaseSystem {
     public boolean isReady() {
         return ready;
     }
-
-    @Override
-    public final void dispose() {
-        if (worker != null && worker.isAlive()) {
-            worker.interrupt();
-            try {
-                worker.join();
-            } catch (InterruptedException ignored) {
-                Thread.currentThread().interrupt();
-            }
-        }
-    }
 }
