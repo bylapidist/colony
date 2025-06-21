@@ -31,6 +31,7 @@ import net.lapidist.colony.client.systems.MapInitSystem;
 import net.lapidist.colony.client.systems.MapRenderDataSystem;
 import net.lapidist.colony.client.systems.LightOcclusionSystem;
 import net.lapidist.colony.components.entities.CelestialBodyComponent;
+import net.lapidist.colony.components.light.DirectionalLightComponent;
 import net.lapidist.colony.components.state.map.CameraPosition;
 import net.lapidist.colony.components.state.MutableEnvironmentState;
 import net.lapidist.colony.components.state.map.MapState;
@@ -280,13 +281,19 @@ public final class MapWorldBuilder {
         sunComp.setTexture("player0");
         sunComp.setOrbitRadius(radius);
         sunComp.setOrbitOffset(0f);
-        sun.edit().add(sunComp);
+        var sunLight = new DirectionalLightComponent();
+        sunLight.setColor(Color.WHITE);
+        sunLight.setIntensity(1f);
+        sun.edit().add(sunComp).add(sunLight);
 
         var moon = world.createEntity();
         var moonComp = new CelestialBodyComponent();
         moonComp.setTexture("player0");
         moonComp.setOrbitRadius(radius);
         moonComp.setOrbitOffset(HALF_ROTATION);
-        moon.edit().add(moonComp);
+        var moonLight = new DirectionalLightComponent();
+        moonLight.setColor(Color.WHITE);
+        moonLight.setIntensity(0.4f);
+        moon.edit().add(moonComp).add(moonLight);
     }
 }

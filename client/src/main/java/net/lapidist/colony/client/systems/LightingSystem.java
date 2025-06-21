@@ -1,6 +1,7 @@
 package net.lapidist.colony.client.systems;
 
 import box2dLight.PointLight;
+import box2dLight.DirectionalLight;
 import box2dLight.RayHandler;
 import com.artemis.Aspect;
 import com.artemis.BaseSystem;
@@ -13,7 +14,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.IntMap;
 import net.lapidist.colony.components.entities.PlayerComponent;
+import net.lapidist.colony.components.entities.CelestialBodyComponent;
 import net.lapidist.colony.components.light.PointLightComponent;
+import net.lapidist.colony.components.light.DirectionalLightComponent;
 import net.lapidist.colony.components.state.MutableEnvironmentState;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.client.events.ResizeEvent;
@@ -26,6 +29,8 @@ public final class LightingSystem extends BaseSystem implements Disposable {
     /** Factory for creating lights. */
     public interface LightFactory {
         PointLight create(RayHandler handler, PointLightComponent comp);
+
+        DirectionalLight createDirectional(RayHandler handler, DirectionalLightComponent comp);
     }
 
     public static final int DEFAULT_RAYS = 16;
@@ -35,12 +40,15 @@ public final class LightingSystem extends BaseSystem implements Disposable {
     private final LightFactory factory;
     private final MutableEnvironmentState environment;
     private final IntMap<PointLight> lights = new IntMap<>();
+    private final IntMap<DirectionalLight> directionalLights = new IntMap<>();
 
     private RayHandler rayHandler;
     private float timeOfDay;
 
     private ComponentMapper<PointLightComponent> lightMapper;
+    private ComponentMapper<DirectionalLightComponent> directionalMapper;
     private ComponentMapper<PlayerComponent> playerMapper;
+    private ComponentMapper<CelestialBodyComponent> bodyMapper;
 
     private static final float HOURS_PER_DAY = 24f;
     private static final float DAY_LENGTH_SECONDS = GameConstants.DAY_LENGTH_SECONDS;
@@ -61,7 +69,18 @@ public final class LightingSystem extends BaseSystem implements Disposable {
                           final int rayCount,
                           final MutableEnvironmentState env) {
         this(clearSystem,
-                (h, c) -> new PointLight(h, rayCount, c.getColor(), c.getRadius(), 0f, 0f),
+                new LightFactory() {
+                    @Override
+                    public PointLight create(final RayHandler h, final PointLightComponent c) {
+                        return new PointLight(h, rayCount, c.getColor(), c.getRadius(), 0f, 0f);
+                    }
+
+                    @Override
+                    public DirectionalLight createDirectional(final RayHandler h,
+                                                             final DirectionalLightComponent c) {
+                        return new DirectionalLight(h, rayCount, c.getColor(), 0f);
+                    }
+                },
                 rayCount,
                 env);
     }
@@ -118,6 +137,11 @@ public final class LightingSystem extends BaseSystem implements Disposable {
         return lights.size;
     }
 
+    /** Number of active directional lights. */
+    public int getDirectionalLightCount() {
+        return directionalLights.size;
+    }
+
     @Subscribe
     private void onResize(final ResizeEvent event) {
         if (rayHandler != null) {
@@ -134,7 +158,9 @@ public final class LightingSystem extends BaseSystem implements Disposable {
     @Override
     public void initialize() {
         lightMapper = world.getMapper(PointLightComponent.class);
+        directionalMapper = world.getMapper(DirectionalLightComponent.class);
         playerMapper = world.getMapper(PlayerComponent.class);
+        bodyMapper = world.getMapper(CelestialBodyComponent.class);
     }
 
     @Override
@@ -195,6 +221,39 @@ public final class LightingSystem extends BaseSystem implements Disposable {
                 }
             }
         }
+
+        var dirSub = world.getAspectSubscriptionManager()
+                .get(Aspect.all(DirectionalLightComponent.class));
+        var dirIds = dirSub.getEntities();
+        int[] dirData = dirIds.getData();
+        for (int i = 0, s = dirIds.size(); i < s; i++) {
+            int id = dirData[i];
+            DirectionalLight light = directionalLights.get(id);
+            Entity e = world.getEntity(id);
+            DirectionalLightComponent comp = directionalMapper.get(e);
+            if (light == null) {
+                light = factory.createDirectional(rayHandler, comp);
+                directionalLights.put(id, light);
+            }
+            Color color = comp.getColor();
+            light.setColor(color.r, color.g, color.b, comp.getIntensity());
+            CelestialBodyComponent body = bodyMapper.get(e);
+            if (body != null) {
+                float angle = (environment.getTimeOfDay() / HOURS_PER_DAY) * 360f - 90f
+                        + body.getOrbitOffset();
+                light.setDirection(angle);
+            }
+        }
+        IntMap.Keys dkeys = directionalLights.keys();
+        while (dkeys.hasNext) {
+            int id = dkeys.next();
+            if (!contains(dirIds, id)) {
+                DirectionalLight light = directionalLights.remove(id);
+                if (light != null) {
+                    light.remove();
+                }
+            }
+        }
     }
 
     private static boolean contains(final com.artemis.utils.IntBag bag, final int value) {
@@ -217,6 +276,11 @@ public final class LightingSystem extends BaseSystem implements Disposable {
             values.next().remove();
         }
         lights.clear();
+        IntMap.Values<DirectionalLight> dvals = directionalLights.values();
+        while (dvals.hasNext()) {
+            dvals.next().remove();
+        }
+        directionalLights.clear();
     }
 
     private static float wrap(final float time) {
