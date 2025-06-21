@@ -39,6 +39,7 @@ public final class MapScreen implements Screen {
         ScreenViewport viewport = (ScreenViewport) stage.getViewport();
         viewport.setUnitsPerPixel(1f / scale);
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+        stage.getRoot().setScale(scale);
     }
 
     public MapScreen(final Colony colonyToSet, final MapState state, final GameClient client) {
