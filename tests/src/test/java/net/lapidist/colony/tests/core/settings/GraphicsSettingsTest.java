@@ -11,6 +11,8 @@ import static org.junit.Assert.*;
 @RunWith(GdxTestRunner.class)
 public class GraphicsSettingsTest {
 
+    private static final float SOFTNESS = 3f;
+
     @Test
     public void savesAndLoadsValues() {
         Properties props = new Properties();
@@ -27,6 +29,8 @@ public class GraphicsSettingsTest {
         gs.setSpecularMapsEnabled(true);
         gs.setDayNightCycleEnabled(false);
         gs.setLightRays(rays);
+        gs.setSoftShadowsEnabled(true);
+        gs.setShadowSoftnessLength(SOFTNESS);
         gs.save(props);
 
         GraphicsSettings loaded = GraphicsSettings.load(props);
@@ -40,6 +44,8 @@ public class GraphicsSettingsTest {
         assertTrue(loaded.isSpecularMapsEnabled());
         assertFalse(loaded.isDayNightCycleEnabled());
         assertEquals(rays, loaded.getLightRays());
+        assertTrue(loaded.isSoftShadowsEnabled());
+        assertEquals(SOFTNESS, loaded.getShadowSoftnessLength(), 0f);
     }
 
     @Test
@@ -57,5 +63,6 @@ public class GraphicsSettingsTest {
         assertFalse(loaded.isSpecularMapsEnabled());
         assertTrue(loaded.isDayNightCycleEnabled());
         assertEquals(GraphicsSettings.load(new Properties()).getLightRays(), loaded.getLightRays());
+        assertFalse(loaded.isSoftShadowsEnabled());
     }
 }

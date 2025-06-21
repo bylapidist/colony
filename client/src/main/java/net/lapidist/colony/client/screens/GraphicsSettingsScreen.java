@@ -33,6 +33,9 @@ public final class GraphicsSettingsScreen extends BaseScreen {
     private final CheckBox cacheBox;
     private final CheckBox lightingBox;
     private final CheckBox dayNightBox;
+    private final CheckBox softShadowBox;
+    private final Slider softnessSlider;
+    private final Label softnessLabel;
     private final Slider uiScaleSlider;
     private final Label uiScaleLabel;
     private static final float PADDING = 10f;
@@ -40,6 +43,9 @@ public final class GraphicsSettingsScreen extends BaseScreen {
     private static final float SCALE_MAX = 2f;
     private static final float SCALE_STEP = 0.1f;
     private static final float SLIDER_WIDTH = 150f;
+    private static final float SOFT_MIN = 0f;
+    private static final float SOFT_MAX = 10f;
+    private static final float SOFT_STEP = 0.5f;
 
     public GraphicsSettingsScreen(final Colony game) {
         this(game, new Stage(new ScreenViewport()));
@@ -86,6 +92,11 @@ public final class GraphicsSettingsScreen extends BaseScreen {
         lightingBox.setChecked(graphics.isLightingEnabled());
         dayNightBox = new CheckBox(I18n.get("graphics.dayNightCycle"), getSkin());
         dayNightBox.setChecked(graphics.isDayNightCycleEnabled());
+        softShadowBox = new CheckBox(I18n.get("graphics.softShadows"), getSkin());
+        softShadowBox.setChecked(graphics.isSoftShadowsEnabled());
+        softnessSlider = new Slider(SOFT_MIN, SOFT_MAX, SOFT_STEP, false, getSkin());
+        softnessSlider.setValue(graphics.getShadowSoftnessLength());
+        softnessLabel = new Label(I18n.get("graphics.shadowSoftnessLength"), getSkin());
         uiScaleSlider = new Slider(SCALE_MIN, SCALE_MAX, SCALE_STEP, false, getSkin());
         uiScaleSlider.setValue(general.getUiScale());
         uiScaleLabel = new Label(I18n.get("graphics.uiScale"), getSkin());
@@ -102,6 +113,11 @@ public final class GraphicsSettingsScreen extends BaseScreen {
         options.add(cacheBox).left().row();
         options.add(lightingBox).left().row();
         options.add(dayNightBox).left().row();
+        options.add(softShadowBox).left().row();
+        Table softRow = new Table();
+        softRow.add(softnessLabel).padRight(PADDING);
+        softRow.add(softnessSlider).width(SLIDER_WIDTH);
+        options.add(softRow).left().row();
         options.add(rendererBox).left().row();
         options.add(resolutionBox).left().row();
         options.add(fullscreenBox).left().row();
@@ -131,6 +147,8 @@ public final class GraphicsSettingsScreen extends BaseScreen {
                 graphics.setSpriteCacheEnabled(cacheBox.isChecked());
                 graphics.setLightingEnabled(lightingBox.isChecked());
                 graphics.setDayNightCycleEnabled(dayNightBox.isChecked());
+                graphics.setSoftShadowsEnabled(softShadowBox.isChecked());
+                graphics.setShadowSoftnessLength(softnessSlider.getValue());
                 graphics.setRenderer(rendererBox.getSelected());
                 String[] res = resolutionBox.getSelected().split("x");
                 general.setWidth(Integer.parseInt(res[0]));
