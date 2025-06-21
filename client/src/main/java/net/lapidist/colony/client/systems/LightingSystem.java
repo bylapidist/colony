@@ -42,6 +42,9 @@ public final class LightingSystem extends BaseSystem implements Disposable {
     private final IntMap<PointLight> lights = new IntMap<>();
     private final IntMap<DirectionalLight> directionalLights = new IntMap<>();
 
+    private boolean softShadowsEnabled;
+    private float shadowSoftnessLength = 2f;
+
     private RayHandler rayHandler;
     private float timeOfDay;
 
@@ -59,6 +62,8 @@ public final class LightingSystem extends BaseSystem implements Disposable {
     private static final Color SUNRISE_COLOR = new Color(0.6f, 0.5f, 0.4f, 1f);
     private static final Color DAY_COLOR = new Color(0.6f, 0.7f, 1f, 1f);
     private static final float NIGHT_AMBIENT_SCALE = 0.1f;
+    private static final float FULL_ROTATION = 360f;
+    private static final float QUARTER_ROTATION = 90f;
 
     public LightingSystem(final ClearScreenSystem clearSystem,
                           final MutableEnvironmentState env) {
@@ -142,6 +147,22 @@ public final class LightingSystem extends BaseSystem implements Disposable {
         return directionalLights.size;
     }
 
+    public void setSoftShadowsEnabled(final boolean enabled) {
+        this.softShadowsEnabled = enabled;
+    }
+
+    public boolean isSoftShadowsEnabled() {
+        return softShadowsEnabled;
+    }
+
+    public void setShadowSoftnessLength(final float length) {
+        this.shadowSoftnessLength = length;
+    }
+
+    public float getShadowSoftnessLength() {
+        return shadowSoftnessLength;
+    }
+
     @Subscribe
     private void onResize(final ResizeEvent event) {
         if (rayHandler != null) {
@@ -201,6 +222,8 @@ public final class LightingSystem extends BaseSystem implements Disposable {
             PointLightComponent comp = lightMapper.get(e);
             if (light == null) {
                 light = factory.create(rayHandler, comp);
+                light.setSoft(softShadowsEnabled);
+                light.setSoftnessLength(shadowSoftnessLength);
                 lights.put(id, light);
             }
             Color color = comp.getColor();
@@ -233,13 +256,15 @@ public final class LightingSystem extends BaseSystem implements Disposable {
             DirectionalLightComponent comp = directionalMapper.get(e);
             if (light == null) {
                 light = factory.createDirectional(rayHandler, comp);
+                light.setSoft(softShadowsEnabled);
+                light.setSoftnessLength(shadowSoftnessLength);
                 directionalLights.put(id, light);
             }
             Color color = comp.getColor();
             light.setColor(color.r, color.g, color.b, comp.getIntensity());
             CelestialBodyComponent body = bodyMapper.get(e);
             if (body != null) {
-                float angle = (environment.getTimeOfDay() / HOURS_PER_DAY) * 360f - 90f
+                float angle = (environment.getTimeOfDay() / HOURS_PER_DAY) * FULL_ROTATION - QUARTER_ROTATION
                         + body.getOrbitOffset();
                 light.setDirection(angle);
             }

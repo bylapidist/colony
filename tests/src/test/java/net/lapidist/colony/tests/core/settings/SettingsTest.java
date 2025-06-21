@@ -14,13 +14,14 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.util.Locale;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 @RunWith(GdxTestRunner.class)
 public class SettingsTest {
     private static final int RES_W = 1024;
     private static final int RES_H = 768;
     private static final float SCALE = 1.5f;
+    private static final float SOFTNESS = 5f;
 
     @Test
     public void savesAndLoadsLocale() throws IOException {
@@ -82,6 +83,8 @@ public class SettingsTest {
         graphics.setDayNightCycleEnabled(false);
         final int rays = 20;
         graphics.setLightRays(rays);
+        graphics.setSoftShadowsEnabled(true);
+        graphics.setShadowSoftnessLength(SOFTNESS);
         settings.save(paths);
 
         Settings loaded = Settings.load(paths);
@@ -95,6 +98,8 @@ public class SettingsTest {
         assertEquals(true, loaded.getGraphicsSettings().isSpecularMapsEnabled());
         assertEquals(false, loaded.getGraphicsSettings().isDayNightCycleEnabled());
         assertEquals(rays, loaded.getGraphicsSettings().getLightRays());
+        assertTrue(loaded.getGraphicsSettings().isSoftShadowsEnabled());
+        assertEquals(SOFTNESS, loaded.getGraphicsSettings().getShadowSoftnessLength(), 0f);
     }
 
     @Test

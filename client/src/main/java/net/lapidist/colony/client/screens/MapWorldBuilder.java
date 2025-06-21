@@ -57,6 +57,7 @@ public final class MapWorldBuilder {
     }
 
     private static final float HALF_ROTATION = 180f;
+    private static final float MOON_INTENSITY = 0.4f;
 
     /**
      * Create a base {@link WorldConfigurationBuilder} containing the default
@@ -171,6 +172,10 @@ public final class MapWorldBuilder {
         LightingSystem lighting = null;
         if (lightingEnabled || dayNightEnabled) {
             lighting = new LightingSystem(clear, rays, environment);
+            lighting.setSoftShadowsEnabled(graphics != null && graphics.isSoftShadowsEnabled());
+            if (graphics != null) {
+                lighting.setShadowSoftnessLength(graphics.getShadowSoftnessLength());
+            }
         }
         WorldConfigurationBuilder builder = new WorldConfigurationBuilder()
                 .with(
@@ -293,7 +298,7 @@ public final class MapWorldBuilder {
         moonComp.setOrbitOffset(HALF_ROTATION);
         var moonLight = new DirectionalLightComponent();
         moonLight.setColor(Color.WHITE);
-        moonLight.setIntensity(0.4f);
+        moonLight.setIntensity(MOON_INTENSITY);
         moon.edit().add(moonComp).add(moonLight);
     }
 }

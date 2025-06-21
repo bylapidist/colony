@@ -127,6 +127,8 @@ public final class Settings {
             settings.graphicsSettings.setNormalMapStrength(gLoaded.getNormalMapStrength());
             settings.graphicsSettings.setDayNightCycleEnabled(gLoaded.isDayNightCycleEnabled());
             settings.graphicsSettings.setLightRays(gLoaded.getLightRays());
+            settings.graphicsSettings.setSoftShadowsEnabled(gLoaded.isSoftShadowsEnabled());
+            settings.graphicsSettings.setShadowSoftnessLength(gLoaded.getShadowSoftnessLength());
         } catch (IOException e) {
             // ignore and use defaults
         }
