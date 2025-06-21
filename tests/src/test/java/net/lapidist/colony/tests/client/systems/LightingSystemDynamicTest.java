@@ -10,6 +10,8 @@ import net.lapidist.colony.client.systems.ClearScreenSystem;
 import net.lapidist.colony.components.state.MutableEnvironmentState;
 import net.lapidist.colony.components.entities.PlayerComponent;
 import net.lapidist.colony.components.light.PointLightComponent;
+import net.lapidist.colony.settings.GraphicsSettings;
+import java.util.concurrent.atomic.AtomicReference;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,11 +24,22 @@ public class LightingSystemDynamicTest {
 
     private static final float RADIUS = 5f;
     private static final float INTENSITY = 0.5f;
+    private static final float SOFT_LENGTH = 3f;
 
     @Test
     public void createsAndRemovesLights() {
         ClearScreenSystem clear = new ClearScreenSystem(new Color());
-        LightingSystem.LightFactory factory = (h, c) -> mock(box2dLight.PointLight.class);
+        GraphicsSettings gs = new GraphicsSettings();
+        gs.setSoftShadowsEnabled(false);
+        gs.setShadowSoftnessLength(SOFT_LENGTH);
+        AtomicReference<box2dLight.PointLight> created = new AtomicReference<>();
+        LightingSystem.LightFactory factory = (h, c) -> {
+            box2dLight.PointLight pl = mock(box2dLight.PointLight.class);
+            created.set(pl);
+            pl.setSoft(gs.isSoftShadowsEnabled());
+            pl.setSoftnessLength(gs.getShadowSoftnessLength());
+            return pl;
+        };
         MutableEnvironmentState env = new MutableEnvironmentState();
         LightingSystem lighting = new LightingSystem(clear, factory, env);
         World world = new World(new WorldConfigurationBuilder()
@@ -48,6 +61,8 @@ public class LightingSystemDynamicTest {
         world.setDelta(0f);
         world.process();
         assertEquals(1, lighting.getLightCount());
+        verify(created.get()).setSoft(false);
+        verify(created.get()).setSoftnessLength(SOFT_LENGTH);
 
         e.deleteFromWorld();
         world.process();

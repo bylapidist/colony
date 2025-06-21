@@ -79,6 +79,9 @@ public class SettingsTest {
         graphics.setLightingEnabled(false);
         graphics.setNormalMapsEnabled(true);
         graphics.setSpecularMapsEnabled(true);
+        final float softness = 3f;
+        graphics.setSoftShadowsEnabled(false);
+        graphics.setShadowSoftnessLength(softness);
         graphics.setDayNightCycleEnabled(false);
         final int rays = 20;
         graphics.setLightRays(rays);
@@ -93,6 +96,8 @@ public class SettingsTest {
         assertEquals(false, loaded.getGraphicsSettings().isLightingEnabled());
         assertEquals(true, loaded.getGraphicsSettings().isNormalMapsEnabled());
         assertEquals(true, loaded.getGraphicsSettings().isSpecularMapsEnabled());
+        assertEquals(false, loaded.getGraphicsSettings().isSoftShadowsEnabled());
+        assertEquals(softness, loaded.getGraphicsSettings().getShadowSoftnessLength(), 0f);
         assertEquals(false, loaded.getGraphicsSettings().isDayNightCycleEnabled());
         assertEquals(rays, loaded.getGraphicsSettings().getLightRays());
     }

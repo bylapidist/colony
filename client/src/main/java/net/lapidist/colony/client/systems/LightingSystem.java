@@ -17,6 +17,7 @@ import net.lapidist.colony.components.light.PointLightComponent;
 import net.lapidist.colony.components.state.MutableEnvironmentState;
 import net.lapidist.colony.components.GameConstants;
 import net.lapidist.colony.client.events.ResizeEvent;
+import net.lapidist.colony.settings.GraphicsSettings;
 import net.mostlyoriginal.api.event.common.Subscribe;
 
 /**
@@ -29,6 +30,18 @@ public final class LightingSystem extends BaseSystem implements Disposable {
     }
 
     public static final int DEFAULT_RAYS = 16;
+
+    /** Factory using {@link GraphicsSettings} for light softness. */
+    public static LightFactory pointLightFactory(final int rayCount, final GraphicsSettings graphics) {
+        return (h, c) -> {
+            PointLight light = new PointLight(h, rayCount, c.getColor(), c.getRadius(), 0f, 0f);
+            if (graphics != null) {
+                light.setSoft(graphics.isSoftShadowsEnabled());
+                light.setSoftnessLength(graphics.getShadowSoftnessLength());
+            }
+            return light;
+        };
+    }
 
     private final ClearScreenSystem clearScreenSystem;
     private final int rays;
@@ -61,7 +74,7 @@ public final class LightingSystem extends BaseSystem implements Disposable {
                           final int rayCount,
                           final MutableEnvironmentState env) {
         this(clearSystem,
-                (h, c) -> new PointLight(h, rayCount, c.getColor(), c.getRadius(), 0f, 0f),
+                pointLightFactory(rayCount, new net.lapidist.colony.settings.GraphicsSettings()),
                 rayCount,
                 env);
     }

@@ -17,6 +17,7 @@ public class GraphicsSettingsTest {
 
         GraphicsSettings gs = new GraphicsSettings();
         final int rays = 32;
+        final float softness = 3f;
         gs.setAntialiasingEnabled(true);
         gs.setMipMapsEnabled(true);
         gs.setAnisotropicFilteringEnabled(true);
@@ -25,6 +26,8 @@ public class GraphicsSettingsTest {
         gs.setLightingEnabled(false);
         gs.setNormalMapsEnabled(true);
         gs.setSpecularMapsEnabled(true);
+        gs.setSoftShadowsEnabled(false);
+        gs.setShadowSoftnessLength(softness);
         gs.setDayNightCycleEnabled(false);
         gs.setLightRays(rays);
         gs.save(props);
@@ -38,6 +41,8 @@ public class GraphicsSettingsTest {
         assertFalse(loaded.isLightingEnabled());
         assertTrue(loaded.isNormalMapsEnabled());
         assertTrue(loaded.isSpecularMapsEnabled());
+        assertFalse(loaded.isSoftShadowsEnabled());
+        assertEquals(softness, loaded.getShadowSoftnessLength(), 0f);
         assertFalse(loaded.isDayNightCycleEnabled());
         assertEquals(rays, loaded.getLightRays());
     }
@@ -55,6 +60,9 @@ public class GraphicsSettingsTest {
         assertTrue(loaded.isLightingEnabled());
         assertFalse(loaded.isNormalMapsEnabled());
         assertFalse(loaded.isSpecularMapsEnabled());
+        assertTrue(loaded.isSoftShadowsEnabled());
+        assertEquals(GraphicsSettings.load(new Properties()).getShadowSoftnessLength(),
+                loaded.getShadowSoftnessLength(), 0f);
         assertTrue(loaded.isDayNightCycleEnabled());
         assertEquals(GraphicsSettings.load(new Properties()).getLightRays(), loaded.getLightRays());
     }
