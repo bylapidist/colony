@@ -131,6 +131,8 @@ public class MapScreenTest {
             Stage stage = extractStage(screen);
             ScreenViewport vp = (ScreenViewport) stage.getViewport();
             assertEquals(1f / settings.getUiScale(), vp.getUnitsPerPixel(), 0f);
+            assertEquals(settings.getUiScale(), stage.getRoot().getScaleX(), 0f);
+            assertEquals(settings.getUiScale(), stage.getRoot().getScaleY(), 0f);
         }
     }
 
