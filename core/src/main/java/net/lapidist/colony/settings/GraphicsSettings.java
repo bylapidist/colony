@@ -18,6 +18,8 @@ public final class GraphicsSettings {
     private static final String NORMAL_STRENGTH_KEY = PREFIX + "normalStrength";
     private static final String DAY_NIGHT_KEY = PREFIX + "dayNightCycle";
     private static final String RAYS_KEY = PREFIX + "lightRays";
+    private static final String SOFT_SHADOW_KEY = PREFIX + "softShadows";
+    private static final String SOFT_LENGTH_KEY = PREFIX + "shadowSoftnessLength";
 
     private static final int DEFAULT_RAYS = 16;
     private static final float DEFAULT_NORMAL_STRENGTH = 0.5f;
@@ -33,6 +35,8 @@ public final class GraphicsSettings {
     private float normalMapStrength = DEFAULT_NORMAL_STRENGTH;
     private boolean dayNightCycleEnabled = true;
     private int lightRays = DEFAULT_RAYS;
+    private boolean softShadowsEnabled;
+    private float shadowSoftnessLength = 2f;
 
     public boolean isAntialiasingEnabled() {
         return antialiasingEnabled;
@@ -123,6 +127,22 @@ public final class GraphicsSettings {
         this.lightRays = rays;
     }
 
+    public boolean isSoftShadowsEnabled() {
+        return softShadowsEnabled;
+    }
+
+    public void setSoftShadowsEnabled(final boolean enabled) {
+        this.softShadowsEnabled = enabled;
+    }
+
+    public float getShadowSoftnessLength() {
+        return shadowSoftnessLength;
+    }
+
+    public void setShadowSoftnessLength(final float length) {
+        this.shadowSoftnessLength = length;
+    }
+
     /** Load graphics settings from the given properties. */
     public static GraphicsSettings load(final Properties props) {
         GraphicsSettings gs = new GraphicsSettings();
@@ -140,6 +160,8 @@ public final class GraphicsSettings {
         ));
         gs.dayNightCycleEnabled = Boolean.parseBoolean(props.getProperty(DAY_NIGHT_KEY, "true"));
         gs.lightRays = Integer.parseInt(props.getProperty(RAYS_KEY, Integer.toString(DEFAULT_RAYS)));
+        gs.softShadowsEnabled = Boolean.parseBoolean(props.getProperty(SOFT_SHADOW_KEY, "false"));
+        gs.shadowSoftnessLength = Float.parseFloat(props.getProperty(SOFT_LENGTH_KEY, "2"));
         return gs;
     }
 
@@ -156,5 +178,7 @@ public final class GraphicsSettings {
         props.setProperty(NORMAL_STRENGTH_KEY, Float.toString(normalMapStrength));
         props.setProperty(DAY_NIGHT_KEY, Boolean.toString(dayNightCycleEnabled));
         props.setProperty(RAYS_KEY, Integer.toString(lightRays));
+        props.setProperty(SOFT_SHADOW_KEY, Boolean.toString(softShadowsEnabled));
+        props.setProperty(SOFT_LENGTH_KEY, Float.toString(shadowSoftnessLength));
     }
 }

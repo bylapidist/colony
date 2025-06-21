@@ -7,9 +7,8 @@ import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.graphics.Color;
 import net.lapidist.colony.components.entities.CelestialBodyComponent;
 import net.lapidist.colony.components.light.DirectionalLightComponent;
+import net.lapidist.colony.components.light.PointLightComponent;
 import net.lapidist.colony.components.state.MutableEnvironmentState;
-import net.lapidist.colony.client.systems.LightingSystem;
-import net.lapidist.colony.client.systems.ClearScreenSystem;
 import net.lapidist.colony.tests.GdxTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +25,7 @@ public class DirectionalLightSystemTest {
         ClearScreenSystem clear = new ClearScreenSystem(new Color());
         LightingSystem.LightFactory factory = new LightingSystem.LightFactory() {
             @Override
-            public box2dLight.PointLight create(final RayHandler h, final net.lapidist.colony.components.light.PointLightComponent c) {
+            public box2dLight.PointLight create(final RayHandler h, final PointLightComponent c) {
                 return null;
             }
 
