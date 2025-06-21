@@ -1,6 +1,7 @@
 package net.lapidist.colony.tests.client.systems;
 
 import box2dLight.RayHandler;
+import box2dLight.DirectionalLight;
 import com.artemis.World;
 import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.graphics.Color;
@@ -26,7 +27,17 @@ public class LightingSystemDynamicTest {
     @Test
     public void createsAndRemovesLights() {
         ClearScreenSystem clear = new ClearScreenSystem(new Color());
-        LightingSystem.LightFactory factory = (h, c) -> mock(box2dLight.PointLight.class);
+        LightingSystem.LightFactory factory = new LightingSystem.LightFactory() {
+            @Override
+            public box2dLight.PointLight create(final RayHandler h, final PointLightComponent c) {
+                return mock(box2dLight.PointLight.class);
+            }
+
+            @Override
+            public DirectionalLight createDirectional(final RayHandler h, final net.lapidist.colony.components.light.DirectionalLightComponent c) {
+                return null;
+            }
+        };
         MutableEnvironmentState env = new MutableEnvironmentState();
         LightingSystem lighting = new LightingSystem(clear, factory, env);
         World world = new World(new WorldConfigurationBuilder()
