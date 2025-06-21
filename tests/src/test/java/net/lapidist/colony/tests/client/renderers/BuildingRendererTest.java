@@ -189,6 +189,44 @@ public class BuildingRendererTest {
     }
 
     @Test
+    public void bindsSpecularTextureWhenEnabled() {
+        SpriteBatch batch = mock(SpriteBatch.class);
+        ShaderProgram shader = mock(ShaderProgram.class);
+        when(batch.getShader()).thenReturn(shader);
+        ResourceLoader loader = mock(ResourceLoader.class);
+        TextureRegion region = mock(TextureRegion.class);
+        TextureRegion spec = mock(TextureRegion.class);
+        Texture specTex = mock(Texture.class);
+        when(spec.getTexture()).thenReturn(specTex);
+        when(loader.findRegion(anyString())).thenReturn(region);
+        when(loader.findSpecularRegion(anyString())).thenReturn(spec);
+
+        CameraProvider camera = mock(CameraProvider.class);
+        OrthographicCamera cam = new OrthographicCamera();
+        ExtendViewport viewport = new ExtendViewport(VIEW_SIZE, VIEW_SIZE, cam);
+        viewport.update(VIEW_SIZE, VIEW_SIZE, true);
+        cam.update();
+        when(camera.getCamera()).thenReturn(cam);
+        when(camera.getViewport()).thenReturn(viewport);
+
+        GraphicsSettings graphics = new GraphicsSettings();
+        graphics.setSpecularMapsEnabled(true);
+        BuildingRenderer renderer = new BuildingRenderer(batch, loader, camera, new DefaultAssetResolver(), graphics);
+
+        Array<RenderBuilding> buildings = new Array<>();
+        RenderBuilding building = RenderBuilding.builder().x(0).y(0).buildingType("house").build();
+        buildings.add(building);
+
+        MapRenderData map = new SimpleMapRenderData(new Array<RenderTile>(), buildings,
+                new RenderTile[MapState.DEFAULT_WIDTH][MapState.DEFAULT_HEIGHT]);
+
+        renderer.render(map);
+
+        verify(specTex).bind();
+        verify(shader).setUniformi("u_specular", 2);
+    }
+
+    @Test
     public void setsSpecularPowerUniform() {
         SpriteBatch batch = mock(SpriteBatch.class);
         ShaderProgram shader = mock(ShaderProgram.class);

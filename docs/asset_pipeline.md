@@ -7,6 +7,10 @@ The normal mapping shader reads a `specularPower` value from atlas regions to
 control the Blinn–Phong exponent. Add a line like `specularPower: 32` under a
 region entry to override the default of `8`.
 
+Specular textures now store reflection color in the RGB channels. When present,
+these maps are bound in RGB mode and multiplied with the computed specular
+highlight. They should therefore be saved without an alpha channel.
+
 Run `./gradlew tests:copyAssets` whenever the atlas is updated so the test module
 has the latest resources.
 
