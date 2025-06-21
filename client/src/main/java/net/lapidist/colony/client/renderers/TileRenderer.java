@@ -128,7 +128,10 @@ public final class TileRenderer implements EntityRenderer<RenderTile> {
                                 shader.setUniformi("u_normal", 1);
                             }
                             if (spec != null && graphicsSettings.isSpecularMapsEnabled()) {
-                                spec.getTexture().bind(2);
+                                com.badlogic.gdx.Gdx.gl.glActiveTexture(
+                                        com.badlogic.gdx.graphics.GL20.GL_TEXTURE0 + 2
+                                );
+                                spec.getTexture().bind();
                                 shader.setUniformi("u_specular", 2);
                             }
                             Integer power = specularPowers.get(type.toUpperCase(java.util.Locale.ROOT));

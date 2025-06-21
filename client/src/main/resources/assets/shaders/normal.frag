@@ -29,7 +29,7 @@ void main() {
     float diff = max(dot(normal, lightDir), 0.0);
     vec3 halfDir = normalize(lightDir + viewDir);
     float specIntensity = pow(max(dot(normal, halfDir), 0.0), u_specularPower);
-    float specMap = texture2D(u_specular, rCoords).r;
-    vec3 color = diffuse.rgb * diff + vec3(specIntensity * specMap);
+    vec3 reflectColor = texture2D(u_specular, rCoords).rgb;
+    vec3 color = diffuse.rgb * diff + reflectColor * specIntensity;
     gl_FragColor = vec4(color, diffuse.a) * v_color;
 }
